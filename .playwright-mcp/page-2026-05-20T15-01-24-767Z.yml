@@ -1,0 +1,84 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e677]:
+        - text: Echo (mock)
+        - generic [ref=e678]: • walking
+      - generic [ref=e680]:
+        - text: Echo (mock)
+        - generic [ref=e681]: • walking
+    - generic:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]: 🏠
+          - generic [ref=e10]:
+            - generic [ref=e11]: DollhouseDev
+            - generic [ref=e12]: spatial multi-agent dev
+          - generic "connected" [ref=e32]
+        - generic [ref=e15]:
+          - generic [ref=e16]: Workspace
+          - generic [ref=e17]:
+            - textbox "/path/to/repo or git url" [ref=e18]: /Users/mia/Documents/Projects/dollhouse
+            - button "Load" [ref=e19] [cursor=pointer]
+          - generic [ref=e20]:
+            - checkbox "clone as git repo" [ref=e21]
+            - text: clone as git repo
+          - generic [ref=e33]: ✓ /Users/mia/Documents/Projects/dollhouse
+        - generic [ref=e23]:
+          - generic [ref=e24]: Master task
+          - textbox "describe what you want the agents to do… (⌘/Ctrl+Enter)" [ref=e34]
+          - button "Delegate ✨" [disabled] [ref=e26]
+        - generic [ref=e28]:
+          - generic [ref=e44]: Last plan
+          - generic [ref=e45]: Mock plan — 2 subtask(s) routed by keyword.
+          - list [ref=e46]:
+            - listitem [ref=e47]:
+              - generic [ref=e48]: echo
+              - generic [ref=e49]: →
+              - generic [ref=e50]: Studio
+              - generic [ref=e51]: build a frontend UI
+            - listitem [ref=e52]:
+              - generic [ref=e53]: echo
+              - generic [ref=e54]: →
+              - generic [ref=e55]: Bathroom
+              - generic [ref=e56]: write API tests
+      - generic [ref=e31]:
+        - generic [ref=e682]:
+          - button "echo · Studio ✕" [ref=e683] [cursor=pointer]:
+            - generic [ref=e685]: echo
+            - generic [ref=e686]: ·
+            - generic [ref=e687]: Studio
+            - button "✕" [ref=e688]
+          - button "echo · Bathroom ✕" [ref=e689] [cursor=pointer]:
+            - generic [ref=e691]: echo
+            - generic [ref=e692]: ·
+            - generic [ref=e693]: Bathroom
+            - button "✕" [ref=e694]
+        - generic [ref=e696]:
+          - generic [ref=e699]:
+            - generic:
+              - textbox "Terminal input"
+          - generic [ref=e754]:
+            - textbox "Terminal input" [ref=e755]
+            - generic [ref=e756]:
+              - generic [ref=e757]:
+                - generic [ref=e758]: 🪞
+                - generic [ref=e759]: echo agent
+                - generic [ref=e760]: cwd=
+                - generic [ref=e761]: /Users/mia/Documents/Projects/dollhouse
+              - generic [ref=e762]:
+                - generic [ref=e763]: 🪞
+                - generic [ref=e764]: "subtask:"
+                - generic [ref=e765]: build a frontend UI
+              - generic [ref=e767]:
+                - generic [ref=e769]: ·
+                - generic [ref=e770]: writing…
+        - generic [ref=e818]:
+          - generic [ref=e819]: "agent: 2WiIemO_"
+          - generic [ref=e820]: "status: walking"
+          - generic [ref=e821]: "room: Studio"
+  - generic [ref=e209]: pppppppppppppppppppppppppppppppp
+  - generic [ref=e348]: "]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"
+  - generic [ref=e526]: pppppppppppppppppppppppppppppppp
+  - generic [ref=e527]: "]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"
+  - generic [ref=e823]: ……………………………………………………………………………………

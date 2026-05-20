@@ -1,0 +1,23 @@
+- generic [ref=e3]:
+  - generic:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: 🏠
+        - generic [ref=e10]:
+          - generic [ref=e11]: DollhouseDev
+          - generic [ref=e12]: spatial multi-agent dev
+        - generic "disconnected" [ref=e13]
+      - generic [ref=e15]:
+        - generic [ref=e16]: Workspace
+        - generic [ref=e17]:
+          - textbox "/path/to/repo or git url" [ref=e18]: /Users/mia/Documents/Projects/dollhouse
+          - button "Load" [ref=e19] [cursor=pointer]
+        - generic [ref=e20]:
+          - checkbox "clone as git repo" [ref=e21]
+          - text: clone as git repo
+      - generic [ref=e23]:
+        - generic [ref=e24]: Master task
+        - textbox "set a workspace first" [disabled] [ref=e25]
+        - button "Delegate ✨" [disabled] [ref=e26]
+      - generic [ref=e28]: no plan yet — the delegator's chat output will appear here.
+    - generic [ref=e31]: no agents running. submit a task to spawn dolls.

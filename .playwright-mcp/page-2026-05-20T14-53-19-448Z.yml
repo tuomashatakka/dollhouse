@@ -1,0 +1,78 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e36]:
+      - text: Echo (mock)
+      - generic [ref=e37]: • walking
+    - generic [ref=e39]:
+      - text: Echo (mock)
+      - generic [ref=e40]: • walking
+    - generic [ref=e42]:
+      - text: Echo (mock)
+      - generic [ref=e43]: • walking
+  - generic:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: 🏠
+        - generic [ref=e10]:
+          - generic [ref=e11]: DollhouseDev
+          - generic [ref=e12]: spatial multi-agent dev
+        - generic "connected" [ref=e32]
+      - generic [ref=e15]:
+        - generic [ref=e16]: Workspace
+        - generic [ref=e17]:
+          - textbox "/path/to/repo or git url" [ref=e18]: /Users/mia/Documents/Projects/dollhouse
+          - button "Load" [ref=e19] [cursor=pointer]
+        - generic [ref=e20]:
+          - checkbox "clone as git repo" [ref=e21]
+          - text: clone as git repo
+        - generic [ref=e33]: ✓ /Users/mia/Documents/Projects/dollhouse
+      - generic [ref=e23]:
+        - generic [ref=e24]: Master task
+        - textbox "describe what you want the agents to do… (⌘/Ctrl+Enter)" [ref=e34]
+        - button "Delegate ✨" [disabled] [ref=e26]
+      - generic [ref=e28]:
+        - generic [ref=e44]: Last plan
+        - generic [ref=e45]: Mock plan — 3 subtask(s) routed by keyword.
+        - list [ref=e46]:
+          - listitem [ref=e47]:
+            - generic [ref=e48]: echo
+            - generic [ref=e49]: →
+            - generic [ref=e50]: Studio
+            - generic [ref=e51]: build a UI component
+          - listitem [ref=e52]:
+            - generic [ref=e53]: echo
+            - generic [ref=e54]: →
+            - generic [ref=e55]: Bathroom
+            - generic [ref=e56]: write API tests
+          - listitem [ref=e57]:
+            - generic [ref=e58]: echo
+            - generic [ref=e59]: →
+            - generic [ref=e60]: Kitchen
+            - generic [ref=e61]: refactor the kitchen module
+    - generic [ref=e31]:
+      - generic [ref=e62]: Live agents (3)
+      - list [ref=e63]:
+        - listitem [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e67]: echo
+            - generic [ref=e68]: ·
+            - generic [ref=e69]: Studio
+            - generic [ref=e70]: walking
+            - button "kill" [ref=e71] [cursor=pointer]
+          - generic [ref=e72]: "🪞 echo agent cwd=/Users/mia/Documents/Projects/dollhouse 🪞 subtask: build a UI component · polishing…"
+        - listitem [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e76]: echo
+            - generic [ref=e77]: ·
+            - generic [ref=e78]: Bathroom
+            - generic [ref=e79]: walking
+            - button "kill" [ref=e80] [cursor=pointer]
+          - generic [ref=e81]: "🪞 echo agent cwd=/Users/mia/Documents/Projects/dollhouse 🪞 subtask: write API tests · tinkering…"
+        - listitem [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e85]: echo
+            - generic [ref=e86]: ·
+            - generic [ref=e87]: Kitchen
+            - generic [ref=e88]: walking
+            - button "kill" [ref=e89] [cursor=pointer]
+          - generic [ref=e90]: "🪞 echo agent cwd=/Users/mia/Documents/Projects/dollhouse 🪞 subtask: refactor the kitchen module · tinkering…"
