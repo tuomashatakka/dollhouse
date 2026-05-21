@@ -1,4 +1,4 @@
-# 🏠 DollhouseDev
+# DollhouseDev
 
 > A spatial, multi-agent AI development environment. Watch worker agents
 > (claude-code, gemini-cli, opencode, Ollama, apfel) navigate a 3D pink
@@ -19,9 +19,10 @@ working** animations driven by live stdout activity.
 
 | Layer | Choice |
 | --- | --- |
-| Monorepo | pnpm workspaces (3 packages: `shared`, `backend`, `frontend`) |
+| Monorepo | pnpm workspaces (4 packages: `shared`, `backend`, `frontend`, `editor`) |
 | Backend | Node + Express + Socket.IO + node-pty + undici |
-| Frontend | Vite + React 18 + React Three Fiber + drei + @react-spring/three + zustand + Tailwind + xterm.js |
+| Frontend | Vite + React 18 + React Router + React Three Fiber + drei + @react-spring/three + zustand + Tailwind + xterm.js |
+| Editor | `@dollhouse/editor` — R3F model editor: select / move / scale / resize / (un)group with undo-redo |
 | LLM providers | Anthropic / OpenRouter / Gemini / Ollama / `mock` (offline) |
 | Worker agents | claude-code, gemini-cli, opencode (PTY) · Ollama, apfel (HTTP) · echo (mock) |
 
@@ -44,10 +45,13 @@ pnpm dev
 ```
 
 Open <http://localhost:5173>. Set a workspace, type a master task, hit
-**Delegate ✨**, watch the dolls move in.
+**Delegate**, watch the dolls move in.
 
 The default `LLM_PROVIDER=mock` works offline and routes subtasks by
 keyword — perfect for demos without burning tokens.
+
+To edit the dollhouse or doll models, open <http://localhost:5173/editor>
+(or click **Open Model Editor** on the home page).
 
 ---
 
@@ -135,6 +139,32 @@ both backend (for delegation hints) and frontend (for doll target coords).
 
 ---
 
+## Model editor
+
+The dollhouse and dolls are **data, not code**. `@dollhouse/shared` defines a
+typed model schema — a `SceneNode` tree with `GeometryDef` / `MaterialDef` and
+`DollhouseDocument` / `DollModel` wrappers. `buildDollhouseDocument()` and
+`buildDollDocument()` are the default documents the frontend renders through
+`<ModelRenderer>`.
+
+`@dollhouse/editor` is a React Three Fiber editor for those documents, reachable
+at **`/editor`**. Inspired by three.js's editor, it provides:
+
+- **Select** — click in the viewport or outliner (shift-click to multi-select)
+- **Move / Rotate / Scale** — a drei `TransformControls` gizmo
+- **Resize** — edit raw geometry parameters (box width/height/depth, sphere radius, …)
+- **Group / Ungroup** — wrap or dissolve nodes, preserving world transforms
+- **Undo / Redo** — full command-pattern history
+- **Save / Export / Import** — JSON; Save persists to `localStorage`
+
+The editor core (`packages/editor/src/core/`) is framework-agnostic — document
+model, commands, history, three.js conversion, serialization. The React layer
+(`src/react/`) wraps it; `<ModelRenderer>` is canvas-agnostic and is what the
+frontend consumes for both the dollhouse and the dolls. Saved documents land in
+`localStorage` and the frontend picks them up on next load.
+
+---
+
 ## Adding a new agent type
 
 ```ts
@@ -184,7 +214,11 @@ model returns into a canonical `DelegatorPlan` shape.
 
 ```
 packages/
-├── shared/      # types shared by BE+FE (events, agents, rooms)
+├── shared/      # types + model schema shared across packages
+│   └── src/
+│       ├── events.ts, agents.ts, rooms.ts   # wire protocol, agent + room types
+│       ├── model/                           # editable model schema (SceneNode, geometry, material)
+│       └── presets/                         # buildDollhouseDocument / buildDollDocument
 ├── backend/
 │   └── src/
 │       ├── index.ts                 # express+socket.io bootstrap
@@ -201,13 +235,18 @@ packages/
 │       │   ├── transports/          # PtyTransport, HttpStreamTransport, EchoTransport
 │       │   └── specs/               # claudeCode, geminiCli, opencode, ollama, apfel, echo
 │       └── socket/                  # io server + handlers
-└── frontend/
+├── frontend/
+│   └── src/
+│       ├── main.tsx, App.tsx        # React Router: / (HomePage) · /editor (EditorPage)
+│       ├── HomePage.tsx, EditorPage.tsx
+│       ├── store/                   # zustand slices: workspace, agents, delegator
+│       ├── socket/                  # io client + bridge to store
+│       ├── three/                   # Scene, Dollhouse, Doll, model.ts, lighting, materials
+│       └── hud/                     # WorkspacePicker, MasterChat, DelegatorPlanView, AgentTabs, Terminal
+└── editor/      # @dollhouse/editor — model editor the frontend consumes
     └── src/
-        ├── main.tsx, App.tsx
-        ├── store/                   # zustand slices: workspace, agents, delegator
-        ├── socket/                  # io client + bridge to store
-        ├── three/                   # Scene, Dollhouse, Doll, lighting, materials
-        └── hud/                     # WorkspacePicker, MasterChat, DelegatorPlanView, AgentTabs, Terminal
+        ├── core/                    # framework-agnostic: commands, history, conversion, serialization
+        └── react/                   # R3F layer: <ModelRenderer>, <Editor>, viewport, gizmo, panels
 ```
 
 ---
@@ -226,11 +265,11 @@ pnpm --filter @dollhouse/frontend dev  # frontend only
 
 ## Notes
 
-- **Procedural-first 3D**: the dollhouse and dolls are pure R3F primitives,
-  so the app runs without any external GLB assets. The animation FSM is
-  named `idle | walking | working | exited` so swapping to real
-  `useGLTF + useAnimations` clips later is a one-file change inside
-  `three/Doll.tsx`.
+- **Data-driven 3D**: the dollhouse and dolls are typed model documents
+  (`@dollhouse/shared`) rendered through `<ModelRenderer>` — edit them visually
+  in the `/editor` route, no code changes needed. Geometry is still pure R3F
+  primitives, so the app runs without external GLB assets. The doll animation
+  FSM (`idle | walking | working | exited`) drives named rig nodes by name.
 - **node-pty native module**: shipped prebuilds cover macOS arm64/x64 and
   Windows arm64/x64. On Linux you may need `pnpm rebuild node-pty`.
 - **Phase-7 xterm warning**: a benign `Cannot read properties of undefined

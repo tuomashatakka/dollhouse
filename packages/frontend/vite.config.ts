@@ -3,6 +3,11 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    // The editor package is consumed from source; dedupe these so the editor
+    // and the frontend share a single instance of each.
+    dedupe: ["react", "react-dom", "three", "@react-three/fiber", "@react-three/drei"],
+  },
   server: {
     port: 5173,
     strictPort: true,
