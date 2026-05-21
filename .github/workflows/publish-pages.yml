@@ -44,7 +44,7 @@ jobs:
         run: pnpm --filter @dollhouse/frontend build
 
       - name: Build editor docs
-        run: pnpm --filter @dollhouse/editor docs
+        run: pnpm --filter @dollhouse/editor run docs
 
       - name: Stage site
         run: |
