@@ -1,0 +1,9 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "out": "docs-dist",
+  "tsconfig": "tsconfig.json",
+  "excludePrivate": true,
+  "readme": "none",
+  "name": "@dollhouse/editor"
+}
