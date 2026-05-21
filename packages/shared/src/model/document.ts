@@ -1,7 +1,7 @@
 import type { SceneNode } from "./node.js";
 
 /** Bump whenever the document shape changes incompatibly. Drives migrations. */
-export const DOLLHOUSE_SCHEMA_VERSION = 1;
+export const DOLLHOUSE_SCHEMA_VERSION = 2;
 
 interface BaseDocument {
   /** Schema version the document was written with. */

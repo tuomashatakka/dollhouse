@@ -30,6 +30,9 @@ export function TransformGizmo() {
     setTarget(found);
   }, [selectedId, scene, editor.revision]);
 
+  // Only the transform tools show a gizmo; `select` / `pan` show nothing.
+  const tool = editor.tool;
+  if (tool !== "translate" && tool !== "rotate" && tool !== "scale") return null;
   if (!target || !selectedId) return null;
 
   // Guard: never attach the gizmo to an object detached from the scene graph —
@@ -48,7 +51,7 @@ export function TransformGizmo() {
   return (
     <TransformControls
       object={target}
-      mode={editor.transformMode}
+      mode={tool}
       onMouseUp={() => {
         editor.execute(
           new SetTransformCommand(editor.root, selectedId, {

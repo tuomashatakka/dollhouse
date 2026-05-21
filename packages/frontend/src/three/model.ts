@@ -1,5 +1,10 @@
-import { buildDollDocument, buildDollhouseDocument, type ModelDocument } from "@dollhouse/shared";
-import { cloneDocument, loadFromStorage } from "@dollhouse/editor";
+import type { ModelDocument } from "@dollhouse/shared";
+import {
+  buildDollDocument,
+  buildDollhouseDocument,
+  cloneDocument,
+  loadFromStorage,
+} from "@dollhouse/editor";
 
 // Module-level caches: every doll shares one doc instance, and the dollhouse is
 // built once. Editor saves land in localStorage and are picked up on reload.

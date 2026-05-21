@@ -150,7 +150,8 @@ typed model schema — a `SceneNode` tree with `GeometryDef` / `MaterialDef` and
 `@dollhouse/editor` is a React Three Fiber editor for those documents, reachable
 at **`/editor`**. Inspired by three.js's editor, it provides:
 
-- **Select** — click in the viewport or outliner (shift-click to multi-select)
+- **Select** — pick nodes in the viewport or outliner (shift-click to multi-select)
+- **Pan** — left-drag to slide the camera (a hand tool)
 - **Move / Rotate / Scale** — a drei `TransformControls` gizmo
 - **Resize** — edit raw geometry parameters (box width/height/depth, sphere radius, …)
 - **Group / Ungroup** — wrap or dissolve nodes, preserving world transforms

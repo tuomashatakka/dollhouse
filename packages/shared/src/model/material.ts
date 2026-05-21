@@ -19,6 +19,15 @@ export interface MaterialDef {
   transparent?: boolean;
   /** Which faces to render. Defaults to "front". */
   side?: MaterialSide;
+  /**
+   * Texture key resolved by the renderer's texture library, e.g. "cobblestone",
+   * "wood", "grass". Maps to a procedural or file-backed THREE.Texture.
+   */
+  texture?: string;
+  /** Texture repeat (S, T). Defaults to [1, 1]. */
+  textureScale?: readonly [number, number];
+  /** Use facet (per-face) normals — the low-poly look. */
+  flatShading?: boolean;
 }
 
 /** A sensible fallback material — opaque mid-roughness grey. */

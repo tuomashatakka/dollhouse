@@ -3,8 +3,15 @@ import type { Command } from "./commands.js";
 import { Signal } from "./Signals.js";
 import { findNode } from "./util.js";
 
-/** Gizmo manipulation mode. */
+/** Gizmo manipulation mode — the subset of {@link EditorTool} that shows a gizmo. */
 export type TransformMode = "translate" | "rotate" | "scale";
+
+/**
+ * The active editor tool. `select` picks nodes with no gizmo; `pan` drags the
+ * camera with the left mouse button; `translate` / `rotate` / `scale` show the
+ * transform gizmo.
+ */
+export type EditorTool = "select" | "pan" | TransformMode;
 
 /** Undo / redo stack of {@link Command}s. */
 export class History {
@@ -53,14 +60,14 @@ export class History {
 export class EditorState {
   document: ModelDocument;
   selection: ReadonlySet<string> = new Set();
-  transformMode: TransformMode = "translate";
+  tool: EditorTool = "select";
   /** Bumped on every document mutation — a cache-buster for `React.memo`. */
   revision = 0;
   readonly history = new History();
   readonly signals = {
     documentChanged: new Signal(),
     selectionChanged: new Signal(),
-    transformModeChanged: new Signal(),
+    toolChanged: new Signal(),
   };
 
   constructor(document: ModelDocument) {
@@ -124,18 +131,18 @@ export class EditorState {
     this.signals.selectionChanged.dispatch();
   }
 
-  /** Switch the gizmo mode (translate / rotate / scale). */
-  setTransformMode(mode: TransformMode): void {
-    if (this.transformMode === mode) return;
-    this.transformMode = mode;
-    this.signals.transformModeChanged.dispatch();
+  /** Switch the active tool (select / pan / translate / rotate / scale). */
+  setTool(tool: EditorTool): void {
+    if (this.tool === tool) return;
+    this.tool = tool;
+    this.signals.toolChanged.dispatch();
   }
 
   /** Swap in a different document (e.g. dollhouse ⇄ doll), resetting state. */
   setDocument(document: ModelDocument): void {
     this.document = document;
     this.selection = new Set();
-    this.transformMode = "translate";
+    this.tool = "select";
     this.history.clear();
     this.revision += 1;
     this.signals.documentChanged.dispatch();

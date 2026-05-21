@@ -37,11 +37,18 @@ export function deserializeDocument(json: string): ModelDocument {
   return migrate(parsed as ModelDocument);
 }
 
-/** Read a saved document from localStorage, or null when absent / invalid. */
+/**
+ * Read a saved document from localStorage. Returns null when absent, malformed,
+ * or written by an older schema version — so callers fall back to the current
+ * default.
+ */
 export function loadFromStorage(kind: ModelDocument["kind"]): ModelDocument | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY[kind]);
-    return raw ? deserializeDocument(raw) : null;
+    if (!raw) return null;
+    const doc = deserializeDocument(raw);
+    if (doc.schemaVersion !== DOLLHOUSE_SCHEMA_VERSION) return null;
+    return doc;
   } catch {
     return null;
   }

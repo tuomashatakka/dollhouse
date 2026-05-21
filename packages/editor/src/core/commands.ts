@@ -96,6 +96,29 @@ export class SetMaterialCommand implements Command {
   }
 }
 
+/** Toggle (or set) a node's visibility. */
+export class SetVisibilityCommand implements Command {
+  readonly label = "Visibility";
+  private readonly before: boolean | undefined;
+
+  constructor(
+    private readonly root: SceneNode,
+    private readonly nodeId: string,
+    private readonly after: boolean,
+  ) {
+    this.before = findNode(root, nodeId)?.visible;
+  }
+
+  execute(): void {
+    const node = findNode(this.root, this.nodeId);
+    if (node) node.visible = this.after;
+  }
+  undo(): void {
+    const node = findNode(this.root, this.nodeId);
+    if (node) node.visible = this.before;
+  }
+}
+
 /** Rename a node. */
 export class RenameNodeCommand implements Command {
   readonly label = "Rename";

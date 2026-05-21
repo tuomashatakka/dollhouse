@@ -33,7 +33,7 @@ export function useEditor(): EditorState {
     const unsubscribe = [
       editor.signals.documentChanged.add(() => forceRender()),
       editor.signals.selectionChanged.add(() => forceRender()),
-      editor.signals.transformModeChanged.add(() => forceRender()),
+      editor.signals.toolChanged.add(() => forceRender()),
     ];
     return () => {
       for (const off of unsubscribe) off();

@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import {
-  buildDollDocument,
-  buildDollhouseDocument,
   type GeometryDef,
   type MaterialDef,
   type ModelDocument,
@@ -13,6 +11,7 @@ import {
   deserializeDocument,
   downloadDocument,
   type EditorState,
+  type EditorTool,
   findNode,
   GroupCommand,
   loadFromStorage,
@@ -20,9 +19,10 @@ import {
   SetGeometryCommand,
   SetMaterialCommand,
   SetTransformCommand,
-  type TransformMode,
+  SetVisibilityCommand,
   UngroupCommand,
 } from "../core/index.js";
+import { buildDollDocument, buildDollhouseDocument } from "../presets/index.js";
 import { useEditor } from "./EditorProvider.js";
 
 /* ───────────────────────── shared chrome ───────────────────────── */
@@ -317,13 +317,15 @@ function OutlinerRow({
   const [open, setOpen] = useState(depth < 2);
   const selected = editor.selection.has(node.id);
   const hasChildren = node.children.length > 0;
+  const visible = node.visible !== false;
 
   return (
     <div>
       <div
         className={
-          "flex items-center gap-1 py-0.5 pr-2 cursor-pointer select-none " +
-          (selected ? "bg-pink-400/25 text-white" : "text-white/70 hover:bg-white/5")
+          "flex items-center gap-1 py-0.5 pr-1 cursor-pointer select-none " +
+          (selected ? "bg-pink-400/25 text-white" : "text-white/70 hover:bg-white/5") +
+          (visible ? "" : " opacity-40")
         }
         style={{ paddingLeft: depth * 12 + 4 }}
         onClick={(e) => editor.select([node.id], e.shiftKey || e.metaKey || e.ctrlKey)}
@@ -339,7 +341,18 @@ function OutlinerRow({
           {hasChildren ? (open ? "▾" : "▸") : ""}
         </button>
         <span className="truncate">{node.name}</span>
-        <span className="ml-auto text-[9px] text-white/25">{nodeGlyph(node)}</span>
+        <span className="ml-auto pl-2 text-[9px] text-white/25">{nodeGlyph(node)}</span>
+        <button
+          type="button"
+          title={visible ? "Hide" : "Show"}
+          className="w-4 shrink-0 text-center text-white/40 hover:text-white"
+          onClick={(e) => {
+            e.stopPropagation();
+            editor.execute(new SetVisibilityCommand(editor.root, node.id, !visible));
+          }}
+        >
+          {visible ? "◉" : "○"}
+        </button>
       </div>
       {open && hasChildren && (
         <div>
@@ -366,13 +379,13 @@ export function Outliner() {
 
 /* ───────────────────────── toolbar ───────────────────────── */
 
-function ModeButton({ mode, label }: { mode: TransformMode; label: string }) {
+function ModeButton({ tool, label }: { tool: EditorTool; label: string }) {
   const editor = useEditor();
-  const active = editor.transformMode === mode;
+  const active = editor.tool === tool;
   return (
     <button
       type="button"
-      onClick={() => editor.setTransformMode(mode)}
+      onClick={() => editor.setTool(tool)}
       className={
         "px-2 py-1 rounded border " +
         (active
@@ -456,9 +469,12 @@ export function Toolbar() {
     <div className="flex items-center gap-1.5 border-b border-white/10 bg-[#171120] px-3 py-2 text-[12px]">
       <span className="mr-1 font-display text-sm text-pink-200">Dollhouse Editor</span>
       <Divider />
-      <ModeButton mode="translate" label="Move" />
-      <ModeButton mode="rotate" label="Rotate" />
-      <ModeButton mode="scale" label="Scale" />
+      <ModeButton tool="select" label="Select" />
+      <ModeButton tool="pan" label="Pan" />
+      <Divider />
+      <ModeButton tool="translate" label="Move" />
+      <ModeButton tool="rotate" label="Rotate" />
+      <ModeButton tool="scale" label="Scale" />
       <Divider />
       <ToolButton onClick={doGroup} disabled={selectionIds.length < 2}>
         Group

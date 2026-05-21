@@ -4,6 +4,7 @@ import { memo, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { ModelDocument, SceneNode } from "@dollhouse/shared";
 import { createGeometry, createMaterial } from "../core/conversion.js";
+import { resolveTexture } from "./textureLibrary.js";
 
 type Triple = [number, number, number];
 
@@ -22,6 +23,8 @@ interface RenderContext {
   selectedIds?: ReadonlySet<string>;
   /** Selection callback; `additive` is true for shift / ctrl / cmd-click. */
   onSelectNode?: (id: string, additive: boolean) => void;
+  /** Node names that should not render (and whose subtree is skipped). */
+  hiddenNames?: ReadonlySet<string>;
 }
 
 interface TransformProps {
@@ -37,6 +40,7 @@ interface TransformProps {
  * mutates nodes in place, so this must re-run whenever its parent re-renders.
  */
 function NodeRenderer({ node, ctx }: { node: SceneNode; ctx: RenderContext }) {
+  if (ctx.hiddenNames?.has(node.name)) return null;
   const geometry = useMemo(
     () => (node.geometry ? createGeometry(node.geometry) : null),
     [node.geometry],
@@ -45,12 +49,31 @@ function NodeRenderer({ node, ctx }: { node: SceneNode; ctx: RenderContext }) {
     if (!node.material) return null;
     const tintKey = typeof node.metadata?.tint === "string" ? node.metadata.tint : undefined;
     const override = tintKey ? ctx.tints?.[tintKey] : undefined;
-    return createMaterial(override ? { ...node.material, color: override } : node.material);
+    const def = override ? { ...node.material, color: override } : node.material;
+    const mat = createMaterial(def);
+    // Texture from the renderer's library, scaled per material.
+    const texture = resolveTexture(def.texture);
+    if (texture) {
+      const cloned = texture.clone();
+      cloned.needsUpdate = true;
+      const scale = def.textureScale ?? [1, 1];
+      cloned.repeat.set(scale[0], scale[1]);
+      cloned.wrapS = THREE.RepeatWrapping;
+      cloned.wrapT = THREE.RepeatWrapping;
+      mat.map = cloned;
+      mat.needsUpdate = true;
+    }
+    if (def.flatShading) {
+      mat.flatShading = true;
+      mat.needsUpdate = true;
+    }
+    return mat;
   }, [node.material, node.metadata, ctx.tints]);
 
   useEffect(() => {
     return () => {
       geometry?.dispose();
+      if (material?.map) material.map.dispose();
       material?.dispose();
     };
   }, [geometry, material]);
@@ -183,6 +206,12 @@ export interface ModelRendererProps {
   onSelectNode?: (id: string, additive: boolean) => void;
   /** Called once with the rendered root group — use it to grab rig nodes. */
   onReady?: (root: THREE.Group) => void;
+  /**
+   * Names of nodes that should NOT render. Whole subtrees are skipped. Used by
+   * the home page to hide the Front Wall + Roof for a cross-section view of
+   * the running dollhouse, while the editor keeps everything visible.
+   */
+  hiddenNames?: ReadonlySet<string> | readonly string[];
 }
 
 function ModelRendererImpl({
@@ -192,6 +221,7 @@ function ModelRendererImpl({
   selectedIds,
   onSelectNode,
   onReady,
+  hiddenNames,
 }: ModelRendererProps) {
   const ref = useRef<THREE.Group>(null);
 
@@ -199,9 +229,14 @@ function ModelRendererImpl({
     if (ref.current && onReady) onReady(ref.current);
   }, [onReady]);
 
+  const hiddenSet = useMemo(() => {
+    if (!hiddenNames) return undefined;
+    return hiddenNames instanceof Set ? hiddenNames : new Set(hiddenNames);
+  }, [hiddenNames]);
+
   const ctx = useMemo<RenderContext>(
-    () => ({ tints, selectable, selectedIds, onSelectNode }),
-    [tints, selectable, selectedIds, onSelectNode],
+    () => ({ tints, selectable, selectedIds, onSelectNode, hiddenNames: hiddenSet }),
+    [tints, selectable, selectedIds, onSelectNode, hiddenSet],
   );
 
   const root = document.root;

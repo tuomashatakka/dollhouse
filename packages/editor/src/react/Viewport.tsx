@@ -1,9 +1,12 @@
-import { Grid, OrbitControls } from "@react-three/drei";
+import { Grid, OrbitControls, Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useCallback } from "react";
+import * as THREE from "three";
 import { useEditor } from "./EditorProvider.js";
 import { ModelRenderer } from "./ModelRenderer.js";
+import { SelectionBounds } from "./SelectionBounds.js";
 import { TransformGizmo } from "./TransformGizmo.js";
+import { XRayOccluder } from "./XRayOccluder.js";
 
 /** The editable 3D viewport — its own Canvas, grid, lighting and gizmo. */
 export function Viewport() {
@@ -16,11 +19,11 @@ export function Viewport() {
   return (
     <Canvas
       shadows
-      camera={{ position: [10, 8, 13], fov: 40 }}
+      camera={{ position: [13, 9, 17], fov: 38 }}
       gl={{ antialias: true }}
       onPointerMissed={() => editor.clearSelection()}
     >
-      <color attach="background" args={["#15101e"]} />
+      <Sky sunPosition={[40, 20, 30]} turbidity={6} rayleigh={2} mieCoefficient={0.005} mieDirectionalG={0.8} />
       <ambientLight intensity={0.55} color="#fff0e6" />
       <directionalLight
         castShadow
@@ -50,8 +53,20 @@ export function Viewport() {
         selectedIds={editor.selection}
         onSelectNode={handleSelect}
       />
+      <SelectionBounds />
+      <XRayOccluder />
       <TransformGizmo />
-      <OrbitControls makeDefault target={[0, 3, 0]} minDistance={3} maxDistance={40} />
+      <OrbitControls
+        makeDefault
+        target={[0, 3, 0]}
+        minDistance={3}
+        maxDistance={40}
+        mouseButtons={{
+          LEFT: editor.tool === "pan" ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE,
+          MIDDLE: THREE.MOUSE.DOLLY,
+          RIGHT: editor.tool === "pan" ? THREE.MOUSE.ROTATE : THREE.MOUSE.PAN,
+        }}
+      />
     </Canvas>
   );
 }

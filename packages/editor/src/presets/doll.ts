@@ -4,7 +4,7 @@ import {
   type GeometryDef,
   type MaterialDef,
   type SceneNode,
-} from "../model/index.js";
+} from "@dollhouse/shared";
 import { NodeFactory } from "./builder.js";
 
 const SKIN = "#fadcc8";
