@@ -1,4 +1,4 @@
-import { ContactShadows, OrbitControls } from "@react-three/drei";
+import { ContactShadows, OrbitControls, Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useStore } from "../store/index.js";
 import { Doll } from "./Doll.js";
@@ -11,12 +11,18 @@ export function Scene() {
   return (
     <Canvas
       shadows
-      camera={{ position: [9, 6, 11], fov: 38 }}
-      gl={{ antialias: true, toneMappingExposure: 1.1 }}
+      camera={{ position: [13, 9, 17], fov: 38 }}
+      gl={{ antialias: true, toneMappingExposure: 1.05 }}
       className="!absolute inset-0"
     >
-      <color attach="background" args={["#1a0e1c"]} />
-      <fog attach="fog" args={["#1a0e1c", 22, 45]} />
+      <Sky
+        sunPosition={[40, 20, 30]}
+        turbidity={6}
+        rayleigh={2}
+        mieCoefficient={0.005}
+        mieDirectionalG={0.8}
+      />
+      <fog attach="fog" args={["#c8d8e8", 35, 80]} />
       <Lighting />
       <Dollhouse />
       {Object.values(agents).map((a) => (
@@ -24,8 +30,8 @@ export function Scene() {
       ))}
       <ContactShadows
         position={[0, 0, 0.6]}
-        opacity={0.55}
-        scale={20}
+        opacity={0.5}
+        scale={30}
         blur={2.5}
         far={6}
       />
@@ -35,7 +41,7 @@ export function Scene() {
         enableZoom
         enableRotate
         minDistance={6}
-        maxDistance={28}
+        maxDistance={40}
         maxPolarAngle={Math.PI / 2.05}
         target={[0, 3, 0]}
       />

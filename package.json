@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -n backend,frontend -c blue,magenta \"pnpm --filter @dollhouse/backend dev\" \"pnpm --filter @dollhouse/frontend dev\"",
-    "build": "pnpm --filter @dollhouse/shared build && pnpm --filter @dollhouse/backend build && pnpm --filter @dollhouse/frontend build",
+    "build": "pnpm --filter @dollhouse/shared build && pnpm --filter @dollhouse/editor build && pnpm --filter @dollhouse/backend build && pnpm --filter @dollhouse/frontend build",
     "typecheck": "pnpm -r typecheck",
     "clean": "pnpm -r exec rm -rf dist node_modules .turbo"
   },
