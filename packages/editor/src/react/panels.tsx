@@ -23,6 +23,16 @@ import {
   UngroupCommand,
 } from "../core/index.js";
 import { buildDollDocument, buildDollhouseDocument } from "../presets/index.js";
+
+const LAST_EDITED_KIND_KEY = "dollhouse:editor:lastKind";
+
+function persistLastEditedKind(kind: ModelDocument["kind"]): void {
+  try {
+    localStorage.setItem(LAST_EDITED_KIND_KEY, kind);
+  } catch {
+    /* storage unavailable */
+  }
+}
 import { useEditor } from "./EditorProvider.js";
 
 /* ───────────────────────── shared chrome ───────────────────────── */
@@ -462,7 +472,13 @@ export function Toolbar() {
     const next =
       loadFromStorage(kind) ??
       (kind === "doll" ? buildDollDocument() : buildDollhouseDocument());
+    persistLastEditedKind(kind);
     editor.setDocument(next);
+  };
+
+  const resetDoc = () => {
+    const kind = editor.document.kind;
+    editor.setDocument(kind === "doll" ? buildDollDocument() : buildDollhouseDocument());
   };
 
   return (
@@ -495,6 +511,7 @@ export function Toolbar() {
       <ToolButton onClick={() => importDocument((doc) => editor.setDocument(doc))}>
         Import
       </ToolButton>
+      <ToolButton onClick={resetDoc}>Reset</ToolButton>
       <div className="ml-auto flex items-center gap-1.5">
         <span className="text-[10px] uppercase tracking-wide text-white/35">Editing</span>
         <select
