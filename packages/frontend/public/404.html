@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      // GitHub Pages SPA redirect: encode the path into the query string and
+      // bounce to index.html so the React router can handle it client-side.
+      var l = window.location;
+      l.replace(
+        l.protocol +
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          l.pathname
+            .split("/")
+            .slice(0, 1 + (l.pathname.match(/^\/([\w-]+)\//) ? 1 : 0))
+            .join("/") +
+          "/?p=" +
+          encodeURIComponent(l.pathname.slice(1) + l.search) +
+          (l.hash ? "&h=" + encodeURIComponent(l.hash.slice(1)) : ""),
+      );
+    </script>
+  </head>
+</html>
