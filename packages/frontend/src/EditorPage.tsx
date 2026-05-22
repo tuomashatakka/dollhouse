@@ -1,13 +1,13 @@
 import { Editor, EditorProvider } from "@dollhouse/editor";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { loadEditorDocument } from "./three/model.js";
+import { loadEditorDocument, loadLastEditedKind } from "./three/model.js";
 
 /** The /editor route — the dollhouse / doll model editor. */
 export function EditorPage() {
-  // A fresh copy so editor mutations don't touch the live home-page scene;
-  // changes reach the frontend only via Save (localStorage).
-  const document = useMemo(() => loadEditorDocument(), []);
+  // Resume whichever model was last open; fresh copy so mutations don't
+  // touch the live home-page scene — changes land via Save (localStorage).
+  const document = useMemo(() => loadEditorDocument(loadLastEditedKind()), []);
   return (
     <div className="relative h-full w-full">
       <EditorProvider initialDocument={document}>

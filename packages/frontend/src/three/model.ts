@@ -27,7 +27,29 @@ export function loadDollDocument(): ModelDocument {
   return dollCache;
 }
 
-/** A fresh, independent copy of the dollhouse for the editor to mutate. */
-export function loadEditorDocument(): ModelDocument {
-  return cloneDocument(loadDollhouseDocument());
+const LAST_EDITED_KIND_KEY = "dollhouse:editor:lastKind";
+
+/** Remember which model was last open in the editor. */
+export function saveLastEditedKind(kind: ModelDocument["kind"]): void {
+  try {
+    localStorage.setItem(LAST_EDITED_KIND_KEY, kind);
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+/** The kind of model last open in the editor, defaulting to "dollhouse". */
+export function loadLastEditedKind(): ModelDocument["kind"] {
+  try {
+    const raw = localStorage.getItem(LAST_EDITED_KIND_KEY);
+    if (raw === "doll" || raw === "dollhouse") return raw;
+  } catch {
+    /* storage unavailable */
+  }
+  return "dollhouse";
+}
+
+/** A fresh, independent copy of the given model for the editor to mutate. */
+export function loadEditorDocument(kind: ModelDocument["kind"] = "dollhouse"): ModelDocument {
+  return cloneDocument(kind === "doll" ? loadDollDocument() : loadDollhouseDocument());
 }
