@@ -21,7 +21,9 @@ import {
  * reachable; mid + top floors have a rectangular hole at the stair landing.
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
- * incrementally enhanced meshes — see {@link buildDollhouseDocument}.
+ * incrementally enhanced meshes — see {@link buildDollhouseDocument}. Three
+ * enhancement passes layer atop the base preset, each adding new courtyard
+ * props and house detailing without removing anything from the prior pass.
  */
 const W = 7;
 const D = 5;
@@ -54,6 +56,13 @@ const POND_POS: [number, number, number] = [-3.9, 0, 10.6];
 const POND_RADIUS = 1.35;
 const ROSE_ARCH_Z = FRONT_Z + 5.0;
 const WHEELBARROW_POS: [number, number, number] = [-3.55, 0, 3.45];
+
+/** Third-pass courtyard props — a stone well, sundial, vegetable patch and a swing. */
+const WELL_POS: [number, number, number] = [4.6, 0, 10.4];
+const SUNDIAL_POS: [number, number, number] = [-1.6, 0, 7.7];
+const VEG_PATCH_POS: [number, number, number] = [4.9, 0, -5.4];
+const VEG_PATCH_SIZE: [number, number] = [3.4, 2.4];
+const SWING_POS: [number, number, number] = [-5.6, 0, -5.5];
 
 const C = {
   exteriorPink: "#f1aac4",
@@ -97,6 +106,17 @@ const C = {
   rosePink: "#ef89a8",
   ironGrey: "#3a3636",
   quoinCream: "#fff1e4",
+  // Third enhancement pass — well, sundial, veg patch, swing; foundation, gutters,
+  // dormers and ivy on the house.
+  wellStone: "#8d7e6f",
+  wellWater: "#3f6a86",
+  brass: "#d6a352",
+  cabbage: "#7fa05c",
+  carrotTop: "#5b8543",
+  carrotOrange: "#e08a3a",
+  gutterCopper: "#7a5d3f",
+  foundationStone: "#7a6e62",
+  ivy: "#3f6d3a",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -840,6 +860,414 @@ function buildWheelbarrow(
   return f.group("Wheelbarrow", parts, { position: pos, rotation: [0, rotationY, 0] });
 }
 
+/**
+ * A stone wishing well — a low cylindrical drum of mortared stones with a
+ * dark water disc inside, capped by a pitched shingle roof carried on two
+ * uprights. A wooden bucket hangs from the crossbeam on a coil of rope.
+ */
+function buildStoneWell(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.wellStone, 0.92, { texture: "cobblestone", flatShading: true });
+  const wood = std(C.walnut, 0.65, { texture: "wood" });
+  const wallR = 0.75;
+  const wallH = 0.7;
+  const postH = 1.6;
+  const postX = wallR + 0.05;
+  const roofY = wallH + postH;
+  const parts: SceneNode[] = [
+    // Outer stone ring + slightly narrower inner ring to suggest a hollow shaft.
+    f.mesh(
+      "Well Wall Outer",
+      cylinder(wallR, wallR + 0.04, wallH, 18),
+      stone,
+      { position: [0, wallH / 2, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.mesh(
+      "Well Wall Inner",
+      cylinder(wallR - 0.18, wallR - 0.18, wallH - 0.04, 16),
+      std(C.soil, 0.95, { flatShading: true }),
+      { position: [0, wallH / 2 - 0.04, 0] },
+      { receiveShadow: true },
+    ),
+    f.mesh(
+      "Well Water",
+      cylinder(wallR - 0.22, wallR - 0.22, 0.04, 18),
+      { color: C.wellWater, roughness: 0.18, metalness: 0.25, transparent: true, opacity: 0.85 },
+      { position: [0, wallH - 0.18, 0] },
+    ),
+    // Stone coping ring at the top of the wall.
+    f.mesh(
+      "Well Coping",
+      cylinder(wallR + 0.06, wallR + 0.06, 0.08, 18),
+      stone,
+      { position: [0, wallH + 0.04, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+  ];
+  for (const side of [-1, 1] as const) {
+    parts.push(
+      f.mesh(
+        "Well Post",
+        box(0.1, postH, 0.1),
+        wood,
+        { position: [side * postX, wallH + postH / 2, 0] },
+        { castShadow: true, receiveShadow: true },
+      ),
+    );
+  }
+  // Crossbeam and crank handle that the bucket hangs from.
+  parts.push(
+    f.mesh(
+      "Well Crossbeam",
+      box(postX * 2 + 0.2, 0.1, 0.1),
+      wood,
+      { position: [0, roofY - 0.1, 0] },
+      { castShadow: true },
+    ),
+    f.mesh(
+      "Well Crank",
+      cylinder(0.07, 0.07, postX * 2, 8),
+      wood,
+      { position: [0, roofY - 0.22, 0], rotation: [0, 0, Math.PI / 2] },
+      { castShadow: true },
+    ),
+    f.mesh(
+      "Well Crank Handle",
+      box(0.05, 0.05, 0.18),
+      wood,
+      { position: [postX + 0.04, roofY - 0.32, 0.05] },
+      { castShadow: true },
+    ),
+  );
+  // Pitched roof — two flat boards meeting at a ridge.
+  const roofW = postX * 2 + 0.4;
+  const roofDepth = 0.7;
+  const roofRise = 0.32;
+  const slope = Math.atan2(roofRise, roofDepth / 2);
+  const hyp = Math.hypot(roofRise, roofDepth / 2);
+  for (const side of [-1, 1] as const) {
+    parts.push(
+      f.mesh(
+        "Well Roof Pitch",
+        box(roofW, 0.06, hyp),
+        std(C.roofShingle, 0.85, { flatShading: true }),
+        {
+          position: [0, roofY + roofRise / 2, side * roofDepth / 4],
+          rotation: [side * slope, 0, 0],
+        },
+        { castShadow: true, receiveShadow: true },
+      ),
+    );
+  }
+  parts.push(
+    f.mesh(
+      "Well Roof Ridge",
+      cylinder(0.05, 0.05, roofW, 7),
+      std(C.roofRose, 0.85, { flatShading: true }),
+      { position: [0, roofY + roofRise + 0.02, 0], rotation: [0, 0, Math.PI / 2] },
+      { castShadow: true },
+    ),
+  );
+  // Rope drop + dangling bucket below the crank.
+  parts.push(
+    f.mesh(
+      "Well Rope",
+      cylinder(0.012, 0.012, 0.45, 5),
+      std(C.cream, 0.9, { flatShading: true }),
+      { position: [0.04, roofY - 0.5, 0] },
+      { castShadow: true },
+    ),
+    f.group(
+      "Well Bucket",
+      [
+        f.mesh(
+          "Bucket Body",
+          cylinder(0.13, 0.1, 0.2, 10),
+          wood,
+          { position: [0, 0.1, 0] },
+          { castShadow: true, receiveShadow: true },
+        ),
+        f.mesh(
+          "Bucket Band",
+          cylinder(0.135, 0.135, 0.025, 10),
+          std(C.ironGrey, 0.5, { metalness: 0.5 }),
+          { position: [0, 0.18, 0] },
+          { castShadow: true },
+        ),
+        f.mesh(
+          "Bucket Handle",
+          cylinder(0.012, 0.012, 0.3, 5),
+          std(C.ironGrey, 0.5, { metalness: 0.5 }),
+          { position: [0, 0.27, 0], rotation: [0, 0, Math.PI / 2] },
+          { castShadow: true },
+        ),
+      ],
+      { position: [0.04, roofY - 0.78, 0] },
+    ),
+  );
+  return f.group("Stone Well", parts, { position: pos });
+}
+
+/**
+ * A stone sundial — a tapered pedestal capped by a flat dial plate with a
+ * triangular brass gnomon and twelve hour markers.
+ */
+function buildSundial(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.wellStone, 0.9, { texture: "cobblestone", flatShading: true });
+  const dialR = 0.32;
+  const dialY = 0.78;
+  const parts: SceneNode[] = [
+    f.mesh(
+      "Sundial Base",
+      box(0.5, 0.12, 0.5),
+      stone,
+      { position: [0, 0.06, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.mesh(
+      "Sundial Pedestal",
+      cylinder(0.14, 0.2, 0.62, 10),
+      stone,
+      { position: [0, 0.43, 0] },
+      { castShadow: true },
+    ),
+    f.mesh(
+      "Sundial Dial",
+      cylinder(dialR, dialR, 0.05, 18),
+      std(C.quoinCream, 0.7, { flatShading: true }),
+      { position: [0, dialY, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+  ];
+  // Twelve short tick marks around the rim.
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2;
+    parts.push(
+      f.mesh(
+        "Hour Mark",
+        box(0.03, 0.012, 0.06),
+        std(C.brass, 0.4, { metalness: 0.7 }),
+        {
+          position: [Math.cos(a) * (dialR - 0.05), dialY + 0.03, Math.sin(a) * (dialR - 0.05)],
+          rotation: [0, -a, 0],
+        },
+        { castShadow: true },
+      ),
+    );
+  }
+  // Triangular gnomon — a thin wedge with its tall edge facing north.
+  const gnomonGeo: GeometryDef = {
+    type: "buffer",
+    attributes: {
+      position: [
+        -0.22, 0, 0,
+        0.22, 0, 0,
+        -0.22, 0.32, 0,
+      ],
+      normal: [0, 0, 1, 0, 0, 1, 0, 0, 1],
+    },
+  };
+  parts.push(
+    f.mesh(
+      "Sundial Gnomon",
+      gnomonGeo,
+      { color: C.brass, roughness: 0.35, metalness: 0.7, side: "double" },
+      { position: [0, dialY + 0.025, 0] },
+      { castShadow: true },
+    ),
+  );
+  return f.group("Sundial", parts, { position: pos });
+}
+
+/**
+ * A small vegetable patch — a rectangular soil bed bordered by short pickets
+ * with parallel rows of leafy cabbages and feathery-topped carrots.
+ */
+function buildVegetablePatch(
+  f: NodeFactory,
+  pos: [number, number, number],
+  size: [number, number],
+): SceneNode {
+  const [w, d] = size;
+  const wood = std(C.fence, 0.85, { texture: "bark", flatShading: true });
+  const parts: SceneNode[] = [
+    f.mesh(
+      "Veg Border",
+      box(w + 0.12, 0.16, d + 0.12),
+      wood,
+      { position: [0, 0.08, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.mesh(
+      "Veg Soil",
+      box(w, 0.18, d),
+      std(C.soil, 0.95, { flatShading: true }),
+      { position: [0, 0.1, 0] },
+      { receiveShadow: true },
+    ),
+  ];
+  // Short corner pickets to break up the silhouette.
+  for (const cx of [-w / 2, w / 2]) {
+    for (const cz of [-d / 2, d / 2]) {
+      parts.push(
+        f.mesh(
+          "Veg Post",
+          box(0.08, 0.32, 0.08),
+          wood,
+          { position: [cx, 0.18, cz] },
+          { castShadow: true },
+        ),
+      );
+    }
+  }
+  // Three furrows of cabbages, three furrows of carrots — alternating along Z.
+  const rng = mulberry32(0x76e6a13);
+  const rows = 6;
+  const rowSpacing = (d - 0.4) / (rows - 1);
+  const colCount = 5;
+  const colSpacing = (w - 0.4) / (colCount - 1);
+  const cabbageInstances: Transform[] = [];
+  const carrotTops: Transform[] = [];
+  const carrotCones: Transform[] = [];
+  for (let r = 0; r < rows; r++) {
+    const z = -d / 2 + 0.2 + r * rowSpacing;
+    const isCabbage = r % 2 === 0;
+    for (let c = 0; c < colCount; c++) {
+      const x = -w / 2 + 0.2 + c * colSpacing + (rng() - 0.5) * 0.03;
+      const zz = z + (rng() - 0.5) * 0.04;
+      if (isCabbage) {
+        const s = 0.85 + rng() * 0.3;
+        cabbageInstances.push({
+          position: [x, 0.22, zz],
+          rotation: [0, rng() * Math.PI, 0],
+          scale: [s, s * 0.7, s],
+        });
+      } else {
+        const s = 0.7 + rng() * 0.25;
+        carrotTops.push({
+          position: [x, 0.24, zz],
+          rotation: [0, rng() * Math.PI, 0],
+          scale: [s, s, s],
+        });
+        carrotCones.push({
+          position: [x, 0.3, zz],
+          rotation: [0, rng() * Math.PI, 0],
+          scale: [s * 0.6, s, s * 0.6],
+        });
+      }
+    }
+  }
+  parts.push(
+    f.instanced(
+      "Cabbages",
+      sphere(0.13, 9, 6),
+      std(C.cabbage, 0.75, { flatShading: true }),
+      cabbageInstances,
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.instanced(
+      "Carrot Tops",
+      sphere(0.09, 7, 5),
+      std(C.carrotTop, 0.75, { flatShading: true }),
+      carrotTops,
+      { castShadow: true },
+    ),
+    f.instanced(
+      "Carrot Tufts",
+      cone(0.05, 0.16, 6),
+      std(C.carrotOrange, 0.7, { flatShading: true }),
+      carrotCones,
+      { castShadow: true },
+    ),
+  );
+  return f.group("Vegetable Patch", parts, { position: pos });
+}
+
+/**
+ * A garden swing — a stout A-frame astride a plank seat that hangs from the
+ * crossbeam on two chains. Built facing +Z, then rotated.
+ */
+function buildGardenSwing(
+  f: NodeFactory,
+  pos: [number, number, number],
+  rotationY: number,
+): SceneNode {
+  const wood = std(C.walnut, 0.6, { texture: "wood" });
+  const chainMat = std(C.ironGrey, 0.45, { metalness: 0.6 });
+  const frameH = 2.3;
+  const frameSpread = 0.9;
+  const beamLen = 1.9;
+  const seatY = 0.55;
+  const parts: SceneNode[] = [];
+  // Two A-frames at the ends of the crossbeam.
+  for (const end of [-1, 1] as const) {
+    for (const leg of [-1, 1] as const) {
+      const legLen = Math.hypot(frameH, frameSpread / 2);
+      const tilt = Math.atan2(frameSpread / 2, frameH) * leg;
+      parts.push(
+        f.mesh(
+          "Swing Leg",
+          box(0.1, legLen, 0.1),
+          wood,
+          {
+            position: [end * (beamLen / 2), frameH / 2, leg * (frameSpread / 4)],
+            rotation: [tilt, 0, 0],
+          },
+          { castShadow: true, receiveShadow: true },
+        ),
+      );
+    }
+    parts.push(
+      f.mesh(
+        "Swing Tie",
+        box(0.08, 0.08, frameSpread * 0.7),
+        wood,
+        { position: [end * (beamLen / 2), 0.7, 0] },
+        { castShadow: true },
+      ),
+    );
+  }
+  // The crossbeam between the two frames.
+  parts.push(
+    f.mesh(
+      "Swing Crossbeam",
+      box(beamLen, 0.12, 0.12),
+      wood,
+      { position: [0, frameH - 0.06, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+  );
+  // Two chains and a plank seat.
+  for (const cx of [-0.55, 0.55]) {
+    parts.push(
+      f.mesh(
+        "Swing Chain",
+        cylinder(0.018, 0.018, frameH - seatY - 0.08, 5),
+        chainMat,
+        { position: [cx, (frameH + seatY) / 2 - 0.04, 0] },
+        { castShadow: true },
+      ),
+    );
+  }
+  parts.push(
+    f.mesh(
+      "Swing Seat",
+      box(1.4, 0.06, 0.32),
+      wood,
+      { position: [0, seatY, 0.04], rotation: [0.12, 0, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.mesh(
+      "Swing Backrest",
+      box(1.4, 0.4, 0.04),
+      wood,
+      { position: [0, seatY + 0.22, -0.12], rotation: [-0.18, 0, 0] },
+      { castShadow: true },
+    ),
+  );
+  return f.group("Garden Swing", parts, { position: pos, rotation: [0, rotationY, 0] });
+}
+
 /* ───────────────────────── exterior walls ───────────────────────── */
 
 function buildBackWall(f: NodeFactory): SceneNode {
@@ -1497,6 +1925,302 @@ function buildCornerQuoins(f: NodeFactory): SceneNode {
   );
 }
 
+/**
+ * A stone foundation skirt — a low course of dressed stones that wraps the
+ * four exterior walls just above ground level, projecting slightly to read
+ * as a separate base from the pink plaster walls above.
+ */
+function buildStoneFoundation(f: NodeFactory): SceneNode {
+  const stone = std(C.foundationStone, 0.9, { texture: "cobblestone", flatShading: true });
+  const skirtH = 0.34;
+  const proj = 0.08;
+  const w = W + proj * 2;
+  const d = D + proj * 2;
+  const parts: SceneNode[] = [
+    f.mesh(
+      "Foundation Front",
+      box(w, skirtH, 0.18),
+      stone,
+      { position: [0, skirtH / 2, FRONT_Z + proj - 0.09] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.mesh(
+      "Foundation Back",
+      box(w, skirtH, 0.18),
+      stone,
+      { position: [0, skirtH / 2, BACK_Z - proj + 0.09] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.mesh(
+      "Foundation Left",
+      box(0.18, skirtH, d),
+      stone,
+      { position: [-W / 2 - proj + 0.09, skirtH / 2, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.mesh(
+      "Foundation Right",
+      box(0.18, skirtH, d),
+      stone,
+      { position: [W / 2 + proj - 0.09, skirtH / 2, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    // Sloped cap course — a slightly wider, lower band at the top of the skirt
+    // suggesting a weathered drip cap.
+    f.mesh(
+      "Foundation Cap Front",
+      box(w + 0.04, 0.06, 0.22),
+      std(C.quoinCream, 0.8, { flatShading: true }),
+      { position: [0, skirtH + 0.03, FRONT_Z + proj - 0.09] },
+      { castShadow: true },
+    ),
+    f.mesh(
+      "Foundation Cap Back",
+      box(w + 0.04, 0.06, 0.22),
+      std(C.quoinCream, 0.8, { flatShading: true }),
+      { position: [0, skirtH + 0.03, BACK_Z - proj + 0.09] },
+      { castShadow: true },
+    ),
+    f.mesh(
+      "Foundation Cap Left",
+      box(0.22, 0.06, d + 0.04),
+      std(C.quoinCream, 0.8, { flatShading: true }),
+      { position: [-W / 2 - proj + 0.09, skirtH + 0.03, 0] },
+      { castShadow: true },
+    ),
+    f.mesh(
+      "Foundation Cap Right",
+      box(0.22, 0.06, d + 0.04),
+      std(C.quoinCream, 0.8, { flatShading: true }),
+      { position: [W / 2 + proj - 0.09, skirtH + 0.03, 0] },
+      { castShadow: true },
+    ),
+  ];
+  return f.group("Stone Foundation", parts);
+}
+
+/**
+ * Copper rain gutters running along each roof eave with downspouts that drop
+ * the water to ground at the four exterior corners — half-pipes carried on
+ * little corbel brackets.
+ */
+function buildRainGutters(f: NodeFactory): SceneNode {
+  const copper = std(C.gutterCopper, 0.55, { metalness: 0.55 });
+  const eaveY = ROOF_TOP - 0.05;
+  const eaveOverhang = 0.4;
+  const gutterR = 0.06;
+  const parts: SceneNode[] = [];
+  // Two horizontal gutters — one along each long pitch eave (left + right).
+  for (const side of [-1, 1] as const) {
+    const x = side * (W / 2 + eaveOverhang);
+    parts.push(
+      f.mesh(
+        "Gutter Run",
+        cylinder(gutterR, gutterR, D + 0.6, 8),
+        copper,
+        { position: [x, eaveY, 0], rotation: [Math.PI / 2, 0, 0] },
+        { castShadow: true, receiveShadow: true },
+      ),
+    );
+    // A short fascia rail on the back of the gutter — visually anchors the half-pipe to the eave.
+    parts.push(
+      f.mesh(
+        "Gutter Fascia",
+        box(0.04, 0.08, D + 0.6),
+        std(C.trim, 0.6),
+        { position: [x - side * (gutterR + 0.02), eaveY + 0.02, 0] },
+        { castShadow: true },
+      ),
+    );
+    // Downspouts at the front + back corners on this side.
+    for (const z of [BACK_Z, FRONT_Z]) {
+      const downspoutH = eaveY - 0.05;
+      parts.push(
+        f.mesh(
+          "Downspout",
+          cylinder(0.045, 0.045, downspoutH, 8),
+          copper,
+          { position: [x, downspoutH / 2, z] },
+          { castShadow: true, receiveShadow: true },
+        ),
+        // Small corbel where the downspout meets the gutter.
+        f.mesh(
+          "Gutter Corbel",
+          box(0.08, 0.08, 0.08),
+          copper,
+          { position: [x, eaveY - 0.08, z] },
+          { castShadow: true },
+        ),
+        // Hood at the bottom that splays out toward the lawn.
+        f.mesh(
+          "Downspout Shoe",
+          cylinder(0.055, 0.075, 0.12, 8),
+          copper,
+          { position: [x, 0.06, z + 0.1], rotation: [Math.PI / 12, 0, 0] },
+          { castShadow: true },
+        ),
+      );
+    }
+  }
+  return f.group("Rain Gutters", parts);
+}
+
+/**
+ * A pair of dormer windows — one nestled into each roof pitch — each with a
+ * pink plaster cheek, a small window, and its own little pitched cap.
+ */
+function buildDormerWindows(f: NodeFactory): SceneNode {
+  const wallMat = std(C.exteriorPink, 0.85, { texture: "plaster-pink" });
+  const trimMat = std(C.trim);
+  const shingleMat = std(C.roofShingle, 0.85, { flatShading: true });
+  const slope = Math.atan2(ROOF_H, W / 2 + 0.4);
+  const dormers: SceneNode[] = [];
+  for (const side of [-1, 1] as const) {
+    // Roughly the midpoint of the pitch in world coords.
+    const px = side * (W / 4 + 0.3);
+    const py = ROOF_TOP + ROOF_H * 0.55;
+    const pz = 0;
+    const dormerW = 1.0;
+    const dormerH = 0.78;
+    const dormerD = 0.6;
+    const parts: SceneNode[] = [
+      // Front face of the dormer cheek, with a small window centred on it.
+      f.mesh(
+        "Dormer Front",
+        box(dormerW, dormerH, 0.06),
+        wallMat,
+        { position: [0, 0, dormerD / 2] },
+        { castShadow: true, receiveShadow: true },
+      ),
+      // Side cheeks.
+      f.mesh(
+        "Dormer Cheek L",
+        box(0.06, dormerH, dormerD),
+        wallMat,
+        { position: [-dormerW / 2 + 0.03, 0, 0] },
+        { castShadow: true },
+      ),
+      f.mesh(
+        "Dormer Cheek R",
+        box(0.06, dormerH, dormerD),
+        wallMat,
+        { position: [dormerW / 2 - 0.03, 0, 0] },
+        { castShadow: true },
+      ),
+      // Window frame + glass.
+      f.mesh(
+        "Dormer Frame",
+        box(0.6, 0.5, 0.04),
+        std(C.white),
+        { position: [0, 0.04, dormerD / 2 + 0.03] },
+        { castShadow: true },
+      ),
+      f.mesh(
+        "Dormer Glass",
+        plane(0.48, 0.4),
+        { color: C.glass, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.6 },
+        { position: [0, 0.04, dormerD / 2 + 0.06] },
+      ),
+      f.mesh(
+        "Dormer Mullion",
+        box(0.03, 0.42, 0.005),
+        std(C.white),
+        { position: [0, 0.04, dormerD / 2 + 0.066] },
+      ),
+      f.mesh(
+        "Dormer Sill",
+        box(dormerW + 0.04, 0.05, 0.1),
+        trimMat,
+        { position: [0, -dormerH / 2 + 0.06, dormerD / 2 + 0.03] },
+        { castShadow: true },
+      ),
+    ];
+    // Two-pitch cap over the dormer.
+    const capRise = 0.22;
+    const capHalfD = dormerD / 2 + 0.08;
+    const capHyp = Math.hypot(capRise, capHalfD);
+    const capSlope = Math.atan2(capRise, capHalfD);
+    for (const capSide of [-1, 1] as const) {
+      parts.push(
+        f.mesh(
+          "Dormer Roof",
+          box(dormerW + 0.16, 0.06, capHyp),
+          shingleMat,
+          {
+            position: [0, dormerH / 2 + capRise / 2, capSide * capHalfD / 2],
+            rotation: [capSide * capSlope, 0, 0],
+          },
+          { castShadow: true, receiveShadow: true },
+        ),
+      );
+    }
+    parts.push(
+      f.mesh(
+        "Dormer Ridge",
+        cylinder(0.04, 0.04, dormerW + 0.16, 6),
+        std(C.roofRose, 0.85, { flatShading: true }),
+        { position: [0, dormerH / 2 + capRise + 0.01, 0], rotation: [0, 0, Math.PI / 2] },
+        { castShadow: true },
+      ),
+    );
+    // The dormer is rotated about Z so it stands proud of the pitch normal.
+    dormers.push(
+      f.group(
+        side < 0 ? "Dormer Left" : "Dormer Right",
+        parts,
+        { position: [px, py, pz], rotation: [0, 0, -side * slope] },
+      ),
+    );
+  }
+  return f.group("Dormer Windows", dormers);
+}
+
+/**
+ * Climbing ivy on the left exterior wall — a dense scatter of leafy clumps
+ * trailing up from the foundation toward the eave, plus a few stragglers
+ * onto the back wall to soften the corner.
+ */
+function buildIvyVines(f: NodeFactory): SceneNode {
+  const ivyMat = std(C.ivy, 0.85, { flatShading: true });
+  const rng = mulberry32(0xb7e7); // deterministic clump layout
+  const leftX = -W / 2 - WALL_T / 2 - 0.02;
+  const leftClumps: Transform[] = [];
+  // Vertical column-ish scatter on the left wall — bias clumps toward the back
+  // so the front entry stays uncluttered.
+  for (let i = 0; i < 70; i++) {
+    const y = 0.5 + rng() * (FLOOR_H * 3 - 0.7);
+    const z = -D / 2 + 0.3 + rng() * (D - 0.6);
+    // Keep ivy fuller near the corner & the eave, sparser at the front.
+    const frontBias = (z + D / 2) / D;
+    if (rng() < frontBias * 0.55) continue;
+    const s = 0.18 + rng() * 0.16;
+    leftClumps.push({
+      position: [leftX, y, z],
+      rotation: [0, rng() * Math.PI * 2, rng() * 0.3],
+      scale: [s, s * (0.7 + rng() * 0.5), s],
+    });
+  }
+  // Stragglers wrapping onto the back wall just beyond the left corner.
+  const backZ = BACK_Z - WALL_T / 2 - 0.02;
+  for (let i = 0; i < 18; i++) {
+    const y = 0.5 + rng() * (FLOOR_H * 3 - 0.9);
+    const x = -W / 2 + 0.15 + rng() * 1.6;
+    const s = 0.16 + rng() * 0.12;
+    leftClumps.push({
+      position: [x, y, backZ],
+      rotation: [0, Math.PI + rng() * Math.PI, rng() * 0.3],
+      scale: [s, s * (0.7 + rng() * 0.4), s],
+    });
+  }
+  return f.instanced(
+    "Climbing Ivy",
+    sphere(1, 8, 6),
+    ivyMat,
+    leftClumps,
+    { castShadow: true, receiveShadow: true },
+  );
+}
+
 /* ───────────────────────── balcony rail ───────────────────────── */
 
 function buildBalconyRail(f: NodeFactory): SceneNode {
@@ -1576,6 +2300,11 @@ function buildFurniture(f: NodeFactory): SceneNode {
  *    rose-covered trellis arch over the path and a soil-heaped wheelbarrow;
  *    house: a pitched porch canopy, a pair of carriage lanterns flanking the
  *    door, a rooftop weather vane and toothed stone corner quoins.
+ *  - Third pass — yard: a roofed stone wishing well, a brass-gnomon sundial, a
+ *    fenced vegetable patch of cabbages and carrots and a hanging garden swing;
+ *    house: a stone foundation skirt, copper rain gutters with corner
+ *    downspouts, a pair of pitched dormer windows in the roof, and climbing
+ *    ivy on the left side wall.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -1588,6 +2317,14 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: LAMP_POST_POS[0], z: LAMP_POST_POS[2], r: 0.9 },
     { x: POND_POS[0], z: POND_POS[2], r: POND_RADIUS + 0.9 },
     { x: WHEELBARROW_POS[0], z: WHEELBARROW_POS[2], r: 1.1 },
+    { x: WELL_POS[0], z: WELL_POS[2], r: 1.4 },
+    { x: SUNDIAL_POS[0], z: SUNDIAL_POS[2], r: 0.9 },
+    {
+      x: VEG_PATCH_POS[0],
+      z: VEG_PATCH_POS[2],
+      r: Math.max(VEG_PATCH_SIZE[0], VEG_PATCH_SIZE[1]) / 2 + 0.6,
+    },
+    { x: SWING_POS[0], z: SWING_POS[2], r: 1.6 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -1603,8 +2340,13 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPond(f, POND_POS),
     buildRoseArch(f, ROSE_ARCH_Z),
     buildWheelbarrow(f, WHEELBARROW_POS, -0.4),
+    buildStoneWell(f, WELL_POS),
+    buildSundial(f, SUNDIAL_POS),
+    buildVegetablePatch(f, VEG_PATCH_POS, VEG_PATCH_SIZE),
+    buildGardenSwing(f, SWING_POS, Math.PI / 2),
   ]);
   const house = f.group("House", [
+    buildStoneFoundation(f),
     buildFloors(f),
     buildBackWall(f),
     buildFrontWall(f),
@@ -1613,9 +2355,12 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildStairs(f),
     buildRoof(f),
     buildRoofRidge(f),
+    buildRainGutters(f),
+    buildDormerWindows(f),
     buildChimney(f),
     buildWeatherVane(f),
     buildCornerQuoins(f),
+    buildIvyVines(f),
     buildBalconyRail(f),
     buildPorchCanopy(f),
     buildDoorLanterns(f),
