@@ -55,6 +55,13 @@ const POND_RADIUS = 1.35;
 const ROSE_ARCH_Z = FRONT_Z + 5.0;
 const WHEELBARROW_POS: [number, number, number] = [-3.55, 0, 3.45];
 
+/** Third-pass courtyard props — vegetable plot, gnome, mailbox and bird feeder. */
+const VEGGIE_GARDEN_POS: [number, number, number] = [4.6, 0, 11.4];
+const GARDEN_GNOME_POS: [number, number, number] = [-2.95, 0, 6.0];
+const MAILBOX_POS: [number, number, number] = [1.65, 0, 13.55];
+const BIRD_FEEDER_POS: [number, number, number] = [4.7, 0, 3.4];
+const STEPPING_STONE_Z = 6.8;
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -97,6 +104,12 @@ const C = {
   rosePink: "#ef89a8",
   ironGrey: "#3a3636",
   quoinCream: "#fff1e4",
+  // Third enhancement pass — terracotta urns, mailbox, gnome and downspouts.
+  terracotta: "#c3674b",
+  mailboxRed: "#c84a3f",
+  gnomeBlue: "#456faa",
+  doormatJute: "#8a6b3d",
+  copperPipe: "#8a6e4f",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -840,6 +853,362 @@ function buildWheelbarrow(
   return f.group("Wheelbarrow", parts, { position: pos, rotation: [0, rotationY, 0] });
 }
 
+/* ─────────────── third-pass courtyard enhancements ─────────────── */
+
+/**
+ * A small raised vegetable plot — a low timber frame filled with soil, planted
+ * with rows of tomato stakes hung with ripe fruit and a few cabbage heads.
+ */
+function buildVegetableGarden(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.walnut, 0.85, { texture: "wood" });
+  const bedW = 1.8;
+  const bedD = 1.2;
+  const railH = 0.22;
+  const parts: SceneNode[] = [
+    f.mesh("Frame Front", box(bedW + 0.16, railH, 0.08), wood, {
+      position: [0, railH / 2, bedD / 2 + 0.04],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Frame Back", box(bedW + 0.16, railH, 0.08), wood, {
+      position: [0, railH / 2, -bedD / 2 - 0.04],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Frame Left", box(0.08, railH, bedD), wood, {
+      position: [-bedW / 2 - 0.04, railH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Frame Right", box(0.08, railH, bedD), wood, {
+      position: [bedW / 2 + 0.04, railH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Soil", box(bedW, railH - 0.04, bedD), std(C.soil, 0.95, { flatShading: true }), {
+      position: [0, (railH - 0.04) / 2 + 0.02, 0],
+    }, { receiveShadow: true }),
+  ];
+  // Two rows of tomato stakes laced with ripe fruit.
+  const stakeMat = std(C.foliage, 0.85, { flatShading: true });
+  const tomatoMat = std(C.mailboxRed, 0.55, { flatShading: true });
+  for (const rz of [-0.32, 0.32]) {
+    for (let i = 0; i < 3; i++) {
+      const sx = -0.6 + i * 0.6;
+      parts.push(
+        f.mesh("Tomato Stake", cylinder(0.018, 0.024, 0.7, 5), stakeMat, {
+          position: [sx, 0.35 + 0.02, rz],
+        }, { castShadow: true }),
+      );
+      // Two fruits per stake.
+      for (const fy of [0.28, 0.5]) {
+        parts.push(
+          f.mesh("Tomato", sphere(0.06, 8, 6), tomatoMat, {
+            position: [sx + (rz < 0 ? 0.05 : -0.05), fy, rz + 0.02],
+          }, { castShadow: true }),
+        );
+      }
+    }
+  }
+  // A short row of cabbages along the front edge.
+  for (let i = 0; i < 4; i++) {
+    const cx = -bedW / 2 + 0.27 + i * 0.42;
+    parts.push(
+      f.mesh(
+        "Cabbage",
+        sphere(0.14, 10, 7),
+        std(C.hedge, 0.8, { flatShading: true }),
+        { position: [cx, 0.22, 0.08], scale: [1, 0.7, 1] },
+        { castShadow: true },
+      ),
+    );
+  }
+  return f.group("Vegetable Garden", parts, { position: pos });
+}
+
+/**
+ * A whimsical garden gnome — pointed cap, round body, stub feet — small enough
+ * to peek out from the lawn near the bench without dominating the courtyard.
+ */
+function buildGardenGnome(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const skin = std("#f0c8a4", 0.85);
+  const beard = std(C.white, 0.9);
+  const tunic = std(C.gnomeBlue, 0.85);
+  const boot = std(C.walnut, 0.8);
+  return f.group("Garden Gnome", [
+    f.mesh("Boot L", box(0.07, 0.07, 0.09), boot, { position: [-0.05, 0.035, 0] }, { castShadow: true }),
+    f.mesh("Boot R", box(0.07, 0.07, 0.09), boot, { position: [0.05, 0.035, 0] }, { castShadow: true }),
+    f.mesh(
+      "Body",
+      cone(0.16, 0.34, 12),
+      tunic,
+      { position: [0, 0.24, 0] },
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.mesh("Head", sphere(0.12, 12, 9), skin, { position: [0, 0.5, 0] }, { castShadow: true }),
+    f.mesh(
+      "Beard",
+      cone(0.1, 0.22, 10),
+      beard,
+      { position: [0, 0.42, 0.04], rotation: [Math.PI, 0, 0] },
+      { castShadow: true },
+    ),
+    f.mesh("Nose", sphere(0.028, 6, 5), std("#d49678", 0.85), {
+      position: [0, 0.5, 0.115],
+    }),
+    f.mesh(
+      "Cap",
+      cone(0.16, 0.4, 12),
+      std(C.mailboxRed, 0.75, { flatShading: true }),
+      { position: [0, 0.78, 0] },
+      { castShadow: true },
+    ),
+    f.mesh("Cap Tip", sphere(0.04, 8, 6), std(C.flowerYellow, 0.6), {
+      position: [0, 1.0, 0],
+    }),
+  ], { position: pos });
+}
+
+/** A trad red-flag mailbox on a slim post, planted just inside the garden gate. */
+function buildMailbox(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const post = std(C.walnut, 0.8, { texture: "wood" });
+  const body = std(C.mailboxRed, 0.65, { flatShading: true });
+  const metal = std(C.ironGrey, 0.5, { metalness: 0.4 });
+  const flag = std(C.mailboxRed, 0.55);
+  const boxL = 0.42;
+  const boxH = 0.24;
+  const boxD = 0.22;
+  return f.group("Mailbox", [
+    f.mesh("Post", box(0.08, 1.1, 0.08), post, { position: [0, 0.55, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    // Cross brace under the box, for the period look.
+    f.mesh("Plinth", box(0.32, 0.05, 0.18), post, { position: [0, 1.12, 0] }, {
+      castShadow: true,
+    }),
+    // The box itself — flat walls plus a half-cylinder lid suggested by a top slab.
+    f.mesh("Box", box(boxL, boxH, boxD), body, { position: [0, 1.28, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.mesh(
+      "Box Lid",
+      cylinder(boxD / 2, boxD / 2, boxL, 12),
+      body,
+      { position: [0, 1.41, 0], rotation: [0, 0, Math.PI / 2] },
+      { castShadow: true },
+    ),
+    // Front door plate and knob.
+    f.mesh("Front Plate", box(boxL - 0.04, boxH - 0.05, 0.015), std(C.brickDark, 0.8), {
+      position: [0, 1.28, boxD / 2 + 0.008],
+    }),
+    f.mesh("Knob", sphere(0.018, 8, 6), metal, {
+      position: [boxL / 2 - 0.06, 1.28, boxD / 2 + 0.022],
+    }),
+    // Raised flag on the side of the box.
+    f.mesh("Flag Pole", cylinder(0.012, 0.012, 0.18, 6), metal, {
+      position: [-boxL / 2 - 0.02, 1.36, 0],
+    }, { castShadow: true }),
+    f.mesh("Flag", box(0.18, 0.1, 0.01), flag, {
+      position: [-boxL / 2 - 0.11, 1.42, 0],
+    }, { castShadow: true }),
+  ], { position: pos, rotation: [0, -Math.PI / 12, 0] });
+}
+
+/**
+ * A wrought-iron shepherd's hook bearing a small bird feeder — a hexagonal
+ * seed hopper under a pitched roof, with a perch ring for visiting finches.
+ */
+function buildBirdFeeder(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const iron = std(C.ironGrey, 0.45, { metalness: 0.55 });
+  const wood = std(C.walnut, 0.75, { texture: "wood" });
+  const roofMat = std(C.roofShingle, 0.8, { flatShading: true });
+  const seed = std(C.flowerYellow, 0.6);
+  const parts: SceneNode[] = [
+    f.mesh("Hook Base", cylinder(0.08, 0.12, 0.12, 10), iron, { position: [0, 0.06, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.mesh("Hook Pole", cylinder(0.025, 0.03, 1.7, 8), iron, { position: [0, 0.97, 0] }, {
+      castShadow: true,
+    }),
+    // The hook arches forward over the feeder.
+    f.mesh("Hook Arm", box(0.45, 0.03, 0.03), iron, {
+      position: [0.22, 1.78, 0],
+    }, { castShadow: true }),
+    f.mesh("Hook Drop", cylinder(0.015, 0.015, 0.12, 6), iron, {
+      position: [0.42, 1.72, 0],
+    }, { castShadow: true }),
+  ];
+  // Feeder body, hanging under the hook arm.
+  const feeder: SceneNode[] = [
+    f.mesh("Roof", cone(0.22, 0.16, 6), roofMat, { position: [0, 0.12, 0] }, {
+      castShadow: true,
+    }),
+    f.mesh("Hopper", cylinder(0.13, 0.13, 0.22, 6), wood, { position: [0, -0.02, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.mesh("Tray", cylinder(0.18, 0.18, 0.03, 8), wood, { position: [0, -0.15, 0] }, {
+      castShadow: true,
+    }),
+    f.mesh("Perch Ring", cylinder(0.19, 0.19, 0.012, 12), iron, {
+      position: [0, -0.13, 0],
+    }),
+    // A scatter of seed visible through the hopper.
+    f.mesh("Seed Mound", sphere(0.09, 8, 6), seed, {
+      position: [0, -0.12, 0], scale: [1, 0.4, 1],
+    }),
+  ];
+  parts.push(f.group("Feeder", feeder, { position: [0.42, 1.5, 0] }));
+  return f.group("Bird Feeder", parts, { position: pos });
+}
+
+/**
+ * A staggered file of flat round stones leading off the cobble path to the
+ * bird bath — invites a casual stroll across the lawn without trampling it.
+ */
+function buildSteppingStones(f: NodeFactory): SceneNode {
+  const rng = mulberry32(0x57e991e);
+  const startX = 1.0;
+  const endX = 3.4;
+  const n = 5;
+  const stones: SceneNode[] = [];
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1);
+    const x = startX + (endX - startX) * t;
+    const z = STEPPING_STONE_Z + Math.sin(t * Math.PI) * 0.3 + (rng() - 0.5) * 0.08;
+    const r = 0.22 + rng() * 0.05;
+    stones.push(
+      f.mesh(
+        "Stepping Stone",
+        cylinder(r, r * 0.95, 0.05, 10),
+        std(C.stone, 0.92, { texture: "cobblestone", flatShading: true }),
+        { position: [x, 0.025, z], rotation: [0, rng() * Math.PI, 0] },
+        { receiveShadow: true },
+      ),
+    );
+  }
+  return f.group("Stepping Stones", stones);
+}
+
+/* ─────────────── third-pass house enhancements ─────────────── */
+
+/**
+ * A pair of copper downspouts hugging the front corners of the house —
+ * vertical pipes carrying water from the eave to a small splash block at the
+ * ground, finished with a swept elbow where they meet the wall.
+ */
+function buildDownspouts(f: NodeFactory): SceneNode {
+  const copper = std(C.copperPipe, 0.5, { metalness: 0.45 });
+  const splash = std(C.stone, 0.92, { texture: "cobblestone", flatShading: true });
+  const wallTop = FLOOR_H * 3 - 0.1;
+  const pipe = (sideX: number): SceneNode => {
+    const x = sideX * (W / 2 + 0.09);
+    return f.group(`Downspout ${sideX < 0 ? "L" : "R"}`, [
+      // Vertical drop along the front corner of the side wall.
+      f.mesh(
+        "Pipe",
+        cylinder(0.05, 0.05, wallTop, 8),
+        copper,
+        { position: [x, wallTop / 2, FRONT_Z - 0.12] },
+        { castShadow: true },
+      ),
+      // Top elbow where the pipe meets the gutter line.
+      f.mesh(
+        "Elbow",
+        cylinder(0.05, 0.05, 0.32, 8),
+        copper,
+        {
+          position: [x, wallTop + 0.06, FRONT_Z - 0.04],
+          rotation: [Math.PI / 4, 0, 0],
+        },
+        { castShadow: true },
+      ),
+      // Bottom shoe nudging water away from the foundation.
+      f.mesh(
+        "Shoe",
+        cylinder(0.05, 0.05, 0.22, 8),
+        copper,
+        {
+          position: [x, 0.08, FRONT_Z + 0.0],
+          rotation: [Math.PI / 3, 0, 0],
+        },
+        { castShadow: true },
+      ),
+      // Splash block on the ground under the shoe.
+      f.mesh(
+        "Splash Block",
+        box(0.3, 0.05, 0.46),
+        splash,
+        { position: [x, 0.025, FRONT_Z + 0.18] },
+        { receiveShadow: true },
+      ),
+    ]);
+  };
+  return f.group("Downspouts", [pipe(-1), pipe(1)]);
+}
+
+/**
+ * A welcome mat and short stone step outside the front door — a low slab
+ * extending the porch lip toward the cobble path, with a banded jute mat
+ * on the porch above to wipe muddy boots.
+ */
+function buildDoorstepMat(f: NodeFactory): SceneNode {
+  const stone = std(C.stone, 0.92, { texture: "cobblestone", flatShading: true });
+  const mat = std(C.doormatJute, 0.95, { flatShading: true });
+  const matBorder = std(C.walnut, 0.85, { flatShading: true });
+  // Porch slab top sits at y ≈ 0.12; its front edge at z ≈ FRONT_Z + 0.75.
+  const stepZ = FRONT_Z + 0.82;
+  const matZ = FRONT_Z + 0.4;
+  return f.group("Front Step", [
+    // Short stone step nestled between the porch lip and the first cobble row.
+    f.mesh("Step Slab", box(1.4, 0.07, 0.2), stone, {
+      position: [0, 0.085, stepZ],
+    }, { receiveShadow: true, castShadow: true }),
+    // Woven jute mat sitting on the porch in front of the door.
+    f.mesh("Mat Border", box(0.92, 0.012, 0.46), matBorder, {
+      position: [0, 0.127, matZ],
+    }, { receiveShadow: true }),
+    f.mesh("Mat", box(0.84, 0.014, 0.38), mat, {
+      position: [0, 0.13, matZ],
+    }, { receiveShadow: true }),
+  ]);
+}
+
+/**
+ * A pair of terracotta urns flanking the door, each cradling a clipped
+ * topiary ball — placed inside the canopy posts on the porch.
+ */
+function buildTopiaryUrns(f: NodeFactory): SceneNode {
+  const urn = std(C.terracotta, 0.85, { flatShading: true });
+  const leaf = std(C.hedge, 0.85, { flatShading: true });
+  const ballMat = std(C.hedge, 0.8, { flatShading: true });
+  const make = (sideX: number): SceneNode => {
+    const x = sideX * 0.95;
+    return f.group(`Topiary ${sideX < 0 ? "L" : "R"}`, [
+      f.mesh("Urn Foot", cylinder(0.15, 0.18, 0.06, 12), urn, {
+        position: [0, 0.03, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Urn Body", cylinder(0.2, 0.14, 0.34, 12), urn, {
+        position: [0, 0.23, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Urn Rim", cylinder(0.22, 0.21, 0.05, 12), urn, {
+        position: [0, 0.42, 0],
+      }, { castShadow: true }),
+      // Trunk rising out of the soil to support the ball.
+      f.mesh("Trunk", cylinder(0.025, 0.028, 0.22, 6), std(C.bark, 0.85), {
+        position: [0, 0.55, 0],
+      }, { castShadow: true }),
+      // Clipped boxwood ball.
+      f.mesh("Topiary Ball", sphere(0.24, 14, 10), ballMat, {
+        position: [0, 0.78, 0],
+      }, { castShadow: true }),
+      // A few sprigs of leafy fill softening the join at the rim.
+      f.mesh("Leaf Tuft Front", sphere(0.09, 8, 6), leaf, {
+        position: [0, 0.46, 0.14], scale: [1.1, 0.5, 1.1],
+      }),
+      f.mesh("Leaf Tuft Back", sphere(0.09, 8, 6), leaf, {
+        position: [0, 0.46, -0.14], scale: [1.1, 0.5, 1.1],
+      }),
+    ], { position: [x, 0, FRONT_Z + 0.18] });
+  };
+  return f.group("Topiary Urns", [make(-1), make(1)]);
+}
+
 /* ───────────────────────── exterior walls ───────────────────────── */
 
 function buildBackWall(f: NodeFactory): SceneNode {
@@ -1576,6 +1945,12 @@ function buildFurniture(f: NodeFactory): SceneNode {
  *    rose-covered trellis arch over the path and a soil-heaped wheelbarrow;
  *    house: a pitched porch canopy, a pair of carriage lanterns flanking the
  *    door, a rooftop weather vane and toothed stone corner quoins.
+ *  - Third pass — yard: a raised vegetable plot with tomato stakes and
+ *    cabbages, a garden gnome on the lawn, a red-flag mailbox at the gate, a
+ *    shepherd's-hook bird feeder and stepping stones to the bird bath; house:
+ *    copper downspouts at the front corners, a stone front step with a jute
+ *    welcome mat and a pair of terracotta urns with topiary balls flanking the
+ *    door.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -1588,6 +1963,12 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: LAMP_POST_POS[0], z: LAMP_POST_POS[2], r: 0.9 },
     { x: POND_POS[0], z: POND_POS[2], r: POND_RADIUS + 0.9 },
     { x: WHEELBARROW_POS[0], z: WHEELBARROW_POS[2], r: 1.1 },
+    { x: VEGGIE_GARDEN_POS[0], z: VEGGIE_GARDEN_POS[2], r: 1.6 },
+    { x: GARDEN_GNOME_POS[0], z: GARDEN_GNOME_POS[2], r: 0.7 },
+    { x: MAILBOX_POS[0], z: MAILBOX_POS[2], r: 0.7 },
+    { x: BIRD_FEEDER_POS[0], z: BIRD_FEEDER_POS[2], r: 0.9 },
+    // Stepping-stone corridor between path and bird bath.
+    { x: 2.2, z: STEPPING_STONE_Z, r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -1603,6 +1984,11 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPond(f, POND_POS),
     buildRoseArch(f, ROSE_ARCH_Z),
     buildWheelbarrow(f, WHEELBARROW_POS, -0.4),
+    buildVegetableGarden(f, VEGGIE_GARDEN_POS),
+    buildGardenGnome(f, GARDEN_GNOME_POS),
+    buildMailbox(f, MAILBOX_POS),
+    buildBirdFeeder(f, BIRD_FEEDER_POS),
+    buildSteppingStones(f),
   ]);
   const house = f.group("House", [
     buildFloors(f),
@@ -1620,6 +2006,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchCanopy(f),
     buildDoorLanterns(f),
     buildWindowDressing(f),
+    buildDownspouts(f),
+    buildDoorstepMat(f),
+    buildTopiaryUrns(f),
     buildFurniture(f),
   ]);
   const root: SceneNode = {
