@@ -66,6 +66,31 @@ const STEPPING_STONE_Z = 6.8;
 const SUNDIAL_POS: [number, number, number] = [3.4, 0, 9.4];
 const BIRDHOUSE_POS: [number, number, number] = [5.6, 0, 8.7];
 
+/**
+ * Fifth-pass courtyard props — backyard living quarters. Garden shed and the
+ * stacked firewood lean against each other on the back-left of the yard; an
+ * A-frame swing sits on the back right; a clothesline strings sheets between
+ * two T-posts on the western side of the house.
+ */
+const SHED_POS: [number, number, number] = [-7.5, 0, -5.5];
+const FIREWOOD_POS: [number, number, number] = [-5.8, 0, -5.2];
+const SWING_POS: [number, number, number] = [6.8, 0, -5.5];
+const CLOTHESLINE_POS: [number, number, number] = [-8.8, 0, -0.6];
+
+/**
+ * Fifth-pass scene extension — a back-meadow plane behind the fenced yard
+ * with a low rolling hill, a meandering brook with a wooden footbridge,
+ * scattered wildflowers and a small grove of meadow trees. The meadow
+ * overlaps the main lawn by ~7 units so the ground layer has no holes
+ * along the join.
+ */
+const MEADOW_POS: [number, number, number] = [0, -0.005, -25];
+const MEADOW_W = 50;
+const MEADOW_D = 30;
+const MEADOW_HILL_POS: [number, number, number] = [-8, 0, -30];
+const MEADOW_BROOK_Z = -20;
+const FOOTBRIDGE_POS: [number, number, number] = [3, 0, MEADOW_BROOK_Z];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -119,6 +144,25 @@ const C = {
   ivyLeaf: "#3a6334",
   ivyDark: "#27482a",
   birdhouseRoof: "#a23f3f",
+  // Fifth enhancement pass — shed, firewood, swing, clothesline, gutters, and
+  // the back meadow (hill, brook, footbridge, wildflowers).
+  shedWall: "#7c5a3a",
+  shedRoof: "#3f3a36",
+  shedTrim: "#dbc89b",
+  logBark: "#6e4a2c",
+  logFlesh: "#d4a273",
+  ropeJute: "#cbb487",
+  laundryBlue: "#7fb7d6",
+  laundryPink: "#f0a8c2",
+  laundryWhite: "#f7f4ec",
+  meadowGrass: "#88b06a",
+  meadowGrassDark: "#5d8a48",
+  brookWater: "#7ec1d8",
+  brookBed: "#3a3a3a",
+  hillEarth: "#6d8848",
+  gutterCopper: "#b3895a",
+  wildflowerBlue: "#7891d4",
+  wildflowerOrange: "#e69a4a",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -1531,6 +1575,669 @@ function buildLightningRod(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────── fifth-pass courtyard enhancements ─────────────── */
+
+/**
+ * A small wooden garden shed — board-and-batten walls, a pitched shingle
+ * roof, a single plank door on the south face and a side window. Footprint
+ * roughly 1.6 × 1.2 m, the eave ~1.6 m off the ground.
+ */
+function buildGardenShed(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.shedWall, 0.85, { texture: "wood", textureScale: [2, 1] });
+  const roofMat = std(C.shedRoof, 0.9, { flatShading: true });
+  const trim = std(C.shedTrim, 0.7);
+  const door = std(C.doorWood, 0.7, { texture: "wood" });
+  const w = 1.6;
+  const d = 1.2;
+  const wallH = 1.6;
+  const peakH = 0.5;
+  const eaveOver = 0.12;
+  const parts: SceneNode[] = [
+    // Walls.
+    f.mesh("Wall N", box(w, wallH, 0.06), wall, {
+      position: [0, wallH / 2, -d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall E", box(0.06, wallH, d), wall, {
+      position: [w / 2, wallH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall W", box(0.06, wallH, d), wall, {
+      position: [-w / 2, wallH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // South wall split around the door — two narrow strips.
+    f.mesh("Wall S L", box((w - 0.7) / 2, wallH, 0.06), wall, {
+      position: [-w / 2 + (w - 0.7) / 4, wallH / 2, d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall S R", box((w - 0.7) / 2, wallH, 0.06), wall, {
+      position: [w / 2 - (w - 0.7) / 4, wallH / 2, d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall S Top", box(0.7, wallH - 1.5, 0.06), wall, {
+      position: [0, 1.5 + (wallH - 1.5) / 2, d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Door panel, slightly recessed.
+    f.mesh("Shed Door", box(0.66, 1.45, 0.04), door, {
+      position: [0, 0.725, d / 2 + 0.02],
+    }, { castShadow: true }),
+    f.mesh("Door Handle", sphere(0.035, 8, 6), std(C.bronze, 0.4, { metalness: 0.6 }), {
+      position: [0.22, 0.78, d / 2 + 0.05],
+    }, { castShadow: true }),
+    // Side window with a single mullion cross.
+    f.mesh("Window Frame", box(0.04, 0.36, 0.36), trim, {
+      position: [w / 2 + 0.005, 1.1, 0],
+    }, { castShadow: true }),
+    f.mesh("Window Glass", plane(0.32, 0.32), {
+      color: C.glass,
+      roughness: 0.05,
+      metalness: 0.1,
+      transparent: true,
+      opacity: 0.55,
+    }, {
+      position: [w / 2 + 0.026, 1.1, 0],
+      rotation: [0, Math.PI / 2, 0],
+    }),
+    f.mesh("Window Mullion V", box(0.005, 0.32, 0.025), trim, {
+      position: [w / 2 + 0.027, 1.1, 0],
+    }),
+    f.mesh("Window Mullion H", box(0.005, 0.025, 0.32), trim, {
+      position: [w / 2 + 0.027, 1.1, 0],
+    }),
+    // Triangular gable infill on east and west walls.
+    f.mesh("Gable E", {
+      type: "buffer",
+      attributes: {
+        position: [
+          -d / 2, 0, 0,
+          d / 2, 0, 0,
+          0, peakH, 0,
+        ],
+        normal: [1, 0, 0, 1, 0, 0, 1, 0, 0],
+      },
+    }, { ...wall, side: "double" }, {
+      position: [w / 2 - 0.01, wallH, 0],
+      rotation: [0, Math.PI / 2, 0],
+    }, { castShadow: true }),
+    f.mesh("Gable W", {
+      type: "buffer",
+      attributes: {
+        position: [
+          -d / 2, 0, 0,
+          d / 2, 0, 0,
+          0, peakH, 0,
+        ],
+        normal: [-1, 0, 0, -1, 0, 0, -1, 0, 0],
+      },
+    }, { ...wall, side: "double" }, {
+      position: [-w / 2 + 0.01, wallH, 0],
+      rotation: [0, -Math.PI / 2, 0],
+    }, { castShadow: true }),
+    // Two pitched roof slabs meeting along the ridge.
+    f.mesh("Roof N", box(w + eaveOver * 2, 0.04, Math.hypot(d / 2, peakH) + eaveOver), roofMat, {
+      position: [0, wallH + peakH / 2 - 0.02, -d / 4],
+      rotation: [Math.atan2(peakH, d / 2), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof S", box(w + eaveOver * 2, 0.04, Math.hypot(d / 2, peakH) + eaveOver), roofMat, {
+      position: [0, wallH + peakH / 2 - 0.02, d / 4],
+      rotation: [-Math.atan2(peakH, d / 2), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Stone footing band where the walls meet the ground.
+    f.mesh("Footing", box(w + 0.1, 0.08, d + 0.1), std(C.stone, 0.92, { texture: "cobblestone" }), {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+  ];
+  return f.group("Garden Shed", parts, { position: pos, rotation: [0, -0.1, 0] });
+}
+
+/**
+ * A neatly stacked pile of split firewood — short cylinders rotated end-on,
+ * built up in three rows behind a low log retainer.
+ */
+function buildFirewoodPile(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bark = std(C.logBark, 0.9, { texture: "bark", flatShading: true });
+  const flesh = std(C.logFlesh, 0.85, { flatShading: true });
+  const logLen = 0.34;
+  const logR = 0.07;
+  const rng = mulberry32(0xf17e057);
+  // Two side retainer logs running along z.
+  const parts: SceneNode[] = [
+    f.mesh("Retainer L", cylinder(logR, logR, 1.1, 8), bark, {
+      position: [-0.55, logR, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Retainer R", cylinder(logR, logR, 1.1, 8), bark, {
+      position: [0.55, logR, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true, receiveShadow: true }),
+  ];
+  // Stacked split logs — three rows, ends facing along x.
+  const rows = 4;
+  const cols = 5;
+  const colSpacing = 0.16;
+  const rowSpacing = logR * 2 + 0.005;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const xOff = (c - (cols - 1) / 2) * colSpacing + (r % 2 === 0 ? 0 : colSpacing / 2);
+      // Skip a few logs on the top row for a lived-in look.
+      if (r === rows - 1 && (c === 0 || c === cols - 1)) continue;
+      const y = logR + 0.08 + r * rowSpacing;
+      const tilt = (rng() - 0.5) * 0.18;
+      parts.push(
+        f.mesh("Log", cylinder(logR, logR, logLen, 6), bark, {
+          position: [xOff, y, (rng() - 0.5) * 0.04],
+          rotation: [Math.PI / 2 + tilt, rng() * Math.PI * 2, 0],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+      // Pale end-grain disc so the cut face reads on the stack.
+      parts.push(
+        f.mesh("Log End", cylinder(logR * 0.95, logR * 0.95, 0.012, 6), flesh, {
+          position: [xOff, y, logLen / 2 + 0.008],
+          rotation: [Math.PI / 2, 0, 0],
+        }),
+      );
+    }
+  }
+  return f.group("Firewood Pile", parts, { position: pos, rotation: [0, Math.PI / 8, 0] });
+}
+
+/**
+ * A free-standing A-frame garden swing — two angled leg pairs joined by a
+ * top crossbar, with a wooden plank seat hung from twin jute ropes.
+ */
+function buildTreeSwing(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.walnut, 0.7, { texture: "wood" });
+  const rope = std(C.ropeJute, 0.95, { flatShading: true });
+  const beamY = 2.0;
+  const beamHalf = 1.2;
+  const legLen = Math.hypot(beamY, 0.7);
+  const legAngle = Math.atan2(0.7, beamY);
+  const ropeLen = 1.25;
+  const seatY = beamY - ropeLen;
+  const leg = (sideZ: number, sideX: number): SceneNode =>
+    f.mesh("Leg", cylinder(0.06, 0.07, legLen, 8), wood, {
+      position: [sideX * 0.35, beamY / 2, sideZ * 0.35],
+      rotation: [sideZ * legAngle, 0, -sideX * legAngle],
+    }, { castShadow: true, receiveShadow: true });
+  return f.group("Garden Swing", [
+    // Crossbar.
+    f.mesh("Crossbar", cylinder(0.06, 0.06, beamHalf * 2, 8), wood, {
+      position: [0, beamY, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    // Four A-frame legs.
+    leg(1, 1),
+    leg(1, -1),
+    leg(-1, 1),
+    leg(-1, -1),
+    // Seat plank.
+    f.mesh("Seat", box(0.78, 0.05, 0.24), wood, {
+      position: [0, seatY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Twin ropes.
+    f.mesh("Rope L", cylinder(0.015, 0.015, ropeLen, 6), rope, {
+      position: [-0.3, beamY - ropeLen / 2, 0],
+    }, { castShadow: true }),
+    f.mesh("Rope R", cylinder(0.015, 0.015, ropeLen, 6), rope, {
+      position: [0.3, beamY - ropeLen / 2, 0],
+    }, { castShadow: true }),
+  ], { position: pos, rotation: [0, Math.PI / 2, 0] });
+}
+
+/**
+ * A washing line strung between two T-shaped posts, with three pieces of
+ * laundry pegged out on the line. Hangs along the +Z axis from the anchor pos.
+ */
+function buildClothesline(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.walnut, 0.8, { texture: "wood" });
+  const rope = std(C.ropeJute, 0.95);
+  const postH = 1.7;
+  const span = 2.6;
+  const post = (zOff: number): SceneNode =>
+    f.group("Clothesline Post", [
+      f.mesh("Post", cylinder(0.06, 0.07, postH, 8), wood, {
+        position: [0, postH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Crossarm", box(0.7, 0.06, 0.06), wood, {
+        position: [0, postH - 0.04, 0],
+      }, { castShadow: true }),
+    ], { position: [0, 0, zOff] });
+  // Two rope lines (front and back of the cross arm).
+  const ropeLine = (xOff: number): SceneNode =>
+    f.mesh("Line", cylinder(0.008, 0.008, span, 5), rope, {
+      position: [xOff, postH - 0.06, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    });
+  // Three pieces of laundry pegged to the front line.
+  const laundry = (zOff: number, w: number, h: number, color: string): SceneNode =>
+    f.group("Laundry", [
+      f.mesh("Sheet", box(w, h, 0.005), std(color, 0.9, { flatShading: true }), {
+        position: [0, postH - 0.06 - h / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Peg L", box(0.04, 0.05, 0.02), std(C.walnut, 0.7), {
+        position: [-w / 2 + 0.04, postH - 0.06, 0],
+      }),
+      f.mesh("Peg R", box(0.04, 0.05, 0.02), std(C.walnut, 0.7), {
+        position: [w / 2 - 0.04, postH - 0.06, 0],
+      }),
+    ], { position: [-0.2, 0, zOff] });
+  return f.group("Clothesline", [
+    post(-span / 2),
+    post(span / 2),
+    ropeLine(-0.2),
+    ropeLine(0.2),
+    laundry(-0.85, 0.55, 0.7, C.laundryWhite),
+    laundry(0, 0.7, 0.85, C.laundryBlue),
+    laundry(0.85, 0.6, 0.55, C.laundryPink),
+  ], { position: pos });
+}
+
+/* ─────────────── fifth-pass house enhancements ─────────────── */
+
+/**
+ * Copper half-round gutters running along the lower edge of each roof pitch,
+ * positioned just below the eave so rainwater can flow into the existing
+ * downspouts at the front corners.
+ */
+function buildRoofGutters(f: NodeFactory): SceneNode {
+  const copper = std(C.gutterCopper, 0.5, { metalness: 0.4 });
+  const roofDepth = D + 0.6;
+  const eaveOut = W / 2 + 0.4;
+  // Y at the eave (bottom of the roof pitch) computed in world space.
+  const eaveY = ROOF_TOP + 0.04;
+  const gutter = (sideX: 1 | -1): SceneNode => {
+    const parts: SceneNode[] = [
+      // Half-round trough sitting just below the eave, opening upward.
+      f.mesh("Trough", cylinder(0.07, 0.07, roofDepth, 8), copper, {
+        position: [sideX * eaveOut, eaveY, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // End caps so the trough reads as closed.
+      f.mesh("Cap Front", cylinder(0.075, 0.075, 0.04, 8), copper, {
+        position: [sideX * eaveOut, eaveY, roofDepth / 2],
+        rotation: [Math.PI / 2, 0, 0],
+      }),
+      f.mesh("Cap Back", cylinder(0.075, 0.075, 0.04, 8), copper, {
+        position: [sideX * eaveOut, eaveY, -roofDepth / 2],
+        rotation: [Math.PI / 2, 0, 0],
+      }),
+    ];
+    // Three little hangers strapping the trough to the eave board.
+    for (const z of [-roofDepth / 2 + 0.4, 0, roofDepth / 2 - 0.4]) {
+      parts.push(
+        f.mesh("Hanger", box(0.04, 0.12, 0.025), copper, {
+          position: [sideX * (eaveOut - 0.05), eaveY + 0.08, z],
+        }, { castShadow: true }),
+      );
+    }
+    return f.group(`Gutter ${sideX < 0 ? "L" : "R"}`, parts);
+  };
+  return f.group("Roof Gutters", [gutter(-1), gutter(1)]);
+}
+
+/**
+ * Decorative white porch railings flanking the front step — two short balusters
+ * topped by a rounded handrail, one on either side of the path.
+ */
+function buildPorchRailings(f: NodeFactory): SceneNode {
+  const paint = std(C.white, 0.7);
+  const railZ = FRONT_Z + 0.4;
+  const make = (sideX: 1 | -1): SceneNode => {
+    const x = sideX * 1.15;
+    const balusters: SceneNode[] = [];
+    for (let i = 0; i < 3; i++) {
+      balusters.push(
+        f.mesh("Baluster", cylinder(0.025, 0.025, 0.42, 6), paint, {
+          position: [0, 0.31, -0.18 + i * 0.18],
+        }, { castShadow: true }),
+      );
+    }
+    return f.group(`Porch Rail ${sideX < 0 ? "L" : "R"}`, [
+      f.mesh("Newel", box(0.1, 0.6, 0.1), paint, {
+        position: [0, 0.3, -0.28],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Newel Cap", sphere(0.07, 10, 8), paint, {
+        position: [0, 0.65, -0.28],
+      }, { castShadow: true }),
+      f.mesh("Newel F", box(0.1, 0.5, 0.1), paint, {
+        position: [0, 0.25, 0.28],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Newel F Cap", sphere(0.06, 10, 8), paint, {
+        position: [0, 0.55, 0.28],
+      }, { castShadow: true }),
+      f.mesh("Top Rail", box(0.06, 0.05, 0.62), paint, {
+        position: [0, 0.55, 0],
+      }, { castShadow: true }),
+      f.mesh("Bottom Rail", box(0.06, 0.04, 0.62), paint, {
+        position: [0, 0.18, 0],
+      }, { castShadow: true }),
+      ...balusters,
+    ], { position: [x, 0, railZ] });
+  };
+  return f.group("Porch Railings", [make(-1), make(1)]);
+}
+
+/* ─────────────── fifth-pass meadow extension ─────────────── */
+
+/**
+ * A back-meadow ground plane that extends the scene beyond the rear fence.
+ * Authored as a gently undulating field — the base plane sits at y≈0, with
+ * a low rolling hill, a meandering brook, a wooden footbridge and a scatter
+ * of wild flowers and meadow trees layered on top of it.
+ *
+ * The meadow plane's front edge (z = -10) overlaps the main lawn's back edge
+ * (z = -17) by ~7 units, so the ground layer has no holes along the join.
+ */
+function buildBackMeadow(f: NodeFactory): SceneNode {
+  return f.group("Back Meadow", [
+    // The meadow ground plane itself — slightly darker / yellower than the lawn.
+    f.mesh(
+      "Meadow Ground",
+      plane(MEADOW_W, MEADOW_D),
+      std(C.meadowGrass, 0.95, { texture: "grass", textureScale: [12, 8] }),
+      { position: MEADOW_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // A subtle darker patch hinting at the join with the lawn.
+    f.mesh(
+      "Meadow Apron",
+      plane(MEADOW_W, 4),
+      std(C.meadowGrassDark, 0.95, { texture: "grass", textureScale: [10, 1] }),
+      { position: [0, -0.004, -13], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    buildMeadowHill(f, MEADOW_HILL_POS),
+    buildMeadowBrook(f),
+    buildFootbridge(f, FOOTBRIDGE_POS),
+    buildWildflowers(f),
+    buildMeadowTrees(f),
+    buildMeadowFence(f),
+  ]);
+}
+
+/**
+ * A low rolling hill rising out of the meadow — a flattened sphere half-buried
+ * at the anchor point, with a few small boulders perched on its flank.
+ */
+function buildMeadowHill(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const earth = std(C.hillEarth, 0.95, { flatShading: true });
+  const stone = std(C.stone, 0.92, { texture: "cobblestone", flatShading: true });
+  const rng = mulberry32(0xa11b057);
+  const boulders: SceneNode[] = [];
+  for (let i = 0; i < 5; i++) {
+    const a = rng() * Math.PI * 2;
+    const rr = 2.6 + rng() * 1.4;
+    boulders.push(
+      f.mesh("Boulder", sphere(0.4 + rng() * 0.35, 9, 7), stone, {
+        position: [Math.cos(a) * rr, 0.6 + rng() * 0.5, Math.sin(a) * rr],
+        scale: [1, 0.7 + rng() * 0.3, 1],
+        rotation: [rng() * 0.4, rng() * Math.PI, rng() * 0.4],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  return f.group("Meadow Hill", [
+    f.mesh("Hill Mound", sphere(4.5, 18, 12), earth, {
+      position: [0, 0.3, 0],
+      scale: [1, 0.42, 1.1],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Hill Crown", sphere(2.6, 14, 10), std(C.meadowGrassDark, 0.95, { flatShading: true }), {
+      position: [0, 1.4, 0],
+      scale: [1, 0.5, 1],
+    }, { castShadow: true, receiveShadow: true }),
+    ...boulders,
+  ], { position: pos });
+}
+
+/**
+ * A meandering brook flowing east-to-west across the meadow at z=MEADOW_BROOK_Z.
+ * Implemented as a long flat strip of water tucked into a stone-lined channel,
+ * with a small cluster of reeds at one end where the water disappears.
+ */
+function buildMeadowBrook(f: NodeFactory): SceneNode {
+  const water = {
+    color: C.brookWater,
+    roughness: 0.1,
+    metalness: 0.25,
+    transparent: true,
+    opacity: 0.78,
+  };
+  const bed = std(C.brookBed, 0.95, { flatShading: true });
+  const stone = std(C.stone, 0.92, { texture: "cobblestone", flatShading: true });
+  const rng = mulberry32(0xb700c);
+  const brookLen = 18;
+  const brookW = 1.4;
+  // Curved stones lining the banks.
+  const bankStones: Transform[] = [];
+  for (const side of [-1, 1] as const) {
+    for (let i = 0; i < 20; i++) {
+      const t = i / 19;
+      const x = -brookLen / 2 + t * brookLen + (rng() - 0.5) * 0.3;
+      const z = side * (brookW / 2 + 0.05 + rng() * 0.08);
+      bankStones.push({
+        position: [x, 0.07 + rng() * 0.06, z],
+        rotation: [0, rng() * Math.PI, 0],
+        scale: [0.22 + rng() * 0.16, 0.16 + rng() * 0.1, 0.22 + rng() * 0.16],
+      });
+    }
+  }
+  return f.group("Meadow Brook", [
+    // Stone-lined channel bed sits a few centimetres below ground level.
+    f.mesh("Brook Bed", box(brookLen, 0.04, brookW + 0.3), bed, {
+      position: [0, -0.01, 0],
+    }, { receiveShadow: true }),
+    // The water surface itself, slightly inset from the banks.
+    f.mesh("Brook Water", box(brookLen, 0.06, brookW), water, {
+      position: [0, 0.03, 0],
+    }, { receiveShadow: true }),
+    // Subtle current ripples — a thin highlight strip on the water.
+    f.mesh("Brook Highlight", box(brookLen - 0.4, 0.005, brookW * 0.3), {
+      color: C.laundryWhite,
+      roughness: 0.05,
+      transparent: true,
+      opacity: 0.18,
+    }, { position: [0, 0.062, 0] }),
+    f.instanced("Brook Bank Stones", box(1, 1, 1), stone, bankStones, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+  ], { position: [0, 0, MEADOW_BROOK_Z] });
+}
+
+/**
+ * A short wooden footbridge spanning the meadow brook — two stringers, a deck
+ * of planks and a simple handrail of slender uprights and top rails.
+ */
+function buildFootbridge(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.walnut, 0.7, { texture: "wood" });
+  const trim = std(C.fence, 0.8, { texture: "bark", flatShading: true });
+  const bridgeLen = 2.2;
+  const bridgeW = 1.2;
+  const deckY = 0.2;
+  const railH = 0.6;
+  const parts: SceneNode[] = [
+    // Two stringers under the deck.
+    f.mesh("Stringer L", box(0.08, 0.12, bridgeLen), wood, {
+      position: [-bridgeW / 2 + 0.1, deckY - 0.08, 0],
+    }, { castShadow: true }),
+    f.mesh("Stringer R", box(0.08, 0.12, bridgeLen), wood, {
+      position: [bridgeW / 2 - 0.1, deckY - 0.08, 0],
+    }, { castShadow: true }),
+  ];
+  // Deck planks running across the bridge.
+  const planks = 11;
+  const plankD = bridgeLen / planks;
+  for (let i = 0; i < planks; i++) {
+    parts.push(
+      f.mesh("Deck Plank", box(bridgeW, 0.04, plankD * 0.94), wood, {
+        position: [0, deckY, -bridgeLen / 2 + plankD * (i + 0.5)],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Handrail uprights and top rails.
+  for (const side of [-1, 1] as const) {
+    const x = side * bridgeW / 2;
+    parts.push(
+      f.mesh("Rail Post Front", box(0.06, railH, 0.06), trim, {
+        position: [x, deckY + railH / 2, bridgeLen / 2 - 0.06],
+      }, { castShadow: true }),
+      f.mesh("Rail Post Back", box(0.06, railH, 0.06), trim, {
+        position: [x, deckY + railH / 2, -bridgeLen / 2 + 0.06],
+      }, { castShadow: true }),
+      f.mesh("Top Rail", box(0.05, 0.05, bridgeLen - 0.18), trim, {
+        position: [x, deckY + railH - 0.025, 0],
+      }, { castShadow: true }),
+    );
+    // A pair of slimmer mid balusters per side.
+    for (let i = 1; i <= 2; i++) {
+      const zPos = -bridgeLen / 2 + (bridgeLen / 3) * i;
+      parts.push(
+        f.mesh("Baluster", box(0.03, railH - 0.05, 0.03), trim, {
+          position: [x, deckY + (railH - 0.05) / 2, zPos],
+        }, { castShadow: true }),
+      );
+    }
+  }
+  return f.group("Footbridge", parts, { position: pos, rotation: [0, Math.PI / 2, 0] });
+}
+
+/**
+ * Scattered wildflowers across the meadow — small bloom puffs in blue, orange
+ * and yellow on top of low green stems. Concentrated away from the hill, brook
+ * and tree-keepout circles so the meadow feels lived-in but uncluttered.
+ */
+function buildWildflowers(f: NodeFactory): SceneNode {
+  const rng = mulberry32(0xfeedb107);
+  const palette = [
+    { stem: C.meadowGrassDark, bloom: C.wildflowerBlue },
+    { stem: C.meadowGrassDark, bloom: C.wildflowerOrange },
+    { stem: C.meadowGrassDark, bloom: C.flowerYellow },
+    { stem: C.meadowGrassDark, bloom: C.flowerWhite },
+  ];
+  const groups: Record<string, Transform[]> = {};
+  for (const p of palette) groups[p.bloom] = [];
+  const tryPlace = (count: number): void => {
+    let attempts = 0;
+    let placed = 0;
+    while (placed < count && attempts < count * 6) {
+      attempts++;
+      const x = MEADOW_POS[0] + (rng() - 0.5) * (MEADOW_W - 4);
+      const z = MEADOW_POS[2] + (rng() - 0.5) * (MEADOW_D - 4);
+      // Avoid the brook channel.
+      if (Math.abs(z - MEADOW_BROOK_Z) < 1.0) continue;
+      // Avoid the hill base.
+      if (Math.hypot(x - MEADOW_HILL_POS[0], z - MEADOW_HILL_POS[2]) < 4.0) continue;
+      const choice = palette[Math.floor(rng() * palette.length)] ?? palette[0]!;
+      const s = 0.7 + rng() * 0.5;
+      groups[choice.bloom]!.push({
+        position: [x, 0, z],
+        rotation: [0, rng() * Math.PI, 0],
+        scale: [s, s, s],
+      });
+      placed++;
+    }
+  };
+  tryPlace(80);
+  const result: SceneNode[] = [];
+  for (const p of palette) {
+    const list = groups[p.bloom]!;
+    if (list.length === 0) continue;
+    // Stem instance — one per color, instanced.
+    result.push(
+      f.instanced(`Stems ${p.bloom}`, cylinder(0.012, 0.018, 0.22, 4),
+        std(p.stem, 0.85, { flatShading: true }),
+        list.map((t) => ({ ...t, position: [t.position[0], 0.11, t.position[2]] })),
+        { castShadow: false }),
+    );
+    // Bloom puff.
+    result.push(
+      f.instanced(`Wildflower ${p.bloom}`, sphere(0.05, 7, 5),
+        std(p.bloom, 0.65, { flatShading: true }),
+        list.map((t) => ({ ...t, position: [t.position[0], 0.24, t.position[2]] })),
+        { castShadow: true }),
+    );
+  }
+  return f.group("Wildflowers", result);
+}
+
+/**
+ * A small grove of meadow trees — wider, fluffier than the conifers in the
+ * front yard. Built from rounded foliage spheres on short trunks, placed
+ * deterministically and routed around the hill, the brook and the footbridge.
+ */
+function buildMeadowTrees(f: NodeFactory): SceneNode {
+  const trunkMat = std(C.bark, 0.95, { texture: "bark", flatShading: true });
+  const foliage = std(C.meadowGrassDark, 0.85, { flatShading: true });
+  const rng = mulberry32(0xab1ea11);
+  const trees: SceneNode[] = [];
+  let attempts = 0;
+  const xMin = MEADOW_POS[0] - MEADOW_W / 2 + 2;
+  const xMax = MEADOW_POS[0] + MEADOW_W / 2 - 2;
+  const zMin = MEADOW_POS[2] - MEADOW_D / 2 + 2;
+  const zMax = MEADOW_POS[2] + MEADOW_D / 2 - 2;
+  const placed: { x: number; z: number }[] = [];
+  while (trees.length < 12 && attempts < 200) {
+    attempts++;
+    const x = xMin + rng() * (xMax - xMin);
+    const z = zMin + rng() * (zMax - zMin);
+    // Stay out of the meadow brook channel.
+    if (Math.abs(z - MEADOW_BROOK_Z) < 1.6) continue;
+    // Stay off the hill itself.
+    if (Math.hypot(x - MEADOW_HILL_POS[0], z - MEADOW_HILL_POS[2]) < 4.5) continue;
+    // Min separation from other meadow trees.
+    if (placed.some((p) => Math.hypot(p.x - x, p.z - z) < 2.6)) continue;
+    placed.push({ x, z });
+    const s = 1.0 + rng() * 0.5;
+    const trunkH = 0.7 + rng() * 0.25;
+    trees.push(
+      f.group(
+        `Meadow Tree ${trees.length + 1}`,
+        [
+          f.mesh("Trunk", cylinder(0.1, 0.14, trunkH, 6), trunkMat, {
+            position: [0, trunkH / 2, 0],
+          }, { castShadow: true, receiveShadow: true }),
+          f.mesh("Crown", sphere(0.95, 12, 9), foliage, {
+            position: [0, trunkH + 0.7, 0],
+          }, { castShadow: true, receiveShadow: true }),
+          f.mesh("Crown Lobe L", sphere(0.55, 10, 8), foliage, {
+            position: [-0.55, trunkH + 0.5, 0.1],
+          }, { castShadow: true }),
+          f.mesh("Crown Lobe R", sphere(0.55, 10, 8), foliage, {
+            position: [0.55, trunkH + 0.55, -0.1],
+          }, { castShadow: true }),
+        ],
+        { position: [x, 0, z], scale: [s, s, s] },
+      ),
+    );
+  }
+  return f.group("Meadow Trees", trees);
+}
+
+/**
+ * A simple post-and-rail fence delineating the meadow's outer perimeter on
+ * the back and far sides — a softer hint of property line than the picket
+ * fence around the inner yard.
+ */
+function buildMeadowFence(f: NodeFactory): SceneNode {
+  const wood = std(C.fence, 0.85, { texture: "bark", flatShading: true });
+  const xMin = MEADOW_POS[0] - MEADOW_W / 2 + 4;
+  const xMax = MEADOW_POS[0] + MEADOW_W / 2 - 4;
+  const zBack = MEADOW_POS[2] - MEADOW_D / 2 + 1.5;
+  const postSpacing = 2.4;
+  const postH = 0.9;
+  const posts: Transform[] = [];
+  for (let x = xMin; x <= xMax + 1e-3; x += postSpacing) {
+    posts.push({ position: [x, postH / 2, zBack], rotation: [0, 0, 0], scale: [1, 1, 1] });
+  }
+  return f.group("Meadow Fence", [
+    f.instanced("Meadow Posts", box(0.08, postH, 0.08), wood, posts, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.mesh("Meadow Top Rail", box(xMax - xMin, 0.05, 0.04), wood, {
+      position: [(xMin + xMax) / 2, postH - 0.1, zBack],
+    }, { castShadow: true }),
+    f.mesh("Meadow Mid Rail", box(xMax - xMin, 0.05, 0.04), wood, {
+      position: [(xMin + xMax) / 2, postH - 0.45, zBack],
+    }, { castShadow: true }),
+  ]);
+}
+
 /* ───────────────────────── exterior walls ───────────────────────── */
 
 function buildBackWall(f: NodeFactory): SceneNode {
@@ -2278,6 +2985,14 @@ function buildFurniture(f: NodeFactory): SceneNode {
  *    pole and festoon bulbs strung along the rose-arch crown; house: climbing
  *    ivy creeping up the chimney's south and east faces and a wrought-iron
  *    lightning rod planted on the chimney crown.
+ *  - Fifth pass — yard: a board-and-batten garden shed with a pitched
+ *    shingle roof, a stacked firewood pile beside it, an A-frame garden
+ *    swing and a clothesline strung with three pieces of laundry; house:
+ *    copper half-round eaves gutters and white porch railings flanking
+ *    the front step; scene: a back-meadow ground plane that extends the
+ *    scene beyond the rear fence, with a rolling hill, a brook crossed
+ *    by a wooden footbridge, wildflowers, meadow trees and a perimeter
+ *    post-and-rail fence.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -2299,6 +3014,11 @@ export function buildDollhouseDocument(): DollhouseDocument {
     // Fourth-pass keep-outs — sundial pedestal and birdhouse pole.
     { x: SUNDIAL_POS[0], z: SUNDIAL_POS[2], r: 0.9 },
     { x: BIRDHOUSE_POS[0], z: BIRDHOUSE_POS[2], r: 0.9 },
+    // Fifth-pass keep-outs — shed, firewood, swing, clothesline.
+    { x: SHED_POS[0], z: SHED_POS[2], r: 1.8 },
+    { x: FIREWOOD_POS[0], z: FIREWOOD_POS[2], r: 1.0 },
+    { x: SWING_POS[0], z: SWING_POS[2], r: 1.5 },
+    { x: CLOTHESLINE_POS[0], z: CLOTHESLINE_POS[2], r: 1.8 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -2323,7 +3043,12 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPathLights(f),
     buildBirdhouse(f, BIRDHOUSE_POS),
     buildRoseArchLights(f, ROSE_ARCH_Z),
+    buildGardenShed(f, SHED_POS),
+    buildFirewoodPile(f, FIREWOOD_POS),
+    buildTreeSwing(f, SWING_POS),
+    buildClothesline(f, CLOTHESLINE_POS),
   ]);
+  const meadow = buildBackMeadow(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -2345,6 +3070,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildTopiaryUrns(f),
     buildChimneyIvy(f),
     buildLightningRod(f),
+    buildRoofGutters(f),
+    buildPorchRailings(f),
     buildFurniture(f),
   ]);
   const root: SceneNode = {
@@ -2352,7 +3079,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, house],
+    children: [garden, meadow, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,
