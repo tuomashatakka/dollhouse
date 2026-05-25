@@ -62,6 +62,10 @@ const MAILBOX_POS: [number, number, number] = [1.65, 0, 13.55];
 const BIRD_FEEDER_POS: [number, number, number] = [4.7, 0, 3.4];
 const STEPPING_STONE_Z = 6.8;
 
+/** Fourth-pass courtyard props — sundial and a cottage birdhouse on a pole. */
+const SUNDIAL_POS: [number, number, number] = [3.4, 0, 9.4];
+const BIRDHOUSE_POS: [number, number, number] = [5.6, 0, 8.7];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -110,6 +114,11 @@ const C = {
   gnomeBlue: "#456faa",
   doormatJute: "#8a6b3d",
   copperPipe: "#8a6e4f",
+  // Fourth enhancement pass — sundial, garden string lights and chimney ivy.
+  bronze: "#a5683c",
+  ivyLeaf: "#3a6334",
+  ivyDark: "#27482a",
+  birdhouseRoof: "#a23f3f",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -1085,6 +1094,239 @@ function buildSteppingStones(f: NodeFactory): SceneNode {
   return f.group("Stepping Stones", stones);
 }
 
+/* ─────────────── fourth-pass courtyard enhancements ─────────────── */
+
+/**
+ * A stone-pedestal sundial with a bronze gnomon — twelve hour marks scribed
+ * around the dial face and a tilted blade casting the sun's shadow.
+ */
+function buildSundial(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.stone, 0.92, { texture: "cobblestone", flatShading: true });
+  const bronze = std(C.bronze, 0.35, { metalness: 0.65 });
+  const marks: SceneNode[] = [];
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2;
+    marks.push(
+      f.mesh(
+        "Hour Mark",
+        box(0.026, 0.012, 0.06),
+        std(C.brickDark, 0.7),
+        {
+          position: [Math.cos(a) * 0.28, 0.93, Math.sin(a) * 0.28],
+          rotation: [0, -a, 0],
+        },
+      ),
+    );
+  }
+  // Gnomon blade — a thin right-triangle wedge tilted forward to throw a shadow.
+  const tilt = Math.atan2(0.34, 0.4);
+  return f.group(
+    "Sundial",
+    [
+      f.mesh("Base", cylinder(0.4, 0.48, 0.12, 14), stone, { position: [0, 0.06, 0] }, {
+        castShadow: true,
+        receiveShadow: true,
+      }),
+      f.mesh("Column", cylinder(0.18, 0.22, 0.72, 12), stone, { position: [0, 0.48, 0] }, {
+        castShadow: true,
+        receiveShadow: true,
+      }),
+      f.mesh("Dial", cylinder(0.34, 0.34, 0.04, 20), stone, { position: [0, 0.9, 0] }, {
+        castShadow: true,
+        receiveShadow: true,
+      }),
+      ...marks,
+      f.mesh(
+        "Gnomon",
+        box(0.02, 0.4, 0.32),
+        bronze,
+        { position: [0, 1.06, 0.04], rotation: [-tilt, 0, 0] },
+        { castShadow: true },
+      ),
+      f.mesh("Gnomon Knob", sphere(0.04, 10, 8), bronze, {
+        position: [0, 1.22, 0.12],
+      }, { castShadow: true }),
+    ],
+    { position: pos },
+  );
+}
+
+/**
+ * Solar-style stake lights flanking the cobble path — slim posts with small
+ * emissive bulbs perched on top, leaving a gap at the rose arch so the path
+ * reads as a continuous lit corridor.
+ */
+function buildPathLights(f: NodeFactory): SceneNode {
+  const metal = std(C.lampMetal, 0.55, { metalness: 0.45 });
+  const glow: MaterialDef = {
+    color: C.lampGlow,
+    roughness: 0.32,
+    emissive: C.lampGlow,
+    transparent: true,
+    opacity: 0.92,
+  };
+  const lights: SceneNode[] = [];
+  const zPositions = [2.5, 4.0, 5.6, 9.1, 10.6].map((d) => FRONT_Z + d);
+  let idx = 0;
+  for (const z of zPositions) {
+    for (const side of [-1, 1] as const) {
+      idx++;
+      lights.push(
+        f.group(
+          `Path Light ${idx}`,
+          [
+            f.mesh(
+              "Stake",
+              cylinder(0.022, 0.022, 0.46, 6),
+              metal,
+              { position: [0, 0.23, 0] },
+              { castShadow: true },
+            ),
+            f.mesh("Bulb", sphere(0.07, 10, 7), glow, { position: [0, 0.5, 0] }),
+            f.mesh(
+              "Cap",
+              cone(0.09, 0.07, 8),
+              metal,
+              { position: [0, 0.59, 0] },
+              { castShadow: true },
+            ),
+          ],
+          { position: [side * 1.62, 0, z] },
+        ),
+      );
+    }
+  }
+  return f.group("Path Lights", lights);
+}
+
+/**
+ * A cottage-style birdhouse on a slender wooden pole, with a pyramidal roof and
+ * a circular entry hole — staked into the lawn near the bird feeder.
+ */
+function buildBirdhouse(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.walnut, 0.78, { texture: "wood" });
+  const lightWood = std(C.fence, 0.8, { texture: "wood" });
+  const roof = std(C.birdhouseRoof, 0.8, { flatShading: true });
+  const dark = std(C.brickDark, 0.85);
+  const poleH = 1.6;
+  const houseY = poleH + 0.16;
+  return f.group(
+    "Birdhouse",
+    [
+      f.mesh(
+        "Pole Base",
+        cylinder(0.12, 0.16, 0.08, 10),
+        std(C.stone, 0.92, { texture: "cobblestone", flatShading: true }),
+        { position: [0, 0.04, 0] },
+        { receiveShadow: true, castShadow: true },
+      ),
+      f.mesh(
+        "Pole",
+        cylinder(0.04, 0.05, poleH, 8),
+        wood,
+        { position: [0, poleH / 2 + 0.06, 0] },
+        { castShadow: true },
+      ),
+      f.group(
+        "House",
+        [
+          f.mesh(
+            "Walls",
+            box(0.34, 0.3, 0.34),
+            lightWood,
+            {},
+            { castShadow: true, receiveShadow: true },
+          ),
+          // Pyramidal roof — a 4-sided cone rotated for square base alignment.
+          f.mesh(
+            "Roof",
+            cone(0.3, 0.24, 4),
+            roof,
+            { position: [0, 0.27, 0], rotation: [0, Math.PI / 4, 0] },
+            { castShadow: true },
+          ),
+          f.mesh(
+            "Entry Hole",
+            cylinder(0.05, 0.05, 0.02, 12),
+            dark,
+            { position: [0, 0.02, 0.17], rotation: [Math.PI / 2, 0, 0] },
+          ),
+          f.mesh(
+            "Perch",
+            cylinder(0.012, 0.012, 0.1, 6),
+            wood,
+            { position: [0, -0.04, 0.21], rotation: [Math.PI / 2, 0, 0] },
+            { castShadow: true },
+          ),
+        ],
+        { position: [0, houseY, 0] },
+      ),
+    ],
+    { position: pos, rotation: [0, Math.PI / 9, 0] },
+  );
+}
+
+/**
+ * Festoon-style bulbs strung along the rose-arch crown — a row of small
+ * emissive spheres draped over the arc, with the same glow as the lamp post.
+ */
+function buildRoseArchLights(f: NodeFactory, z: number): SceneNode {
+  const postX = 1.05;
+  const postH = 2.3;
+  const archR = postX;
+  const archY = postH;
+  const glow: MaterialDef = {
+    color: C.lampGlow,
+    roughness: 0.3,
+    emissive: C.lampGlow,
+    transparent: true,
+    opacity: 0.95,
+  };
+  const bulbs: Transform[] = [];
+  const n = 11;
+  for (let i = 0; i < n; i++) {
+    const th = (Math.PI * (i + 0.5)) / n;
+    const cx = Math.cos(th) * (archR + 0.05);
+    const cy = archY + Math.sin(th) * (archR + 0.05) - 0.06;
+    bulbs.push({
+      position: [cx, cy, 0.02],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+    });
+  }
+  // A subtle wire suggested by a thin curved set of tiny boxes between bulbs.
+  const wireMat = std(C.ironGrey, 0.6, { metalness: 0.4 });
+  const wires: SceneNode[] = [];
+  for (let i = 0; i < n - 1; i++) {
+    const th0 = (Math.PI * (i + 0.5)) / n;
+    const th1 = (Math.PI * (i + 1.5)) / n;
+    const x0 = Math.cos(th0) * (archR + 0.05);
+    const y0 = archY + Math.sin(th0) * (archR + 0.05) - 0.06;
+    const x1 = Math.cos(th1) * (archR + 0.05);
+    const y1 = archY + Math.sin(th1) * (archR + 0.05) - 0.06;
+    const mx = (x0 + x1) / 2;
+    const my = (y0 + y1) / 2;
+    const len = Math.hypot(x1 - x0, y1 - y0);
+    const rot = Math.atan2(y1 - y0, x1 - x0);
+    wires.push(
+      f.mesh(
+        "Wire",
+        box(len, 0.008, 0.008),
+        wireMat,
+        { position: [mx, my, 0.02], rotation: [0, 0, rot] },
+      ),
+    );
+  }
+  return f.group(
+    "Rose Arch Lights",
+    [
+      f.instanced("String Bulbs", sphere(0.055, 8, 6), glow, bulbs, { castShadow: false }),
+      f.group("String Wires", wires),
+    ],
+    { position: [0, 0, z] },
+  );
+}
+
 /* ─────────────── third-pass house enhancements ─────────────── */
 
 /**
@@ -1207,6 +1449,86 @@ function buildTopiaryUrns(f: NodeFactory): SceneNode {
     ], { position: [x, 0, FRONT_Z + 0.18] });
   };
   return f.group("Topiary Urns", [make(-1), make(1)]);
+}
+
+/* ─────────────── fourth-pass house enhancements ─────────────── */
+
+/**
+ * Climbing ivy clinging to the chimney's south and east faces — an instanced
+ * scatter of small dark-green leaf clusters, denser at the base and thinning
+ * out toward the crown for the windswept look.
+ */
+function buildChimneyIvy(f: NodeFactory): SceneNode {
+  const ivy = std(C.ivyLeaf, 0.85, { flatShading: true });
+  const cx = -2.0;
+  const cz = 0.7;
+  const yBottom = 8.2;
+  const yTop = 11.1;
+  const rng = mulberry32(0x190a55e);
+  const instances: Transform[] = [];
+  // South face (z = cz + 0.31). Density decays with height.
+  for (let yy = yBottom; yy < yTop; yy += 0.16) {
+    const heightT = (yy - yBottom) / (yTop - yBottom);
+    const dropRate = 0.25 + heightT * 0.55;
+    for (let xx = -0.28; xx <= 0.28; xx += 0.14) {
+      if (rng() < dropRate) continue;
+      instances.push({
+        position: [
+          cx + xx + (rng() - 0.5) * 0.08,
+          yy + (rng() - 0.5) * 0.08,
+          cz + 0.32 + rng() * 0.03,
+        ],
+        rotation: [0, rng() * Math.PI * 2, 0],
+        scale: [0.75 + rng() * 0.55, 0.6 + rng() * 0.5, 0.75 + rng() * 0.55],
+      });
+    }
+  }
+  // East face (x = cx + 0.31). A second, sparser fall of leaves.
+  for (let yy = yBottom; yy < yTop - 0.5; yy += 0.2) {
+    const heightT = (yy - yBottom) / (yTop - yBottom);
+    const dropRate = 0.4 + heightT * 0.5;
+    for (let zz = -0.26; zz <= 0.26; zz += 0.16) {
+      if (rng() < dropRate) continue;
+      instances.push({
+        position: [
+          cx + 0.32 + rng() * 0.03,
+          yy + (rng() - 0.5) * 0.08,
+          cz + zz + (rng() - 0.5) * 0.07,
+        ],
+        rotation: [0, rng() * Math.PI * 2, 0],
+        scale: [0.7 + rng() * 0.5, 0.6 + rng() * 0.4, 0.7 + rng() * 0.5],
+      });
+    }
+  }
+  return f.instanced("Chimney Ivy", sphere(0.085, 7, 5), ivy, instances, {
+    castShadow: true,
+    receiveShadow: true,
+  });
+}
+
+/**
+ * A small wrought-iron lightning rod planted on top of the chimney crown —
+ * a tapered spire with a single decorative orb halfway up the shaft.
+ */
+function buildLightningRod(f: NodeFactory): SceneNode {
+  const iron = std(C.ironGrey, 0.4, { metalness: 0.65 });
+  const cx = -2.0;
+  const cz = 0.7;
+  const crownTop = 11.25;
+  return f.group("Lightning Rod", [
+    f.mesh("Rod Foot", cylinder(0.06, 0.08, 0.06, 10), iron, {
+      position: [cx, crownTop + 0.03, cz],
+    }, { castShadow: true }),
+    f.mesh("Rod Shaft", cylinder(0.014, 0.02, 0.62, 8), iron, {
+      position: [cx, crownTop + 0.37, cz],
+    }, { castShadow: true }),
+    f.mesh("Rod Orb", sphere(0.045, 10, 8), iron, {
+      position: [cx, crownTop + 0.42, cz],
+    }, { castShadow: true }),
+    f.mesh("Rod Spire", cone(0.022, 0.18, 6), iron, {
+      position: [cx, crownTop + 0.78, cz],
+    }, { castShadow: true }),
+  ]);
 }
 
 /* ───────────────────────── exterior walls ───────────────────────── */
@@ -1951,6 +2273,11 @@ function buildFurniture(f: NodeFactory): SceneNode {
  *    copper downspouts at the front corners, a stone front step with a jute
  *    welcome mat and a pair of terracotta urns with topiary balls flanking the
  *    door.
+ *  - Fourth pass — yard: a stone-pedestal sundial with a bronze gnomon, a row
+ *    of solar stake lights along the cobble path, a cottage birdhouse on a
+ *    pole and festoon bulbs strung along the rose-arch crown; house: climbing
+ *    ivy creeping up the chimney's south and east faces and a wrought-iron
+ *    lightning rod planted on the chimney crown.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -1969,6 +2296,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: BIRD_FEEDER_POS[0], z: BIRD_FEEDER_POS[2], r: 0.9 },
     // Stepping-stone corridor between path and bird bath.
     { x: 2.2, z: STEPPING_STONE_Z, r: 0.9 },
+    // Fourth-pass keep-outs — sundial pedestal and birdhouse pole.
+    { x: SUNDIAL_POS[0], z: SUNDIAL_POS[2], r: 0.9 },
+    { x: BIRDHOUSE_POS[0], z: BIRDHOUSE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -1989,6 +2319,10 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildMailbox(f, MAILBOX_POS),
     buildBirdFeeder(f, BIRD_FEEDER_POS),
     buildSteppingStones(f),
+    buildSundial(f, SUNDIAL_POS),
+    buildPathLights(f),
+    buildBirdhouse(f, BIRDHOUSE_POS),
+    buildRoseArchLights(f, ROSE_ARCH_Z),
   ]);
   const house = f.group("House", [
     buildFloors(f),
@@ -2009,6 +2343,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildDownspouts(f),
     buildDoorstepMat(f),
     buildTopiaryUrns(f),
+    buildChimneyIvy(f),
+    buildLightningRod(f),
     buildFurniture(f),
   ]);
   const root: SceneNode = {

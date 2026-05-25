@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over three enhancement passes.
+// house and its courtyard, layered over four enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -12,6 +12,11 @@
 //   the bird bath; house: copper downspouts on the front corners, a stone
 //   front step with a jute welcome mat and terracotta urns with topiary balls
 //   flanking the door.
+//   Pass 4 — courtyard: a stone sundial with a bronze gnomon, solar stake
+//   lights along the cobble path, a cottage birdhouse on a pole and festoon
+//   bulbs strung along the rose-arch crown; house: climbing ivy creeping up
+//   the chimney's south and east faces and a wrought-iron lightning rod on
+//   the chimney crown.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
