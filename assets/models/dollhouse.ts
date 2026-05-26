@@ -91,6 +91,32 @@ const MEADOW_HILL_POS: [number, number, number] = [-8, 0, -30];
 const MEADOW_BROOK_Z = -20;
 const FOOTBRIDGE_POS: [number, number, number] = [3, 0, MEADOW_BROOK_Z];
 
+/**
+ * Sixth-pass courtyard props — autumn / outdoor-living touches. A scarecrow
+ * planted just north of the vegetable garden, a small pumpkin patch beside
+ * it in the NE yard corner, a parasol-shaded patio set on the east lawn and
+ * a coiled garden hose on a reel mounted to the east side wall of the house.
+ */
+const SCARECROW_POS: [number, number, number] = [4.6, 0, 12.5];
+const PUMPKIN_PATCH_POS: [number, number, number] = [6.0, 0, 12.6];
+const PATIO_SET_POS: [number, number, number] = [8.3, 0, 8.5];
+const HOSE_REEL_POS: [number, number, number] = [W / 2 + 0.05, 0, -1.8];
+
+/**
+ * Sixth-pass scene extension — a side orchard ground plane east of the lawn.
+ * It overlaps the lawn by ~1 unit along the join so the ground layer has no
+ * holes. The orchard carries a dry-stone retaining wall along the lawn join,
+ * a small grove of fruiting apple trees with fallen apples on the grass, an
+ * old wooden hay cart and a stone water well with a peaked shingle roof.
+ */
+const ORCHARD_POS: [number, number, number] = [33, -0.003, 5];
+const ORCHARD_W = 18;
+const ORCHARD_D = 28;
+/** The stone wall lives just inside the orchard's west edge, marking the join. */
+const ORCHARD_WALL_X = 25.5;
+const HAY_CART_POS: [number, number, number] = [30.5, 0, 11];
+const OLD_WELL_POS: [number, number, number] = [37.5, 0, -3];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -163,6 +189,31 @@ const C = {
   gutterCopper: "#b3895a",
   wildflowerBlue: "#7891d4",
   wildflowerOrange: "#e69a4a",
+  // Sixth enhancement pass — scarecrow, pumpkins, patio set, hanging baskets,
+  // a door wreath, a wall hose reel and the side-orchard scene extension
+  // (apple trees, fallen apples, hay cart, dry-stone wall and an old well).
+  strawHay: "#d8b248",
+  strawHayDark: "#a87f2c",
+  pumpkinOrange: "#dc7322",
+  pumpkinDark: "#b85618",
+  pumpkinStem: "#6e8b41",
+  scarecrowShirt: "#a83e30",
+  scarecrowPants: "#3b4a6a",
+  patioCream: "#f3ead4",
+  parasolPink: "#ef89a8",
+  basketTerracotta: "#b46342",
+  wreathBerry: "#b53a3a",
+  hoseGreen: "#2c6741",
+  brass: "#a87a3c",
+  orchardGrass: "#90b76a",
+  appleRed: "#c9322e",
+  appleStem: "#5e3c1f",
+  appleFoliage: "#4f7a3f",
+  dryStone: "#9d9286",
+  dryStoneDark: "#6a635a",
+  hayCartWood: "#7c5536",
+  wellRoof: "#5c3f2c",
+  wellWater: "#3a5a72",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -2238,6 +2289,1047 @@ function buildMeadowFence(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────────── sixth-pass courtyard props ─────────────────── */
+
+/**
+ * A garden scarecrow standing just north of the vegetable garden — wooden T-pole
+ * dressed in a stuffed plaid shirt and patched blue pants, a burlap-sack head
+ * with stitched features and a battered straw hat with a brim. Crow on the
+ * crossarm adds a touch of life.
+ */
+function buildScarecrow(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const pole = std(C.walnut, 0.85, { texture: "wood" });
+  const shirt = std(C.scarecrowShirt, 0.85, { flatShading: true });
+  const pants = std(C.scarecrowPants, 0.9, { flatShading: true });
+  const head = std(C.strawHay, 0.95, { texture: "burlap", textureScale: [3, 3] });
+  const hat = std(C.strawHayDark, 0.95, { texture: "burlap", textureScale: [2, 2] });
+  const button = std(C.ironGrey, 0.4, { metalness: 0.6 });
+  const crow = std("#1a1a1a", 0.7, { flatShading: true });
+  const stitch = std(C.walnut, 0.95);
+  const parts: SceneNode[] = [
+    // Central support pole, planted in the ground.
+    f.mesh("Pole", box(0.07, 1.9, 0.07), pole, { position: [0, 0.95, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    // Horizontal crossarm for the arms — set just below the shoulders.
+    f.mesh("Crossarm", box(1.3, 0.06, 0.06), pole, { position: [0, 1.45, 0] }, {
+      castShadow: true,
+    }),
+    // Lashing — a tight burlap rope wrap where pole and crossarm meet.
+    f.mesh("Lashing", cylinder(0.07, 0.07, 0.1, 8), std(C.ropeJute, 0.95, { flatShading: true }), {
+      position: [0, 1.45, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }),
+    // Stuffed plaid shirt — boxy torso plus thinner sleeves out along the crossarm.
+    f.mesh("Torso", box(0.46, 0.6, 0.26), shirt, { position: [0, 1.18, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.mesh("Sleeve L", box(0.45, 0.16, 0.18), shirt, { position: [-0.42, 1.43, 0] }, {
+      castShadow: true,
+    }),
+    f.mesh("Sleeve R", box(0.45, 0.16, 0.18), shirt, { position: [0.42, 1.43, 0] }, {
+      castShadow: true,
+    }),
+    // Hands — twisted handfuls of straw poking from the cuffs.
+    f.mesh("Hand L", sphere(0.09, 8, 6), head, { position: [-0.66, 1.42, 0], scale: [1, 0.7, 1] }, {
+      castShadow: true,
+    }),
+    f.mesh("Hand R", sphere(0.09, 8, 6), head, { position: [0.66, 1.42, 0], scale: [1, 0.7, 1] }, {
+      castShadow: true,
+    }),
+    // Patched pants below the shirt — also stuffed.
+    f.mesh("Pants L", box(0.16, 0.42, 0.18), pants, { position: [-0.1, 0.66, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.mesh("Pants R", box(0.16, 0.42, 0.18), pants, { position: [0.1, 0.66, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    // Boots peeking out at the foot of each leg.
+    f.mesh("Boot L", box(0.16, 0.08, 0.22), std(C.walnut, 0.85), {
+      position: [-0.1, 0.42, 0.04],
+    }, { castShadow: true }),
+    f.mesh("Boot R", box(0.16, 0.08, 0.22), std(C.walnut, 0.85), {
+      position: [0.1, 0.42, 0.04],
+    }, { castShadow: true }),
+    // Burlap-sack head — rounded with a flat top under the hat.
+    f.mesh("Head", sphere(0.18, 12, 9), head, { position: [0, 1.66, 0], scale: [1, 1.05, 1] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    // Stitched cross-eyes and a button mouth.
+    f.mesh("Eye L", box(0.04, 0.012, 0.008), stitch, {
+      position: [-0.06, 1.7, 0.16],
+      rotation: [0, 0, Math.PI / 4],
+    }),
+    f.mesh("Eye L Cross", box(0.04, 0.012, 0.008), stitch, {
+      position: [-0.06, 1.7, 0.16],
+      rotation: [0, 0, -Math.PI / 4],
+    }),
+    f.mesh("Eye R", box(0.04, 0.012, 0.008), stitch, {
+      position: [0.06, 1.7, 0.16],
+      rotation: [0, 0, Math.PI / 4],
+    }),
+    f.mesh("Eye R Cross", box(0.04, 0.012, 0.008), stitch, {
+      position: [0.06, 1.7, 0.16],
+      rotation: [0, 0, -Math.PI / 4],
+    }),
+    f.mesh("Mouth Stitch", box(0.12, 0.012, 0.008), stitch, { position: [0, 1.6, 0.16] }),
+    f.mesh("Mouth Up", box(0.012, 0.04, 0.008), stitch, { position: [-0.04, 1.62, 0.16] }),
+    f.mesh("Mouth Up R", box(0.012, 0.04, 0.008), stitch, { position: [0.04, 1.62, 0.16] }),
+    // Battered straw hat — brim disc + crown cone.
+    f.mesh("Hat Brim", cylinder(0.34, 0.34, 0.03, 16), hat, { position: [0, 1.86, 0] }, {
+      castShadow: true,
+    }),
+    f.mesh("Hat Crown", cone(0.18, 0.22, 12), hat, { position: [0, 1.97, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.mesh("Hat Band", cylinder(0.185, 0.185, 0.04, 12),
+      std(C.scarecrowShirt, 0.9, { flatShading: true }),
+      { position: [0, 1.89, 0] }),
+    // Shirt buttons down the front.
+    f.mesh("Btn 1", sphere(0.022, 8, 6), button, { position: [0, 1.32, 0.135] }),
+    f.mesh("Btn 2", sphere(0.022, 8, 6), button, { position: [0, 1.18, 0.135] }),
+    f.mesh("Btn 3", sphere(0.022, 8, 6), button, { position: [0, 1.04, 0.135] }),
+    // A small crow perched on the crossarm's right tip.
+    f.group("Crow", [
+      f.mesh("Body", sphere(0.07, 10, 7), crow, { position: [0, 0, 0], scale: [1, 0.95, 1.4] }, {
+        castShadow: true,
+      }),
+      f.mesh("Head", sphere(0.045, 8, 6), crow, { position: [0, 0.05, 0.08] }, { castShadow: true }),
+      f.mesh("Beak", cone(0.015, 0.05, 5),
+        std(C.flowerYellow, 0.6),
+        { position: [0, 0.05, 0.12], rotation: [Math.PI / 2, 0, 0] }),
+      f.mesh("Tail", box(0.04, 0.02, 0.06), crow, { position: [0, -0.005, -0.08] }),
+    ], { position: [0.62, 1.52, 0], rotation: [0, -Math.PI / 8, 0] }),
+  ];
+  return f.group("Scarecrow", parts, { position: pos, rotation: [0, -Math.PI / 14, 0] });
+}
+
+/**
+ * A small pumpkin patch — five gourds of varied size and orientation grouped
+ * on the lawn, joined by a winding green vine of foliage spheres. Stems and
+ * subtle vertical ribbing (suggested by an inner sphere) sell the pumpkin
+ * silhouette without a custom geometry.
+ */
+function buildPumpkinPatch(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const skin = std(C.pumpkinOrange, 0.85, { flatShading: true });
+  const rib = std(C.pumpkinDark, 0.9, { flatShading: true });
+  const stem = std(C.pumpkinStem, 0.9, { flatShading: true });
+  const vine = std(C.pumpkinStem, 0.9, { flatShading: true });
+  const leaf = std(C.appleFoliage, 0.85, { flatShading: true });
+  // Five pumpkins arranged in a loose cluster.
+  const layout = [
+    { x: 0.0, z: 0.0, r: 0.3, sx: 1.1, ry: 0 },
+    { x: 0.7, z: 0.25, r: 0.24, sx: 1.05, ry: 0.6 },
+    { x: -0.55, z: 0.35, r: 0.22, sx: 1.08, ry: -0.4 },
+    { x: 0.25, z: 0.85, r: 0.18, sx: 1.0, ry: 0.2 },
+    { x: -0.3, z: -0.45, r: 0.16, sx: 1.0, ry: 1.1 },
+  ];
+  const parts: SceneNode[] = [];
+  for (let i = 0; i < layout.length; i++) {
+    const p = layout[i]!;
+    const cy = p.r * 0.8;
+    parts.push(
+      f.group(`Pumpkin ${i + 1}`, [
+        // Main body — slightly squashed sphere for the iconic shape.
+        f.mesh("Skin", sphere(p.r, 14, 10), skin, {
+          position: [0, 0, 0],
+          scale: [p.sx, 0.78, p.sx],
+        }, { castShadow: true, receiveShadow: true }),
+        // Three darker ribs implied by thin slivers cutting through the body.
+        f.mesh("Rib A", box(p.r * 0.06, p.r * 1.4, p.r * 2 * p.sx * 0.98), rib, {
+          position: [0, 0, 0],
+        }),
+        f.mesh("Rib B", box(p.r * 2 * p.sx * 0.98, p.r * 1.4, p.r * 0.06), rib, {
+          position: [0, 0, 0],
+        }),
+        f.mesh("Rib C", box(p.r * 0.06, p.r * 1.4, p.r * 2 * p.sx * 0.98), rib, {
+          position: [0, 0, 0],
+          rotation: [0, Math.PI / 3, 0],
+        }),
+        f.mesh("Rib D", box(p.r * 0.06, p.r * 1.4, p.r * 2 * p.sx * 0.98), rib, {
+          position: [0, 0, 0],
+          rotation: [0, -Math.PI / 3, 0],
+        }),
+        // Stubby green stem on top.
+        f.mesh("Stem", cylinder(p.r * 0.15, p.r * 0.22, p.r * 0.5, 6), stem, {
+          position: [0, p.r * 0.6, 0],
+          rotation: [0.15, 0, 0.1],
+        }, { castShadow: true }),
+      ], { position: [p.x, cy, p.z], rotation: [0, p.ry, 0] }),
+    );
+  }
+  // A few vine segments and a leaf wandering between pumpkins.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    parts.push(
+      f.mesh("Vine", cylinder(0.02, 0.022, 0.55, 5), vine, {
+        position: [Math.cos(a) * 0.45, 0.06, Math.sin(a) * 0.5],
+        rotation: [Math.PI / 2 + (i % 2 === 0 ? 0.15 : -0.15), a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Two pumpkin leaves on the ground.
+  parts.push(
+    f.mesh("Leaf A", sphere(0.14, 8, 5), leaf, {
+      position: [0.5, 0.04, -0.1],
+      scale: [1.2, 0.2, 0.8],
+      rotation: [0, 0.3, 0],
+    }, { castShadow: false }),
+    f.mesh("Leaf B", sphere(0.12, 8, 5), leaf, {
+      position: [-0.4, 0.03, 0.6],
+      scale: [1.1, 0.18, 0.9],
+      rotation: [0, -0.6, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Pumpkin Patch", parts, { position: pos });
+}
+
+/**
+ * A round bistro patio set — pedestal table with a striped canvas parasol,
+ * two slatted chairs facing across the table and a small ceramic teapot.
+ * The parasol's pink-and-cream segments are six interleaved wedge boxes; not
+ * a true cone, but the silhouette reads clearly from any orbit angle.
+ */
+function buildPatioSet(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const metal = std(C.patioCream, 0.6, { metalness: 0.1 });
+  const wood = std(C.walnut, 0.75, { texture: "wood" });
+  const parasolPink = std(C.parasolPink, 0.7);
+  const parasolCream = std(C.patioCream, 0.7);
+  const pot = std(C.white, 0.6);
+  const tableY = 0.78;
+  const tableR = 0.55;
+  const parts: SceneNode[] = [
+    // Pedestal base and column.
+    f.mesh("Table Base", cylinder(0.22, 0.26, 0.05, 12), metal, { position: [0, 0.025, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.mesh("Table Column", cylinder(0.05, 0.055, tableY - 0.05, 10), metal, {
+      position: [0, (tableY - 0.05) / 2 + 0.05, 0],
+    }, { castShadow: true }),
+    f.mesh("Table Top", cylinder(tableR, tableR, 0.05, 24), metal, {
+      position: [0, tableY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Parasol pole — runs through the table.
+    f.mesh("Parasol Pole", cylinder(0.024, 0.028, 1.75, 8), wood, {
+      position: [0, tableY + 0.85, 0],
+    }, { castShadow: true }),
+    // Parasol canopy — a single shallow cone for the silhouette, dressed
+    // with eight alternating pink-and-cream ribbed wedges (thin boxes draped
+    // along the slope) for the striped look.
+    f.mesh("Parasol Canopy", cone(0.9, 0.45, 16), parasolCream, {
+      position: [0, tableY + 1.5, 0],
+    }, { castShadow: true }),
+  ];
+  const wedges = 8;
+  const parasolR = 0.9;
+  for (let i = 0; i < wedges; i += 2) {
+    const a = (i / wedges) * Math.PI * 2;
+    parts.push(
+      f.mesh("Parasol Stripe", box(parasolR * 0.96, 0.005, 0.18), parasolPink, {
+        position: [
+          Math.cos(a) * parasolR * 0.5,
+          tableY + 1.45,
+          Math.sin(a) * parasolR * 0.5,
+        ],
+        rotation: [0, a + Math.PI / 2, -0.45],
+      }),
+    );
+  }
+  // Parasol crown — a small ball cap at the very top.
+  parts.push(
+    f.mesh("Parasol Finial", sphere(0.05, 10, 7),
+      std(C.brass, 0.4, { metalness: 0.6 }),
+      { position: [0, tableY + 1.78, 0] }),
+  );
+  // Decorative teapot on the table.
+  parts.push(
+    f.group("Teapot", [
+      f.mesh("Pot Body", sphere(0.1, 12, 9), pot, {
+        position: [0, 0.07, 0],
+        scale: [1.1, 0.85, 1.1],
+      }, { castShadow: true }),
+      f.mesh("Pot Lid", sphere(0.06, 10, 7), pot, {
+        position: [0, 0.16, 0],
+        scale: [1, 0.5, 1],
+      }, { castShadow: true }),
+      f.mesh("Pot Knob", sphere(0.022, 8, 6), pot, { position: [0, 0.2, 0] }),
+      f.mesh("Pot Spout", cylinder(0.018, 0.03, 0.12, 6), pot, {
+        position: [0.12, 0.1, 0],
+        rotation: [0, 0, -Math.PI / 3],
+      }),
+      f.mesh("Pot Handle", cylinder(0.012, 0.012, 0.13, 6), pot, {
+        position: [-0.105, 0.1, 0],
+        rotation: [0, 0, Math.PI / 4],
+      }),
+    ], { position: [-0.25, tableY + 0.03, -0.1] }),
+  );
+  // Two chairs flanking the table.
+  const chair = (cx: number, cz: number, ry: number): SceneNode => {
+    const seatY = 0.42;
+    return f.group("Chair", [
+      // Four splayed legs.
+      f.mesh("Leg FL", cylinder(0.022, 0.022, seatY, 6), metal, {
+        position: [-0.18, seatY / 2, 0.18],
+      }, { castShadow: true }),
+      f.mesh("Leg FR", cylinder(0.022, 0.022, seatY, 6), metal, {
+        position: [0.18, seatY / 2, 0.18],
+      }, { castShadow: true }),
+      f.mesh("Leg BL", cylinder(0.022, 0.022, seatY, 6), metal, {
+        position: [-0.18, seatY / 2, -0.18],
+      }, { castShadow: true }),
+      f.mesh("Leg BR", cylinder(0.022, 0.022, seatY, 6), metal, {
+        position: [0.18, seatY / 2, -0.18],
+      }, { castShadow: true }),
+      // Round seat plate.
+      f.mesh("Seat", cylinder(0.22, 0.22, 0.04, 16), metal, {
+        position: [0, seatY, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Curved backrest — three slats on a U-frame.
+      f.mesh("Back Rail Top", cylinder(0.02, 0.02, 0.45, 6), metal, {
+        position: [0, seatY + 0.36, -0.21],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: true }),
+      f.mesh("Back Post L", cylinder(0.022, 0.022, 0.4, 6), metal, {
+        position: [-0.2, seatY + 0.2, -0.21],
+      }, { castShadow: true }),
+      f.mesh("Back Post R", cylinder(0.022, 0.022, 0.4, 6), metal, {
+        position: [0.2, seatY + 0.2, -0.21],
+      }, { castShadow: true }),
+      f.mesh("Back Slat A", box(0.35, 0.04, 0.02), metal, {
+        position: [0, seatY + 0.14, -0.21],
+      }, { castShadow: true }),
+      f.mesh("Back Slat B", box(0.35, 0.04, 0.02), metal, {
+        position: [0, seatY + 0.25, -0.21],
+      }, { castShadow: true }),
+      // Soft seat cushion.
+      f.mesh("Cushion", cylinder(0.2, 0.2, 0.045, 16),
+        std(C.parasolPink, 0.85),
+        { position: [0, seatY + 0.045, 0] }, { castShadow: true }),
+    ], { position: [cx, 0, cz], rotation: [0, ry, 0] });
+  };
+  parts.push(chair(0.85, 0, -Math.PI / 2));
+  parts.push(chair(-0.85, 0, Math.PI / 2));
+  return f.group("Patio Set", parts, { position: pos, rotation: [0, Math.PI / 12, 0] });
+}
+
+/**
+ * A pair of cascading flower baskets hanging from the porch canopy brackets,
+ * one under each canopy post. Each basket is a terracotta planter on three
+ * chains, with a cluster of trailing pink, yellow and white blooms.
+ */
+function buildHangingBaskets(f: NodeFactory): SceneNode {
+  const basketMat = std(C.basketTerracotta, 0.95, { flatShading: true });
+  const rim = std(C.brickDark, 0.9, { flatShading: true });
+  const chain = std(C.ironGrey, 0.4, { metalness: 0.6 });
+  const soil = std(C.soil, 0.95, { flatShading: true });
+  const leaf = std(C.appleFoliage, 0.85, { flatShading: true });
+  const blooms = [
+    std(C.parasolPink, 0.7),
+    std(C.flowerYellow, 0.6),
+    std(C.flowerWhite, 0.7),
+  ];
+  // The canopy posts sit at x = ±1.18, z = FRONT_Z + 0.65, with the canopy at y ≈ 2.95.
+  const anchorY = 2.65;
+  const basketY = 1.9;
+  const basketR = 0.22;
+  const buildOne = (sideX: number): SceneNode => {
+    const parts: SceneNode[] = [
+      // Tapered terracotta planter.
+      f.mesh("Planter", cylinder(basketR, basketR * 0.7, 0.22, 14), basketMat, {
+        position: [0, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Thin rolled rim on top.
+      f.mesh("Rim", cylinder(basketR + 0.015, basketR + 0.015, 0.025, 16), rim, {
+        position: [0, 0.115, 0],
+      }, { castShadow: true }),
+      // Soil cap inside the rim.
+      f.mesh("Soil", cylinder(basketR - 0.01, basketR - 0.01, 0.025, 14), soil, {
+        position: [0, 0.105, 0],
+      }),
+    ];
+    // Three suspension chains from rim out to a common ring under the anchor.
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * Math.PI * 2;
+      const cx = Math.cos(a) * basketR;
+      const cz = Math.sin(a) * basketR;
+      const dy = anchorY - basketY;
+      parts.push(
+        f.mesh("Chain", cylinder(0.008, 0.008, dy, 4), chain, {
+          position: [cx / 2, dy / 2 + 0.11, cz / 2],
+          // Tilt the chain so its top converges near the anchor.
+          rotation: [Math.atan2(cz, dy), 0, -Math.atan2(cx, dy)],
+        }),
+      );
+    }
+    // Anchor ring under the canopy bracket.
+    parts.push(
+      f.mesh("Anchor Ring", cylinder(0.04, 0.04, 0.012, 8), chain, {
+        position: [0, anchorY - basketY + 0.12, 0],
+      }),
+    );
+    // Cascading flowers — instanced colored spheres across the rim circumference.
+    const flowerInstances: { mat: MaterialDef; transforms: Transform[] }[] = blooms.map((m) => ({
+      mat: m,
+      transforms: [],
+    }));
+    const rng = mulberry32(0xba53e7 + Math.round(sideX * 100));
+    for (let i = 0; i < 26; i++) {
+      const t = i / 26;
+      const a = t * Math.PI * 2 + rng() * 0.3;
+      const r = basketR * (0.7 + rng() * 0.5);
+      const drop = -rng() * 0.35;
+      const choice = Math.floor(rng() * blooms.length);
+      flowerInstances[choice]!.transforms.push({
+        position: [Math.cos(a) * r, 0.08 + drop, Math.sin(a) * r],
+        rotation: [0, rng() * Math.PI, 0],
+        scale: [1, 1, 1],
+      });
+    }
+    flowerInstances.forEach((g, idx) => {
+      if (g.transforms.length === 0) return;
+      parts.push(
+        f.instanced(`Blooms ${idx}`, sphere(0.05, 8, 6), g.mat, g.transforms, {
+          castShadow: true,
+        }),
+      );
+    });
+    // A few trailing leaves cascading over the rim.
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2 + 0.4;
+      parts.push(
+        f.mesh("Trail Leaf", sphere(0.07, 8, 5), leaf, {
+          position: [Math.cos(a) * basketR * 0.95, -0.05, Math.sin(a) * basketR * 0.95],
+          scale: [1.3, 0.3, 0.6],
+          rotation: [0, a, 0.3],
+        }),
+      );
+    }
+    return f.group("Hanging Basket", parts, { position: [sideX, basketY, FRONT_Z + 0.65] });
+  };
+  return f.group("Hanging Baskets", [buildOne(-1.18), buildOne(1.18)]);
+}
+
+/**
+ * A pine-needle wreath on the front door — a ring of small foliage spheres
+ * with a scatter of red berries, finished with a pink ribbon bow. The wreath
+ * sits centred on the upper half of the arched front door.
+ */
+function buildDoorWreath(f: NodeFactory): SceneNode {
+  const foliage = std(C.appleFoliage, 0.95, { flatShading: true });
+  const foliageDark = std(C.ivyDark, 0.95, { flatShading: true });
+  const berry = std(C.wreathBerry, 0.65, { flatShading: true });
+  const ribbon = std(C.parasolPink, 0.7);
+  // Hang on the front wall just above the arched doorway, fitting in the
+  // narrow gap between the door trim (y≈2.32) and the porch canopy's
+  // underside (y≈2.67).
+  const z = FRONT_Z + WALL_T / 2 + 0.012;
+  const ringR = 0.16;
+  const parts: SceneNode[] = [];
+  const segs = 22;
+  for (let i = 0; i < segs; i++) {
+    const a = (i / segs) * Math.PI * 2;
+    const r = ringR + (i % 2 === 0 ? 0 : -0.018);
+    const size = 0.042 + (i % 3 === 0 ? 0.012 : 0);
+    parts.push(
+      f.mesh("Foliage", sphere(size, 7, 5), i % 4 === 0 ? foliageDark : foliage, {
+        position: [Math.cos(a) * r, Math.sin(a) * r, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Berry clusters at the three- and nine-o'clock and bottom-right.
+  for (const a of [0.6, -0.6, 2.2, -2.4, 1.7]) {
+    parts.push(
+      f.mesh("Berry", sphere(0.022, 6, 5), berry, {
+        position: [Math.cos(a) * (ringR + 0.008), Math.sin(a) * (ringR + 0.008), 0.018],
+      }),
+    );
+  }
+  // Ribbon at the top — two loops + two tails.
+  parts.push(
+    f.mesh("Bow Loop L", sphere(0.045, 8, 6), ribbon, {
+      position: [-0.045, ringR + 0.025, 0.012],
+      scale: [1.1, 0.7, 0.5],
+      rotation: [0, 0, 0.4],
+    }, { castShadow: true }),
+    f.mesh("Bow Loop R", sphere(0.045, 8, 6), ribbon, {
+      position: [0.045, ringR + 0.025, 0.012],
+      scale: [1.1, 0.7, 0.5],
+      rotation: [0, 0, -0.4],
+    }, { castShadow: true }),
+    f.mesh("Bow Knot", sphere(0.022, 8, 6), ribbon, {
+      position: [0, ringR + 0.025, 0.018],
+    }),
+    f.mesh("Bow Tail L", box(0.028, 0.11, 0.008), ribbon, {
+      position: [-0.03, ringR - 0.05, 0.012],
+      rotation: [0, 0, 0.25],
+    }),
+    f.mesh("Bow Tail R", box(0.028, 0.11, 0.008), ribbon, {
+      position: [0.03, ringR - 0.05, 0.012],
+      rotation: [0, 0, -0.25],
+    }),
+  );
+  return f.group("Door Wreath", parts, { position: [0, 2.5, z] });
+}
+
+/**
+ * A coiled garden hose mounted on a wall reel on the east side wall of the
+ * house, plus a brass spigot below it. The hose is suggested by three nested
+ * tori (cylinders edge-on as flattened rings) and a free-tail loop dropping
+ * to the ground.
+ */
+function buildGardenHoseReel(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bracket = std(C.ironGrey, 0.5, { metalness: 0.6, flatShading: true });
+  const drum = std(C.scarecrowPants, 0.85, { flatShading: true });
+  const hose = std(C.hoseGreen, 0.85, { flatShading: true });
+  const brass = std(C.brass, 0.4, { metalness: 0.7 });
+  const parts: SceneNode[] = [
+    // Wall bracket plate.
+    f.mesh("Bracket", box(0.06, 0.4, 0.5), bracket, { position: [0, 1.1, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    // Reel drum — cylinder turned out from the wall.
+    f.mesh("Drum", cylinder(0.08, 0.08, 0.3, 14), drum, {
+      position: [0.18, 1.1, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Reel rims at either end of the drum.
+    f.mesh("Drum Rim L", cylinder(0.18, 0.18, 0.025, 18), bracket, {
+      position: [0.04, 1.1, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    f.mesh("Drum Rim R", cylinder(0.18, 0.18, 0.025, 18), bracket, {
+      position: [0.32, 1.1, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    // A crank handle sticking off the right rim.
+    f.mesh("Crank", cylinder(0.012, 0.012, 0.16, 6), bracket, {
+      position: [0.34, 1.14, 0.13],
+    }),
+    f.mesh("Crank Grip", sphere(0.025, 8, 6), drum, { position: [0.34, 1.22, 0.13] }),
+  ];
+  // Coiled hose — a fat sleeve of hose wrapping the drum, with three darker
+  // groove rings cut around it to suggest the individual wraps.
+  parts.push(
+    f.mesh("Hose Wrap", cylinder(0.16, 0.16, 0.28, 18), hose, {
+      position: [0.18, 1.1, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  for (let r = 0; r < 4; r++) {
+    const groove = std(C.ivyDark, 0.95, { flatShading: true });
+    const x = 0.18 + (r - 1.5) * 0.07;
+    parts.push(
+      f.mesh("Hose Groove", cylinder(0.162, 0.162, 0.012, 18), groove, {
+        position: [x, 1.1, 0],
+        rotation: [0, 0, Math.PI / 2],
+      }),
+    );
+  }
+  // Outer hose tail dropping to the ground in a relaxed S-curve.
+  parts.push(
+    f.mesh("Hose Drop A", cylinder(0.022, 0.022, 0.7, 6), hose, {
+      position: [0.22, 0.7, 0.05],
+      rotation: [0.15, 0, 0.1],
+    }, { castShadow: true }),
+    f.mesh("Hose Drop B", cylinder(0.022, 0.022, 0.55, 6), hose, {
+      position: [0.3, 0.25, 0.08],
+      rotation: [Math.PI / 2.2, 0, 0.2],
+    }, { castShadow: true }),
+    f.mesh("Hose Nozzle", cylinder(0.025, 0.034, 0.1, 8), brass, {
+      position: [0.45, 0.06, 0.16],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Brass garden spigot below the reel.
+  parts.push(
+    f.mesh("Spigot Pipe", cylinder(0.022, 0.022, 0.18, 6), brass, {
+      position: [0, 0.7, 0.06],
+      rotation: [Math.PI / 2, 0, 0],
+    }),
+    f.mesh("Spigot Bonnet", cylinder(0.04, 0.04, 0.07, 8), brass, {
+      position: [0, 0.7, 0.18],
+      rotation: [Math.PI / 2, 0, 0],
+    }),
+    f.mesh("Spigot Handle", box(0.13, 0.014, 0.02), brass, {
+      position: [0, 0.72, 0.22],
+    }),
+    f.mesh("Spigot Handle Cap", sphere(0.018, 8, 6), brass, {
+      position: [0, 0.72, 0.22],
+    }),
+  );
+  return f.group("Hose Reel", parts, { position: pos });
+}
+
+/* ─────────────────── sixth-pass scene extension ─────────────────── */
+
+/**
+ * The side orchard — a new ground plane east of the lawn that overlaps the
+ * lawn by ~1 unit along the join. Carries a fruiting apple grove, a scatter
+ * of fallen apples, a dry-stone retaining wall, an old wooden hay cart and
+ * a stone water well with a peaked shingle roof.
+ */
+function buildSideOrchard(f: NodeFactory): SceneNode {
+  return f.group("Side Orchard", [
+    // Orchard ground plane — slightly fresher green than the main lawn.
+    f.mesh(
+      "Orchard Ground",
+      plane(ORCHARD_W, ORCHARD_D),
+      std(C.orchardGrass, 0.95, { texture: "grass", textureScale: [9, 12] }),
+      { position: ORCHARD_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // A darker apron exactly along the lawn join — feathers the seam so the
+    // overlap doesn't read as a hard line in raking sun.
+    f.mesh(
+      "Orchard Apron",
+      plane(2.5, ORCHARD_D),
+      std(C.grassDark, 0.95, { texture: "grass", textureScale: [1, 8] }),
+      { position: [25, -0.002, ORCHARD_POS[2]], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    buildOrchardMounds(f),
+    buildOrchardWall(f),
+    buildAppleTrees(f),
+    buildFallenApples(f),
+    buildHayCart(f, HAY_CART_POS),
+    buildOldWell(f, OLD_WELL_POS),
+  ]);
+}
+
+/**
+ * Two low, gently sloping earth mounds tucked into the orchard — flattened
+ * spheres half-buried in the ground that give the otherwise-flat plane
+ * realistic landform without disturbing the apple tree placement.
+ */
+function buildOrchardMounds(f: NodeFactory): SceneNode {
+  const earth = std(C.hillEarth, 0.95, { flatShading: true });
+  const grassCap = std(C.orchardGrass, 0.95, { flatShading: true });
+  return f.group("Orchard Mounds", [
+    f.mesh("Mound A Base", sphere(2.6, 16, 10), earth, {
+      position: [35, 0.05, -7],
+      scale: [1, 0.18, 1.2],
+    }, { receiveShadow: true }),
+    f.mesh("Mound A Crown", sphere(2.0, 14, 9), grassCap, {
+      position: [35, 0.12, -7],
+      scale: [1, 0.18, 1.1],
+    }, { receiveShadow: true }),
+    f.mesh("Mound B Base", sphere(2.2, 14, 9), earth, {
+      position: [39, 0.04, 14],
+      scale: [1, 0.16, 1.0],
+    }, { receiveShadow: true }),
+    f.mesh("Mound B Crown", sphere(1.7, 12, 8), grassCap, {
+      position: [39, 0.1, 14],
+      scale: [1, 0.18, 1.0],
+    }, { receiveShadow: true }),
+  ]);
+}
+
+/**
+ * A dry-stone retaining wall along the orchard's west edge — boxy field
+ * stones stacked two courses high, with a wider capstone course on top.
+ * A 1.4-unit gap in the middle lets a doll walk between the lawn and the
+ * orchard.
+ */
+function buildOrchardWall(f: NodeFactory): SceneNode {
+  const stone = std(C.dryStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.dryStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const capstone = std(C.dryStoneDark, 0.92, { flatShading: true });
+  const rng = mulberry32(0xd4d51078);
+  const zMin = ORCHARD_POS[2] - ORCHARD_D / 2 + 1;
+  const zMax = ORCHARD_POS[2] + ORCHARD_D / 2 - 1;
+  const gapHalf = 0.7;
+  const gapZ = ORCHARD_POS[2];
+  // Two courses of irregular stones.
+  const stones: Transform[] = [];
+  const stonesDark: Transform[] = [];
+  const courseHeights = [0.18, 0.45];
+  for (const y of courseHeights) {
+    let z = zMin;
+    while (z < zMax) {
+      const w = 0.45 + rng() * 0.35;
+      // Skip the gap.
+      if (Math.abs(z - gapZ) < gapHalf || Math.abs(z + w - gapZ) < gapHalf) {
+        z += w;
+        continue;
+      }
+      const inst: Transform = {
+        position: [ORCHARD_WALL_X + (rng() - 0.5) * 0.08, y, z + w / 2],
+        rotation: [0, rng() * 0.3 - 0.15, 0],
+        scale: [w, 0.26, 0.42 + rng() * 0.18],
+      };
+      (rng() < 0.35 ? stonesDark : stones).push(inst);
+      z += w * 0.97;
+    }
+  }
+  // Wider capstone course.
+  const caps: Transform[] = [];
+  let cz = zMin;
+  while (cz < zMax) {
+    const w = 0.55 + rng() * 0.3;
+    if (Math.abs(cz - gapZ) < gapHalf || Math.abs(cz + w - gapZ) < gapHalf) {
+      cz += w;
+      continue;
+    }
+    caps.push({
+      position: [ORCHARD_WALL_X, 0.62, cz + w / 2],
+      rotation: [0, rng() * 0.18 - 0.09, 0],
+      scale: [w, 0.1, 0.6],
+    });
+    cz += w * 0.99;
+  }
+  return f.group("Orchard Wall", [
+    f.instanced("Wall Stones", box(1, 1, 1), stone, stones, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.instanced("Wall Stones Dark", box(1, 1, 1), stoneDark, stonesDark, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.instanced("Wall Capstones", box(1, 1, 1), capstone, caps, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+  ]);
+}
+
+/**
+ * A small grove of fruiting apple trees — wider, fluffier than the conifers
+ * in the front yard. Each tree has a short cylindrical trunk and two
+ * overlapping rounded foliage spheres dotted with red apples. Placed
+ * deterministically across the orchard, avoiding the mounds, the wall gap,
+ * the cart and the well.
+ */
+function buildAppleTrees(f: NodeFactory): SceneNode {
+  const trunkMat = std(C.bark, 0.95, { texture: "bark", flatShading: true });
+  const foliage = std(C.appleFoliage, 0.85, { flatShading: true });
+  const foliageLight = std(C.foliage, 0.85, { flatShading: true });
+  const apple = std(C.appleRed, 0.55, { flatShading: true });
+  // Deterministic positions inside the orchard plane.
+  const layouts: { x: number; z: number; s: number }[] = [
+    { x: 28, z: -6, s: 1.0 },
+    { x: 31, z: 2, s: 1.15 },
+    { x: 36, z: -5, s: 0.95 },
+    { x: 33, z: 8, s: 1.1 },
+    { x: 38, z: 6, s: 1.0 },
+    { x: 40, z: -2, s: 1.05 },
+    { x: 27, z: 14, s: 0.9 },
+    { x: 36, z: 16, s: 1.0 },
+  ];
+  const trees: SceneNode[] = [];
+  // Apple instances are batched per-tree.
+  for (let i = 0; i < layouts.length; i++) {
+    const lay = layouts[i]!;
+    const rng = mulberry32(0xa00d + i * 17);
+    const parts: SceneNode[] = [
+      f.mesh("Trunk", cylinder(0.18, 0.24, 1.1, 8), trunkMat, {
+        position: [0, 0.55, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Lower Limbs", sphere(0.45, 8, 6), trunkMat, {
+        position: [0, 1.05, 0],
+      }),
+      // Two overlapping foliage canopies.
+      f.mesh("Canopy A", sphere(1.05, 14, 10), foliage, {
+        position: [0, 1.6, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Canopy B", sphere(0.85, 12, 9), foliageLight, {
+        position: [0.4, 1.95, -0.2],
+      }, { castShadow: true }),
+      f.mesh("Canopy C", sphere(0.78, 12, 9), foliage, {
+        position: [-0.4, 1.85, 0.3],
+      }, { castShadow: true }),
+    ];
+    // Scatter ~14 apples on the canopy surface.
+    const apples: Transform[] = [];
+    for (let a = 0; a < 14; a++) {
+      const phi = rng() * Math.PI * 2;
+      const theta = (rng() * 0.7 + 0.1) * Math.PI;
+      const cr = 1.0 + rng() * 0.1;
+      apples.push({
+        position: [
+          Math.sin(theta) * Math.cos(phi) * cr,
+          1.6 + Math.cos(theta) * cr,
+          Math.sin(theta) * Math.sin(phi) * cr,
+        ],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1],
+      });
+    }
+    parts.push(
+      f.instanced("Apples", sphere(0.07, 8, 6), apple, apples, { castShadow: true }),
+    );
+    trees.push(
+      f.group(`Apple Tree ${i + 1}`, parts, {
+        position: [lay.x, 0, lay.z],
+        scale: [lay.s, lay.s, lay.s],
+        rotation: [0, (i * 0.7) % (Math.PI * 2), 0],
+      }),
+    );
+  }
+  return f.group("Apple Grove", trees);
+}
+
+/**
+ * A loose scatter of fallen apples across the orchard grass — instanced red
+ * spheres deterministically placed away from the trees' trunks but bunched
+ * near them, where windfall actually lands.
+ */
+function buildFallenApples(f: NodeFactory): SceneNode {
+  const apple = std(C.appleRed, 0.55, { flatShading: true });
+  const rng = mulberry32(0xfa11e7);
+  const instances: Transform[] = [];
+  const centres: [number, number][] = [
+    [28, -6], [31, 2], [36, -5], [33, 8], [38, 6], [40, -2], [27, 14], [36, 16],
+  ];
+  for (const [cx, cz] of centres) {
+    const n = 4 + Math.floor(rng() * 4);
+    for (let i = 0; i < n; i++) {
+      const a = rng() * Math.PI * 2;
+      const r = 0.6 + rng() * 1.0;
+      instances.push({
+        position: [cx + Math.cos(a) * r, 0.06, cz + Math.sin(a) * r],
+        rotation: [rng() * Math.PI, rng() * Math.PI, rng() * Math.PI],
+        scale: [1, 1, 1],
+      });
+    }
+  }
+  return f.instanced("Fallen Apples", sphere(0.07, 7, 6), apple, instances, {
+    castShadow: true,
+    receiveShadow: true,
+  });
+}
+
+/**
+ * A weathered wooden hay cart with two large spoked wheels — flat bed,
+ * sloped end-boards and a heap of straw spilling over the back. Sits on the
+ * orchard with one shaft tilted gently down to the ground.
+ */
+function buildHayCart(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.hayCartWood, 0.85, { texture: "wood" });
+  const ironBand = std(C.ironGrey, 0.5, { metalness: 0.5, flatShading: true });
+  const hay = std(C.strawHay, 0.95, { flatShading: true });
+  const hayDark = std(C.strawHayDark, 0.95, { flatShading: true });
+  // Cart bed sits low; wheel radius defines height.
+  const wheelR = 0.55;
+  const bedY = wheelR + 0.08;
+  const bedW = 1.6;
+  const bedD = 0.95;
+  const parts: SceneNode[] = [
+    // Flat plank bed.
+    f.mesh("Cart Bed", box(bedW, 0.1, bedD), wood, { position: [0, bedY, 0] }, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    // Side rails — taller in front, sloping down at the back tailgate.
+    f.mesh("Rail L", box(bedW, 0.42, 0.08), wood, {
+      position: [0, bedY + 0.26, bedD / 2 - 0.04],
+    }, { castShadow: true }),
+    f.mesh("Rail R", box(bedW, 0.42, 0.08), wood, {
+      position: [0, bedY + 0.26, -bedD / 2 + 0.04],
+    }, { castShadow: true }),
+    f.mesh("Front Board", box(0.08, 0.65, bedD), wood, {
+      position: [-bedW / 2 + 0.04, bedY + 0.36, 0],
+    }, { castShadow: true }),
+    // A dropped tailgate at the back.
+    f.mesh("Tailgate", box(0.08, 0.34, bedD), wood, {
+      position: [bedW / 2 + 0.04, bedY + 0.18, 0],
+      rotation: [0, 0, -0.45],
+    }, { castShadow: true }),
+    // Two shafts pulling forward off the front, one tilted to the ground.
+    f.mesh("Shaft L", cylinder(0.05, 0.05, 1.6, 8), wood, {
+      position: [-bedW / 2 - 0.75, bedY - 0.05, bedD / 2 - 0.18],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    f.mesh("Shaft R", cylinder(0.05, 0.05, 1.6, 8), wood, {
+      position: [-bedW / 2 - 0.75, bedY - 0.45, -bedD / 2 + 0.18],
+      rotation: [0, 0, Math.PI / 2 + 0.3],
+    }, { castShadow: true }),
+  ];
+  // Two large spoked wheels — a cylinder rim plus six crossbars per wheel.
+  for (const side of [-1, 1] as const) {
+    const wheelZ = side * (bedD / 2 + 0.04);
+    parts.push(
+      f.mesh("Wheel Rim", cylinder(wheelR, wheelR, 0.07, 22), ironBand, {
+        position: [0.05, wheelR, wheelZ],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Wheel Tyre", cylinder(wheelR + 0.04, wheelR + 0.04, 0.05, 24), wood, {
+        position: [0.05, wheelR, wheelZ],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true }),
+      f.mesh("Hub", cylinder(0.1, 0.1, 0.1, 10), wood, {
+        position: [0.05, wheelR, wheelZ],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true }),
+    );
+    for (let s = 0; s < 6; s++) {
+      const a = (s / 6) * Math.PI;
+      parts.push(
+        f.mesh("Spoke", box(wheelR * 1.85, 0.04, 0.04), wood, {
+          position: [0.05, wheelR, wheelZ],
+          rotation: [0, 0, a],
+        }, { castShadow: true }),
+      );
+    }
+  }
+  // Hay heap piled in the bed, spilling over the tailgate.
+  parts.push(
+    f.mesh("Hay Heap", sphere(0.65, 14, 9), hay, {
+      position: [0.1, bedY + 0.45, 0],
+      scale: [1.1, 0.65, 0.85],
+    }, { castShadow: true }),
+    f.mesh("Hay Mound", sphere(0.45, 12, 8), hayDark, {
+      position: [-0.2, bedY + 0.55, 0.15],
+      scale: [1, 0.55, 0.9],
+    }),
+    // Loose straws spilling over the tailgate.
+    f.mesh("Spill A", cylinder(0.02, 0.02, 0.5, 4), hayDark, {
+      position: [bedW / 2 + 0.18, bedY + 0.05, 0.1],
+      rotation: [0, 0.1, Math.PI / 2.5],
+    }),
+    f.mesh("Spill B", cylinder(0.02, 0.02, 0.6, 4), hay, {
+      position: [bedW / 2 + 0.2, bedY + 0.02, -0.15],
+      rotation: [0, -0.3, Math.PI / 2.3],
+    }),
+    f.mesh("Spill C", cylinder(0.02, 0.02, 0.4, 4), hay, {
+      position: [bedW / 2 + 0.15, bedY + 0.08, 0.3],
+      rotation: [0, 0.4, Math.PI / 2.7],
+    }),
+  );
+  return f.group("Hay Cart", parts, { position: pos, rotation: [0, Math.PI / 5, 0] });
+}
+
+/**
+ * An old stone water well — circular dry-stone wall, peaked shingled roof
+ * carried on four corner posts, a winch with rope, and a wooden bucket
+ * dangling above the dark water.
+ */
+function buildOldWell(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.dryStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.dryStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const roofShingle = std(C.wellRoof, 0.85, { texture: "shingle", textureScale: [1.5, 1.2] });
+  const wood = std(C.wellRoof, 0.85, { texture: "wood" });
+  const post = std(C.walnut, 0.85, { texture: "wood" });
+  const water = {
+    color: C.wellWater,
+    roughness: 0.15,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.85,
+  };
+  const rope = std(C.ropeJute, 0.95, { flatShading: true });
+  const wellR = 0.6;
+  const wellH = 0.85;
+  const parts: SceneNode[] = [
+    // Stone outer ring and inner ring (so the lip looks hollow).
+    f.mesh("Well Outer", cylinder(wellR, wellR, wellH, 18), stone, {
+      position: [0, wellH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Well Inner", cylinder(wellR - 0.12, wellR - 0.12, wellH - 0.05, 18), stoneDark, {
+      position: [0, wellH / 2 - 0.025, 0],
+    }, { receiveShadow: true }),
+    // The dark water surface set just below the lip.
+    f.mesh("Well Water", cylinder(wellR - 0.14, wellR - 0.14, 0.04, 18), water, {
+      position: [0, wellH - 0.18, 0],
+    }),
+    // A flat rim cap of darker stone on top.
+    f.mesh("Well Cap", cylinder(wellR + 0.05, wellR + 0.05, 0.06, 18), stoneDark, {
+      position: [0, wellH + 0.03, 0],
+    }, { castShadow: true }),
+  ];
+  // Four corner posts carrying the peaked roof.
+  const postH = 1.0;
+  const postY = wellH + 0.06 + postH / 2;
+  const cornerXZ = wellR + 0.05;
+  const corners: [number, number][] = [
+    [-cornerXZ, -cornerXZ], [cornerXZ, -cornerXZ],
+    [-cornerXZ, cornerXZ], [cornerXZ, cornerXZ],
+  ];
+  for (const [cx, cz] of corners) {
+    parts.push(
+      f.mesh("Post", box(0.08, postH, 0.08), post, { position: [cx, postY, cz] }, {
+        castShadow: true,
+      }),
+    );
+  }
+  // Peaked roof — two sloping panels meeting at a ridge.
+  const roofTopY = postY + postH / 2 + 0.04;
+  const roofW = (cornerXZ + 0.18) * 2;
+  const roofRise = 0.55;
+  const roofHyp = Math.hypot(roofRise, roofW / 2);
+  const roofSlope = Math.atan2(roofRise, roofW / 2);
+  parts.push(
+    f.mesh("Roof Front", box(roofHyp, 0.06, roofW + 0.1), roofShingle, {
+      position: [-roofW / 4, roofTopY + roofRise / 2 - 0.02, 0],
+      rotation: [0, 0, roofSlope],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Back", box(roofHyp, 0.06, roofW + 0.1), roofShingle, {
+      position: [roofW / 4, roofTopY + roofRise / 2 - 0.02, 0],
+      rotation: [0, 0, -roofSlope],
+    }, { castShadow: true, receiveShadow: true }),
+    // Ridge cap.
+    f.mesh("Roof Ridge", cylinder(0.06, 0.06, roofW + 0.12, 6), roofShingle, {
+      position: [0, roofTopY + roofRise, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Winch — a horizontal log between the front posts with a crank handle.
+  const winchY = postY + 0.05;
+  parts.push(
+    f.mesh("Winch Log", cylinder(0.07, 0.07, cornerXZ * 2 - 0.1, 10), post, {
+      position: [0, winchY, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Crank Arm", box(0.15, 0.025, 0.025), post, {
+      position: [0, winchY + 0.06, cornerXZ - 0.04],
+    }),
+    f.mesh("Crank Grip", cylinder(0.018, 0.018, 0.06, 6), post, {
+      position: [0.07, winchY + 0.06, cornerXZ - 0.04],
+      rotation: [Math.PI / 2, 0, 0],
+    }),
+    // Rope going down from the winch to the bucket.
+    f.mesh("Rope", cylinder(0.012, 0.012, winchY - 0.4, 5), rope, {
+      position: [0, winchY / 2 + 0.2, 0],
+    }),
+    // Wooden bucket dangling above the water.
+    f.group("Bucket", [
+      f.mesh("Bucket Body", cylinder(0.13, 0.11, 0.18, 12), wood, {
+        position: [0, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Bucket Band Top", cylinder(0.135, 0.135, 0.015, 12),
+        std(C.ironGrey, 0.5, { metalness: 0.5 }),
+        { position: [0, 0.08, 0] }),
+      f.mesh("Bucket Band Bot", cylinder(0.115, 0.115, 0.015, 12),
+        std(C.ironGrey, 0.5, { metalness: 0.5 }),
+        { position: [0, -0.08, 0] }),
+      f.mesh("Bucket Handle", cylinder(0.008, 0.008, 0.28, 5),
+        std(C.ironGrey, 0.5, { metalness: 0.5 }),
+        { position: [0, 0.12, 0], rotation: [0, 0, Math.PI / 2] }),
+    ], { position: [0, wellH + 0.4, 0] }),
+  );
+  // A small stone bench beside the well for character.
+  parts.push(
+    f.mesh("Bench Slab", box(0.7, 0.1, 0.28), stoneDark, {
+      position: [wellR + 0.7, 0.32, -wellR - 0.05],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Bench Leg L", box(0.14, 0.32, 0.22), stoneDark, {
+      position: [wellR + 0.45, 0.16, -wellR - 0.05],
+    }, { castShadow: true }),
+    f.mesh("Bench Leg R", box(0.14, 0.32, 0.22), stoneDark, {
+      position: [wellR + 0.95, 0.16, -wellR - 0.05],
+    }, { castShadow: true }),
+  );
+  return f.group("Old Well", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
+}
+
 /* ───────────────────────── exterior walls ───────────────────────── */
 
 function buildBackWall(f: NodeFactory): SceneNode {
@@ -2993,6 +4085,16 @@ function buildFurniture(f: NodeFactory): SceneNode {
  *    scene beyond the rear fence, with a rolling hill, a brook crossed
  *    by a wooden footbridge, wildflowers, meadow trees and a perimeter
  *    post-and-rail fence.
+ *  - Sixth pass — yard: a burlap-headed scarecrow with a crow on its
+ *    crossarm, a five-pumpkin patch with winding vines, a parasol-shaded
+ *    bistro patio set with two cushioned chairs and a teapot, and a
+ *    coiled garden hose on a wall-mounted reel with a brass spigot; house:
+ *    a pair of cascading hanging flower baskets on the porch canopy and a
+ *    pine-needle wreath with a pink ribbon on the front door; scene: a
+ *    side-orchard ground plane east of the lawn with a dry-stone retaining
+ *    wall, a small grove of fruiting apple trees with windfall apples,
+ *    rolling earth mounds, an old hay cart and a stone water well with a
+ *    peaked shingle roof and a winched bucket.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -3019,6 +4121,11 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: FIREWOOD_POS[0], z: FIREWOOD_POS[2], r: 1.0 },
     { x: SWING_POS[0], z: SWING_POS[2], r: 1.5 },
     { x: CLOTHESLINE_POS[0], z: CLOTHESLINE_POS[2], r: 1.8 },
+    // Sixth-pass keep-outs — scarecrow, pumpkin patch, patio set, hose reel.
+    { x: SCARECROW_POS[0], z: SCARECROW_POS[2], r: 0.9 },
+    { x: PUMPKIN_PATCH_POS[0], z: PUMPKIN_PATCH_POS[2], r: 1.2 },
+    { x: PATIO_SET_POS[0], z: PATIO_SET_POS[2], r: 1.6 },
+    { x: HOSE_REEL_POS[0], z: HOSE_REEL_POS[2], r: 0.5 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -3047,8 +4154,13 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildFirewoodPile(f, FIREWOOD_POS),
     buildTreeSwing(f, SWING_POS),
     buildClothesline(f, CLOTHESLINE_POS),
+    buildScarecrow(f, SCARECROW_POS),
+    buildPumpkinPatch(f, PUMPKIN_PATCH_POS),
+    buildPatioSet(f, PATIO_SET_POS),
+    buildGardenHoseReel(f, HOSE_REEL_POS),
   ]);
   const meadow = buildBackMeadow(f);
+  const orchard = buildSideOrchard(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -3072,6 +4184,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildLightningRod(f),
     buildRoofGutters(f),
     buildPorchRailings(f),
+    buildHangingBaskets(f),
+    buildDoorWreath(f),
     buildFurniture(f),
   ]);
   const root: SceneNode = {
@@ -3079,7 +4193,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, house],
+    children: [garden, meadow, orchard, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,
