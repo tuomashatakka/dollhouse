@@ -62,6 +62,11 @@ function makeCanvasTexture({ size = 512, seed, draw }: CanvasOpts): THREE.Canvas
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
   texture.colorSpace = THREE.SRGBColorSpace;
+  // Mipmaps are generated automatically by CanvasTexture when dimensions are
+  // power-of-two; anisotropy keeps glancing-angle detail (lawn, paths) crisp.
+  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
   texture.anisotropy = 4;
   return texture;
 }
@@ -231,6 +236,77 @@ function buildDefaultLibrary(): void {
         ctx.lineTo(size, i * t);
         ctx.stroke();
       }
+    },
+  });
+
+  // Burlap — coarse hessian weave with criss-crossing fibres in straw tones.
+  // Used for the scarecrow's sack head and hat band.
+  registry.burlap = makeCanvasTexture({
+    seed: 0xb117a9,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#c2a262";
+      ctx.fillRect(0, 0, size, size);
+      const threads = 64;
+      const step = size / threads;
+      for (let i = 0; i < threads; i++) {
+        const shade = 30 + rng() * 22;
+        // Horizontal weave row.
+        ctx.fillStyle = `hsl(${30 + rng() * 14}, 38%, ${shade}%)`;
+        for (let x = 0; x < size; x += step * 2) {
+          ctx.fillRect(x, i * step, step * 1.05, step * 0.9);
+        }
+        // Vertical weave row offset by one fibre.
+        ctx.fillStyle = `hsl(${30 + rng() * 14}, 32%, ${shade + 6}%)`;
+        for (let y = 0; y < size; y += step * 2) {
+          ctx.fillRect(i * step, y + step, step * 0.9, step * 1.05);
+        }
+      }
+      // A faint smudge of darker noise to age the fibre.
+      paintNoise(ctx, rng, size, "transparent", 40, 0.0025);
+    },
+  });
+
+  // Shingle — rows of overlapping diamond-tipped shingles, weathered cedar.
+  // Used on the well roof.
+  registry.shingle = makeCanvasTexture({
+    seed: 0x54171c1e,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#3b2a1f";
+      ctx.fillRect(0, 0, size, size);
+      const rows = 7;
+      const cols = 9;
+      const rh = size / rows;
+      const cw = size / cols;
+      for (let r = 0; r < rows; r++) {
+        const offset = r % 2 === 0 ? 0 : cw / 2;
+        const y = size - (r + 1) * rh;
+        for (let c = -1; c < cols + 1; c++) {
+          const x = c * cw + offset;
+          const shade = 28 + rng() * 22;
+          ctx.fillStyle = `hsl(${22 + rng() * 14}, 24%, ${shade}%)`;
+          // Shingle tab — a rounded-rectangle wide tooth.
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + cw * 0.96, y);
+          ctx.lineTo(x + cw * 0.96, y + rh * 0.72);
+          ctx.lineTo(x + cw * 0.78, y + rh * 0.88);
+          ctx.lineTo(x + cw * 0.18, y + rh * 0.88);
+          ctx.lineTo(x, y + rh * 0.72);
+          ctx.closePath();
+          ctx.fill();
+          // Subtle highlight along the top edge to suggest a beveled lip.
+          ctx.fillStyle = `hsla(30, 30%, ${shade + 18}%, 0.4)`;
+          ctx.fillRect(x + 1, y + 1, cw * 0.94, 2);
+          // Grain scratch down the middle.
+          ctx.strokeStyle = `hsla(28, 20%, ${shade - 14}%, 0.55)`;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(x + cw / 2, y + 4);
+          ctx.lineTo(x + cw / 2, y + rh * 0.84);
+          ctx.stroke();
+        }
+      }
+      paintNoise(ctx, rng, size, "transparent", 50, 0.0018);
     },
   });
 }
