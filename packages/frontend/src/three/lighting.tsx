@@ -6,23 +6,37 @@ export function Lighting() {
       {/* Soft warm HDR — gives the dollhouse PBR a believable studio glow. */}
       <Environment preset="apartment" background={false} />
       <ambientLight intensity={0.35} color="#fff0e6" />
+      {/*
+        Key sun light. Shadow frustum widened to cover the full extended
+        scene — the back meadow (z ≤ -10), the side orchard (x up to +42)
+        and the west pond garden (x down to -42). A 64-unit far plane keeps
+        the willow and apple canopies inside the cascade, and a 4096 shadow
+        map preserves crispness over the larger area.
+      */}
       <directionalLight
         castShadow
-        position={[8, 14, 9]}
-        intensity={1.5}
+        position={[12, 22, 14]}
+        intensity={1.55}
         color="#fff5e6"
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={4096}
+        shadow-mapSize-height={4096}
         shadow-camera-near={0.5}
-        shadow-camera-far={40}
-        shadow-camera-left={-12}
-        shadow-camera-right={12}
-        shadow-camera-top={12}
-        shadow-camera-bottom={-2}
-        shadow-bias={-0.0005}
+        shadow-camera-far={64}
+        shadow-camera-left={-44}
+        shadow-camera-right={44}
+        shadow-camera-top={22}
+        shadow-camera-bottom={-22}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.04}
       />
       {/* Pink rim fill from camera-left to keep the interior from going flat. */}
       <directionalLight position={[-10, 6, 4]} intensity={0.35} color="#ffd5e2" />
+      {/*
+        A cool, dim fill from the west — bounce light off the new pond
+        garden so its boulders and willows don't fall completely flat
+        when the sun is on the orchard side.
+      */}
+      <directionalLight position={[-18, 8, 6]} intensity={0.22} color="#b9d6e6" />
     </>
   );
 }
