@@ -266,6 +266,88 @@ function buildDefaultLibrary(): void {
     },
   });
 
+  // Awning stripe — vertical alternating cream and pink bands. Used on the
+  // window awnings. Authored with a soft inner shadow on each stripe so the
+  // canvas reads as fabric rather than a flat decal at glancing angles.
+  registry["awning-stripe"] = makeCanvasTexture({
+    seed: 0x4a1d177e,
+    draw: (ctx, rng, size) => {
+      const stripes = 6;
+      const w = size / stripes;
+      for (let s = 0; s < stripes; s++) {
+        const cream = s % 2 === 0;
+        ctx.fillStyle = cream ? "#fff5e6" : "#e6738d";
+        ctx.fillRect(s * w, 0, w, size);
+        // Inner-shadow gradient along each stripe — gives a subtle "fold"
+        // reading that mimics depth on a fabric surface.
+        const grad = ctx.createLinearGradient(s * w, 0, s * w + w, 0);
+        grad.addColorStop(0, "rgba(0,0,0,0.25)");
+        grad.addColorStop(0.5, "rgba(0,0,0,0)");
+        grad.addColorStop(1, "rgba(0,0,0,0.25)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(s * w, 0, w, size);
+        // A faint weave noise to break up the flat stripe.
+        for (let i = 0; i < 60; i++) {
+          ctx.fillStyle = `rgba(255,255,255,${0.04 + rng() * 0.06})`;
+          ctx.fillRect(s * w + rng() * w, rng() * size, 1, 1);
+        }
+      }
+      // Horizontal seams every 1/8 of the height — suggests stitched panels.
+      ctx.strokeStyle = "rgba(0,0,0,0.18)";
+      ctx.lineWidth = 1;
+      for (let i = 1; i < 8; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, (size / 8) * i);
+        ctx.lineTo(size, (size / 8) * i);
+        ctx.stroke();
+      }
+    },
+  });
+
+  // Koi water — drifting concentric ripples over a teal pond surface, with a
+  // soft brightness gradient so the centre reads slightly more sunlit than
+  // the shaded edge. Layered with a low-density highlight noise to break up
+  // any banding on the mipmap chain.
+  registry["koi-water"] = makeCanvasTexture({
+    seed: 0xc01f15,
+    draw: (ctx, rng, size) => {
+      // Base radial gradient — sunlit centre, shaded periphery.
+      const base = ctx.createRadialGradient(
+        size * 0.5, size * 0.45, size * 0.05,
+        size * 0.5, size * 0.5, size * 0.6,
+      );
+      base.addColorStop(0, "#a8d8e8");
+      base.addColorStop(0.6, "#5fa3bc");
+      base.addColorStop(1, "#2f5d75");
+      ctx.fillStyle = base;
+      ctx.fillRect(0, 0, size, size);
+      // Three drifting ripple centres — concentric arcs.
+      const centres: [number, number][] = [
+        [size * 0.32, size * 0.38],
+        [size * 0.7, size * 0.66],
+        [size * 0.48, size * 0.78],
+      ];
+      ctx.lineWidth = 1.4;
+      for (const [cx, cy] of centres) {
+        for (let r = 6; r < size * 0.55; r += 6 + rng() * 4) {
+          ctx.strokeStyle = `rgba(255,255,255,${0.08 + rng() * 0.08})`;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+      // Tiny highlights for sparkle.
+      for (let i = 0; i < 280; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `rgba(255,255,255,${0.25 + rng() * 0.4})`;
+        ctx.fillRect(x, y, 1 + rng() * 1.5, 1);
+      }
+      // Subtle dark depth wash near the edges to imply deeper water.
+      paintNoise(ctx, rng, size, "transparent", 30, 0.0012);
+    },
+  });
+
   // Shingle — rows of overlapping diamond-tipped shingles, weathered cedar.
   // Used on the well roof.
   registry.shingle = makeCanvasTexture({

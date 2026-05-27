@@ -117,6 +117,35 @@ const ORCHARD_WALL_X = 25.5;
 const HAY_CART_POS: [number, number, number] = [30.5, 0, 11];
 const OLD_WELL_POS: [number, number, number] = [37.5, 0, -3];
 
+/**
+ * Seventh-pass courtyard props — outdoor gathering and tidying. A round
+ * fire pit on the east lawn (south of the patio set), a hexagonal gazebo
+ * tucked into the southwest lawn, and a composter bin parked just north
+ * of the garden shed in the back-left corner of the yard.
+ */
+const FIRE_PIT_POS: [number, number, number] = [8.5, 0, 5.0];
+const GAZEBO_POS: [number, number, number] = [-9.5, 0, 7.5];
+const COMPOSTER_POS: [number, number, number] = [-10.0, 0, -3.0];
+
+/**
+ * Seventh-pass scene extension — a Japanese-inspired west pond garden,
+ * mirroring the side orchard's footprint along the lawn's western edge.
+ * The garden overlaps the lawn by ~1 unit along the join so the ground
+ * layer has no holes. It carries a koi pond ringed by polished river
+ * stones, an arched stone footbridge, two stone garden lanterns, a pair
+ * of weeping willows and scattered decorative boulders softened by moss.
+ */
+const POND_GARDEN_POS: [number, number, number] = [-33, -0.003, 5];
+const POND_GARDEN_W = 18;
+const POND_GARDEN_D = 28;
+/** Mirror image of the orchard wall — the moss-stone curb along the lawn join. */
+const POND_GARDEN_WALL_X = -25.5;
+const KOI_POND_POS: [number, number, number] = [-33, 0, 4];
+const KOI_POND_RADIUS = 3.4;
+const STONE_BRIDGE_POS: [number, number, number] = [-29.6, 0, 4];
+const WEST_LANTERN_A: [number, number, number] = [-37.5, 0, -2];
+const WEST_LANTERN_B: [number, number, number] = [-37.5, 0, 11];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -214,6 +243,35 @@ const C = {
   hayCartWood: "#7c5536",
   wellRoof: "#5c3f2c",
   wellWater: "#3a5a72",
+  // Seventh enhancement pass — fire pit + ember glow, gazebo, composter,
+  // porch step rails, striped awnings, and a Japanese-style west pond
+  // garden scene extension (koi pond, arched stone bridge, stone lanterns,
+  // weeping willows, decorative boulders).
+  firePitStone: "#5a544c",
+  firePitAsh: "#2c2825",
+  firePitEmber: "#f07a2c",
+  emberGlow: "#ffb348",
+  gazeboPost: "#f0e2c8",
+  gazeboRoof: "#bd6c8e",
+  gazeboTrim: "#fdfbf4",
+  composterWood: "#5c4326",
+  composterBin: "#3a2a1e",
+  awningCream: "#fff5e6",
+  awningStripe: "#e6738d",
+  pondGardenGrass: "#80a85a",
+  koiWater: "#3f8aa2",
+  koiSurface: "#84c2d8",
+  koiOrange: "#e88341",
+  bridgeStone: "#a89b8a",
+  bridgeStoneDark: "#766a5b",
+  lanternStone: "#8c8278",
+  lanternGlow: "#ffd989",
+  willowTrunk: "#5e4a30",
+  willowFoliage: "#7ea64b",
+  boulderRock: "#8a8580",
+  boulderShade: "#5a564f",
+  cherryBlossom: "#f4c7d4",
+  mossGreen: "#4d6f3a",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -3330,6 +3388,784 @@ function buildOldWell(f: NodeFactory, pos: [number, number, number]): SceneNode 
   return f.group("Old Well", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
 }
 
+/* ─────────────────── seventh-pass courtyard props ─────────────────── */
+
+/**
+ * A round stone fire pit — a low ring of mortared field stones around an
+ * ash pit, three crossed logs in the middle and a cluster of glowing
+ * ember spheres at the heart of the pile. Eight sittable log rounds
+ * arranged around the ring give it a "campfire" feel without ringing
+ * the whole pit with seating that fights the patio set.
+ */
+function buildFirePit(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.firePitStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.firePitAsh, 0.95, { flatShading: true });
+  const log = std(C.logBark, 0.9, { texture: "bark", flatShading: true });
+  const logFlesh = std(C.logFlesh, 0.85, { flatShading: true });
+  const ember = std(C.firePitEmber, 0.5, { emissive: C.emberGlow, flatShading: true });
+  const ash = std(C.firePitAsh, 0.95);
+  const pitR = 0.85;
+  const ringStones = 14;
+  const parts: SceneNode[] = [];
+  // Ring of stacked stones.
+  for (let i = 0; i < ringStones; i++) {
+    const a = (i / ringStones) * Math.PI * 2;
+    const x = Math.cos(a) * pitR;
+    const z = Math.sin(a) * pitR;
+    const tilt = ((i * 137) % 7) / 30;
+    parts.push(
+      f.mesh("Stone", box(0.32, 0.24, 0.28), i % 3 === 0 ? stoneDark : stone, {
+        position: [x, 0.12, z],
+        rotation: [0, a + 0.15, tilt],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Ash circle inside the ring.
+  parts.push(
+    f.mesh("Ash Bed", cylinder(pitR - 0.18, pitR - 0.14, 0.04, 22), ash, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+  );
+  // Three crossed logs at the centre.
+  const logLen = 1.1;
+  const logR = 0.085;
+  for (let i = 0; i < 3; i++) {
+    const a = (i / 3) * Math.PI;
+    parts.push(
+      f.mesh("Log", cylinder(logR, logR, logLen, 8), log, {
+        position: [0, 0.16 + i * 0.04, 0],
+        rotation: [0, a, Math.PI / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Log End A", cylinder(logR, logR, 0.018, 8), logFlesh, {
+        position: [Math.cos(a) * (logLen / 2 - 0.01), 0.16 + i * 0.04, Math.sin(a) * (logLen / 2 - 0.01)],
+        rotation: [0, a, Math.PI / 2],
+      }),
+      f.mesh("Log End B", cylinder(logR, logR, 0.018, 8), logFlesh, {
+        position: [-Math.cos(a) * (logLen / 2 - 0.01), 0.16 + i * 0.04, -Math.sin(a) * (logLen / 2 - 0.01)],
+        rotation: [0, a, Math.PI / 2],
+      }),
+    );
+  }
+  // Glowing ember cluster between the logs.
+  const embers: Transform[] = [];
+  const rng = mulberry32(0xe11be7);
+  for (let i = 0; i < 9; i++) {
+    embers.push({
+      position: [(rng() - 0.5) * 0.5, 0.13 + rng() * 0.05, (rng() - 0.5) * 0.5],
+      rotation: [rng(), rng(), rng()],
+      scale: [0.6 + rng() * 0.6, 0.6 + rng() * 0.6, 0.6 + rng() * 0.6],
+    });
+  }
+  parts.push(
+    f.instanced("Embers", sphere(0.05, 6, 5), ember, embers),
+  );
+  // Three log stool seats around the pit (not a full ring — leaves room for the patio set).
+  const stoolAngles = [Math.PI * 0.35, Math.PI * 0.95, Math.PI * 1.7];
+  for (const a of stoolAngles) {
+    const sr = pitR + 0.95;
+    parts.push(
+      f.group("Log Stool", [
+        f.mesh("Stool Body", cylinder(0.22, 0.24, 0.42, 10), log, {
+          position: [0, 0.21, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh("Stool Top", cylinder(0.22, 0.22, 0.02, 10), logFlesh, {
+          position: [0, 0.42, 0],
+        }),
+      ], { position: [Math.cos(a) * sr, 0, Math.sin(a) * sr] }),
+    );
+  }
+  return f.group("Fire Pit", parts, { position: pos });
+}
+
+/**
+ * A hexagonal cottage gazebo — six creamy posts on a low octagonal stone
+ * pad carrying a rose-pink shingle dome with a finial ball, and a small
+ * curved bench wrapping the back three panels. Built airy so it reads as
+ * a destination from across the lawn without crowding the patio.
+ */
+function buildGazebo(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const post = std(C.gazeboPost, 0.7, { texture: "wood", textureScale: [1, 4] });
+  const trim = std(C.gazeboTrim, 0.7);
+  const roof = std(C.gazeboRoof, 0.8, { texture: "shingle", textureScale: [2, 1.5] });
+  const benchWood = std(C.walnut, 0.7, { texture: "wood" });
+  const pad = std(C.stone, 0.95, { texture: "cobblestone", flatShading: true });
+  const parts: SceneNode[] = [];
+  const r = 1.6;
+  const postH = 2.2;
+  const sides = 6;
+  // Stone pad — a low hexagonal slab.
+  parts.push(
+    f.mesh("Gazebo Pad", cylinder(r + 0.25, r + 0.32, 0.18, sides), pad, {
+      position: [0, 0.09, 0],
+    }, { receiveShadow: true, castShadow: true }),
+    f.mesh("Pad Trim", cylinder(r + 0.27, r + 0.27, 0.03, sides), trim, {
+      position: [0, 0.2, 0],
+    }),
+  );
+  // Six corner posts.
+  for (let i = 0; i < sides; i++) {
+    const a = (i / sides) * Math.PI * 2;
+    parts.push(
+      f.mesh("Post", box(0.12, postH, 0.12), post, {
+        position: [Math.cos(a) * r, 0.18 + postH / 2, Math.sin(a) * r],
+      }, { castShadow: true, receiveShadow: true }),
+      // Decorative bracket at the top of each post.
+      f.mesh("Bracket", box(0.18, 0.22, 0.18), trim, {
+        position: [Math.cos(a) * r * 0.92, 0.18 + postH - 0.04, Math.sin(a) * r * 0.92],
+        rotation: [0, a, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Hexagonal roof dome — a six-sided cone, rotated so its flats line up
+  // with the gaps between posts and its corners sit above the posts.
+  const roofRise = 0.9;
+  const roofPeak = 0.18 + postH + roofRise;
+  parts.push(
+    f.mesh("Roof Dome", cone(r + 0.3, roofRise, 6), roof, {
+      position: [0, 0.18 + postH + roofRise / 2, 0],
+      rotation: [0, Math.PI / sides, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // A thin ring at the eave to read as a fascia / drip edge.
+    f.mesh("Roof Fascia", cylinder(r + 0.32, r + 0.32, 0.05, sides), trim, {
+      position: [0, 0.18 + postH + 0.025, 0],
+      rotation: [0, Math.PI / sides, 0],
+    }, { castShadow: true }),
+  );
+  // Finial — a ball atop a short stem at the dome peak.
+  parts.push(
+    f.mesh("Finial Stem", cylinder(0.04, 0.04, 0.18, 6), trim, {
+      position: [0, roofPeak + 0.1, 0],
+    }),
+    f.mesh("Finial Ball", sphere(0.12, 10, 8), roof, {
+      position: [0, roofPeak + 0.26, 0],
+    }, { castShadow: true }),
+  );
+  // Curved bench wrapping three back panels.
+  for (let i = 0; i < 3; i++) {
+    const a = Math.PI + (i - 1) * (Math.PI / sides) * 2;
+    const br = r - 0.28;
+    parts.push(
+      f.mesh("Bench Seat", box(r * 0.95, 0.05, 0.32), benchWood, {
+        position: [Math.cos(a) * br, 0.5, Math.sin(a) * br],
+        rotation: [0, a + Math.PI / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Bench Back", box(r * 0.95, 0.45, 0.05), benchWood, {
+        position: [Math.cos(a) * (br + 0.13), 0.7, Math.sin(a) * (br + 0.13)],
+        rotation: [0, a + Math.PI / 2, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Hanging lantern at the centre of the dome — a small glowing sphere.
+  parts.push(
+    f.mesh("Lantern Rope", cylinder(0.008, 0.008, 0.5, 4), benchWood, {
+      position: [0, roofPeak - 0.45, 0],
+    }),
+    f.mesh("Lantern", sphere(0.1, 10, 8),
+      std(C.lampGlow, 0.4, { emissive: "#f7d28c" }),
+      { position: [0, roofPeak - 0.75, 0] },
+      { castShadow: true }),
+  );
+  return f.group("Gazebo", parts, { position: pos, rotation: [0, Math.PI / 12, 0] });
+}
+
+/**
+ * A pair of slatted compost bins beside the garden shed — open-top
+ * wooden frames filled with darker mulch, with a small pitchfork leaning
+ * on one bin and a scattering of stray leaves on the lid of the other.
+ */
+function buildComposterBin(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.composterWood, 0.92, { texture: "wood", flatShading: true });
+  const mulch = std(C.composterBin, 0.95, { flatShading: true });
+  const metal = std(C.ironGrey, 0.5, { metalness: 0.5, flatShading: true });
+  const handle = std(C.walnut, 0.8, { texture: "wood" });
+  const leaf = std(C.appleFoliage, 0.95, { flatShading: true });
+  const binW = 0.62;
+  const binH = 0.62;
+  const binD = 0.55;
+  const parts: SceneNode[] = [];
+  // Two bins side-by-side along X.
+  for (let b = 0; b < 2; b++) {
+    const xOff = (b - 0.5) * (binW + 0.05);
+    // Four corner posts.
+    for (const sx of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        parts.push(
+          f.mesh("Post", box(0.06, binH + 0.04, 0.06), wood, {
+            position: [xOff + sx * binW / 2, binH / 2, sz * binD / 2],
+          }, { castShadow: true, receiveShadow: true }),
+        );
+      }
+    }
+    // Slatted side and back walls.
+    for (let s = 0; s < 3; s++) {
+      const y = 0.12 + s * 0.2;
+      parts.push(
+        f.mesh("Slat Back", box(binW, 0.12, 0.025), wood, {
+          position: [xOff, y, -binD / 2 + 0.012],
+        }, { castShadow: true }),
+        f.mesh("Slat Left", box(0.025, 0.12, binD), wood, {
+          position: [xOff - binW / 2 + 0.012, y, 0],
+        }, { castShadow: true }),
+        f.mesh("Slat Right", box(0.025, 0.12, binD), wood, {
+          position: [xOff + binW / 2 - 0.012, y, 0],
+        }, { castShadow: true }),
+        f.mesh("Slat Front", box(binW, 0.12, 0.025), wood, {
+          position: [xOff, y, binD / 2 - 0.012],
+        }, { castShadow: true }),
+      );
+    }
+    // Heap of mulch inside.
+    parts.push(
+      f.mesh("Mulch", box(binW - 0.08, 0.25, binD - 0.08), mulch, {
+        position: [xOff, 0.16, 0],
+      }, { receiveShadow: true }),
+      f.mesh("Mulch Mound", sphere(0.22, 10, 7), mulch, {
+        position: [xOff, 0.42, 0],
+        scale: [1.3, 0.5, 1.0],
+      }),
+    );
+  }
+  // Pitchfork leaning on the right bin — handle + four tines.
+  parts.push(
+    f.mesh("Fork Handle", cylinder(0.022, 0.022, 1.4, 6), handle, {
+      position: [binW + 0.4, 0.7, binD / 2 + 0.15],
+      rotation: [-0.25, 0, 0.35],
+    }, { castShadow: true }),
+    f.mesh("Fork Head", box(0.16, 0.06, 0.02), metal, {
+      position: [binW + 0.62, 1.36, binD / 2 + 0.3],
+      rotation: [-0.25, 0, 0.35],
+    }),
+  );
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh("Fork Tine", cylinder(0.012, 0.012, 0.18, 4), metal, {
+        position: [binW + 0.56 + i * 0.04, 1.46, binD / 2 + 0.32],
+        rotation: [-0.25, 0, 0.35],
+      }),
+    );
+  }
+  // A few fallen leaves on the left lid.
+  const leafRng = mulberry32(0x1eaf);
+  const leaves: Transform[] = [];
+  for (let i = 0; i < 8; i++) {
+    leaves.push({
+      position: [-binW / 2 - 0.5 + (leafRng() - 0.5) * binW, 0.66, (leafRng() - 0.5) * binD],
+      rotation: [Math.PI / 2 + leafRng() * 0.2, leafRng() * Math.PI, 0],
+      scale: [0.7 + leafRng() * 0.4, 0.7 + leafRng() * 0.4, 1],
+    });
+  }
+  parts.push(
+    f.instanced("Loose Leaves", plane(0.12, 0.12), leaf, leaves, { castShadow: false }),
+  );
+  return f.group("Composter Bin", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
+}
+
+/* ─────────────────── seventh-pass house enhancements ─────────────────── */
+
+/**
+ * A formal topiary edging running alongside the cobble path from the
+ * porch out to the gate — five clipped dwarf hedge balls on each side,
+ * planted in shallow soil mounds so the path reads as a deliberate
+ * approach to the front door rather than a casual track.
+ */
+function buildPorchSteps(f: NodeFactory): SceneNode {
+  const hedge = std(C.hedge, 0.9, { flatShading: true });
+  const hedgeDark = std(C.foliage, 0.9, { flatShading: true });
+  const soil = std(C.soil, 0.95, { flatShading: true });
+  const balls: SceneNode[] = [];
+  // Path runs along x ≈ 0; cobble stones span x in [-0.55, +0.55]. Place
+  // edging at x = ±0.9 — outside the stones but still hugging the path.
+  const startZ = FRONT_Z + 1.4;
+  const step = 1.7;
+  const count = 5;
+  for (const sx of [-1, 1]) {
+    for (let i = 0; i < count; i++) {
+      const z = startZ + i * step;
+      const big = i % 2 === 0;
+      balls.push(
+        f.group("Topiary Ball", [
+          // Soil mound under the ball.
+          f.mesh("Soil Mound", cylinder(big ? 0.22 : 0.18, big ? 0.26 : 0.22, 0.07, 12), soil, {
+            position: [0, 0.035, 0],
+          }, { receiveShadow: true }),
+          // Clipped hedge sphere — alternating size and a tonally darker
+          // every-other ball, like a real planted lineup.
+          f.mesh(
+            "Ball",
+            sphere(big ? 0.2 : 0.16, 12, 10),
+            i % 2 === 0 ? hedge : hedgeDark,
+            { position: [0, big ? 0.27 : 0.23, 0], scale: [1, 0.95, 1] },
+            { castShadow: true, receiveShadow: true },
+          ),
+        ], { position: [sx * 0.9, 0, z] }),
+      );
+    }
+  }
+  return f.group("Porch Topiary Edging", balls);
+}
+
+/**
+ * Striped canvas awnings projecting over the upper-storey back-wall
+ * windows — one per upper floor, sitting just above the existing
+ * shutters and flower boxes. Each is a sloping rectangle of cream and
+ * pink stripes with a scalloped valance and two side arm supports.
+ */
+function buildWindowAwnings(f: NodeFactory): SceneNode {
+  const awning = std(C.awningCream, 0.85, { texture: "awning-stripe", textureScale: [1, 0.5] });
+  const trim = std(C.awningStripe, 0.85);
+  // Stand the awning just forward of the back wall's interior face, where
+  // the windows and shutters live (zFront = BACK_Z + WALL_T/2 in
+  // buildWindowDressing). +0.05 keeps the back lip flush against the wall.
+  const z = BACK_Z + WALL_T / 2 + 0.05;
+  const x = 2.3;
+  // Window centres are at y = 1.3 + floor * FLOOR_H (top of window ≈ y+0.46);
+  // place the awning's back lip ~0.55 above the centre so it caps the frame.
+  const ys = [1.3 + FLOOR_H + 0.6, 1.3 + FLOOR_H * 2 + 0.6];
+  const parts: SceneNode[] = [];
+  for (const y of ys) {
+    parts.push(
+      f.group("Awning", [
+        // Sloped canvas — a thin box tilted so the front edge dips lower.
+        f.mesh("Canvas", box(1.05, 0.035, 0.5), awning, {
+          position: [0, 0, 0.22],
+          rotation: [-0.45, 0, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Scalloped valance hanging from the front edge.
+        f.mesh("Valance", box(1.05, 0.12, 0.025), trim, {
+          position: [0, -0.18, 0.43],
+        }, { castShadow: true }),
+        // Two side arm supports running from the wall down to the eave.
+        f.mesh("Arm L", cylinder(0.012, 0.012, 0.45, 5), trim, {
+          position: [-0.5, -0.08, 0.22],
+          rotation: [Math.PI / 2.4, 0, 0],
+        }),
+        f.mesh("Arm R", cylinder(0.012, 0.012, 0.45, 5), trim, {
+          position: [0.5, -0.08, 0.22],
+          rotation: [Math.PI / 2.4, 0, 0],
+        }),
+      ], { position: [x, y, z] }),
+    );
+  }
+  return f.group("Window Awnings", parts);
+}
+
+/* ─────────────────── seventh-pass scene extension ─────────────────── */
+
+/**
+ * The west pond garden — a new ground plane west of the lawn that
+ * overlaps the lawn by ~1 unit. A Japanese-inspired water garden with a
+ * circular koi pond, an arched stone footbridge, two stone lanterns,
+ * weeping willows softening the perimeter and decorative moss-flecked
+ * boulders. Mirrors the side orchard's structural pattern so the scene
+ * stays balanced east-to-west.
+ */
+function buildWestPondGarden(f: NodeFactory): SceneNode {
+  return f.group("West Pond Garden", [
+    // Pond garden ground plane.
+    f.mesh(
+      "Pond Garden Ground",
+      plane(POND_GARDEN_W, POND_GARDEN_D),
+      std(C.pondGardenGrass, 0.95, { texture: "grass", textureScale: [9, 12] }),
+      { position: POND_GARDEN_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // Apron along the lawn join — mirrors the orchard apron so the seam
+    // feathers cleanly under raking light.
+    f.mesh(
+      "Pond Garden Apron",
+      plane(2.5, POND_GARDEN_D),
+      std(C.grassDark, 0.95, { texture: "grass", textureScale: [1, 8] }),
+      { position: [-25, -0.002, POND_GARDEN_POS[2]], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    buildKoiPond(f, KOI_POND_POS),
+    buildStoneBridge(f, STONE_BRIDGE_POS),
+    buildStoneLantern(f, WEST_LANTERN_A),
+    buildStoneLantern(f, WEST_LANTERN_B),
+    buildWeepingWillows(f),
+    buildPondGardenBoulders(f),
+    buildPondGardenWall(f),
+  ]);
+}
+
+/**
+ * The koi pond — a circular pool with a sand-coloured stone perimeter, a
+ * lily-pad-strewn water surface and three orange koi just below it.
+ */
+function buildKoiPond(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.bridgeStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.bridgeStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const water = std(C.koiSurface, 0.2, {
+    metalness: 0.25,
+    transparent: true,
+    opacity: 0.78,
+    texture: "koi-water",
+    textureScale: [2, 2],
+  });
+  const deepWater = std(C.koiWater, 0.3, { metalness: 0.15 });
+  const koi = std(C.koiOrange, 0.5, { flatShading: true });
+  const koiPale = std(C.flowerWhite, 0.5, { flatShading: true });
+  const lilyPad = std(C.lilyPad, 0.85, { flatShading: true });
+  const lilyFlower = std(C.flowerWhite, 0.6, { flatShading: true });
+  const r = KOI_POND_RADIUS;
+  const parts: SceneNode[] = [];
+  // Outer stone ring — wider, darker capstones.
+  const ringStones = 22;
+  const ring: Transform[] = [];
+  const ringCaps: Transform[] = [];
+  for (let i = 0; i < ringStones; i++) {
+    const a = (i / ringStones) * Math.PI * 2;
+    const wob = ((i * 41) % 7) / 60;
+    ring.push({
+      position: [Math.cos(a) * r, 0.1, Math.sin(a) * r],
+      rotation: [0, a, wob],
+      scale: [0.55, 0.22, 0.45],
+    });
+    if (i % 2 === 0) {
+      ringCaps.push({
+        position: [Math.cos(a) * (r + 0.04), 0.22, Math.sin(a) * (r + 0.04)],
+        rotation: [0, a, 0],
+        scale: [0.58, 0.08, 0.5],
+      });
+    }
+  }
+  parts.push(
+    f.instanced("Pond Stones", box(1, 1, 1), stone, ring, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.instanced("Pond Capstones", box(1, 1, 1), stoneDark, ringCaps, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+  );
+  // Pond bed (dark deep water) and a brighter rippled surface above it.
+  parts.push(
+    f.mesh("Pond Bed", cylinder(r - 0.18, r - 0.18, 0.05, 28), deepWater, {
+      position: [0, 0.03, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Pond Surface", cylinder(r - 0.16, r - 0.16, 0.04, 28), water, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // Lily pads scattered on the surface.
+  const lilyRng = mulberry32(0x111ad);
+  const lilies: Transform[] = [];
+  const flowers: Transform[] = [];
+  for (let i = 0; i < 9; i++) {
+    const a = lilyRng() * Math.PI * 2;
+    const rr = (lilyRng() * 0.7 + 0.1) * (r - 0.5);
+    lilies.push({
+      position: [Math.cos(a) * rr, 0.18, Math.sin(a) * rr],
+      rotation: [0, lilyRng() * Math.PI, 0],
+      scale: [0.7 + lilyRng() * 0.4, 1, 0.7 + lilyRng() * 0.4],
+    });
+    if (i % 3 === 0) {
+      flowers.push({
+        position: [Math.cos(a) * rr, 0.21, Math.sin(a) * rr],
+        rotation: [0, lilyRng() * Math.PI, 0],
+        scale: [1, 1, 1],
+      });
+    }
+  }
+  parts.push(
+    f.instanced("Lily Pads", cylinder(0.24, 0.24, 0.02, 10), lilyPad, lilies, {
+      castShadow: false,
+      receiveShadow: true,
+    }),
+    f.instanced("Lily Flowers", sphere(0.05, 8, 6), lilyFlower, flowers),
+  );
+  // Three koi just under the surface — flattened orange ovoids with a white belly.
+  const koiPositions: [number, number, number, number][] = [
+    [r * 0.5, 0.13, r * 0.1, 0.3],
+    [-r * 0.4, 0.13, r * 0.4, -1.2],
+    [r * 0.2, 0.13, -r * 0.5, 2.2],
+  ];
+  for (const [kx, ky, kz, ra] of koiPositions) {
+    parts.push(
+      f.group("Koi", [
+        f.mesh("Koi Body", sphere(0.16, 10, 7), koi, {
+          position: [0, 0, 0],
+          scale: [1.6, 0.55, 0.8],
+        }),
+        f.mesh("Koi Belly", sphere(0.13, 8, 6), koiPale, {
+          position: [0, -0.04, 0],
+          scale: [1.4, 0.4, 0.7],
+        }),
+        f.mesh("Koi Tail", cone(0.08, 0.18, 6), koi, {
+          position: [-0.22, 0, 0],
+          rotation: [0, 0, -Math.PI / 2],
+        }),
+      ], { position: [kx, ky, kz], rotation: [0, ra, 0] }),
+    );
+  }
+  return f.group("Koi Pond", parts, { position: pos });
+}
+
+/**
+ * An arched stone footbridge crossing the koi pond on its east side —
+ * a curved span of mortared blocks with low side walls. The path
+ * approaches it from the lawn join and exits onto the garden floor.
+ */
+function buildStoneBridge(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.bridgeStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.bridgeStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const moss = std(C.mossGreen, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Five arching deck segments forming a gentle hump along Z.
+  const segs = 7;
+  const span = 3.4;
+  for (let i = 0; i < segs; i++) {
+    const t = i / (segs - 1);
+    const z = (t - 0.5) * span;
+    const rise = Math.sin(t * Math.PI) * 0.35;
+    parts.push(
+      f.mesh("Bridge Tread", box(0.95, 0.12, span / segs + 0.04), stone, {
+        position: [0, 0.32 + rise, z],
+        rotation: [Math.cos(t * Math.PI) * 0.18, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Two side rails — short walls following the arch.
+  for (const sx of [-1, 1]) {
+    for (let i = 0; i < segs; i++) {
+      const t = i / (segs - 1);
+      const z = (t - 0.5) * span;
+      const rise = Math.sin(t * Math.PI) * 0.35;
+      parts.push(
+        f.mesh("Rail Stone", box(0.1, 0.22, span / segs + 0.02), i % 2 === 0 ? stone : stoneDark, {
+          position: [sx * 0.5, 0.55 + rise, z],
+          rotation: [Math.cos(t * Math.PI) * 0.18, 0, 0],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    // Cap blocks at each end of the rail.
+    parts.push(
+      f.mesh("Rail End", box(0.18, 0.3, 0.18), stoneDark, {
+        position: [sx * 0.5, 0.45, -span / 2 - 0.04],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Rail End", box(0.18, 0.3, 0.18), stoneDark, {
+        position: [sx * 0.5, 0.45, span / 2 + 0.04],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Two moss tufts on the rails for an aged look.
+  parts.push(
+    f.mesh("Moss Tuft A", sphere(0.07, 8, 6), moss, {
+      position: [-0.5, 0.66, -0.4],
+      scale: [1.4, 0.4, 1.0],
+    }),
+    f.mesh("Moss Tuft B", sphere(0.06, 8, 6), moss, {
+      position: [0.5, 0.7, 0.6],
+      scale: [1.2, 0.4, 1.0],
+    }),
+  );
+  return f.group("Stone Bridge", parts, { position: pos });
+}
+
+/**
+ * A stylised stone garden lantern — square plinth, slender shaft, roofed
+ * fire box housing a warm glow, finial cap. Two are placed flanking the
+ * pond, casting illumination across the surface.
+ */
+function buildStoneLantern(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.lanternStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.bridgeStoneDark, 0.95, { flatShading: true });
+  const moss = std(C.mossGreen, 0.95, { flatShading: true });
+  const glow = std(C.lanternGlow, 0.4, { emissive: C.lanternGlow });
+  return f.group("Stone Lantern", [
+    // Base plinth.
+    f.mesh("Plinth", box(0.5, 0.18, 0.5), stone, {
+      position: [0, 0.09, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Shaft.
+    f.mesh("Shaft", cylinder(0.07, 0.09, 0.7, 8), stoneDark, {
+      position: [0, 0.55, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Fire box platform.
+    f.mesh("Platform", box(0.32, 0.05, 0.32), stone, {
+      position: [0, 0.92, 0],
+    }, { castShadow: true }),
+    // Fire box walls — square frame with the glow inside.
+    f.mesh("Box Frame", box(0.34, 0.32, 0.34), stoneDark, {
+      position: [0, 1.1, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Box Glow", box(0.2, 0.22, 0.2), glow, {
+      position: [0, 1.1, 0],
+    }),
+    // Pyramid roof — a low cone.
+    f.mesh("Lantern Roof", cone(0.3, 0.22, 4), stone, {
+      position: [0, 1.38, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Finial pinecone.
+    f.mesh("Finial", sphere(0.04, 8, 6), stoneDark, {
+      position: [0, 1.55, 0],
+    }),
+    // A small moss patch crawling onto the plinth.
+    f.mesh("Plinth Moss", sphere(0.1, 8, 6), moss, {
+      position: [0.2, 0.2, 0.18],
+      scale: [1.2, 0.35, 1.2],
+    }),
+  ], { position: pos, rotation: [0, ((pos[2] * 0.3) % Math.PI), 0] });
+}
+
+/**
+ * Two weeping willows softening the pond garden's edges — wide, drooping
+ * tear-drop foliage made from elongated, downward-scaled spheres.
+ */
+function buildWeepingWillows(f: NodeFactory): SceneNode {
+  const trunkMat = std(C.willowTrunk, 0.95, { texture: "bark", flatShading: true });
+  const foliage = std(C.willowFoliage, 0.85, { flatShading: true });
+  const foliageDark = std(C.appleFoliage, 0.85, { flatShading: true });
+  const layouts: { x: number; z: number; s: number }[] = [
+    { x: -38.5, z: -8, s: 1.1 },
+    { x: -38.5, z: 16, s: 1.0 },
+    { x: -29, z: -7, s: 0.9 },
+  ];
+  const trees: SceneNode[] = [];
+  for (let i = 0; i < layouts.length; i++) {
+    const lay = layouts[i]!;
+    const parts: SceneNode[] = [
+      f.mesh("Trunk", cylinder(0.18, 0.24, 1.4, 8), trunkMat, {
+        position: [0, 0.7, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Lower Limbs", sphere(0.4, 8, 6), trunkMat, {
+        position: [0, 1.4, 0],
+      }),
+      // Wide drooping canopy — multiple flattened spheres tear-dropping down.
+      f.mesh("Canopy A", sphere(1.4, 14, 10), foliage, {
+        position: [0, 1.95, 0],
+        scale: [1.2, 0.95, 1.2],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Canopy B", sphere(1.1, 12, 9), foliageDark, {
+        position: [0.45, 1.65, -0.2],
+        scale: [1.0, 1.1, 1.0],
+      }, { castShadow: true }),
+      f.mesh("Canopy C", sphere(1.0, 12, 9), foliage, {
+        position: [-0.4, 1.6, 0.4],
+        scale: [1.0, 1.15, 1.0],
+      }, { castShadow: true }),
+      // Two trailing whips that hang lower than the main canopy.
+      f.mesh("Whip A", sphere(0.7, 10, 8), foliage, {
+        position: [0.6, 1.1, 0.3],
+        scale: [1.0, 1.6, 1.0],
+      }, { castShadow: true }),
+      f.mesh("Whip B", sphere(0.65, 10, 8), foliageDark, {
+        position: [-0.55, 1.05, -0.35],
+        scale: [1.0, 1.5, 1.0],
+      }, { castShadow: true }),
+    ];
+    trees.push(
+      f.group(`Willow ${i + 1}`, parts, {
+        position: [lay.x, 0, lay.z],
+        scale: [lay.s, lay.s, lay.s],
+        rotation: [0, (i * 1.1) % (Math.PI * 2), 0],
+      }),
+    );
+  }
+  return f.group("Weeping Willows", trees);
+}
+
+/**
+ * Decorative boulders scattered around the pond garden — large smooth
+ * river rocks half-buried in the grass, with moss patches on the
+ * shaded faces.
+ */
+function buildPondGardenBoulders(f: NodeFactory): SceneNode {
+  const rock = std(C.boulderRock, 0.95, { flatShading: true });
+  const rockDark = std(C.boulderShade, 0.95, { flatShading: true });
+  const moss = std(C.mossGreen, 0.95, { flatShading: true });
+  const layouts: { x: number; z: number; s: number; tilt: number }[] = [
+    { x: -29.6, z: 9, s: 0.9, tilt: 0.2 },
+    { x: -28.8, z: -3, s: 0.7, tilt: -0.15 },
+    { x: -36, z: 12, s: 1.1, tilt: 0.3 },
+    { x: -35.5, z: -6, s: 0.85, tilt: -0.25 },
+    { x: -32, z: 14.5, s: 0.6, tilt: 0.1 },
+    { x: -39, z: 3, s: 0.5, tilt: 0.4 },
+  ];
+  const parts: SceneNode[] = [];
+  for (let i = 0; i < layouts.length; i++) {
+    const lay = layouts[i]!;
+    const mat = i % 2 === 0 ? rock : rockDark;
+    parts.push(
+      f.group("Boulder", [
+        f.mesh("Boulder Body", sphere(0.7, 12, 9), mat, {
+          position: [0, 0.35, 0],
+          scale: [1.2, 0.7, 1.0],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh("Moss Cap", sphere(0.4, 10, 7), moss, {
+          position: [0.05, 0.55, 0.1],
+          scale: [1.2, 0.32, 1.0],
+        }),
+      ], {
+        position: [lay.x, 0, lay.z],
+        scale: [lay.s, lay.s, lay.s],
+        rotation: [lay.tilt * 0.3, lay.tilt, 0],
+      }),
+    );
+  }
+  return f.group("Pond Garden Boulders", parts);
+}
+
+/**
+ * A low moss-flecked stone curb along the pond garden's east edge —
+ * mirrors the orchard wall on the opposite side but is shorter (the
+ * pond garden is meant to feel open and contemplative). A 1.4-unit gap
+ * in the middle lets a doll cross between the lawn and the garden.
+ */
+function buildPondGardenWall(f: NodeFactory): SceneNode {
+  const stone = std(C.dryStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.dryStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const moss = std(C.mossGreen, 0.95, { flatShading: true });
+  const rng = mulberry32(0x70ddca11);
+  const zMin = POND_GARDEN_POS[2] - POND_GARDEN_D / 2 + 1;
+  const zMax = POND_GARDEN_POS[2] + POND_GARDEN_D / 2 - 1;
+  const gapHalf = 0.7;
+  const gapZ = POND_GARDEN_POS[2];
+  const stones: Transform[] = [];
+  const stonesDark: Transform[] = [];
+  let z = zMin;
+  while (z < zMax) {
+    const w = 0.5 + rng() * 0.3;
+    if (Math.abs(z - gapZ) < gapHalf || Math.abs(z + w - gapZ) < gapHalf) {
+      z += w;
+      continue;
+    }
+    const inst: Transform = {
+      position: [POND_GARDEN_WALL_X + (rng() - 0.5) * 0.08, 0.16, z + w / 2],
+      rotation: [0, rng() * 0.3 - 0.15, 0],
+      scale: [w, 0.32, 0.4 + rng() * 0.18],
+    };
+    (rng() < 0.4 ? stonesDark : stones).push(inst);
+    z += w * 0.97;
+  }
+  // A few moss tufts on the wall.
+  const mossTufts: Transform[] = [];
+  let mz = zMin + 1;
+  while (mz < zMax) {
+    if (Math.abs(mz - gapZ) > gapHalf) {
+      mossTufts.push({
+        position: [POND_GARDEN_WALL_X, 0.32, mz],
+        rotation: [0, rng() * Math.PI, 0],
+        scale: [1.0 + rng() * 0.6, 0.35, 0.7],
+      });
+    }
+    mz += 1.8 + rng() * 1.4;
+  }
+  return f.group("Pond Garden Wall", [
+    f.instanced("Wall Stones", box(1, 1, 1), stone, stones, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.instanced("Wall Stones Dark", box(1, 1, 1), stoneDark, stonesDark, {
+      castShadow: true,
+      receiveShadow: true,
+    }),
+    f.instanced("Wall Moss", sphere(0.1, 8, 6), moss, mossTufts),
+  ]);
+}
+
 /* ───────────────────────── exterior walls ───────────────────────── */
 
 function buildBackWall(f: NodeFactory): SceneNode {
@@ -4095,6 +4931,18 @@ function buildFurniture(f: NodeFactory): SceneNode {
  *    wall, a small grove of fruiting apple trees with windfall apples,
  *    rolling earth mounds, an old hay cart and a stone water well with a
  *    peaked shingle roof and a winched bucket.
+ *  - Seventh pass — yard: a round stone fire pit with crossed logs and
+ *    glowing embers ringed by three log-round stools, a hexagonal
+ *    cottage gazebo with a domed shingle roof, a curved bench and a
+ *    hanging lantern, and a pair of slatted compost bins with a leaning
+ *    pitchfork tucked behind the garden shed; house: a formal topiary
+ *    edging of ten clipped dwarf hedge balls lining the cobble path
+ *    from porch to gate, and a pair of striped canvas awnings over the
+ *    upper-storey back-wall windows; scene: a Japanese-style west pond
+ *    garden plane mirroring the side orchard, with a koi pond ringed
+ *    by river stones, drifting lily pads and three submerged koi, an
+ *    arched stone footbridge, two stone garden lanterns, three weeping
+ *    willows and moss-flecked decorative boulders.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -4126,6 +4974,10 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: PUMPKIN_PATCH_POS[0], z: PUMPKIN_PATCH_POS[2], r: 1.2 },
     { x: PATIO_SET_POS[0], z: PATIO_SET_POS[2], r: 1.6 },
     { x: HOSE_REEL_POS[0], z: HOSE_REEL_POS[2], r: 0.5 },
+    // Seventh-pass keep-outs — fire pit (with seating ring), gazebo and composter.
+    { x: FIRE_PIT_POS[0], z: FIRE_PIT_POS[2], r: 2.0 },
+    { x: GAZEBO_POS[0], z: GAZEBO_POS[2], r: 2.0 },
+    { x: COMPOSTER_POS[0], z: COMPOSTER_POS[2], r: 1.2 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -4158,9 +5010,13 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPumpkinPatch(f, PUMPKIN_PATCH_POS),
     buildPatioSet(f, PATIO_SET_POS),
     buildGardenHoseReel(f, HOSE_REEL_POS),
+    buildFirePit(f, FIRE_PIT_POS),
+    buildGazebo(f, GAZEBO_POS),
+    buildComposterBin(f, COMPOSTER_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
+  const pondGarden = buildWestPondGarden(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -4186,6 +5042,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchRailings(f),
     buildHangingBaskets(f),
     buildDoorWreath(f),
+    buildPorchSteps(f),
+    buildWindowAwnings(f),
     buildFurniture(f),
   ]);
   const root: SceneNode = {
@@ -4193,7 +5051,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, orchard, house],
+    children: [garden, meadow, orchard, pondGarden, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,
