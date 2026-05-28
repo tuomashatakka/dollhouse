@@ -146,6 +146,35 @@ const STONE_BRIDGE_POS: [number, number, number] = [-29.6, 0, 4];
 const WEST_LANTERN_A: [number, number, number] = [-37.5, 0, -2];
 const WEST_LANTERN_B: [number, number, number] = [-37.5, 0, 11];
 
+/**
+ * Eighth-pass courtyard props — outdoor dining and tidy storage. A rustic
+ * picnic table with a red-checkered cloth and pair of benches on the west
+ * lawn, a three-tier cascading stone fountain just off the cobble path on
+ * the south lawn, and a leaning tool rack of garden implements parked
+ * against the back-corner shed.
+ */
+const PICNIC_TABLE_POS: [number, number, number] = [-5.5, 0, -2.2];
+const STONE_FOUNTAIN_POS: [number, number, number] = [-1.6, 0, 8.0];
+const TOOL_RACK_POS: [number, number, number] = [-6.2, 0, -4.0];
+
+/**
+ * Eighth-pass scene extension — a north lakefront plane reaching beyond
+ * the back meadow's far edge. The plane overlaps the meadow by ~1 unit
+ * so the ground layer joins seamlessly. It carries a calm open lake, a
+ * wooden plank pier on mooring posts, a tied-up rowboat resting in the
+ * shallows, fringes of cattails along the shoreline, a small grove of
+ * lakeside conifers and a bobbing red-and-white channel buoy.
+ */
+const LAKEFRONT_POS: [number, number, number] = [0, -0.006, -56];
+const LAKEFRONT_W = 60;
+const LAKEFRONT_D = 34;
+const LAKE_WATER_POS: [number, number, number] = [-2, 0.014, -60];
+const LAKE_WATER_W = 38;
+const LAKE_WATER_D = 22;
+const LAKE_PIER_POS: [number, number, number] = [9, 0, -50];
+const ROWBOAT_POS: [number, number, number] = [12.4, 0, -55];
+const BUOY_POS: [number, number, number] = [-14, 0, -64];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -272,6 +301,37 @@ const C = {
   boulderShade: "#5a564f",
   cherryBlossom: "#f4c7d4",
   mossGreen: "#4d6f3a",
+  // Eighth enhancement pass — picnic table with checkered cloth, three-tier
+  // stone fountain with cascading water, an A-frame tool rack of garden
+  // implements, the front-eave bistro string lights along the porch fascia,
+  // and the north lakefront scene extension (open lake water, wooden pier,
+  // moored rowboat, cattail fringes, lakeside conifers and a channel buoy).
+  clothCheckRed: "#c2403a",
+  clothCheckCream: "#fff5e8",
+  fountainStone: "#a89e90",
+  fountainStoneDark: "#776c5c",
+  fountainWater: "#7eb6cf",
+  fountainSplash: "#fdfefe",
+  toolHandle: "#7a5236",
+  toolMetalDark: "#3e4148",
+  toolMetalLight: "#a3a7ad",
+  bistroBulb: "#ffe9a8",
+  bistroBulbGlow: "#fff1c4",
+  bistroWire: "#1f1c1a",
+  lakefrontGrass: "#86a85f",
+  lakefrontSand: "#cdb98a",
+  lakeWater: "#3b6e8c",
+  lakeShallow: "#7faec5",
+  lakeShoreReed: "#5d8a48",
+  pierPlank: "#5e4530",
+  pierPost: "#3b2a1e",
+  pierTrim: "#a98359",
+  boatHull: "#bd5a3d",
+  boatTrim: "#fff5e8",
+  boatInterior: "#8a6240",
+  cattailHead: "#5a4022",
+  buoyRed: "#c84a3f",
+  buoyWhite: "#fdf6f0",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -4166,6 +4226,957 @@ function buildPondGardenWall(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────────── eighth-pass courtyard props ─────────────────── */
+
+/**
+ * A rustic picnic table — two trestle X-frames carrying a slatted top with a
+ * red-checkered cloth thrown over it, flanked by two slatted benches. The
+ * cloth tapers down past the table edge so it hangs naturally over the side.
+ */
+function buildPicnicTable(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.walnut, 0.7, { texture: "wood", textureScale: [1, 3] });
+  const woodDark = std(C.bark, 0.85, { texture: "wood", flatShading: true });
+  const cloth = std(C.clothCheckRed, 0.95, {
+    texture: "checkered-cloth",
+    textureScale: [2, 1.4],
+  });
+  const clothEdge = std(C.clothCheckCream, 0.9, { flatShading: true });
+  const tableL = 1.85;
+  const tableW = 0.95;
+  const tableY = 0.74;
+  const benchY = 0.45;
+  const benchOffset = 0.55;
+  const parts: SceneNode[] = [];
+
+  // Trestle X-frame legs at each end of the table.
+  const trestle = (zPos: number): SceneNode[] => {
+    return [
+      f.mesh("Leg A", box(0.06, 0.86, 0.06), woodDark, {
+        position: [-0.4, 0.43, zPos],
+        rotation: [0, 0, 0.46],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Leg B", box(0.06, 0.86, 0.06), woodDark, {
+        position: [0.4, 0.43, zPos],
+        rotation: [0, 0, -0.46],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Cross Rail", box(0.78, 0.06, 0.06), woodDark, {
+        position: [0, 0.38, zPos],
+      }, { castShadow: true }),
+    ];
+  };
+  parts.push(...trestle(-tableL / 2 + 0.16), ...trestle(tableL / 2 - 0.16));
+
+  // Stretcher running between the trestles.
+  parts.push(
+    f.mesh("Stretcher", box(0.06, 0.06, tableL - 0.3), woodDark, {
+      position: [0, 0.32, 0],
+    }, { castShadow: true }),
+  );
+
+  // Slatted tabletop — five planks running lengthwise.
+  const slats = 5;
+  for (let i = 0; i < slats; i++) {
+    const xOff = -tableW / 2 + (tableW / slats) * (i + 0.5);
+    parts.push(
+      f.mesh("Top Slat", box(tableW / slats - 0.02, 0.04, tableL), wood, {
+        position: [xOff, tableY - 0.02, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Two end battens fixing the slats.
+  for (const sz of [-1, 1] as const) {
+    parts.push(
+      f.mesh("Top Batten", box(tableW - 0.04, 0.03, 0.06), woodDark, {
+        position: [0, tableY - 0.05, sz * (tableL / 2 - 0.18)],
+      }),
+    );
+  }
+
+  // Checkered tablecloth — a flat panel on the table with an apron flap on
+  // each long side. Scale on the side flaps cheats the "draped" silhouette.
+  parts.push(
+    f.mesh("Tablecloth", box(tableW + 0.18, 0.01, tableL + 0.22), cloth, {
+      position: [0, tableY + 0.012, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  for (const sx of [-1, 1] as const) {
+    parts.push(
+      f.mesh("Cloth Apron", box(0.02, 0.16, tableL + 0.18), cloth, {
+        position: [sx * (tableW / 2 + 0.09), tableY - 0.06, 0],
+        rotation: [0, 0, sx * 0.05],
+      }, { castShadow: true }),
+    );
+  }
+  for (const sz of [-1, 1] as const) {
+    parts.push(
+      f.mesh("Cloth End Apron", box(tableW + 0.16, 0.12, 0.02), cloth, {
+        position: [0, tableY - 0.04, sz * (tableL / 2 + 0.11)],
+        rotation: [sz * 0.05, 0, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Cream piping along the cloth hem on the long sides.
+  for (const sx of [-1, 1] as const) {
+    parts.push(
+      f.mesh("Cloth Hem", box(0.025, 0.018, tableL + 0.2), clothEdge, {
+        position: [sx * (tableW / 2 + 0.09), tableY - 0.135, 0],
+      }),
+    );
+  }
+
+  // Two benches running parallel to the table.
+  for (const sx of [-1, 1] as const) {
+    const bx = sx * (tableW / 2 + benchOffset);
+    parts.push(
+      f.mesh("Bench Top", box(0.28, 0.04, tableL - 0.05), wood, {
+        position: [bx, benchY, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Pair of legs per bench.
+    for (const sz of [-1, 1] as const) {
+      parts.push(
+        f.mesh("Bench Leg", box(0.06, benchY, 0.22), woodDark, {
+          position: [bx, benchY / 2, sz * (tableL / 2 - 0.22)],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+
+  // A small wooden serving tray with two clay mugs at the centre of the table.
+  const mug = std(C.terracotta, 0.65, { flatShading: true });
+  parts.push(
+    f.mesh("Serving Tray", box(0.5, 0.025, 0.32), woodDark, {
+      position: [0, tableY + 0.04, 0],
+    }, { castShadow: true }),
+    f.mesh("Mug", cylinder(0.05, 0.05, 0.09, 10), mug, {
+      position: [-0.1, tableY + 0.09, 0],
+    }, { castShadow: true }),
+    f.mesh("Mug", cylinder(0.05, 0.05, 0.09, 10), mug, {
+      position: [0.1, tableY + 0.09, 0],
+    }, { castShadow: true }),
+    f.mesh("Mug Handle", cylinder(0.012, 0.012, 0.04, 6), mug, {
+      position: [-0.16, tableY + 0.09, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }),
+    f.mesh("Mug Handle", cylinder(0.012, 0.012, 0.04, 6), mug, {
+      position: [0.16, tableY + 0.09, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }),
+  );
+
+  return f.group("Picnic Table", parts, { position: pos, rotation: [0, 0.2, 0] });
+}
+
+/**
+ * A three-tier cascading stone fountain — a stepped basin stack on an
+ * octagonal coping, with translucent water plates filling each bowl and a
+ * stylised splash mist tuft at the lip of every step. The bowls grow
+ * smaller as they climb, finishing in a finial sphere.
+ */
+function buildStoneFountain(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.fountainStone, 0.85, {
+    texture: "cobblestone",
+    flatShading: true,
+  });
+  const stoneDark = std(C.fountainStoneDark, 0.9, {
+    texture: "cobblestone",
+    flatShading: true,
+  });
+  const moss = std(C.mossGreen, 0.95, { flatShading: true });
+  const water = {
+    color: C.fountainWater,
+    roughness: 0.08,
+    metalness: 0.32,
+    transparent: true,
+    opacity: 0.82,
+  };
+  const splash = std(C.fountainSplash, 0.4, {
+    transparent: true,
+    opacity: 0.55,
+    flatShading: true,
+  });
+
+  const parts: SceneNode[] = [];
+
+  // Octagonal coping basin at the base.
+  parts.push(
+    f.mesh("Base Coping", cylinder(1.18, 1.28, 0.22, 8), stoneDark, {
+      position: [0, 0.11, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Base Bowl", cylinder(1.04, 1.06, 0.16, 16), stone, {
+      position: [0, 0.28, 0],
+    }, { receiveShadow: true }),
+    // Water in the lower basin.
+    f.mesh("Base Water", cylinder(0.96, 0.96, 0.04, 24), water, {
+      position: [0, 0.32, 0],
+    }, { receiveShadow: true }),
+  );
+
+  // Middle tier — narrower bowl on a chunky pedestal.
+  parts.push(
+    f.mesh("Mid Pedestal", cylinder(0.32, 0.4, 0.55, 12), stone, {
+      position: [0, 0.65, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Mid Bowl", cylinder(0.72, 0.74, 0.12, 14), stoneDark, {
+      position: [0, 0.96, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Mid Water", cylinder(0.66, 0.66, 0.03, 18), water, {
+      position: [0, 1.02, 0],
+    }),
+  );
+
+  // Top tier — small bowl and finial.
+  parts.push(
+    f.mesh("Top Pedestal", cylinder(0.18, 0.24, 0.45, 10), stone, {
+      position: [0, 1.27, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Top Bowl", cylinder(0.4, 0.42, 0.1, 12), stoneDark, {
+      position: [0, 1.54, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Top Water", cylinder(0.34, 0.34, 0.02, 14), water, {
+      position: [0, 1.59, 0],
+    }),
+    f.mesh("Finial Stem", cylinder(0.06, 0.08, 0.2, 8), stone, {
+      position: [0, 1.71, 0],
+    }, { castShadow: true }),
+    f.mesh("Finial Ball", sphere(0.14, 12, 9), stoneDark, {
+      position: [0, 1.88, 0],
+    }, { castShadow: true }),
+  );
+
+  // Cascading splash mist — small flattened spheres along the spillways.
+  const rng = mulberry32(0xfa017a1);
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh("Top Spill", sphere(0.09, 8, 6), splash, {
+        position: [Math.cos(a) * 0.4, 1.48, Math.sin(a) * 0.4],
+        scale: [1, 0.4 + rng() * 0.2, 1],
+      }),
+    );
+  }
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2 + 0.2;
+    parts.push(
+      f.mesh("Mid Spill", sphere(0.12, 8, 6), splash, {
+        position: [Math.cos(a) * 0.7, 0.92, Math.sin(a) * 0.7],
+        scale: [1, 0.4 + rng() * 0.25, 1],
+      }),
+    );
+  }
+
+  // Moss patches along the lower coping for an aged look.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + 0.4;
+    parts.push(
+      f.mesh("Coping Moss", sphere(0.13, 7, 5), moss, {
+        position: [Math.cos(a) * 1.18, 0.2, Math.sin(a) * 1.18],
+        scale: [1.1 + rng() * 0.5, 0.4, 0.7 + rng() * 0.4],
+      }),
+    );
+  }
+
+  // A few worn cobble stones around the fountain's base, suggesting a
+  // small plaza of paving.
+  const cobbleStones: Transform[] = [];
+  for (let i = 0; i < 14; i++) {
+    const a = rng() * Math.PI * 2;
+    const r = 1.3 + rng() * 0.5;
+    cobbleStones.push({
+      position: [Math.cos(a) * r, 0.02, Math.sin(a) * r],
+      rotation: [0, rng() * Math.PI, 0],
+      scale: [0.32 + rng() * 0.18, 0.05 + rng() * 0.02, 0.32 + rng() * 0.18],
+    });
+  }
+  parts.push(
+    f.instanced("Plaza Cobbles", box(1, 1, 1), stoneDark, cobbleStones, {
+      receiveShadow: true,
+    }),
+  );
+
+  return f.group("Stone Fountain", parts, { position: pos });
+}
+
+/**
+ * An A-frame wooden tool rack with four leaning garden implements — a
+ * rake, a long-handled shovel, a hoe and a small pitchfork. Parked
+ * against the back-corner shed so it reads as a tool stash.
+ */
+function buildToolRack(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.toolHandle, 0.7, { texture: "wood", flatShading: true });
+  const woodDark = std(C.walnut, 0.85, { texture: "wood", flatShading: true });
+  const metalDark = std(C.toolMetalDark, 0.55, { metalness: 0.6, flatShading: true });
+  const metalLight = std(C.toolMetalLight, 0.45, { metalness: 0.7, flatShading: true });
+
+  const rackW = 1.4;
+  const rackH = 1.2;
+  const parts: SceneNode[] = [];
+
+  // Two A-frames at each end.
+  for (const sx of [-1, 1] as const) {
+    const ax = sx * rackW / 2;
+    parts.push(
+      f.mesh("Frame Leg L", box(0.05, rackH, 0.05), woodDark, {
+        position: [ax - 0.13, rackH / 2, 0.08],
+        rotation: [0, 0, sx * 0.0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Frame Leg R", box(0.05, rackH, 0.05), woodDark, {
+        position: [ax + 0.13, rackH / 2, 0.08],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Frame Tie", box(0.32, 0.04, 0.04), woodDark, {
+        position: [ax, rackH - 0.1, 0.08],
+      }),
+    );
+  }
+  // Top horizontal beam — the rail tools lean against.
+  parts.push(
+    f.mesh("Rail", box(rackW + 0.05, 0.06, 0.06), woodDark, {
+      position: [0, rackH - 0.05, 0.08],
+    }, { castShadow: true }),
+    // Small backboard pegboard.
+    f.mesh("Backboard", box(rackW - 0.08, 0.7, 0.04), wood, {
+      position: [0, 0.7, 0.06],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+
+  // Tools leaning against the rail. Each tool is a long thin handle plus a
+  // shaped head at the bottom — slight rotation so they fan across the rack.
+  const handle = (x: number, len: number, tilt: number): SceneNode =>
+    f.mesh("Handle", cylinder(0.018, 0.022, len, 6), wood, {
+      position: [x, len / 2 - 0.04, 0.18],
+      rotation: [tilt, 0, 0],
+    }, { castShadow: true, receiveShadow: true });
+
+  // Rake.
+  parts.push(
+    handle(-0.55, 1.4, -0.18),
+    f.mesh("Rake Bar", box(0.32, 0.03, 0.04), metalDark, {
+      position: [-0.55, 0.04, 0.42],
+      rotation: [-0.18, 0, 0],
+    }, { castShadow: true }),
+  );
+  for (let i = 0; i < 6; i++) {
+    parts.push(
+      f.mesh("Rake Tine", box(0.012, 0.12, 0.012), metalDark, {
+        position: [-0.55 - 0.13 + i * 0.052, -0.05, 0.43],
+        rotation: [-0.18, 0, 0],
+      }),
+    );
+  }
+
+  // Shovel — long handle, broad blade.
+  parts.push(
+    handle(-0.18, 1.42, -0.05),
+    f.mesh("Shovel Blade", box(0.18, 0.22, 0.02), metalLight, {
+      position: [-0.18, -0.04, 0.27],
+      rotation: [-0.05, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Shovel Shoulder", cylinder(0.026, 0.022, 0.07, 6), metalLight, {
+      position: [-0.18, 0.08, 0.26],
+      rotation: [-0.05, 0, 0],
+    }),
+  );
+
+  // Hoe.
+  parts.push(
+    handle(0.22, 1.36, 0.08),
+    f.mesh("Hoe Head", box(0.22, 0.04, 0.12), metalDark, {
+      position: [0.22, 0.0, 0.17],
+      rotation: [0.08 + Math.PI / 6, 0, 0],
+    }, { castShadow: true }),
+  );
+
+  // Small pitchfork.
+  parts.push(
+    handle(0.6, 1.32, 0.2),
+    f.mesh("Fork Head", box(0.16, 0.04, 0.05), metalDark, {
+      position: [0.6, -0.04, 0.06],
+      rotation: [0.2, 0, 0],
+    }),
+  );
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh("Fork Tine", box(0.018, 0.18, 0.018), metalDark, {
+        position: [0.55 + i * 0.034, -0.16, 0.04],
+        rotation: [0.2, 0, 0],
+      }),
+    );
+  }
+
+  // A small bucket on the ground beside the rack.
+  parts.push(
+    f.mesh("Bucket", cylinder(0.16, 0.13, 0.22, 12), metalLight, {
+      position: [0.78, 0.11, -0.05],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Bucket Rim", cylinder(0.165, 0.165, 0.02, 12), metalDark, {
+      position: [0.78, 0.22, -0.05],
+    }),
+    f.mesh("Bucket Handle", cylinder(0.012, 0.012, 0.32, 6), metalDark, {
+      position: [0.78, 0.3, -0.05],
+      rotation: [0, 0, Math.PI / 2],
+    }),
+  );
+
+  return f.group("Tool Rack", parts, { position: pos, rotation: [0, -0.35, 0] });
+}
+
+/* ─────────────────────── eighth-pass house detail ─────────────────────── */
+
+/**
+ * Bistro string lights strung along the front roof eave — a thin wire
+ * draped from the porch canopy's east post across the front fascia to the
+ * roof's east corner, dotted with warm glowing bulbs. The wire dips
+ * slightly between bulbs to suggest the cable's slack.
+ */
+function buildEaveStringLights(f: NodeFactory): SceneNode {
+  const wire = std(C.bistroWire, 0.6, { flatShading: true });
+  const bulb = std(C.bistroBulb, 0.35, { emissive: C.bistroBulbGlow, transparent: false });
+  const socket = std(C.bistroWire, 0.7, { flatShading: true });
+
+  const eaveY = ROOF_TOP - 0.06;
+  const startX = -W / 2 + 0.15;
+  const endX = W / 2 - 0.15;
+  const span = endX - startX;
+  const cableZ = FRONT_Z + 0.07;
+  const parts: SceneNode[] = [];
+
+  // The wire — a thin cylinder running horizontally just under the fascia.
+  parts.push(
+    f.mesh("Eave Wire", cylinder(0.012, 0.012, span, 5), wire, {
+      position: [(startX + endX) / 2, eaveY, cableZ],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+  );
+
+  // Six bulbs evenly spaced, each on its own short drop-wire and socket.
+  const bulbCount = 6;
+  for (let i = 0; i < bulbCount; i++) {
+    const t = (i + 0.5) / bulbCount;
+    const bx = startX + span * t;
+    // Slight sag in the middle of the wire — a tiny parabolic dip.
+    const sag = Math.sin(t * Math.PI) * 0.05;
+    const dropY = eaveY - 0.08 - sag;
+    parts.push(
+      f.mesh("Drop Wire", cylinder(0.008, 0.008, 0.16, 4), wire, {
+        position: [bx, dropY + 0.04, cableZ],
+      }),
+      f.mesh("Bulb Socket", cylinder(0.026, 0.022, 0.05, 8), socket, {
+        position: [bx, dropY - 0.05, cableZ],
+      }),
+      f.mesh("Bulb", sphere(0.06, 12, 8), bulb, {
+        position: [bx, dropY - 0.12, cableZ],
+      }, { castShadow: true }),
+    );
+  }
+
+  // A small wall hook anchoring each end of the wire.
+  for (const x of [startX, endX]) {
+    parts.push(
+      f.mesh("Eave Hook", box(0.04, 0.06, 0.04), socket, {
+        position: [x, eaveY, cableZ - 0.02],
+      }, { castShadow: true }),
+    );
+  }
+
+  return f.group("Eave String Lights", parts);
+}
+
+/* ─────────────────── eighth-pass scene extension ─────────────────── */
+
+/**
+ * The lakefront scene extension — a large ground plane stretching beyond
+ * the back meadow's far edge with a calm open lake, a wooden plank pier
+ * on stout posts, a moored rowboat, cattail fringes along the shore, a
+ * grove of lakeside conifers and a bobbing channel buoy. The lakefront
+ * overlaps the meadow by ~1 unit along the join so the ground layer has
+ * no holes.
+ */
+function buildNorthLakefront(f: NodeFactory): SceneNode {
+  return f.group("North Lakefront", [
+    // The lakefront ground plane itself — warmer / more golden grass than the
+    // meadow, suggesting a sunlit clearing on the shore.
+    f.mesh(
+      "Lakefront Ground",
+      plane(LAKEFRONT_W, LAKEFRONT_D),
+      std(C.lakefrontGrass, 0.95, { texture: "grass", textureScale: [14, 8] }),
+      { position: LAKEFRONT_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // A thin sand apron tracing the shore where the grass meets the water.
+    f.mesh(
+      "Shore Apron",
+      plane(LAKE_WATER_W + 5, 3.5),
+      std(C.lakefrontSand, 0.9, { texture: "grass", textureScale: [12, 2] }),
+      {
+        position: [LAKE_WATER_POS[0], -0.004, LAKE_WATER_POS[2] + LAKE_WATER_D / 2 + 1.4],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // Apron joining the meadow's far edge — a darker grass strip with the
+    // same texture so the seam reads as one continuous lawn.
+    f.mesh(
+      "Lakefront Apron",
+      plane(LAKEFRONT_W, 3),
+      std(C.meadowGrassDark, 0.95, { texture: "grass", textureScale: [12, 1] }),
+      { position: [0, -0.004, -40.5], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    buildLakeWater(f, LAKE_WATER_POS),
+    buildLakePier(f, LAKE_PIER_POS),
+    buildRowboat(f, ROWBOAT_POS),
+    buildCattails(f),
+    buildLakefrontTrees(f),
+    buildMooringBuoy(f, BUOY_POS),
+  ]);
+}
+
+/**
+ * The lake water surface — an oval pool with a darker deep-water plate
+ * sitting below a lighter shallow rim plate that fades to the shore. The
+ * shallows are slightly transparent so the sand apron reads through. A
+ * pair of stylised ripple highlights breaks up the surface.
+ */
+function buildLakeWater(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const deep = {
+    color: C.lakeWater,
+    roughness: 0.08,
+    metalness: 0.4,
+    transparent: true,
+    opacity: 0.92,
+    texture: "lake-water",
+    textureScale: [3, 2] as const,
+  };
+  const shallow = {
+    color: C.lakeShallow,
+    roughness: 0.18,
+    metalness: 0.3,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const ripple = {
+    color: C.laundryWhite,
+    roughness: 0.05,
+    transparent: true,
+    opacity: 0.22,
+  };
+  return f.group("Lake", [
+    // Shallow rim plate sits a hair below the deep plate so the deep colour
+    // shows through where it overlaps.
+    f.mesh(
+      "Lake Shallow",
+      plane(LAKE_WATER_W + 1.6, LAKE_WATER_D + 1.2),
+      shallow,
+      { position: [0, 0.005, 0], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    f.mesh(
+      "Lake Deep",
+      plane(LAKE_WATER_W, LAKE_WATER_D),
+      deep,
+      { position: [0, 0.012, 0], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // Two thin ripple highlights to suggest a gentle current.
+    f.mesh(
+      "Ripple A",
+      plane(LAKE_WATER_W * 0.5, 0.18),
+      ripple,
+      { position: [-3, 0.018, -1], rotation: [-Math.PI / 2, 0, 0] },
+    ),
+    f.mesh(
+      "Ripple B",
+      plane(LAKE_WATER_W * 0.35, 0.14),
+      ripple,
+      { position: [4, 0.018, 3], rotation: [-Math.PI / 2, 0, 0] },
+    ),
+  ], { position: pos });
+}
+
+/**
+ * A wooden plank pier sitting on six stout square posts that walk out
+ * over the lake. The deck is six planks wide and runs ~7 units long;
+ * the last bay carries a low railed nook for the moored rowboat.
+ */
+function buildLakePier(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const plank = std(C.pierPlank, 0.85, { texture: "wood", textureScale: [1, 2] });
+  const post = std(C.pierPost, 0.95, { texture: "wood", flatShading: true });
+  const trim = std(C.pierTrim, 0.8, { texture: "wood" });
+
+  const pierLen = 7.6;
+  const pierW = 1.4;
+  const deckY = 0.45;
+  const parts: SceneNode[] = [];
+
+  // Three pairs of mooring posts under the deck.
+  const postPairs = 3;
+  for (let p = 0; p < postPairs; p++) {
+    const tz = -pierLen / 2 + (pierLen / (postPairs - 1)) * p;
+    for (const sx of [-1, 1] as const) {
+      parts.push(
+        f.mesh("Pier Post", box(0.14, 0.95, 0.14), post, {
+          position: [sx * (pierW / 2 - 0.08), 0.45, tz],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+
+  // Two stringers under the deck running the full length.
+  for (const sx of [-1, 1] as const) {
+    parts.push(
+      f.mesh("Pier Stringer", box(0.06, 0.1, pierLen + 0.05), post, {
+        position: [sx * (pierW / 2 - 0.1), deckY - 0.08, 0],
+      }, { castShadow: true }),
+    );
+  }
+
+  // Deck planks — running across the pier.
+  const planks = 22;
+  const plankD = pierLen / planks;
+  for (let i = 0; i < planks; i++) {
+    parts.push(
+      f.mesh("Pier Plank", box(pierW, 0.04, plankD * 0.94), plank, {
+        position: [0, deckY, -pierLen / 2 + plankD * (i + 0.5)],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+
+  // Low railed nook at the lake end of the pier — two short posts and a
+  // top rail, with a mooring cleat in the middle.
+  for (const sx of [-1, 1] as const) {
+    parts.push(
+      f.mesh("Rail Post", box(0.08, 0.6, 0.08), post, {
+        position: [sx * (pierW / 2 - 0.06), deckY + 0.3, -pierLen / 2 + 0.05],
+      }, { castShadow: true }),
+    );
+  }
+  parts.push(
+    f.mesh("End Top Rail", box(pierW - 0.04, 0.05, 0.05), trim, {
+      position: [0, deckY + 0.55, -pierLen / 2 + 0.05],
+    }, { castShadow: true }),
+    // Mooring cleat — a small T-shape on the deck.
+    f.mesh("Cleat Body", cylinder(0.06, 0.06, 0.12, 8), trim, {
+      position: [pierW / 2 - 0.18, deckY + 0.06, -pierLen / 2 + 0.6],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+  );
+
+  // A small lantern hanging over the rail at the lake end.
+  parts.push(
+    f.mesh("Lantern Arm", box(0.05, 0.05, 0.3), post, {
+      position: [0, deckY + 0.75, -pierLen / 2 + 0.05],
+    }),
+    f.mesh("Lantern Box", box(0.18, 0.22, 0.18), std(C.ironGrey, 0.5, {
+      metalness: 0.4, flatShading: true,
+    }), {
+      position: [0, deckY + 0.62, -pierLen / 2 - 0.1],
+    }, { castShadow: true }),
+    f.mesh("Lantern Glow", box(0.12, 0.14, 0.12),
+      std(C.lampGlow, 0.4, { emissive: "#f7d28c", transparent: true, opacity: 0.9 }),
+      { position: [0, deckY + 0.62, -pierLen / 2 - 0.1] }),
+  );
+
+  // A coiled rope on the deck near the cleat — read as a few stacked rings.
+  const rope = std(C.ropeJute, 0.95, { flatShading: true });
+  for (let i = 0; i < 3; i++) {
+    parts.push(
+      f.mesh("Rope Coil", cylinder(0.07 + i * 0.01, 0.07 + i * 0.01, 0.02, 14), rope, {
+        position: [-pierW / 2 + 0.32, deckY + 0.04 + i * 0.018, -pierLen / 2 + 0.95],
+      }),
+    );
+  }
+
+  return f.group("Lake Pier", parts, { position: pos, rotation: [0, Math.PI / 2, 0] });
+}
+
+/**
+ * A small wooden rowboat moored to the lake end of the pier. Three thwart
+ * benches across the hull, two long oars resting across the gunwales, a
+ * tiny brass painter looping forward over the bow.
+ */
+function buildRowboat(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const hull = std(C.boatHull, 0.7, { texture: "wood", textureScale: [2, 1] });
+  const trim = std(C.boatTrim, 0.7, { texture: "wood" });
+  const inside = std(C.boatInterior, 0.85, { texture: "wood" });
+  const oar = std(C.walnut, 0.7, { texture: "wood", flatShading: true });
+
+  const boatL = 2.4;
+  const boatW = 0.95;
+  const parts: SceneNode[] = [];
+
+  // Hull — a long flattened box with two end tapers (small triangular bow and
+  // stern caps). The body sits half-sunk in the water.
+  parts.push(
+    f.mesh("Hull Body", box(boatW, 0.32, boatL), hull, {
+      position: [0, 0.14, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Bow taper — a flattened cone pointing forward.
+    f.mesh("Bow", cone(boatW / 2, 0.7, 4), hull, {
+      position: [0, 0.14, boatL / 2 + 0.34],
+      rotation: [Math.PI / 2, 0, Math.PI / 4],
+      scale: [1, 1, 0.6],
+    }, { castShadow: true }),
+    // Stern taper.
+    f.mesh("Stern", cone(boatW / 2, 0.5, 4), hull, {
+      position: [0, 0.14, -boatL / 2 - 0.24],
+      rotation: [-Math.PI / 2, 0, Math.PI / 4],
+      scale: [1, 1, 0.6],
+    }, { castShadow: true }),
+  );
+
+  // Interior shell — a slightly smaller darker box inset into the hull so the
+  // boat reads as open-topped from above.
+  parts.push(
+    f.mesh("Inside Pan", box(boatW - 0.14, 0.04, boatL - 0.18), inside, {
+      position: [0, 0.26, 0],
+    }, { receiveShadow: true }),
+  );
+
+  // Gunwale trim — a thin cream rim around the top edge of the hull.
+  parts.push(
+    f.mesh("Gunwale L", box(0.04, 0.05, boatL + 0.4), trim, {
+      position: [-boatW / 2, 0.31, 0],
+    }, { castShadow: true }),
+    f.mesh("Gunwale R", box(0.04, 0.05, boatL + 0.4), trim, {
+      position: [boatW / 2, 0.31, 0],
+    }, { castShadow: true }),
+    f.mesh("Gunwale Bow", box(boatW, 0.05, 0.04), trim, {
+      position: [0, 0.31, boatL / 2 + 0.18],
+    }),
+    f.mesh("Gunwale Stern", box(boatW, 0.05, 0.04), trim, {
+      position: [0, 0.31, -boatL / 2 - 0.12],
+    }),
+  );
+
+  // Three thwart benches across the hull.
+  for (let i = 0; i < 3; i++) {
+    const tz = -boatL / 2 + (boatL / 4) * (i + 1);
+    parts.push(
+      f.mesh("Thwart", box(boatW - 0.06, 0.05, 0.18), trim, {
+        position: [0, 0.32, tz],
+      }, { castShadow: true }),
+    );
+  }
+
+  // Two oars resting across the gunwales, blades aft.
+  for (const sx of [-1, 1] as const) {
+    parts.push(
+      f.mesh("Oar Shaft", cylinder(0.024, 0.024, 1.6, 7), oar, {
+        position: [sx * 0.12, 0.36, -0.05],
+        rotation: [0, sx * 0.05, Math.PI / 2 - sx * 0.1],
+      }, { castShadow: true }),
+      f.mesh("Oar Blade", box(0.08, 0.02, 0.32), oar, {
+        position: [sx * 0.86, 0.36, -0.18],
+        rotation: [0, sx * 0.05, 0],
+      }),
+      // Oarlock — a small upright at the gunwale.
+      f.mesh("Oarlock", cylinder(0.016, 0.016, 0.1, 6), trim, {
+        position: [sx * (boatW / 2), 0.36, 0],
+      }),
+    );
+  }
+
+  // Painter (mooring rope) looping forward off the bow.
+  parts.push(
+    f.mesh("Painter", cylinder(0.012, 0.012, 0.9, 6), std(C.ropeJute, 0.95), {
+      position: [0, 0.32, boatL / 2 + 0.55],
+      rotation: [0.3, 0, Math.PI / 2],
+    }),
+  );
+
+  return f.group("Rowboat", parts, { position: pos, rotation: [0, -0.18, 0] });
+}
+
+/**
+ * Cattail clusters along the lake shore — two stems of slender green
+ * leaves and a tall brown sausage seed-head per clump, instanced in
+ * three colour groups across the shoreline.
+ */
+function buildCattails(f: NodeFactory): SceneNode {
+  const rng = mulberry32(0xca770a17);
+  const stemMat = std(C.lakeShoreReed, 0.85, { flatShading: true });
+  const headMat = std(C.cattailHead, 0.95, { flatShading: true });
+  const tipMat = std(C.strawHay, 0.9, { flatShading: true });
+
+  const stems: Transform[] = [];
+  const heads: Transform[] = [];
+  const tips: Transform[] = [];
+
+  // Concentrate clusters along the curving lake shoreline — three short arcs
+  // at different shore points.
+  const shoreSegments: { cx: number; cz: number; r: number; arcStart: number; arcEnd: number }[] = [
+    { cx: LAKE_WATER_POS[0], cz: LAKE_WATER_POS[2] + LAKE_WATER_D / 2 + 0.4, r: 14, arcStart: -1.3, arcEnd: -0.5 },
+    { cx: LAKE_WATER_POS[0] - 12, cz: LAKE_WATER_POS[2], r: 4, arcStart: 1.6, arcEnd: 2.4 },
+    { cx: LAKE_WATER_POS[0] + 14, cz: LAKE_WATER_POS[2] + 4, r: 4, arcStart: 0.3, arcEnd: 1.1 },
+  ];
+  for (const seg of shoreSegments) {
+    const n = 18;
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1);
+      const a = seg.arcStart + (seg.arcEnd - seg.arcStart) * t;
+      const wobbleR = seg.r + (rng() - 0.5) * 1.2;
+      const x = seg.cx + Math.cos(a) * wobbleR;
+      const z = seg.cz + Math.sin(a) * wobbleR;
+      // Bunch two stems per clump.
+      for (let s = 0; s < 2; s++) {
+        const sx = x + (rng() - 0.5) * 0.18;
+        const sz = z + (rng() - 0.5) * 0.18;
+        const h = 0.9 + rng() * 0.35;
+        stems.push({
+          position: [sx, h / 2, sz],
+          rotation: [0, rng() * Math.PI, (rng() - 0.5) * 0.12],
+          scale: [1, h / 1.0, 1],
+        });
+        if (s === 0) {
+          heads.push({
+            position: [sx, h + 0.14, sz],
+            rotation: [0, rng() * Math.PI, 0],
+            scale: [1, 1, 1],
+          });
+          tips.push({
+            position: [sx, h + 0.32, sz],
+            rotation: [0, rng() * Math.PI, 0],
+            scale: [1, 1, 1],
+          });
+        }
+      }
+    }
+  }
+
+  return f.group("Cattails", [
+    f.instanced("Cattail Stems", cylinder(0.014, 0.02, 1.0, 5), stemMat, stems, {
+      castShadow: true,
+    }),
+    f.instanced("Cattail Heads", cylinder(0.04, 0.04, 0.24, 7), headMat, heads, {
+      castShadow: true,
+    }),
+    // Tiny tuft tip on top of each head — a wisp of pale fluff.
+    f.instanced("Cattail Tips", sphere(0.03, 6, 5), tipMat, tips),
+  ]);
+}
+
+/**
+ * A small grove of slender lakeside conifers placed around the lakefront,
+ * routed away from the lake water, the pier and the meadow join. Built
+ * from a stack of stylised cones over a short trunk.
+ */
+function buildLakefrontTrees(f: NodeFactory): SceneNode {
+  const trunkMat = std(C.bark, 0.95, { texture: "bark", flatShading: true });
+  const foliage = std(C.foliage, 0.85, { flatShading: true });
+  const rng = mulberry32(0x1ac3c0);
+  const trees: SceneNode[] = [];
+  const placed: { x: number; z: number }[] = [];
+  const xMin = LAKEFRONT_POS[0] - LAKEFRONT_W / 2 + 2;
+  const xMax = LAKEFRONT_POS[0] + LAKEFRONT_W / 2 - 2;
+  const zMin = LAKEFRONT_POS[2] - LAKEFRONT_D / 2 + 2;
+  const zMax = LAKEFRONT_POS[2] + LAKEFRONT_D / 2 - 2;
+  let attempts = 0;
+  while (trees.length < 16 && attempts < 400) {
+    attempts++;
+    const x = xMin + rng() * (xMax - xMin);
+    const z = zMin + rng() * (zMax - zMin);
+    // Stay off the lake water itself, plus a one-unit buffer.
+    if (
+      x > LAKE_WATER_POS[0] - LAKE_WATER_W / 2 - 1 &&
+      x < LAKE_WATER_POS[0] + LAKE_WATER_W / 2 + 1 &&
+      z > LAKE_WATER_POS[2] - LAKE_WATER_D / 2 - 1 &&
+      z < LAKE_WATER_POS[2] + LAKE_WATER_D / 2 + 1
+    ) continue;
+    // Stay off the pier corridor.
+    if (Math.hypot(x - LAKE_PIER_POS[0], z - LAKE_PIER_POS[2]) < 4.5) continue;
+    // Stay off the meadow seam (avoid overlapping back-meadow trees).
+    if (z > -42) continue;
+    if (placed.some((p) => Math.hypot(p.x - x, p.z - z) < 3.0)) continue;
+    placed.push({ x, z });
+
+    const trunkH = 0.55 + rng() * 0.25;
+    const s = 1.1 + rng() * 0.5;
+    const tilt = (rng() - 0.5) * 0.05;
+    trees.push(
+      f.group(
+        `Lakefront Tree ${trees.length + 1}`,
+        [
+          f.mesh("Trunk", cylinder(0.1, 0.14, trunkH, 6), trunkMat, {
+            position: [0, trunkH / 2, 0],
+          }, { castShadow: true, receiveShadow: true }),
+          f.mesh("Lower Cone", cone(0.78, 1.0, 8), foliage, {
+            position: [0, trunkH + 0.42, 0],
+          }, { castShadow: true, receiveShadow: true }),
+          f.mesh("Mid Cone", cone(0.6, 0.8, 8), foliage, {
+            position: [0, trunkH + 0.95, 0],
+          }, { castShadow: true }),
+          f.mesh("Top Cone", cone(0.4, 0.6, 8), foliage, {
+            position: [0, trunkH + 1.4, 0],
+          }, { castShadow: true }),
+        ],
+        { position: [x, 0, z], scale: [s, s, s], rotation: [tilt, rng() * Math.PI, tilt] },
+      ),
+    );
+  }
+  return f.group("Lakefront Trees", trees);
+}
+
+/**
+ * A small bobbing channel buoy — red and white horizontal stripes over a
+ * cylindrical drum on a flat base, with a small lantern cage and a tiny
+ * pennant flag on top. Anchored a few units off shore.
+ */
+function buildMooringBuoy(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const red = std(C.buoyRed, 0.55, { flatShading: true });
+  const white = std(C.buoyWhite, 0.6, { flatShading: true });
+  const metal = std(C.ironGrey, 0.4, { metalness: 0.6, flatShading: true });
+  const flag = std(C.flowerYellow, 0.6, { transparent: true, opacity: 0.95 });
+
+  const parts: SceneNode[] = [
+    // Flotation drum sitting on the water.
+    f.mesh("Drum Base", cylinder(0.34, 0.4, 0.1, 14), white, {
+      position: [0, 0.06, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Drum Red A", cylinder(0.36, 0.36, 0.16, 14), red, {
+      position: [0, 0.2, 0],
+    }, { castShadow: true }),
+    f.mesh("Drum White", cylinder(0.36, 0.36, 0.1, 14), white, {
+      position: [0, 0.33, 0],
+    }, { castShadow: true }),
+    f.mesh("Drum Red B", cylinder(0.36, 0.36, 0.16, 14), red, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true }),
+    f.mesh("Drum Top", cylinder(0.3, 0.36, 0.08, 14), white, {
+      position: [0, 0.58, 0],
+    }, { castShadow: true }),
+    // Lantern cage — four uprights forming an open box on top of the drum.
+    f.mesh("Cage Floor", cylinder(0.18, 0.18, 0.02, 8), metal, {
+      position: [0, 0.63, 0],
+    }),
+  ];
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    parts.push(
+      f.mesh("Cage Post", cylinder(0.012, 0.012, 0.34, 5), metal, {
+        position: [Math.cos(a) * 0.16, 0.8, Math.sin(a) * 0.16],
+      }),
+    );
+  }
+  parts.push(
+    f.mesh("Cage Ring", cylinder(0.18, 0.18, 0.02, 8), metal, {
+      position: [0, 0.96, 0],
+    }),
+    // Tiny lantern bulb inside the cage.
+    f.mesh("Buoy Lamp", sphere(0.08, 10, 8),
+      std(C.lampGlow, 0.4, { emissive: "#f7d28c" }),
+      { position: [0, 0.8, 0] }),
+    // Pennant flag pole and triangular flag.
+    f.mesh("Pennant Pole", cylinder(0.01, 0.01, 0.4, 5), metal, {
+      position: [0, 1.18, 0],
+    }, { castShadow: true }),
+    f.mesh("Pennant Flag", box(0.22, 0.14, 0.005), flag, {
+      position: [0.11, 1.3, 0],
+    }),
+  );
+
+  return f.group("Mooring Buoy", parts, { position: pos, rotation: [0, 0.2, 0] });
+}
+
 /* ───────────────────────── exterior walls ───────────────────────── */
 
 function buildBackWall(f: NodeFactory): SceneNode {
@@ -4978,6 +5989,10 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: FIRE_PIT_POS[0], z: FIRE_PIT_POS[2], r: 2.0 },
     { x: GAZEBO_POS[0], z: GAZEBO_POS[2], r: 2.0 },
     { x: COMPOSTER_POS[0], z: COMPOSTER_POS[2], r: 1.2 },
+    // Eighth-pass keep-outs — picnic table, stone fountain and tool rack.
+    { x: PICNIC_TABLE_POS[0], z: PICNIC_TABLE_POS[2], r: 1.6 },
+    { x: STONE_FOUNTAIN_POS[0], z: STONE_FOUNTAIN_POS[2], r: 1.5 },
+    { x: TOOL_RACK_POS[0], z: TOOL_RACK_POS[2], r: 1.0 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -5013,10 +6028,14 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildFirePit(f, FIRE_PIT_POS),
     buildGazebo(f, GAZEBO_POS),
     buildComposterBin(f, COMPOSTER_POS),
+    buildPicnicTable(f, PICNIC_TABLE_POS),
+    buildStoneFountain(f, STONE_FOUNTAIN_POS),
+    buildToolRack(f, TOOL_RACK_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
   const pondGarden = buildWestPondGarden(f);
+  const lakefront = buildNorthLakefront(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -5044,6 +6063,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildDoorWreath(f),
     buildPorchSteps(f),
     buildWindowAwnings(f),
+    buildEaveStringLights(f),
     buildFurniture(f),
   ]);
   const root: SceneNode = {
@@ -5051,7 +6071,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, orchard, pondGarden, house],
+    children: [garden, meadow, orchard, pondGarden, lakefront, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,
