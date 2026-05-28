@@ -348,6 +348,87 @@ function buildDefaultLibrary(): void {
     },
   });
 
+  // Checkered cloth — red-and-cream picnic checker with a faint fabric weave
+  // and a soft drape shadow at the centre of each square. Authored on a
+  // power-of-two canvas with eight squares per side so the mipmap chain still
+  // reads as a checker pattern when viewed from across the yard.
+  registry["checkered-cloth"] = makeCanvasTexture({
+    seed: 0xc4ec1ed,
+    draw: (ctx, rng, size) => {
+      const squares = 8;
+      const sq = size / squares;
+      for (let r = 0; r < squares; r++) {
+        for (let c = 0; c < squares; c++) {
+          const red = (r + c) % 2 === 0;
+          ctx.fillStyle = red ? "#c2403a" : "#fff5e8";
+          ctx.fillRect(c * sq, r * sq, sq, sq);
+          // Inner-shadow gradient on each red square — gives a subtle "drape"
+          // reading that mimics depth on the cloth.
+          if (red) {
+            const grad = ctx.createRadialGradient(
+              c * sq + sq / 2, r * sq + sq / 2, sq * 0.1,
+              c * sq + sq / 2, r * sq + sq / 2, sq * 0.7,
+            );
+            grad.addColorStop(0, "rgba(0,0,0,0)");
+            grad.addColorStop(1, "rgba(0,0,0,0.2)");
+            ctx.fillStyle = grad;
+            ctx.fillRect(c * sq, r * sq, sq, sq);
+          }
+        }
+      }
+      // A faint horizontal/vertical weave noise — looks like fabric thread.
+      for (let i = 0; i < 1400; i++) {
+        ctx.fillStyle = `rgba(0,0,0,${0.04 + rng() * 0.06})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+      // Cream piping along the cloth edges — a thin lighter band on each side.
+      ctx.fillStyle = "#fff5e8";
+      ctx.fillRect(0, 0, size, 2);
+      ctx.fillRect(0, size - 2, size, 2);
+      ctx.fillRect(0, 0, 2, size);
+      ctx.fillRect(size - 2, 0, 2, size);
+    },
+  });
+
+  // Lake water — a soft blue-grey base with a long drift gradient and a few
+  // faint wind-streak highlights. Designed so the mipmap chain reads as a
+  // calm, distance-fading surface rather than a tiled ripple.
+  registry["lake-water"] = makeCanvasTexture({
+    seed: 0x1a4ec3,
+    draw: (ctx, rng, size) => {
+      // Base linear gradient — slightly lighter sun-side, darker shaded edge.
+      const grad = ctx.createLinearGradient(0, 0, size, size);
+      grad.addColorStop(0, "#5a98b4");
+      grad.addColorStop(0.5, "#3b6e8c");
+      grad.addColorStop(1, "#2c5673");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, size, size);
+      // Long drift highlights — thin pale streaks at gentle angles.
+      ctx.strokeStyle = "rgba(255,255,255,0.18)";
+      ctx.lineWidth = 0.9;
+      for (let i = 0; i < 40; i++) {
+        const y = rng() * size;
+        const len = size * (0.35 + rng() * 0.4);
+        const x0 = rng() * size;
+        ctx.beginPath();
+        ctx.moveTo(x0, y);
+        ctx.bezierCurveTo(
+          x0 + len * 0.3, y + (rng() - 0.5) * 6,
+          x0 + len * 0.7, y + (rng() - 0.5) * 6,
+          x0 + len, y,
+        );
+        ctx.stroke();
+      }
+      // Sparse sparkle dots — read as sun glints on micro-waves.
+      for (let i = 0; i < 400; i++) {
+        ctx.fillStyle = `rgba(255,255,255,${0.18 + rng() * 0.3})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+      // Subtle dark noise wash to break up flat bands in deeper mip levels.
+      paintNoise(ctx, rng, size, "transparent", 28, 0.0014);
+    },
+  });
+
   // Shingle — rows of overlapping diamond-tipped shingles, weathered cedar.
   // Used on the well roof.
   registry.shingle = makeCanvasTexture({
