@@ -26,6 +26,14 @@ export interface MaterialDef {
   texture?: string;
   /** Texture repeat (S, T). Defaults to [1, 1]. */
   textureScale?: readonly [number, number];
+  /**
+   * Bump (depth) map key resolved by the renderer's texture library, e.g.
+   * "marble-bump". Greyscale height field — light = raised, dark = recessed.
+   * Lets a flat colour map read as relief without extra geometry.
+   */
+  bumpMap?: string;
+  /** Bump-map relief strength. Defaults to 0.03. */
+  bumpScale?: number;
   /** Use facet (per-face) normals — the low-poly look. */
   flatShading?: boolean;
 }
