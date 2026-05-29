@@ -429,6 +429,243 @@ function buildDefaultLibrary(): void {
     },
   });
 
+  // ── Ninth-pass additions ───────────────────────────────────────────
+  // The ninth enhancement pass introduced three new courtyard / heath
+  // materials, each paired with a companion "depth" (bump) map that the
+  // renderer applies as a height field. Light pixels in the depth map
+  // read as raised, dark pixels as recessed — giving each colour map
+  // a subtle relief read at glancing angles without extra geometry.
+
+  // Marble — creamy off-white slab with thin grey veins. Used on the
+  // garden statue pedestal and the south-heath standing stones.
+  registry.marble = makeCanvasTexture({
+    seed: 0xa46b1e,
+    draw: (ctx, rng, size) => {
+      const grad = ctx.createLinearGradient(0, 0, size, size);
+      grad.addColorStop(0, "#f4ede0");
+      grad.addColorStop(0.5, "#ebe2d0");
+      grad.addColorStop(1, "#dccdb1");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, size, size);
+      // Soft cloud blobs to break up the gradient.
+      for (let i = 0; i < 28; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = size * (0.05 + rng() * 0.12);
+        const wash = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        wash.addColorStop(0, `rgba(255,255,255,${0.05 + rng() * 0.06})`);
+        wash.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = wash;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Veins — wavering thin grey strokes following sweeping bezier paths.
+      ctx.strokeStyle = "rgba(70, 60, 50, 0.45)";
+      ctx.lineWidth = 0.9;
+      for (let v = 0; v < 9; v++) {
+        ctx.beginPath();
+        const y0 = rng() * size;
+        let x = -10;
+        let y = y0;
+        ctx.moveTo(x, y);
+        while (x < size + 10) {
+          const dx = 40 + rng() * 80;
+          const dy = (rng() - 0.5) * 60;
+          ctx.bezierCurveTo(
+            x + dx * 0.3, y + dy * 0.5,
+            x + dx * 0.7, y + dy * 0.5,
+            x + dx, y + dy,
+          );
+          x += dx;
+          y += dy;
+        }
+        ctx.stroke();
+      }
+      // Fine sparkle noise — looks like polished mica.
+      paintNoise(ctx, rng, size, "transparent", 50, 0.0014);
+    },
+  });
+  // Marble depth map — veins are darker (recessed), micro-noise raises the
+  // slab between veins. Same seed family so the relief tracks the colour.
+  registry["marble-bump"] = makeCanvasTexture({
+    seed: 0xa46b1e + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#b8b8b8";
+      ctx.fillRect(0, 0, size, size);
+      // Re-draw the vein pattern with the same RNG signature, in dark grey
+      // — these read as carved-in recesses on the bump map.
+      ctx.strokeStyle = "#3a3a3a";
+      ctx.lineWidth = 1.3;
+      for (let v = 0; v < 9; v++) {
+        ctx.beginPath();
+        const y0 = rng() * size;
+        let x = -10;
+        let y = y0;
+        ctx.moveTo(x, y);
+        while (x < size + 10) {
+          const dx = 40 + rng() * 80;
+          const dy = (rng() - 0.5) * 60;
+          ctx.bezierCurveTo(
+            x + dx * 0.3, y + dy * 0.5,
+            x + dx * 0.7, y + dy * 0.5,
+            x + dx, y + dy,
+          );
+          x += dx;
+          y += dy;
+        }
+        ctx.stroke();
+      }
+      // High-frequency speckle for the polished surface micro-relief.
+      for (let i = 0; i < 1200; i++) {
+        const v = 200 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
+
+  // Honeycomb — gold hexagonal cells over a wax-yellow base. Used on the
+  // front face of the apiary hive boxes.
+  registry.honeycomb = makeCanvasTexture({
+    seed: 0xb33c0b,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#d49b3a";
+      ctx.fillRect(0, 0, size, size);
+      const cols = 8;
+      const rows = 9;
+      const cellW = size / cols;
+      const cellH = (cellW * Math.sqrt(3)) / 2;
+      for (let r = -1; r < rows + 1; r++) {
+        for (let c = -1; c < cols + 1; c++) {
+          const cx = c * cellW + (r % 2 === 0 ? 0 : cellW / 2);
+          const cy = r * cellH;
+          const radius = cellW * 0.46;
+          ctx.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const a = (Math.PI / 3) * i - Math.PI / 6;
+            const px = cx + Math.cos(a) * radius;
+            const py = cy + Math.sin(a) * radius;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          // Cell colour — varying golden warmth.
+          const lightness = 40 + rng() * 18;
+          ctx.fillStyle = `hsl(${36 + rng() * 8}, 70%, ${lightness}%)`;
+          ctx.fill();
+          // Highlight rim — narrow lighter band on the upper-left.
+          ctx.strokeStyle = `hsla(45, 80%, ${lightness + 18}%, 0.65)`;
+          ctx.lineWidth = 1.4;
+          ctx.stroke();
+          // A tiny darker honey dot in the cell.
+          ctx.fillStyle = `hsla(30, 80%, ${lightness - 22}%, 0.55)`;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius * 0.18, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      paintNoise(ctx, rng, size, "transparent", 40, 0.0018);
+    },
+  });
+  // Honeycomb depth map — cell walls (which are bright on the colour map
+  // due to the highlight rim) become raised ridges; cell interiors recede.
+  registry["honeycomb-bump"] = makeCanvasTexture({
+    seed: 0xb33c0b + 1,
+    draw: (ctx, _rng, size) => {
+      ctx.fillStyle = "#202020";
+      ctx.fillRect(0, 0, size, size);
+      const cols = 8;
+      const rows = 9;
+      const cellW = size / cols;
+      const cellH = (cellW * Math.sqrt(3)) / 2;
+      for (let r = -1; r < rows + 1; r++) {
+        for (let c = -1; c < cols + 1; c++) {
+          const cx = c * cellW + (r % 2 === 0 ? 0 : cellW / 2);
+          const cy = r * cellH;
+          const radius = cellW * 0.46;
+          // Hex outline raised (bright); fill stays low (dark).
+          ctx.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const a = (Math.PI / 3) * i - Math.PI / 6;
+            const px = cx + Math.cos(a) * radius;
+            const py = cy + Math.sin(a) * radius;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.strokeStyle = "#f0f0f0";
+          ctx.lineWidth = 3.4;
+          ctx.stroke();
+        }
+      }
+    },
+  });
+
+  // Heather — a purple-and-mauve carpet of flowering shrubs, with darker
+  // peat-coloured patches. Used as the ground texture on the south heath.
+  registry.heather = makeCanvasTexture({
+    seed: 0xb4e7e5,
+    draw: (ctx, rng, size) => {
+      const grad = ctx.createLinearGradient(0, 0, 0, size);
+      grad.addColorStop(0, "#7a6f4a");
+      grad.addColorStop(1, "#5e553a");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, size, size);
+      // Scatter blobs of heather pink, lavender and peat.
+      for (let i = 0; i < 700; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        const r = 2 + rng() * 5;
+        let colour: string;
+        if (which < 0.4) {
+          colour = `hsla(${320 + rng() * 12}, 38%, ${50 + rng() * 12}%, 0.7)`;
+        } else if (which < 0.75) {
+          colour = `hsla(${280 + rng() * 18}, 36%, ${45 + rng() * 16}%, 0.65)`;
+        } else {
+          colour = `hsla(${36 + rng() * 12}, 24%, ${28 + rng() * 14}%, 0.7)`;
+        }
+        ctx.fillStyle = colour;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Tiny grass-like flecks of green.
+      for (let i = 0; i < 1400; i++) {
+        ctx.fillStyle = `hsla(${78 + rng() * 18}, 32%, ${36 + rng() * 16}%, 0.55)`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1 + rng() * 1.5);
+      }
+      paintNoise(ctx, rng, size, "transparent", 36, 0.002);
+    },
+  });
+  // Heather depth map — the pink/lavender blooms sit a hair above the peat.
+  registry["heather-bump"] = makeCanvasTexture({
+    seed: 0xb4e7e5 + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#404040";
+      ctx.fillRect(0, 0, size, size);
+      for (let i = 0; i < 700; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        const r = 2 + rng() * 5;
+        if (which < 0.75) {
+          // Blooms raised.
+          const v = 180 + Math.floor(rng() * 50);
+          ctx.fillStyle = `rgb(${v},${v},${v})`;
+        } else {
+          // Peat patches recessed.
+          const v = 30 + Math.floor(rng() * 30);
+          ctx.fillStyle = `rgb(${v},${v},${v})`;
+        }
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    },
+  });
+
   // Shingle — rows of overlapping diamond-tipped shingles, weathered cedar.
   // Used on the well roof.
   registry.shingle = makeCanvasTexture({

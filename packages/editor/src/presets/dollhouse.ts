@@ -175,6 +175,33 @@ const LAKE_PIER_POS: [number, number, number] = [9, 0, -50];
 const ROWBOAT_POS: [number, number, number] = [12.4, 0, -55];
 const BUOY_POS: [number, number, number] = [-14, 0, -64];
 
+/**
+ * Ninth-pass courtyard props — a small bee apiary on a slate platform behind
+ * the vegetable garden, a marble bunny garden statue on a column pedestal on
+ * the south lawn, and a black kettle BBQ grill on three legs by the patio set.
+ * Each new mesh that carries a procedural texture also references a paired
+ * depth (bump) map registered in the renderer's texture library, so the
+ * marble veins on the pedestal and the honeycomb cells on the hive front
+ * read as relief instead of flat decals.
+ */
+const APIARY_POS: [number, number, number] = [9.5, 0, 11.5];
+const GARDEN_STATUE_POS: [number, number, number] = [6.5, 0, 2.0];
+const BBQ_GRILL_POS: [number, number, number] = [11.0, 0, 7.5];
+
+/**
+ * Ninth-pass scene extension — a south heath plane reaching beyond the front
+ * yard's far edge. The plane overlaps the main lawn by ~1 unit at z = 32 so
+ * the ground layer joins seamlessly. It carries a rolling earth mound, a
+ * miniature standing stone circle, scattered heather shrubs, three slender
+ * birch trees and a winding dirt continuation of the cobble path that
+ * disappears into the distance.
+ */
+const HEATH_POS: [number, number, number] = [0, -0.007, 46];
+const HEATH_W = 50;
+const HEATH_D = 28;
+const STANDING_STONES_POS: [number, number, number] = [-9, 0, 50];
+const HEATH_MOUND_POS: [number, number, number] = [12, 0, 52];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -332,6 +359,25 @@ const C = {
   cattailHead: "#5a4022",
   buoyRed: "#c84a3f",
   buoyWhite: "#fdf6f0",
+  // Ninth enhancement pass — a bee apiary, a marble garden statue, a kettle
+  // BBQ grill, and a south-heath scene extension with heather, standing
+  // stones, birches and a rolling earth mound.
+  hiveWhite: "#f1ead4",
+  hiveHoney: "#d49b3a",
+  hiveRoof: "#3f3a36",
+  slatePlate: "#4a4944",
+  marbleCream: "#ede2d0",
+  bunnyShade: "#cbb8a4",
+  grillBody: "#1a1a1a",
+  grillSilver: "#c5c8cf",
+  grillEmber: "#e85d2a",
+  heathGround: "#75673f",
+  heathMoss: "#5e6a3a",
+  heatherBloom: "#a35aa6",
+  heatherDark: "#6b4477",
+  birchTrunk: "#f0e8d8",
+  birchBark: "#2c2823",
+  birchFoliage: "#8fb05e",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -5898,6 +5944,562 @@ function buildFurniture(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────── ninth-pass courtyard enhancements ─────────────── */
+
+/**
+ * A small bee apiary — two stacked white hive boxes (with a honeycomb-stamped
+ * front face that reads as relief via the paired depth map) on a flat slate
+ * platform. The hive carries a peaked roof with a tiny landing board where
+ * stylised bees can be implied as instanced specks above the entrance hole.
+ */
+function buildBeeApiary(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const slate = std(C.slatePlate, 0.85, { flatShading: true });
+  const hiveBody = std(C.hiveWhite, 0.65, { texture: "wood", textureScale: [1, 1] });
+  // Honeycomb front — colour + companion bump map.
+  const hiveFront: MaterialDef = {
+    color: C.hiveHoney,
+    roughness: 0.55,
+    texture: "honeycomb",
+    textureScale: [1, 1],
+    bumpMap: "honeycomb-bump",
+    bumpScale: 0.045,
+  };
+  const roof = std(C.hiveRoof, 0.9, { texture: "shingle", textureScale: [1, 1] });
+  const metal = std(C.ironGrey, 0.4, { metalness: 0.6 });
+  const beeBody = std(C.bistroBulb, 0.6, { flatShading: true });
+
+  const boxW = 0.7;
+  const boxH = 0.32;
+  const boxD = 0.6;
+  const slateH = 0.06;
+  const parts: SceneNode[] = [
+    // Slate platform — wider than the hive footprint.
+    f.mesh("Slate Plate", box(boxW + 0.4, slateH, boxD + 0.4), slate, {
+      position: [0, slateH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Two short feet under the slate.
+    f.mesh("Foot L", box(0.1, 0.05, 0.1), slate, {
+      position: [-boxW / 2 + 0.06, slateH / 2 - 0.03, boxD / 2 - 0.06],
+    }, { castShadow: true }),
+    f.mesh("Foot R", box(0.1, 0.05, 0.1), slate, {
+      position: [boxW / 2 - 0.06, slateH / 2 - 0.03, boxD / 2 - 0.06],
+    }, { castShadow: true }),
+    f.mesh("Foot BL", box(0.1, 0.05, 0.1), slate, {
+      position: [-boxW / 2 + 0.06, slateH / 2 - 0.03, -boxD / 2 + 0.06],
+    }, { castShadow: true }),
+    f.mesh("Foot BR", box(0.1, 0.05, 0.1), slate, {
+      position: [boxW / 2 - 0.06, slateH / 2 - 0.03, -boxD / 2 + 0.06],
+    }, { castShadow: true }),
+  ];
+  // Lower hive box.
+  const baseY = slateH + boxH / 2;
+  parts.push(
+    f.mesh("Hive Lower Body", box(boxW, boxH, boxD), hiveBody, {
+      position: [0, baseY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Hive Lower Front", box(boxW + 0.01, boxH * 0.7, 0.01), hiveFront, {
+      position: [0, baseY, boxD / 2 + 0.005],
+    }, { castShadow: false }),
+    // Entrance slot — a thin dark rectangle at the bottom of the lower box.
+    f.mesh("Entrance Slot", box(boxW * 0.4, 0.04, 0.012), std(C.composterBin, 0.95), {
+      position: [0, slateH + 0.06, boxD / 2 + 0.012],
+    }),
+    // Landing board projecting forward.
+    f.mesh("Landing Board", box(boxW * 0.5, 0.02, 0.08), hiveBody, {
+      position: [0, slateH + 0.04, boxD / 2 + 0.05],
+    }, { castShadow: true }),
+  );
+  // Upper hive box (slightly recessed inset look — same width).
+  const upperY = slateH + boxH + boxH / 2 + 0.005;
+  parts.push(
+    f.mesh("Hive Upper Body", box(boxW, boxH, boxD), hiveBody, {
+      position: [0, upperY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Hive Upper Front", box(boxW + 0.01, boxH * 0.7, 0.01), hiveFront, {
+      position: [0, upperY, boxD / 2 + 0.005],
+    }),
+  );
+  // Peaked roof — gable + ridge.
+  const ridgeY = upperY + boxH / 2 + 0.18;
+  parts.push(
+    f.mesh("Roof Slope L", box(boxW + 0.18, 0.04, boxD + 0.16), roof, {
+      position: [-0.16, ridgeY - 0.08, 0],
+      rotation: [0, 0, 0.35],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Slope R", box(boxW + 0.18, 0.04, boxD + 0.16), roof, {
+      position: [0.16, ridgeY - 0.08, 0],
+      rotation: [0, 0, -0.35],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Ridge", box(0.04, 0.06, boxD + 0.16), roof, {
+      position: [0, ridgeY, 0],
+    }, { castShadow: true }),
+    // A tiny ventilation chimney pipe.
+    f.mesh("Vent Pipe", cylinder(0.025, 0.025, 0.12, 6), metal, {
+      position: [0.18, ridgeY + 0.08, 0],
+    }, { castShadow: true }),
+  );
+  // A few stylised bees orbiting the entrance — three small striped specks.
+  const beeSpots: [number, number, number][] = [
+    [0.05, slateH + 0.18, boxD / 2 + 0.18],
+    [-0.12, slateH + 0.26, boxD / 2 + 0.32],
+    [0.18, slateH + 0.34, boxD / 2 + 0.22],
+  ];
+  beeSpots.forEach(([bx, by, bz], i) => {
+    parts.push(
+      f.mesh(`Bee ${i + 1}`, sphere(0.022, 6, 5), beeBody, {
+        position: [bx, by, bz], scale: [1.3, 0.8, 0.9],
+      }, { castShadow: true }),
+    );
+  });
+  return f.group("Bee Apiary", parts, { position: pos });
+}
+
+/**
+ * A small marble garden statue — a stylised crouching bunny perched on a
+ * fluted column pedestal. Both pedestal and bunny use the marble colour
+ * map paired with a depth map, so the chiseled veining reads as relief
+ * when sun grazes the pedestal at an angle.
+ */
+function buildGardenStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const marble: MaterialDef = {
+    color: C.marbleCream,
+    roughness: 0.45,
+    metalness: 0.05,
+    texture: "marble",
+    textureScale: [1, 1.4],
+    bumpMap: "marble-bump",
+    bumpScale: 0.06,
+  };
+  const marbleShade: MaterialDef = {
+    color: C.bunnyShade,
+    roughness: 0.55,
+    metalness: 0.05,
+    texture: "marble",
+    textureScale: [0.6, 0.6],
+    bumpMap: "marble-bump",
+    bumpScale: 0.04,
+  };
+  const parts: SceneNode[] = [
+    // Square plinth at the base.
+    f.mesh("Plinth", box(0.5, 0.1, 0.5), marbleShade, {
+      position: [0, 0.05, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Fluted column shaft.
+    f.mesh("Shaft", cylinder(0.16, 0.18, 0.7, 16), marble, {
+      position: [0, 0.45, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // A simple capital block on top.
+    f.mesh("Capital", box(0.42, 0.08, 0.42), marbleShade, {
+      position: [0, 0.84, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Bunny body — a flattened sphere.
+    f.mesh("Bunny Body", sphere(0.13, 12, 10), marble, {
+      position: [0, 1.0, 0], scale: [1, 0.85, 1.15],
+    }, { castShadow: true, receiveShadow: true }),
+    // Bunny head — a smaller sphere forward and up.
+    f.mesh("Bunny Head", sphere(0.09, 12, 10), marble, {
+      position: [0, 1.16, 0.08], scale: [1, 0.95, 1],
+    }, { castShadow: true, receiveShadow: true }),
+    // Two ears — short flattened cylinders angled back.
+    f.mesh("Ear L", cylinder(0.02, 0.03, 0.12, 6), marble, {
+      position: [-0.04, 1.27, 0.04], rotation: [0.2, 0, -0.15],
+    }, { castShadow: true }),
+    f.mesh("Ear R", cylinder(0.02, 0.03, 0.12, 6), marble, {
+      position: [0.04, 1.27, 0.04], rotation: [0.2, 0, 0.15],
+    }, { castShadow: true }),
+    // Tail — a tiny sphere at the back.
+    f.mesh("Tail", sphere(0.03, 8, 6), marble, {
+      position: [0, 1.0, -0.12],
+    }, { castShadow: true }),
+    // Two front paws — tiny boxes peeking out.
+    f.mesh("Paw L", box(0.04, 0.05, 0.08), marble, {
+      position: [-0.06, 0.92, 0.14],
+    }),
+    f.mesh("Paw R", box(0.04, 0.05, 0.08), marble, {
+      position: [0.06, 0.92, 0.14],
+    }),
+  ];
+  return f.group("Garden Statue", parts, { position: pos });
+}
+
+/**
+ * A black kettle BBQ grill — a hemispherical lid on a domed bowl, perched
+ * on three tubular legs, with a small wire side shelf, a wooden handle on
+ * the lid and a faint orange ember glow showing through the vent.
+ */
+function buildBbqKettle(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const body = std(C.grillBody, 0.4, { metalness: 0.5 });
+  const trim = std(C.grillSilver, 0.3, { metalness: 0.85, flatShading: true });
+  const wood = std(C.walnut, 0.7, { texture: "wood" });
+  const ember = {
+    color: C.grillEmber,
+    roughness: 0.35,
+    emissive: C.emberGlow,
+    opacity: 0.95,
+  };
+  const legH = 0.62;
+  const bowlY = legH + 0.18;
+  const parts: SceneNode[] = [];
+  // Three legs splayed outward.
+  for (let i = 0; i < 3; i++) {
+    const a = (i / 3) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Leg ${i + 1}`, cylinder(0.018, 0.024, legH, 6), body, {
+        position: [Math.cos(a) * 0.22, legH / 2, Math.sin(a) * 0.22],
+        rotation: [Math.cos(a) * 0.1, 0, -Math.sin(a) * 0.1],
+      }, { castShadow: true }),
+    );
+  }
+  // Bowl — the lower half of a sphere clipped at the equator.
+  const bowlGeom: GeometryDef = {
+    type: "sphere",
+    radius: 0.32,
+    widthSegments: 16,
+    heightSegments: 10,
+    phiStart: 0,
+    phiLength: Math.PI * 2,
+    thetaStart: Math.PI / 2,
+    thetaLength: Math.PI / 2,
+  };
+  const lidGeom: GeometryDef = {
+    type: "sphere",
+    radius: 0.32,
+    widthSegments: 16,
+    heightSegments: 10,
+    phiStart: 0,
+    phiLength: Math.PI * 2,
+    thetaStart: 0,
+    thetaLength: Math.PI / 2,
+  };
+  parts.push(
+    f.mesh("Bowl", bowlGeom, body, {
+      position: [0, bowlY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // A black grate disc on top of the bowl rim.
+    f.mesh("Grate", cylinder(0.3, 0.3, 0.018, 18), trim, {
+      position: [0, bowlY + 0.01, 0],
+    }),
+    // Glowing ember disc just below the grate — visible through the slats.
+    f.mesh("Embers", cylinder(0.26, 0.26, 0.012, 16), ember, {
+      position: [0, bowlY - 0.05, 0],
+    }),
+    // Lid — the upper hemisphere over the bowl.
+    f.mesh("Lid", lidGeom, body, {
+      position: [0, bowlY + 0.02, 0],
+    }, { castShadow: true }),
+    // Lid handle — a small wood knob on top.
+    f.mesh("Lid Handle Base", cylinder(0.02, 0.02, 0.05, 8), trim, {
+      position: [0, bowlY + 0.32, 0],
+    }),
+    f.mesh("Lid Handle", sphere(0.04, 10, 8), wood, {
+      position: [0, bowlY + 0.38, 0],
+    }, { castShadow: true }),
+    // Vent at the back of the lid.
+    f.mesh("Vent", cylinder(0.04, 0.04, 0.012, 10), trim, {
+      position: [0, bowlY + 0.28, -0.18],
+      rotation: [Math.PI / 2, 0, 0],
+    }),
+    // A small wire side shelf on the east leg.
+    f.mesh("Side Shelf", box(0.16, 0.012, 0.22), trim, {
+      position: [0.32, bowlY - 0.06, 0],
+    }, { castShadow: true }),
+    // A pair of grilling tongs resting on the shelf.
+    f.mesh("Tongs A", cylinder(0.008, 0.008, 0.2, 5), trim, {
+      position: [0.32, bowlY - 0.04, 0.02],
+      rotation: [0, 0.1, 0],
+    }),
+    f.mesh("Tongs B", cylinder(0.008, 0.008, 0.2, 5), trim, {
+      position: [0.32, bowlY - 0.04, -0.02],
+      rotation: [0, -0.1, 0],
+    }),
+  );
+  return f.group("BBQ Kettle Grill", parts, { position: pos });
+}
+
+/* ─────────────── ninth-pass scene extension: south heath ─────────────── */
+
+/**
+ * The south heath — a heather-carpeted moorland plane reaching beyond the
+ * front yard. The plane overlaps the main lawn by ~1 unit along the join
+ * at z = 32 so the ground layer reads as continuous. Carries a rolling
+ * earth mound, a miniature standing-stone circle in the marble palette,
+ * scattered heather shrubs, three slender birch trees with stylised paper
+ * bark and a winding extension of the cobble path that fades into the
+ * heath as a soft dirt trail.
+ */
+function buildSouthHeath(f: NodeFactory): SceneNode {
+  return f.group("South Heath", [
+    // The heath ground plane itself — a heather-toned carpet, slightly
+    // duller than the lawn so the eye reads the transition. The texture
+    // uses repeats sized for the plane's footprint.
+    f.mesh(
+      "Heath Ground",
+      plane(HEATH_W, HEATH_D),
+      {
+        color: C.heathGround,
+        roughness: 0.97,
+        texture: "heather",
+        textureScale: [10, 6],
+        bumpMap: "heather-bump",
+        bumpScale: 0.05,
+      },
+      { position: HEATH_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // Apron joining the lawn's far edge — a darker moss strip with the
+    // grass texture so the seam reads as one continuous lawn-to-heath.
+    f.mesh(
+      "Heath Apron",
+      plane(HEATH_W, 3),
+      std(C.heathMoss, 0.95, { texture: "grass", textureScale: [12, 1] }),
+      { position: [0, -0.004, 33], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    buildHeathTrail(f),
+    buildHeathMound(f, HEATH_MOUND_POS),
+    buildStandingStones(f, STANDING_STONES_POS),
+    buildHeatherShrubs(f),
+    buildBirchTrees(f),
+  ]);
+}
+
+/**
+ * A winding dirt trail — a soft cream-coloured strip that continues the
+ * cobble path's exit into the heath, tapering as it recedes. Implemented
+ * as a series of slightly-overlapping flat planes so the eye reads it as
+ * a meandering path rather than a single rectangle.
+ */
+function buildHeathTrail(f: NodeFactory): SceneNode {
+  const dirt = std(C.lakefrontSand, 0.95, { texture: "grass", textureScale: [3, 1] });
+  const rng = mulberry32(0xd17e21);
+  const segments: SceneNode[] = [];
+  const startZ = 36;
+  const endZ = 60;
+  const step = 1.2;
+  let curveX = 0;
+  for (let z = startZ; z <= endZ; z += step) {
+    curveX += (rng() - 0.5) * 0.4;
+    const taper = 1 - (z - startZ) / (endZ - startZ);
+    const w = 1.3 * (0.4 + taper * 0.6);
+    segments.push(
+      f.mesh(
+        "Trail Segment",
+        plane(w, step * 1.1),
+        dirt,
+        {
+          position: [curveX, -0.003, z],
+          rotation: [-Math.PI / 2, 0, (rng() - 0.5) * 0.1],
+        },
+        { receiveShadow: true },
+      ),
+    );
+  }
+  return f.group("Heath Trail", segments);
+}
+
+/**
+ * A low rolling earth mound on the heath — a heavily flattened sphere half
+ * buried at the anchor point. Carries a few small loose stones on its flank.
+ */
+function buildHeathMound(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const earth = std(C.heathGround, 0.97, { flatShading: true });
+  const moss = std(C.heathMoss, 0.95, { flatShading: true });
+  const stone = std(C.stone, 0.92, { texture: "cobblestone", flatShading: true });
+  const rng = mulberry32(0xea14b00d);
+  const loose: SceneNode[] = [];
+  for (let i = 0; i < 4; i++) {
+    const a = rng() * Math.PI * 2;
+    const rr = 2.0 + rng() * 1.6;
+    loose.push(
+      f.mesh("Loose Stone", sphere(0.18 + rng() * 0.22, 8, 6), stone, {
+        position: [Math.cos(a) * rr, 0.18 + rng() * 0.25, Math.sin(a) * rr],
+        rotation: [rng() * 0.4, rng() * Math.PI, rng() * 0.4],
+        scale: [1, 0.7 + rng() * 0.3, 1],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  return f.group("Heath Mound", [
+    f.mesh("Mound Base", sphere(3.8, 18, 12), earth, {
+      position: [0, 0.2, 0],
+      scale: [1, 0.32, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Mound Crown", sphere(2.0, 14, 10), moss, {
+      position: [0, 1.05, 0],
+      scale: [1, 0.45, 1],
+    }, { castShadow: true, receiveShadow: true }),
+    ...loose,
+  ], { position: pos });
+}
+
+/**
+ * A miniature standing-stone circle — six tall marble megaliths arranged in
+ * a ring around a flat altar stone, evoking a tiny Stonehenge tucked into
+ * the heath. Each stone uses the marble colour + depth map so the veining
+ * reads as carved relief on the surface.
+ */
+function buildStandingStones(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const marble: MaterialDef = {
+    color: C.marbleCream,
+    roughness: 0.6,
+    texture: "marble",
+    textureScale: [0.5, 1.2],
+    bumpMap: "marble-bump",
+    bumpScale: 0.08,
+    flatShading: true,
+  };
+  const marbleAltar: MaterialDef = {
+    color: C.bunnyShade,
+    roughness: 0.7,
+    texture: "marble",
+    textureScale: [0.8, 0.8],
+    bumpMap: "marble-bump",
+    bumpScale: 0.05,
+    flatShading: true,
+  };
+  const ringR = 2.0;
+  const stones: SceneNode[] = [];
+  const rng = mulberry32(0x5103e0);
+  const N = 6;
+  for (let i = 0; i < N; i++) {
+    const a = (i / N) * Math.PI * 2;
+    const lean = (rng() - 0.5) * 0.2;
+    const h = 1.4 + rng() * 0.5;
+    const w = 0.32 + rng() * 0.12;
+    stones.push(
+      f.mesh(`Megalith ${i + 1}`, box(w, h, w * 0.7), marble, {
+        position: [Math.cos(a) * ringR, h / 2, Math.sin(a) * ringR],
+        rotation: [lean, a + Math.PI / 2, lean * 0.5],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  return f.group("Standing Stones", [
+    // Flat altar stone in the centre — half-buried in the heath.
+    f.mesh("Altar", box(1.1, 0.18, 0.7), marbleAltar, {
+      position: [0, 0.1, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    ...stones,
+  ], { position: pos });
+}
+
+/**
+ * Heather shrubs scattered across the heath — short rounded bushes in a mix
+ * of bloom and dark-foliage colours. Instanced for cheap rendering since
+ * the heath wants a dense carpet of small shapes.
+ */
+function buildHeatherShrubs(f: NodeFactory): SceneNode {
+  const rng = mulberry32(0xc01d12c);
+  const blooms: Transform[] = [];
+  const darks: Transform[] = [];
+  const xMin = HEATH_POS[0] - HEATH_W / 2 + 2;
+  const xMax = HEATH_POS[0] + HEATH_W / 2 - 2;
+  const zMin = HEATH_POS[2] - HEATH_D / 2 + 2;
+  const zMax = HEATH_POS[2] + HEATH_D / 2 - 2;
+  const standingR = 3.5;
+  const moundR = 4.5;
+  const trailHalfW = 0.9;
+  let attempts = 0;
+  while (blooms.length + darks.length < 110 && attempts < 1200) {
+    attempts++;
+    const x = xMin + rng() * (xMax - xMin);
+    const z = zMin + rng() * (zMax - zMin);
+    // Avoid the standing-stone circle, the mound and the trail corridor.
+    if (Math.hypot(x - STANDING_STONES_POS[0], z - STANDING_STONES_POS[2]) < standingR) continue;
+    if (Math.hypot(x - HEATH_MOUND_POS[0], z - HEATH_MOUND_POS[2]) < moundR) continue;
+    if (Math.abs(x) < trailHalfW && z > 35 && z < 60) continue;
+    const s = 0.3 + rng() * 0.22;
+    const transform: Transform = {
+      position: [x, s * 0.45, z],
+      rotation: [0, rng() * Math.PI, 0],
+      scale: [s, s * 0.6, s],
+    };
+    if (rng() < 0.65) blooms.push(transform);
+    else darks.push(transform);
+  }
+  return f.group("Heather Shrubs", [
+    f.instanced(
+      "Heather Bloom Cluster",
+      sphere(1, 10, 7),
+      std(C.heatherBloom, 0.85, { flatShading: true }),
+      blooms,
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.instanced(
+      "Heather Foliage Cluster",
+      sphere(1, 10, 7),
+      std(C.heatherDark, 0.9, { flatShading: true }),
+      darks,
+      { castShadow: true, receiveShadow: true },
+    ),
+  ]);
+}
+
+/**
+ * Three slender birch trees scattered across the heath — a pale paper-bark
+ * trunk with dark knots stamped on as small ringed bands, and a soft lime
+ * foliage crown of stacked cones. Birches tilt slightly for naturalism.
+ */
+function buildBirchTrees(f: NodeFactory): SceneNode {
+  const trunkMat = std(C.birchTrunk, 0.85, { flatShading: true });
+  const knot = std(C.birchBark, 0.9, { flatShading: true });
+  const foliage = std(C.birchFoliage, 0.85, { flatShading: true });
+  const positions: [number, number, number][] = [
+    [-12, 0, 42],
+    [6, 0, 56],
+    [18, 0, 48],
+  ];
+  const trees: SceneNode[] = [];
+  positions.forEach((p, idx) => {
+    const rng = mulberry32(0xb127c70 + idx);
+    const trunkH = 2.4 + rng() * 0.6;
+    const tilt = (rng() - 0.5) * 0.06;
+    const parts: SceneNode[] = [
+      f.mesh("Birch Trunk", cylinder(0.08, 0.12, trunkH, 8), trunkMat, {
+        position: [0, trunkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    ];
+    // A few dark knot bands stamped on the trunk.
+    for (let k = 0; k < 4; k++) {
+      const y = 0.4 + rng() * (trunkH - 0.8);
+      parts.push(
+        f.mesh(`Knot ${k + 1}`, cylinder(0.105, 0.115, 0.04, 8), knot, {
+          position: [0, y, 0],
+          rotation: [0, rng() * Math.PI, 0],
+        }),
+      );
+    }
+    // Two lateral branches near the top of the trunk.
+    for (let b = 0; b < 2; b++) {
+      const a = rng() * Math.PI * 2;
+      parts.push(
+        f.mesh(`Branch ${b + 1}`, cylinder(0.025, 0.04, 0.6, 5), trunkMat, {
+          position: [Math.cos(a) * 0.18, trunkH - 0.4 - b * 0.25, Math.sin(a) * 0.18],
+          rotation: [Math.PI / 2 + 0.3, a, 0],
+        }, { castShadow: true }),
+      );
+    }
+    // Foliage — a stack of three soft cones with airy spread.
+    parts.push(
+      f.mesh("Lower Foliage", cone(0.95, 1.2, 9), foliage, {
+        position: [0, trunkH + 0.45, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Mid Foliage", cone(0.7, 0.9, 9), foliage, {
+        position: [0, trunkH + 0.95, 0],
+      }, { castShadow: true }),
+      f.mesh("Top Foliage", cone(0.42, 0.6, 8), foliage, {
+        position: [0, trunkH + 1.4, 0],
+      }, { castShadow: true }),
+    );
+    trees.push(
+      f.group(`Birch Tree ${idx + 1}`, parts, {
+        position: p,
+        rotation: [tilt, rng() * Math.PI, tilt],
+        scale: [0.95 + rng() * 0.2, 0.95 + rng() * 0.2, 0.95 + rng() * 0.2],
+      }),
+    );
+  });
+  return f.group("Birch Trees", trees);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -5954,6 +6556,35 @@ function buildFurniture(f: NodeFactory): SceneNode {
  *    by river stones, drifting lily pads and three submerged koi, an
  *    arched stone footbridge, two stone garden lanterns, three weeping
  *    willows and moss-flecked decorative boulders.
+ *  - Eighth pass — yard: a rustic picnic table with a red-checkered
+ *    tablecloth and matching slatted benches, a three-tier cascading
+ *    stone fountain on the south lawn and an A-frame tool rack of
+ *    leaning garden implements with a galvanised bucket beside the
+ *    back-corner shed; house: a strand of warm bistro string lights
+ *    running along the front roof eave from porch to weather vane;
+ *    scene: a north lakefront plane stretching beyond the back
+ *    meadow's far edge, carrying an open lake with deep / shallow
+ *    layers and drift highlights, a wooden plank pier on stout posts
+ *    with a lake-end lantern and a mooring cleat, a moored rowboat
+ *    with oars and a painter, cattail fringes along the shoreline,
+ *    a grove of lakeside conifers and a red-and-white channel buoy
+ *    with a tiny pennant flag.
+ *  - Ninth pass — yard: a two-box bee apiary on a slate platform with
+ *    a honeycomb-stamped hive front (paired with a depth map so the
+ *    cell walls read as relief), a marble bunny garden statue on a
+ *    fluted column pedestal (with a marble depth map carving its
+ *    veining as bump relief) and a three-legged black kettle BBQ
+ *    grill with a glowing ember disc and a side shelf of tongs;
+ *    scene: a south-heath plane reaching beyond the front yard's
+ *    far edge, with a heather-toned ground that uses a heather
+ *    depth map, a winding dirt trail extending the cobble path
+ *    into the moor, a low rolling earth mound topped with loose
+ *    stones, a miniature standing-stone circle in marble around a
+ *    flat altar and three slender birch trees with stylised paper
+ *    bark and lime foliage crowns; the frontend lighting rig adds
+ *    a warm-pink-over-moss-green hemisphere fill so the under-eaves
+ *    and the heath stones don't fall completely flat in the sun's
+ *    shadow.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -5993,6 +6624,10 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: PICNIC_TABLE_POS[0], z: PICNIC_TABLE_POS[2], r: 1.6 },
     { x: STONE_FOUNTAIN_POS[0], z: STONE_FOUNTAIN_POS[2], r: 1.5 },
     { x: TOOL_RACK_POS[0], z: TOOL_RACK_POS[2], r: 1.0 },
+    // Ninth-pass keep-outs — apiary, marble statue and kettle BBQ grill.
+    { x: APIARY_POS[0], z: APIARY_POS[2], r: 1.1 },
+    { x: GARDEN_STATUE_POS[0], z: GARDEN_STATUE_POS[2], r: 0.9 },
+    { x: BBQ_GRILL_POS[0], z: BBQ_GRILL_POS[2], r: 0.8 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -6031,11 +6666,15 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPicnicTable(f, PICNIC_TABLE_POS),
     buildStoneFountain(f, STONE_FOUNTAIN_POS),
     buildToolRack(f, TOOL_RACK_POS),
+    buildBeeApiary(f, APIARY_POS),
+    buildGardenStatue(f, GARDEN_STATUE_POS),
+    buildBbqKettle(f, BBQ_GRILL_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
   const pondGarden = buildWestPondGarden(f);
   const lakefront = buildNorthLakefront(f);
+  const heath = buildSouthHeath(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -6071,7 +6710,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, orchard, pondGarden, lakefront, house],
+    children: [garden, meadow, orchard, pondGarden, lakefront, heath, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,

@@ -37,6 +37,15 @@ export function Lighting() {
         when the sun is on the orchard side.
       */}
       <directionalLight position={[-18, 8, 6]} intensity={0.22} color="#b9d6e6" />
+      {/*
+        Sky / ground hemisphere fill added in the ninth enhancement
+        pass. A warm pink sky tint above and a cool moss tint below
+        approximates indirect bounce off the lawn and into the
+        shadowed undersides of foliage, gazebo eaves and the new
+        south-heath standing stones. Intensity is intentionally low
+        so the directional sun stays the dominant shaper of shadows.
+      */}
+      <hemisphereLight args={["#ffe6ea", "#5d6d3a", 0.35]} />
     </>
   );
 }

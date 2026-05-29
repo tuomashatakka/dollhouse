@@ -63,6 +63,20 @@ function NodeRenderer({ node, ctx }: { node: SceneNode; ctx: RenderContext }) {
       mat.map = cloned;
       mat.needsUpdate = true;
     }
+    // Bump (depth) map, paired with the same texture-scale so the relief
+    // tracks the colour map. Greyscale height field — light = raised.
+    const bump = resolveTexture(def.bumpMap);
+    if (bump) {
+      const clonedBump = bump.clone();
+      clonedBump.needsUpdate = true;
+      const scale = def.textureScale ?? [1, 1];
+      clonedBump.repeat.set(scale[0], scale[1]);
+      clonedBump.wrapS = THREE.RepeatWrapping;
+      clonedBump.wrapT = THREE.RepeatWrapping;
+      mat.bumpMap = clonedBump;
+      mat.bumpScale = def.bumpScale ?? 0.03;
+      mat.needsUpdate = true;
+    }
     if (def.flatShading) {
       mat.flatShading = true;
       mat.needsUpdate = true;
@@ -74,6 +88,7 @@ function NodeRenderer({ node, ctx }: { node: SceneNode; ctx: RenderContext }) {
     return () => {
       geometry?.dispose();
       if (material?.map) material.map.dispose();
+      if (material?.bumpMap) material.bumpMap.dispose();
       material?.dispose();
     };
   }, [geometry, material]);

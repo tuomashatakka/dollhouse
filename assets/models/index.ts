@@ -56,6 +56,24 @@
 //   with oars and a painter, cattail fringes along the shoreline,
 //   a grove of lakeside conifers and a red-and-white channel buoy
 //   with a tiny pennant flag.
+//   Pass 9 — courtyard: a two-box bee apiary on a slate platform
+//   with a honeycomb-stamped hive front, a marble bunny garden
+//   statue on a fluted column pedestal and a three-legged black
+//   kettle BBQ grill with a glowing ember disc and a tongs-laden
+//   side shelf. The hive front and the marble surfaces also
+//   reference companion bump (depth) maps registered alongside
+//   the procedural colour maps, so honeycomb cell walls and
+//   marble vein lines read as real relief on glancing-angle sun.
+//   Lighting: the frontend rig adds a warm-pink-over-moss-green
+//   hemisphere fill that simulates indirect bounce off the lawn,
+//   keeping shaded undersides from going completely black.
+//   Scene: a south-heath plane stretching beyond the front yard's
+//   far edge, with a heather-toned ground (heather depth map for
+//   bloom relief), a meandering dirt trail continuing the cobble
+//   path, a low rolling earth mound topped with loose stones, a
+//   miniature standing-stone circle in marble around a flat altar
+//   stone and three slender birch trees with stylised paper-bark
+//   trunks and lime-green foliage crowns.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
