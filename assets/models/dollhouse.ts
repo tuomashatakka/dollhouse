@@ -202,6 +202,35 @@ const HEATH_D = 28;
 const STANDING_STONES_POS: [number, number, number] = [-9, 0, 50];
 const HEATH_MOUND_POS: [number, number, number] = [12, 0, 52];
 
+/**
+ * Tenth-pass courtyard props — a cast-iron hand-pump well with a stone trough
+ * on the west lawn, a grape-vined wooden arbor over the back-east lawn edge,
+ * and a pair of weathered copper rain barrels under the house's front-corner
+ * downspouts. The barrels use a new procedural copper-patina colour map paired
+ * with a depth (bump) map registered in the texture library, so the verdigris
+ * mottling on the copper reads as crusted relief instead of a flat decal.
+ */
+const HAND_PUMP_POS: [number, number, number] = [-7.8, 0, -1.0];
+const GRAPE_ARBOR_POS: [number, number, number] = [7.6, 0, -2.4];
+const RAIN_BARREL_L_POS: [number, number, number] = [-W / 2 - 0.35, 0, FRONT_Z - 0.5];
+const RAIN_BARREL_R_POS: [number, number, number] = [W / 2 + 0.35, 0, FRONT_Z - 0.5];
+
+/**
+ * Tenth-pass scene extension — a northeast pasture plane that fills the
+ * empty corner between the back meadow's east edge (x ≈ +25) and the side
+ * orchard's north edge (z ≈ -9). The plane overlaps the meadow by ~1 unit
+ * along its west join and the orchard by ~1 unit along its south join so
+ * the ground layer has no holes at the seams. It carries a small wooden
+ * horse stable with a gabled roof, a pair of stacked round hay bales, a
+ * split-rail pasture fence following two sides of the plane and a couple
+ * of meadow-tone grass tufts.
+ */
+const NE_PASTURE_POS: [number, number, number] = [34, -0.008, -24];
+const NE_PASTURE_W = 18;
+const NE_PASTURE_D = 32;
+const STABLE_POS: [number, number, number] = [37, 0, -32];
+const HAY_BALES_POS: [number, number, number] = [30, 0, -18];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -378,6 +407,31 @@ const C = {
   birchTrunk: "#f0e8d8",
   birchBark: "#2c2823",
   birchFoliage: "#8fb05e",
+  // Tenth enhancement pass — a cast-iron hand pump and stone trough, a
+  // grape-vined wooden arbor, copper rain barrels and the northeast
+  // pasture scene extension with a stable, hay bales and a split-rail
+  // fence corner. The copper patina pair (colour + bump) is registered in
+  // the renderer's texture library so the verdigris reads as relief.
+  copperPatina: "#5fa884",
+  copperPatinaDark: "#2d6849",
+  copperRim: "#a06a3c",
+  pumpIron: "#2a2622",
+  pumpHandle: "#3a2c1c",
+  troughStone: "#8a8278",
+  troughWater: "#5b91a4",
+  arborWood: "#7c5536",
+  grapeLeaf: "#587f3a",
+  grapeLeafDark: "#3d5a28",
+  grapePurple: "#5c3c7a",
+  pastureGrass: "#8aa75e",
+  pastureGrassDark: "#5e7a3a",
+  stableWall: "#6b4a2c",
+  stableTrim: "#dcc89b",
+  stableRoof: "#5c2a2a",
+  stableDoor: "#3a2218",
+  hayBale: "#d4a85a",
+  hayBaleDark: "#a87f2c",
+  pastureFence: "#b89a72",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -6500,6 +6554,504 @@ function buildBirchTrees(f: NodeFactory): SceneNode {
   return f.group("Birch Trees", trees);
 }
 
+/* ─────────────── tenth-pass courtyard props ─────────────── */
+
+/**
+ * A cast-iron hand pump on a flat slate footing, with a curved spout
+ * dripping into a stone trough. The cylindrical pump shaft, a sweeping
+ * lever handle and a thin water column from the spout into the trough
+ * read as a working village pump. Designed to sit just west of the
+ * picnic table on the back lawn.
+ */
+function buildHandPump(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const iron = std(C.pumpIron, 0.7, { flatShading: true, metalness: 0.4 });
+  const handleWood = std(C.pumpHandle, 0.75, { texture: "wood" });
+  const stone = std(C.troughStone, 0.92, { texture: "cobblestone", flatShading: true });
+  const water: MaterialDef = {
+    color: C.troughWater,
+    roughness: 0.18,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.85,
+  };
+  const slate = std("#4a4944", 0.8, { texture: "cobblestone", flatShading: true });
+  return f.group("Hand Pump", [
+    // Slate footing the pump and trough share.
+    f.mesh("Pump Footing", box(1.5, 0.06, 1.0), slate, {
+      position: [0, 0.03, 0],
+    }, { receiveShadow: true }),
+    // Stone trough — a rectangular box hollowed with a water sheet on top.
+    f.mesh("Trough Body", box(1.2, 0.34, 0.5), stone, {
+      position: [0.3, 0.23, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // A second slightly inset rim to suggest a hollowed bowl.
+    f.mesh("Trough Rim", box(1.04, 0.05, 0.42), stone, {
+      position: [0.3, 0.42, 0],
+    }, { castShadow: true }),
+    // Water surface inside the trough.
+    f.mesh("Trough Water", box(0.98, 0.025, 0.38), water, {
+      position: [0.3, 0.435, 0],
+    }, { receiveShadow: true }),
+    // Pump column — vertical cast-iron pipe.
+    f.mesh("Pump Column", cylinder(0.07, 0.09, 0.92, 12), iron, {
+      position: [-0.4, 0.5, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Flared base block at the bottom.
+    f.mesh("Pump Base", box(0.26, 0.18, 0.26), iron, {
+      position: [-0.4, 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Curved iron spout — a short pipe arced down toward the trough.
+    f.mesh("Pump Spout", cylinder(0.04, 0.04, 0.42, 8), iron, {
+      position: [-0.18, 0.82, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: true }),
+    // Thin water column from the spout into the trough.
+    f.mesh("Pump Stream", cylinder(0.022, 0.018, 0.42, 6), water, {
+      position: [0.03, 0.6, 0],
+    }),
+    // Lever handle — a thick wooden lever pinned to the top of the column.
+    f.mesh("Pump Lever", box(0.7, 0.06, 0.08), handleWood, {
+      position: [-0.55, 1.02, 0],
+      rotation: [0, 0, -0.35],
+    }, { castShadow: true }),
+    // The pivot bolt where the lever meets the column.
+    f.mesh("Lever Pivot", cylinder(0.04, 0.04, 0.12, 8), iron, {
+      position: [-0.4, 0.98, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // A small grip at the lever's far end.
+    f.mesh("Lever Grip", cylinder(0.045, 0.045, 0.16, 8), iron, {
+      position: [-0.88, 0.85, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  ], { position: pos, rotation: [0, Math.PI / 2.3, 0] });
+}
+
+/**
+ * A grape arbor — two slatted wooden posts joined by a flat overhead
+ * lattice, draped with a green vine and small cobalt grape clusters.
+ * Sits on the east lawn just south of the patio set.
+ */
+function buildGrapeArbor(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.arborWood, 0.8, { texture: "wood" });
+  const leaf = std(C.grapeLeaf, 0.85, { flatShading: true });
+  const leafDark = std(C.grapeLeafDark, 0.9, { flatShading: true });
+  const grape = std(C.grapePurple, 0.55, { flatShading: true });
+  const arborW = 2.2;
+  const arborD = 1.6;
+  const postH = 2.1;
+  const parts: SceneNode[] = [];
+  // Four corner posts.
+  for (const sx of [-1, 1] as const) {
+    for (const sz of [-1, 1] as const) {
+      parts.push(
+        f.mesh("Arbor Post", box(0.12, postH, 0.12), wood, {
+          position: [sx * arborW / 2, postH / 2, sz * arborD / 2],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Top frame — two long beams and three crosspieces forming a lattice.
+  parts.push(
+    f.mesh("Arbor Beam Front", box(arborW + 0.2, 0.08, 0.1), wood, {
+      position: [0, postH + 0.04, arborD / 2],
+    }, { castShadow: true }),
+    f.mesh("Arbor Beam Back", box(arborW + 0.2, 0.08, 0.1), wood, {
+      position: [0, postH + 0.04, -arborD / 2],
+    }, { castShadow: true }),
+  );
+  for (let i = 0; i < 5; i++) {
+    const x = -arborW / 2 + (arborW / 4) * i;
+    parts.push(
+      f.mesh(`Lattice Slat ${i + 1}`, box(0.06, 0.05, arborD + 0.2), wood, {
+        position: [x, postH + 0.12, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Drape the lattice with grouped leaves and grape clusters.
+  const rng = mulberry32(0x9214b305);
+  for (let i = 0; i < 22; i++) {
+    const x = (rng() - 0.5) * arborW;
+    const z = (rng() - 0.5) * arborD;
+    const y = postH + 0.18 + rng() * 0.08;
+    const s = 0.18 + rng() * 0.1;
+    parts.push(
+      f.mesh("Vine Leaf", sphere(s, 7, 5), rng() < 0.5 ? leaf : leafDark, {
+        position: [x, y, z],
+        scale: [1, 0.45, 1],
+        rotation: [0, rng() * Math.PI, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Grape clusters dangling between leaves.
+  for (let i = 0; i < 5; i++) {
+    const x = -arborW / 2 + 0.3 + (arborW - 0.6) * (i / 4);
+    const z = (rng() - 0.5) * (arborD - 0.4);
+    parts.push(
+      f.mesh(`Grape Cluster ${i + 1}`, sphere(0.13, 8, 6), grape, {
+        position: [x, postH - 0.08, z],
+        scale: [1, 1.4, 1],
+      }, { castShadow: true }),
+    );
+  }
+  // A trailing tendril along one post, suggesting the vine grew up from below.
+  for (let i = 0; i < 6; i++) {
+    parts.push(
+      f.mesh("Trailing Leaf", sphere(0.12, 6, 5), leaf, {
+        position: [arborW / 2 + 0.06, 0.3 + i * 0.3, arborD / 2 + (i % 2 === 0 ? 0.02 : -0.02)],
+        scale: [1, 0.5, 1],
+      }, { castShadow: true }),
+    );
+  }
+  return f.group("Grape Arbor", parts, { position: pos, rotation: [0, -Math.PI / 9, 0] });
+}
+
+/**
+ * A pair of weathered copper rain barrels under the front-corner
+ * downspouts. Each barrel is a banded cylinder with an iron lid, a
+ * brass spigot near the foot and a wooden riser plinth — the copper
+ * skin uses the `copper-patina` colour map paired with a depth map so
+ * the verdigris mottling reads as crusted relief.
+ */
+function buildRainBarrels(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.copperPatina,
+    roughness: 0.6,
+    metalness: 0.45,
+    texture: "copper-patina",
+    textureScale: [1, 1.4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.04,
+  };
+  const band = std(C.copperRim, 0.5, { metalness: 0.55 });
+  const lid = std(C.copperPatinaDark, 0.55, { metalness: 0.5 });
+  const spigot = std(C.brass, 0.4, { metalness: 0.7 });
+  const wood = std(C.walnut, 0.85, { texture: "wood" });
+  function barrel(sideX: number): SceneNode {
+    const dir = sideX < 0 ? -1 : 1;
+    const radius = 0.32;
+    const height = 0.78;
+    return f.group(`Rain Barrel ${sideX < 0 ? "L" : "R"}`, [
+      // Wooden riser plinth — keeps the barrel off the wet grass.
+      f.mesh("Plinth", box(0.78, 0.08, 0.78), wood, {
+        position: [0, 0.04, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Main copper drum.
+      f.mesh("Drum", cylinder(radius, radius, height, 18), copper, {
+        position: [0, 0.08 + height / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Three iron hoops — upper, mid, lower.
+      f.mesh("Upper Band", cylinder(radius + 0.012, radius + 0.012, 0.04, 18), band, {
+        position: [0, 0.08 + height - 0.08, 0],
+      }, { castShadow: true }),
+      f.mesh("Mid Band", cylinder(radius + 0.012, radius + 0.012, 0.04, 18), band, {
+        position: [0, 0.08 + height * 0.5, 0],
+      }, { castShadow: true }),
+      f.mesh("Lower Band", cylinder(radius + 0.012, radius + 0.012, 0.04, 18), band, {
+        position: [0, 0.08 + 0.1, 0],
+      }, { castShadow: true }),
+      // Lid — a slightly larger flat disc on top.
+      f.mesh("Lid", cylinder(radius + 0.04, radius + 0.04, 0.04, 18), lid, {
+        position: [0, 0.08 + height + 0.02, 0],
+      }, { castShadow: true }),
+      // Small finial knob on the lid.
+      f.mesh("Lid Knob", cylinder(0.05, 0.05, 0.08, 8), band, {
+        position: [0, 0.08 + height + 0.08, 0],
+      }, { castShadow: true }),
+      // Brass spigot — pipe + handle pointing outward away from the wall.
+      f.mesh("Spigot Pipe", cylinder(0.025, 0.025, 0.14, 8), spigot, {
+        position: [dir * (radius + 0.07), 0.22, 0],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: true }),
+      f.mesh("Spigot Handle", box(0.12, 0.02, 0.04), spigot, {
+        position: [dir * (radius + 0.16), 0.32, 0],
+      }, { castShadow: true }),
+      // Short downspout drop pipe entering the lid.
+      f.mesh("Downspout Drop", box(0.07, 0.55, 0.07), std(C.copperPipe, 0.7, { metalness: 0.4 }), {
+        position: [0, 0.08 + height + 0.35, 0],
+      }, { castShadow: true }),
+    ], { position: [0, 0, 0] });
+  }
+  return f.group("Rain Barrels", [
+    f.group("Barrel L", [barrel(-1)], { position: RAIN_BARREL_L_POS }),
+    f.group("Barrel R", [barrel(+1)], { position: RAIN_BARREL_R_POS }),
+  ]);
+}
+
+/* ─────────────── tenth-pass NE pasture extension ─────────────── */
+
+/**
+ * A northeast pasture ground plane that bridges the back-meadow's east
+ * edge and the side-orchard's north edge. The plane overlaps each
+ * neighbour by ~1 unit so the ground layer joins seamlessly. It carries
+ * a small gabled wooden horse stable, two stacked round hay bales and a
+ * split-rail pasture fence along the eastern and southern perimeters.
+ */
+function buildNortheastPasture(f: NodeFactory): SceneNode {
+  return f.group("Northeast Pasture", [
+    // The pasture ground plane itself — a slightly warmer yellow-green
+    // than the meadow so the eye reads the transition without a hard
+    // seam, and a tiny bump map gives the carpet some glancing relief.
+    f.mesh(
+      "Pasture Ground",
+      plane(NE_PASTURE_W, NE_PASTURE_D),
+      std(C.pastureGrass, 0.96, {
+        texture: "grass",
+        textureScale: [10, 8],
+        bumpMap: "heather-bump",
+        bumpScale: 0.02,
+      }),
+      { position: NE_PASTURE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — a darker strip overlapping the meadow's east edge so
+    // the join between the two grass tones reads as one continuous field.
+    f.mesh(
+      "Pasture West Apron",
+      plane(2, NE_PASTURE_D),
+      std(C.pastureGrassDark, 0.95, { texture: "grass", textureScale: [1, 8] }),
+      { position: [NE_PASTURE_POS[0] - NE_PASTURE_W / 2 + 1, -0.005, NE_PASTURE_POS[2]], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // South apron — overlaps the orchard's north edge.
+    f.mesh(
+      "Pasture South Apron",
+      plane(NE_PASTURE_W, 2),
+      std(C.pastureGrassDark, 0.95, { texture: "grass", textureScale: [8, 1] }),
+      { position: [NE_PASTURE_POS[0], -0.005, NE_PASTURE_POS[2] + NE_PASTURE_D / 2 - 1], rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    buildPastureStable(f, STABLE_POS),
+    buildHayBales(f, HAY_BALES_POS),
+    buildPastureFence(f),
+    buildPastureTufts(f),
+  ]);
+}
+
+/**
+ * A small wooden horse stable — board-and-batten walls, a gabled red
+ * roof with shingle texture, a Dutch-style split door on one face and
+ * a small square window on the gable end. Sized to suggest a single
+ * stall rather than a working barn.
+ */
+function buildPastureStable(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.stableWall, 0.85, { texture: "wood", textureScale: [2, 1] });
+  const trim = std(C.stableTrim, 0.85, { texture: "wood" });
+  const roof = std(C.stableRoof, 0.85, { texture: "shingle", textureScale: [2, 2] });
+  const door = std(C.stableDoor, 0.7, { texture: "wood" });
+  const glass: MaterialDef = {
+    color: "#9bcfdc",
+    roughness: 0.15,
+    metalness: 0.3,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const stone = std(C.stone, 0.92, { texture: "cobblestone", flatShading: true });
+  const w = 3.0;
+  const d = 2.4;
+  const wallH = 1.7;
+  const ridgeH = 1.0;
+  const parts: SceneNode[] = [
+    // Stone footing.
+    f.mesh("Footing", box(w + 0.2, 0.12, d + 0.2), stone, {
+      position: [0, 0.06, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Four walls.
+    f.mesh("Wall N", box(w, wallH, 0.1), wall, {
+      position: [0, 0.12 + wallH / 2, -d / 2 + 0.05],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall S", box(w, wallH, 0.1), wall, {
+      position: [0, 0.12 + wallH / 2, d / 2 - 0.05],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall E", box(0.1, wallH, d), wall, {
+      position: [w / 2 - 0.05, 0.12 + wallH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall W", box(0.1, wallH, d), wall, {
+      position: [-w / 2 + 0.05, 0.12 + wallH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Trim cap along the eave on each long wall.
+    f.mesh("Eave Trim N", box(w + 0.06, 0.06, 0.14), trim, {
+      position: [0, 0.12 + wallH, -d / 2 + 0.05],
+    }, { castShadow: true }),
+    f.mesh("Eave Trim S", box(w + 0.06, 0.06, 0.14), trim, {
+      position: [0, 0.12 + wallH, d / 2 - 0.05],
+    }, { castShadow: true }),
+    // Gable triangles on east and west walls — simple flat boards rising to
+    // the ridge.
+    f.mesh("Gable E", cone(d * 0.7, ridgeH, 4), wall, {
+      position: [w / 2 - 0.06, 0.12 + wallH + ridgeH / 2, 0],
+      rotation: [0, Math.PI / 4, Math.PI / 2],
+      scale: [1, 1, 0.18],
+    }, { castShadow: true }),
+    f.mesh("Gable W", cone(d * 0.7, ridgeH, 4), wall, {
+      position: [-w / 2 + 0.06, 0.12 + wallH + ridgeH / 2, 0],
+      rotation: [0, Math.PI / 4, Math.PI / 2],
+      scale: [1, 1, 0.18],
+    }, { castShadow: true }),
+    // Two roof slopes — flat planks tilted to meet at the ridge.
+    f.mesh("Roof Slope N", box(w + 0.4, 0.06, Math.hypot(d / 2, ridgeH) + 0.1), roof, {
+      position: [0, 0.12 + wallH + ridgeH / 2, -d / 4],
+      rotation: [-Math.atan2(ridgeH, d / 2), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Slope S", box(w + 0.4, 0.06, Math.hypot(d / 2, ridgeH) + 0.1), roof, {
+      position: [0, 0.12 + wallH + ridgeH / 2, d / 4],
+      rotation: [Math.atan2(ridgeH, d / 2), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Ridge cap.
+    f.mesh("Ridge Cap", box(w + 0.4, 0.07, 0.18), trim, {
+      position: [0, 0.12 + wallH + ridgeH + 0.02, 0],
+    }, { castShadow: true }),
+    // Dutch split door on the south wall — upper and lower halves with a
+    // gap between them.
+    f.mesh("Door Lower", box(0.85, 0.85, 0.06), door, {
+      position: [0.3, 0.12 + 0.425, d / 2 + 0.04],
+    }, { castShadow: true }),
+    f.mesh("Door Upper", box(0.85, 0.7, 0.06), door, {
+      position: [0.3, 0.12 + 0.85 + 0.05 + 0.35, d / 2 + 0.04],
+    }, { castShadow: true }),
+    f.mesh("Door Frame", box(0.95, 0.08, 0.08), trim, {
+      position: [0.3, 0.12 + wallH - 0.04, d / 2 + 0.04],
+    }, { castShadow: true }),
+    // A small gable-end window.
+    f.mesh("Gable Window", box(0.34, 0.34, 0.05), glass, {
+      position: [-w / 2 + 0.06, 0.12 + wallH + ridgeH * 0.45, 0],
+      rotation: [0, Math.PI / 2, 0],
+    }, { castShadow: false }),
+    f.mesh("Window Frame", box(0.4, 0.4, 0.04), trim, {
+      position: [-w / 2 + 0.04, 0.12 + wallH + ridgeH * 0.45, 0],
+      rotation: [0, Math.PI / 2, 0],
+    }, { castShadow: true }),
+  ];
+  return f.group("Pasture Stable", parts, { position: pos, rotation: [0, -Math.PI / 8, 0] });
+}
+
+/**
+ * Two stacked round hay bales — a bottom pair lying on their flat ends
+ * with a single bale resting on top. Each bale uses the burlap texture
+ * for a coarse straw weave reading.
+ */
+function buildHayBales(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const hayMat = std(C.hayBale, 0.95, {
+    texture: "burlap",
+    textureScale: [2, 1],
+    flatShading: true,
+  });
+  const hayCap = std(C.hayBaleDark, 0.95, { texture: "burlap", textureScale: [1, 1], flatShading: true });
+  function bale(name: string, pos: [number, number, number], rotY: number): SceneNode {
+    const radius = 0.55;
+    const length = 0.95;
+    return f.group(name, [
+      // Cylindrical body laid on its side.
+      f.mesh("Body", cylinder(radius, radius, length, 16), hayMat, {
+        position: [0, 0, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Darker caps for the cut ends.
+      f.mesh("Cap Front", cylinder(radius * 0.98, radius * 0.98, 0.03, 16), hayCap, {
+        position: [0, 0, length / 2 + 0.01],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true }),
+      f.mesh("Cap Back", cylinder(radius * 0.98, radius * 0.98, 0.03, 16), hayCap, {
+        position: [0, 0, -length / 2 - 0.01],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true }),
+    ], { position: pos, rotation: [0, rotY, 0] });
+  }
+  return f.group("Hay Bales", [
+    bale("Bale A", [-0.3, 0.55, 0], 0),
+    bale("Bale B", [0.6, 0.55, 0.1], 0.12),
+    // Top bale tucked between the lower pair.
+    bale("Bale C", [0.18, 1.18, 0.04], -0.05),
+    // A loose hay scatter on the ground — a few thin angled boxes.
+    f.mesh("Loose Hay", box(1.6, 0.04, 1.4), hayMat, {
+      position: [0.15, 0.02, 0],
+    }, { receiveShadow: true }),
+  ], { position: pos, rotation: [0, Math.PI / 7, 0] });
+}
+
+/**
+ * A split-rail pasture fence running along the east and south edges of
+ * the new ground plane. Each segment is a pair of horizontal rails between
+ * square posts — instanced so the corner is cheap.
+ */
+function buildPastureFence(f: NodeFactory): SceneNode {
+  const wood = std(C.pastureFence, 0.85, { texture: "bark", flatShading: true });
+  const xR = NE_PASTURE_POS[0] + NE_PASTURE_W / 2 - 0.5;
+  const xL = NE_PASTURE_POS[0] - NE_PASTURE_W / 2 + 1.0;
+  const zN = NE_PASTURE_POS[2] - NE_PASTURE_D / 2 + 0.5;
+  const zS = NE_PASTURE_POS[2] + NE_PASTURE_D / 2 - 0.5;
+  const postH = 1.05;
+  const posts: Transform[] = [];
+  // Posts along the east edge.
+  for (let z = zN; z <= zS + 1e-3; z += 1.6) {
+    posts.push({ position: [xR, postH / 2, z], rotation: [0, 0, 0], scale: [1, 1, 1] });
+  }
+  // Posts along the south edge (skip the corner one already placed at zS).
+  for (let x = xR - 1.6; x >= xL - 1e-3; x -= 1.6) {
+    posts.push({ position: [x, postH / 2, zS], rotation: [0, 0, 0], scale: [1, 1, 1] });
+  }
+  // Rails — long thin boxes.
+  const rails: SceneNode[] = [];
+  const eastLen = zS - zN;
+  const southLen = xR - xL;
+  for (const yOff of [0.35, 0.78]) {
+    rails.push(
+      f.mesh("Rail E", box(0.06, 0.05, eastLen), wood, {
+        position: [xR, yOff, (zN + zS) / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Rail S", box(southLen, 0.05, 0.06), wood, {
+        position: [(xL + xR) / 2, yOff, zS],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  return f.group("Pasture Fence", [
+    f.instanced(
+      "Fence Posts",
+      box(0.1, postH, 0.1),
+      wood,
+      posts,
+      { castShadow: true, receiveShadow: true },
+    ),
+    ...rails,
+  ]);
+}
+
+/**
+ * A scatter of meadow-grass tufts on the pasture — short rounded clumps,
+ * instanced for cheap rendering. Tufts avoid the stable, the hay bales
+ * and the perimeter fence corridor.
+ */
+function buildPastureTufts(f: NodeFactory): SceneNode {
+  const tuftMat = std(C.pastureGrassDark, 0.95, { flatShading: true });
+  const rng = mulberry32(0x70ff7a);
+  const tufts: Transform[] = [];
+  const xMin = NE_PASTURE_POS[0] - NE_PASTURE_W / 2 + 2;
+  const xMax = NE_PASTURE_POS[0] + NE_PASTURE_W / 2 - 2;
+  const zMin = NE_PASTURE_POS[2] - NE_PASTURE_D / 2 + 2;
+  const zMax = NE_PASTURE_POS[2] + NE_PASTURE_D / 2 - 2;
+  let attempts = 0;
+  while (tufts.length < 56 && attempts < 600) {
+    attempts++;
+    const x = xMin + rng() * (xMax - xMin);
+    const z = zMin + rng() * (zMax - zMin);
+    if (Math.hypot(x - STABLE_POS[0], z - STABLE_POS[2]) < 2.6) continue;
+    if (Math.hypot(x - HAY_BALES_POS[0], z - HAY_BALES_POS[2]) < 1.6) continue;
+    const s = 0.18 + rng() * 0.12;
+    tufts.push({
+      position: [x, s * 0.35, z],
+      rotation: [0, rng() * Math.PI, 0],
+      scale: [s, s * 0.6, s],
+    });
+  }
+  return f.instanced(
+    "Pasture Tufts",
+    sphere(1, 8, 6),
+    tuftMat,
+    tufts,
+    { castShadow: true, receiveShadow: true },
+  );
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -6585,6 +7137,20 @@ function buildBirchTrees(f: NodeFactory): SceneNode {
  *    a warm-pink-over-moss-green hemisphere fill so the under-eaves
  *    and the heath stones don't fall completely flat in the sun's
  *    shadow.
+ *  - Tenth pass — yard: a cast-iron hand-pump well on a slate
+ *    footing with a stone trough and a thin water column on the
+ *    west lawn, and a wooden grape arbor draped with leaves and
+ *    cobalt-purple grape clusters on the east lawn; house: a pair
+ *    of weathered copper rain barrels under the front-corner
+ *    downspouts, banded with iron hoops and a brass spigot — the
+ *    barrels carry the new `copper-patina` colour map paired with
+ *    a matching depth map so the verdigris mottling reads as
+ *    crusted relief; scene: a northeast pasture ground plane
+ *    bridging the back meadow's east edge and the side orchard's
+ *    north edge, with a board-and-batten horse stable with a
+ *    gabled shingle roof and a Dutch-split door, a stack of three
+ *    round burlap-bound hay bales and a split-rail pasture fence
+ *    running the eastern and southern perimeters.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -6628,6 +7194,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: APIARY_POS[0], z: APIARY_POS[2], r: 1.1 },
     { x: GARDEN_STATUE_POS[0], z: GARDEN_STATUE_POS[2], r: 0.9 },
     { x: BBQ_GRILL_POS[0], z: BBQ_GRILL_POS[2], r: 0.8 },
+    // Tenth-pass keep-outs — hand pump and grape arbor.
+    { x: HAND_PUMP_POS[0], z: HAND_PUMP_POS[2], r: 1.4 },
+    { x: GRAPE_ARBOR_POS[0], z: GRAPE_ARBOR_POS[2], r: 1.7 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -6669,12 +7238,15 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildBeeApiary(f, APIARY_POS),
     buildGardenStatue(f, GARDEN_STATUE_POS),
     buildBbqKettle(f, BBQ_GRILL_POS),
+    buildHandPump(f, HAND_PUMP_POS),
+    buildGrapeArbor(f, GRAPE_ARBOR_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
   const pondGarden = buildWestPondGarden(f);
   const lakefront = buildNorthLakefront(f);
   const heath = buildSouthHeath(f);
+  const nePasture = buildNortheastPasture(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -6704,13 +7276,14 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildWindowAwnings(f),
     buildEaveStringLights(f),
     buildFurniture(f),
+    buildRainBarrels(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, orchard, pondGarden, lakefront, heath, house],
+    children: [garden, meadow, orchard, pondGarden, lakefront, heath, nePasture, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,

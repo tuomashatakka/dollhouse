@@ -666,6 +666,124 @@ function buildDefaultLibrary(): void {
     },
   });
 
+  // ── Tenth-pass additions ───────────────────────────────────────────
+  // The tenth enhancement pass introduced a weathered copper material
+  // for the front-corner rain barrels — a base patina colour map paired
+  // with a companion depth (bump) map so the verdigris mottling reads
+  // as crusted relief instead of a flat decal.
+
+  // Copper patina — a mottled green-blue base with bronze-warm streaks
+  // and tarnish freckles, on a power-of-two canvas so the mipmap chain
+  // stays clean. Used on the rain barrel drum.
+  registry["copper-patina"] = makeCanvasTexture({
+    seed: 0xc09e16a,
+    draw: (ctx, rng, size) => {
+      // Base gradient — warmer top (sun-bleached) into cooler patina below.
+      const grad = ctx.createLinearGradient(0, 0, 0, size);
+      grad.addColorStop(0, "#7fc09a");
+      grad.addColorStop(0.45, "#4d9a76");
+      grad.addColorStop(1, "#2c6c52");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, size, size);
+      // Soft patina blobs — irregular blue-green cloud washes.
+      for (let i = 0; i < 36; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = size * (0.07 + rng() * 0.18);
+        const wash = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        const lightness = 35 + rng() * 25;
+        const hue = rng() < 0.6 ? 150 + rng() * 30 : 30 + rng() * 18;
+        wash.addColorStop(0, `hsla(${hue}, 35%, ${lightness}%, 0.55)`);
+        wash.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = wash;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Vertical drip streaks — patina runs caused by rain.
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < 24; i++) {
+        const x = rng() * size;
+        const len = size * (0.2 + rng() * 0.6);
+        const startY = rng() * size * 0.4;
+        ctx.strokeStyle = `hsla(${155 + rng() * 20}, 40%, ${25 + rng() * 15}%, 0.5)`;
+        ctx.beginPath();
+        ctx.moveTo(x, startY);
+        ctx.bezierCurveTo(
+          x + (rng() - 0.5) * 6, startY + len * 0.3,
+          x + (rng() - 0.5) * 6, startY + len * 0.7,
+          x + (rng() - 0.5) * 4, startY + len,
+        );
+        ctx.stroke();
+      }
+      // Bronze pinpricks where the patina has chipped back to raw copper.
+      for (let i = 0; i < 90; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${20 + rng() * 14}, 60%, ${45 + rng() * 15}%, 0.7)`;
+        ctx.beginPath();
+        ctx.arc(x, y, 1 + rng() * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // A faint speckle wash to break up flat bands in deeper mipmaps.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0022);
+    },
+  });
+  // Copper patina depth map — the patina blobs sit raised above the
+  // smoother copper field, while the bronze chip pinpricks recess
+  // slightly so the relief tracks the colour map's blooms.
+  registry["copper-patina-bump"] = makeCanvasTexture({
+    seed: 0xc09e16a + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#888888";
+      ctx.fillRect(0, 0, size, size);
+      // Patina blobs — bright (raised).
+      for (let i = 0; i < 36; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = size * (0.07 + rng() * 0.18);
+        const wash = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        wash.addColorStop(0, "rgba(240, 240, 240, 0.55)");
+        wash.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = wash;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Drip streaks raise slightly along their length too.
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 24; i++) {
+        const x = rng() * size;
+        const len = size * (0.2 + rng() * 0.6);
+        const startY = rng() * size * 0.4;
+        ctx.strokeStyle = "rgba(220,220,220,0.45)";
+        ctx.beginPath();
+        ctx.moveTo(x, startY);
+        ctx.bezierCurveTo(
+          x, startY + len * 0.3,
+          x, startY + len * 0.7,
+          x, startY + len,
+        );
+        ctx.stroke();
+      }
+      // Bronze chip pinpricks recess (dark).
+      for (let i = 0; i < 90; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `rgba(40,40,40,0.7)`;
+        ctx.beginPath();
+        ctx.arc(x, y, 1 + rng() * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle for surface micro-relief.
+      for (let i = 0; i < 800; i++) {
+        const v = 100 + Math.floor(rng() * 80);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
+
   // Shingle — rows of overlapping diamond-tipped shingles, weathered cedar.
   // Used on the well roof.
   registry.shingle = makeCanvasTexture({
