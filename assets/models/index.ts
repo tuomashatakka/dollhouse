@@ -74,6 +74,20 @@
 //   miniature standing-stone circle in marble around a flat altar
 //   stone and three slender birch trees with stylised paper-bark
 //   trunks and lime-green foliage crowns.
+//   Pass 10 — courtyard: a cast-iron hand-pump well on a slate
+//   footing, with a curved spout dripping into a stone trough, and
+//   a wooden grape arbor draped with leafy vines and cobalt-purple
+//   grape clusters; house: a pair of weathered copper rain barrels
+//   under the front-corner downspouts, each banded with iron hoops
+//   and a brass spigot, surfaced with a new `copper-patina` colour
+//   map paired with a matching depth map (registered alongside the
+//   other procedural textures) so the verdigris mottling reads as
+//   crusted relief on the curved drum. Scene: a northeast pasture
+//   ground plane bridging the back meadow's east edge and the side
+//   orchard's north edge, with a board-and-batten gabled horse
+//   stable, a stack of three round burlap-bound hay bales and a
+//   weathered split-rail pasture fence around the eastern and
+//   southern perimeters.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
