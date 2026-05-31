@@ -231,6 +231,31 @@ const NE_PASTURE_D = 32;
 const STABLE_POS: [number, number, number] = [37, 0, -32];
 const HAY_BALES_POS: [number, number, number] = [30, 0, -18];
 
+/**
+ * Eleventh-pass courtyard props — a wood-fired stone pizza oven on the
+ * east back lawn (with a stacked split-wood pile beside the firebox), a
+ * timber potting bench against the back fence flanked by a row of
+ * terracotta pots, and a stone garden chess set on the front lawn with
+ * carved chess pieces on a checkered marble board.
+ */
+const PIZZA_OVEN_POS: [number, number, number] = [11.0, 0, -2.2];
+const POTTING_BENCH_POS: [number, number, number] = [-2.2, 0, -4.2];
+const CHESS_GARDEN_POS: [number, number, number] = [-0.7, 0, 1.6];
+
+/**
+ * Eleventh-pass scene extension — a southwest wheat field plane bridging
+ * the gap between the west pond garden's south edge (z ≈ 19) and the
+ * south heath's west edge (z ≈ 32, x ≈ -25). The plane overlaps each
+ * neighbour by ~1.5 units so the ground layer joins seamlessly. It
+ * carries golden wind-rowed wheat (with a paired colour + depth map), a
+ * Dutch-style four-sail windmill, scattered wheat sheaves and a winding
+ * cart trail that meanders between the windmill and the pond garden.
+ */
+const WHEAT_FIELD_POS: [number, number, number] = [-32, -0.009, 25.5];
+const WHEAT_FIELD_W = 22;
+const WHEAT_FIELD_D = 16;
+const WINDMILL_POS: [number, number, number] = [-36, 0, 28];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -432,6 +457,43 @@ const C = {
   hayBale: "#d4a85a",
   hayBaleDark: "#a87f2c",
   pastureFence: "#b89a72",
+  // Eleventh enhancement pass — outdoor stone pizza oven, a slatted potting
+  // bench with a row of terracotta pots, a stone garden chess set, a
+  // wisteria-bloom drape over the porch canopy (with companion bloom +
+  // depth maps) and a southwest wheat-field scene extension bridging the
+  // gap between the south heath and the west pond garden, complete with a
+  // Dutch-style farm windmill, scattered wheat sheaves and a winding cart
+  // trail. The wheat field colour map is paired with a bump map registered
+  // alongside it so the windrow ridges read as relief at glancing sun.
+  ovenBrick: "#a8553c",
+  ovenBrickDark: "#7a3a26",
+  ovenDome: "#c98a64",
+  ovenMortar: "#b8a98a",
+  ovenIron: "#221e1a",
+  ovenEmber: "#f57a26",
+  pottingPine: "#9b7a4e",
+  pottingPineDark: "#6e5436",
+  clayPot: "#c3674b",
+  clayPotShade: "#8e4730",
+  pottingMint: "#7fb094",
+  chessSlabLight: "#ede2cd",
+  chessSlabDark: "#3a2e26",
+  chessPieceCream: "#f0e8d8",
+  chessPieceOnyx: "#2b2622",
+  wisteriaPurple: "#a585c8",
+  wisteriaPurpleDark: "#5d4485",
+  wisteriaLeaf: "#5e8a4a",
+  wisteriaVine: "#5a4630",
+  wheatGold: "#cda651",
+  wheatGoldDark: "#a47e2a",
+  wheatHusk: "#7e6432",
+  wheatStubble: "#b69a5a",
+  windmillSail: "#fbf6e7",
+  windmillSailFrame: "#6e4a2c",
+  windmillTower: "#8c6a44",
+  windmillCap: "#9e3a36",
+  cartDirt: "#6a5236",
+  cartDirtDark: "#3f3022",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -7052,6 +7114,838 @@ function buildPastureTufts(f: NodeFactory): SceneNode {
   );
 }
 
+/* ─────────────── eleventh-pass courtyard props ─────────────── */
+
+/**
+ * A wood-fired stone pizza oven — a brick base with a small firebox slot,
+ * topped by a domed terracotta cooking chamber and a short brick chimney
+ * trailing wisps of smoke. A small split-wood pile leans against the
+ * base, and an iron tool rests against the firebox opening. Sized to
+ * sit against the east lawn near the grape arbor.
+ */
+function buildPizzaOven(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const brick = std(C.ovenBrick, 0.85, { texture: "brick", textureScale: [2, 1.4], flatShading: true });
+  const brickDark = std(C.ovenBrickDark, 0.9, { texture: "brick", textureScale: [1.4, 1], flatShading: true });
+  const mortar = std(C.ovenMortar, 0.95, { flatShading: true });
+  const dome = std(C.ovenDome, 0.7, { flatShading: true });
+  const iron = std(C.ovenIron, 0.55, { metalness: 0.55, flatShading: true });
+  const ember: MaterialDef = {
+    color: C.ovenEmber,
+    roughness: 0.55,
+    emissive: "#c84a18",
+  };
+  const wood = std(C.logFlesh, 0.85, { texture: "wood", flatShading: true });
+  const baseW = 1.6;
+  const baseD = 1.4;
+  const baseH = 1.05;
+  const domeR = 0.72;
+  const parts: SceneNode[] = [];
+  // Solid stone hearth slab the oven sits on.
+  parts.push(
+    f.mesh("Oven Hearth Slab", box(baseW + 0.4, 0.1, baseD + 0.4), mortar, {
+      position: [0, 0.05, 0],
+    }, { receiveShadow: true }),
+  );
+  // Brick base — four short walls leaving a small recessed log alcove at the front.
+  parts.push(
+    f.mesh("Base Back", box(baseW, baseH, 0.18), brick, {
+      position: [0, 0.1 + baseH / 2, -baseD / 2 + 0.09],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Base Front L", box(0.5, baseH, 0.18), brick, {
+      position: [-(baseW / 2 - 0.25), 0.1 + baseH / 2, baseD / 2 - 0.09],
+    }, { castShadow: true }),
+    f.mesh("Base Front R", box(0.5, baseH, 0.18), brick, {
+      position: [(baseW / 2 - 0.25), 0.1 + baseH / 2, baseD / 2 - 0.09],
+    }, { castShadow: true }),
+    f.mesh("Base Side L", box(0.18, baseH, baseD - 0.18), brick, {
+      position: [-baseW / 2 + 0.09, 0.1 + baseH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Base Side R", box(0.18, baseH, baseD - 0.18), brick, {
+      position: [baseW / 2 - 0.09, 0.1 + baseH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Cap slab between base and dome — the cooking floor.
+  parts.push(
+    f.mesh("Cooking Floor", box(baseW + 0.06, 0.1, baseD + 0.06), mortar, {
+      position: [0, 0.1 + baseH + 0.05, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Dome — half sphere capping the oven.
+  parts.push(
+    f.mesh("Oven Dome", sphere(domeR, 14, 8), dome, {
+      position: [0, 0.1 + baseH + 0.1, 0],
+      scale: [1, 0.85, 1.05],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Dome ring trim where it meets the cooking floor.
+  parts.push(
+    f.mesh("Dome Ring", cylinder(domeR + 0.04, domeR + 0.04, 0.05, 18), brickDark, {
+      position: [0, 0.1 + baseH + 0.1, 0],
+    }, { castShadow: true }),
+  );
+  // Mouth arch — a darker recessed slot on the front of the dome with a
+  // glowing ember disc inside, suggesting a live fire.
+  parts.push(
+    f.mesh("Oven Mouth", box(0.46, 0.34, 0.16), brickDark, {
+      position: [0, 0.1 + baseH + 0.22, domeR - 0.02],
+    }, { castShadow: true }),
+    f.mesh("Mouth Inset", box(0.36, 0.26, 0.06), {
+      color: "#1a0d05",
+      roughness: 0.95,
+    }, {
+      position: [0, 0.1 + baseH + 0.22, domeR + 0.04],
+    }),
+    f.mesh("Oven Ember Glow", box(0.28, 0.06, 0.04), ember, {
+      position: [0, 0.1 + baseH + 0.13, domeR + 0.06],
+    }),
+  );
+  // Chimney — a short brick stack with a clay cap, set toward the back of the dome.
+  parts.push(
+    f.mesh("Chimney Stack", box(0.28, 0.6, 0.28), brick, {
+      position: [0, 0.1 + baseH + domeR * 0.85 + 0.3, -domeR * 0.4],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Cap", box(0.36, 0.06, 0.36), brickDark, {
+      position: [0, 0.1 + baseH + domeR * 0.85 + 0.63, -domeR * 0.4],
+    }, { castShadow: true }),
+    // A small wisp of smoke rising — implemented as two stacked translucent
+    // light-grey blobs so it reads as drifting steam rather than solid mass.
+    f.mesh("Smoke Wisp Low", sphere(0.22, 10, 7), {
+      color: "#e0d8d0",
+      roughness: 0.95,
+      transparent: true,
+      opacity: 0.42,
+    }, {
+      position: [0.05, 0.1 + baseH + domeR * 0.85 + 0.95, -domeR * 0.4 + 0.04],
+      scale: [1, 0.7, 1],
+    }),
+    f.mesh("Smoke Wisp High", sphere(0.32, 10, 7), {
+      color: "#eee6dd",
+      roughness: 0.95,
+      transparent: true,
+      opacity: 0.3,
+    }, {
+      position: [0.18, 0.1 + baseH + domeR * 0.85 + 1.35, -domeR * 0.4 + 0.12],
+      scale: [1.2, 0.6, 1.2],
+    }),
+  );
+  // Stack of split firewood inside the alcove — five short logs end-on.
+  for (let i = 0; i < 5; i++) {
+    const lx = -0.18 + (i % 3) * 0.18;
+    const ly = 0.18 + Math.floor(i / 3) * 0.14;
+    parts.push(
+      f.mesh(`Hearth Log ${i + 1}`, cylinder(0.07, 0.07, 0.16, 8), wood, {
+        position: [lx, ly, baseD / 2 - 0.06],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // A long iron peel (pizza paddle) leaning against the front face.
+  parts.push(
+    f.mesh("Peel Handle", cylinder(0.02, 0.02, 1.05, 6), std(C.toolHandle, 0.8, { texture: "wood" }), {
+      position: [baseW / 2 - 0.12, 0.7, baseD / 2 + 0.18],
+      rotation: [0.35, 0, 0.18],
+    }, { castShadow: true }),
+    f.mesh("Peel Paddle", box(0.22, 0.02, 0.3), iron, {
+      position: [baseW / 2 - 0.04, 0.12, baseD / 2 + 0.4],
+      rotation: [0, 0, 0],
+    }, { castShadow: true }),
+  );
+  return f.group("Pizza Oven", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
+}
+
+/**
+ * A timber potting bench — a slatted-top work table on four legs with a
+ * lower storage shelf, a row of small terracotta pots lined up along the
+ * top, a leaning trowel and a sprig of fresh herbs in one of the pots.
+ * Sits along the back yard, perpendicular to the picnic table.
+ */
+function buildPottingBench(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const woodLight = std(C.pottingPine, 0.85, { texture: "wood", flatShading: true });
+  const woodDark = std(C.pottingPineDark, 0.85, { texture: "wood", flatShading: true });
+  const pot = std(C.clayPot, 0.85, { flatShading: true });
+  const potShade = std(C.clayPotShade, 0.9, { flatShading: true });
+  const soil = std(C.soil, 0.95, { flatShading: true });
+  const herb = std(C.pottingMint, 0.85, { flatShading: true });
+  const metal = std(C.toolMetalDark, 0.6, { metalness: 0.5 });
+  const benchW = 1.6;
+  const benchD = 0.55;
+  const benchH = 0.85;
+  const parts: SceneNode[] = [];
+  // Four legs.
+  for (const sx of [-1, 1] as const) {
+    for (const sz of [-1, 1] as const) {
+      parts.push(
+        f.mesh("Bench Leg", box(0.07, benchH, 0.07), woodDark, {
+          position: [sx * (benchW / 2 - 0.05), benchH / 2, sz * (benchD / 2 - 0.05)],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Lower storage shelf.
+  parts.push(
+    f.mesh("Lower Shelf", box(benchW - 0.08, 0.04, benchD - 0.04), woodDark, {
+      position: [0, 0.22, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Slatted top — five slats with thin gaps between them.
+  const slatN = 5;
+  const slatW = (benchD - 0.06) / slatN;
+  for (let i = 0; i < slatN; i++) {
+    parts.push(
+      f.mesh(`Top Slat ${i + 1}`, box(benchW, 0.04, slatW - 0.01), woodLight, {
+        position: [0, benchH + 0.02, -benchD / 2 + 0.03 + slatW * (i + 0.5)],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Back splash board — a low backboard along the back edge.
+  parts.push(
+    f.mesh("Back Splash", box(benchW, 0.32, 0.04), woodLight, {
+      position: [0, benchH + 0.18, -benchD / 2 + 0.02],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // A row of three terracotta pots on the top.
+  function buildPot(x: number, withHerb: boolean): SceneNode {
+    const pots: SceneNode[] = [
+      f.mesh("Pot Body", cylinder(0.13, 0.1, 0.22, 12), pot, {
+        position: [0, 0.11, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Pot Rim", cylinder(0.135, 0.135, 0.03, 12), potShade, {
+        position: [0, 0.225, 0],
+      }, { castShadow: true }),
+      f.mesh("Pot Soil", cylinder(0.115, 0.115, 0.03, 12), soil, {
+        position: [0, 0.21, 0],
+      }),
+    ];
+    if (withHerb) {
+      pots.push(
+        f.mesh("Herb Cluster", sphere(0.14, 10, 7), herb, {
+          position: [0, 0.34, 0],
+          scale: [1, 0.7, 1],
+        }, { castShadow: true }),
+      );
+    }
+    return f.group("Pot", pots, { position: [x, benchH + 0.04, 0.04] });
+  }
+  parts.push(
+    buildPot(-0.55, false),
+    buildPot(-0.18, true),
+    buildPot(0.22, false),
+  );
+  // A stack of two empty pots tipped on their side at the far right.
+  parts.push(
+    f.mesh("Tipped Pot Body", cylinder(0.13, 0.1, 0.22, 12), pot, {
+      position: [benchW / 2 - 0.14, benchH + 0.14, 0.05],
+      rotation: [Math.PI / 2.2, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Tipped Pot Rim", cylinder(0.135, 0.135, 0.03, 12), potShade, {
+      position: [benchW / 2 - 0.14, benchH + 0.05, 0.18],
+      rotation: [Math.PI / 2.2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // A leaning trowel against the right side of the bench.
+  parts.push(
+    f.mesh("Trowel Handle", cylinder(0.022, 0.022, 0.38, 6), std(C.toolHandle, 0.8, { texture: "wood" }), {
+      position: [benchW / 2 + 0.08, 0.5, benchD / 2 - 0.08],
+      rotation: [0, 0, -0.22],
+    }, { castShadow: true }),
+    f.mesh("Trowel Blade", box(0.08, 0.02, 0.16), metal, {
+      position: [benchW / 2 + 0.18, 0.22, benchD / 2 - 0.08],
+      rotation: [-0.3, 0, -0.22],
+    }, { castShadow: true }),
+  );
+  // A small spill of loose soil on the shelf.
+  parts.push(
+    f.mesh("Shelf Soil Pile", sphere(0.14, 10, 6), soil, {
+      position: [0.2, 0.26, 0.04],
+      scale: [1.3, 0.4, 0.9],
+    }),
+  );
+  return f.group("Potting Bench", parts, { position: pos, rotation: [0, Math.PI / 8, 0] });
+}
+
+/**
+ * A stone garden chess set — a square marble-checkered slab on a fluted
+ * column pedestal, ringed by two stone stools, with a quorum of carved
+ * pieces (kings, queens, knights, pawns) arranged mid-game on the board.
+ * The board uses the marble texture's bump map so the chequer lines read
+ * as a relief seam between the squares.
+ */
+function buildGardenChess(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.stone, 0.92, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.bridgeStoneDark, 0.92, { flatShading: true });
+  const marble: MaterialDef = {
+    color: C.marbleCream,
+    roughness: 0.55,
+    texture: "marble",
+    textureScale: [1, 1],
+    bumpMap: "marble-bump",
+    bumpScale: 0.04,
+  };
+  const cream = std(C.chessPieceCream, 0.55, { flatShading: true });
+  const onyx = std(C.chessPieceOnyx, 0.45, { flatShading: true });
+  const dark = std(C.chessSlabDark, 0.6, { flatShading: true });
+  const tableSize = 0.95;
+  const tableH = 0.78;
+  const parts: SceneNode[] = [
+    // Pedestal — a short fluted column, base disc and capital plate.
+    f.mesh("Pedestal Base", cylinder(0.34, 0.4, 0.1, 14), stone, {
+      position: [0, 0.05, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pedestal Shaft", cylinder(0.22, 0.24, tableH - 0.2, 14), stone, {
+      position: [0, (tableH - 0.2) / 2 + 0.1, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pedestal Cap", cylinder(0.34, 0.32, 0.08, 14), stone, {
+      position: [0, tableH - 0.04, 0],
+    }, { castShadow: true }),
+    // The board slab — marble top.
+    f.mesh("Board Slab", box(tableSize, 0.08, tableSize), marble, {
+      position: [0, tableH + 0.04, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  ];
+  // Render the 8x8 chequer pattern as alternating dark squares (the
+  // marble slab itself is the light squares). Each dark square sits a
+  // hair above the slab so it catches the sun.
+  const cells = 8;
+  const cellSize = (tableSize - 0.04) / cells;
+  for (let r = 0; r < cells; r++) {
+    for (let c = 0; c < cells; c++) {
+      if ((r + c) % 2 !== 0) continue;
+      parts.push(
+        f.mesh(`Sq ${r}-${c}`, box(cellSize, 0.012, cellSize), dark, {
+          position: [
+            -tableSize / 2 + 0.02 + cellSize * (c + 0.5),
+            tableH + 0.087,
+            -tableSize / 2 + 0.02 + cellSize * (r + 0.5),
+          ],
+        }, { receiveShadow: true }),
+      );
+    }
+  }
+  // A small selection of pieces mid-game — kings, queens, knights and pawns.
+  function piecePawn(x: number, z: number, isCream: boolean): SceneNode {
+    const mat = isCream ? cream : onyx;
+    return f.group("Pawn", [
+      f.mesh("Pawn Base", cylinder(0.04, 0.05, 0.025, 8), mat, { position: [0, 0.0125, 0] }, { castShadow: true }),
+      f.mesh("Pawn Body", cylinder(0.025, 0.04, 0.075, 8), mat, { position: [0, 0.06, 0] }, { castShadow: true }),
+      f.mesh("Pawn Head", sphere(0.034, 10, 7), mat, { position: [0, 0.12, 0] }, { castShadow: true }),
+    ], { position: [x, tableH + 0.094, z] });
+  }
+  function pieceKing(x: number, z: number, isCream: boolean): SceneNode {
+    const mat = isCream ? cream : onyx;
+    return f.group("King", [
+      f.mesh("King Base", cylinder(0.05, 0.06, 0.03, 8), mat, { position: [0, 0.015, 0] }, { castShadow: true }),
+      f.mesh("King Shaft", cylinder(0.03, 0.045, 0.14, 8), mat, { position: [0, 0.1, 0] }, { castShadow: true }),
+      f.mesh("King Head", sphere(0.04, 10, 7), mat, { position: [0, 0.19, 0] }, { castShadow: true }),
+      f.mesh("Cross V", box(0.012, 0.06, 0.012), mat, { position: [0, 0.255, 0] }, { castShadow: true }),
+      f.mesh("Cross H", box(0.04, 0.012, 0.012), mat, { position: [0, 0.255, 0] }, { castShadow: true }),
+    ], { position: [x, tableH + 0.094, z] });
+  }
+  function pieceKnight(x: number, z: number, isCream: boolean, faceX = 1): SceneNode {
+    const mat = isCream ? cream : onyx;
+    return f.group("Knight", [
+      f.mesh("Knight Base", cylinder(0.05, 0.06, 0.03, 8), mat, { position: [0, 0.015, 0] }, { castShadow: true }),
+      f.mesh("Knight Body", cylinder(0.03, 0.045, 0.1, 8), mat, { position: [0, 0.08, 0] }, { castShadow: true }),
+      // A stylised horse head — a slanted box pointing along faceX.
+      f.mesh("Knight Head", box(0.05, 0.07, 0.08), mat, {
+        position: [faceX * 0.025, 0.175, 0],
+        rotation: [0, 0, -faceX * 0.35],
+      }, { castShadow: true }),
+      f.mesh("Knight Ear", box(0.018, 0.03, 0.018), mat, {
+        position: [faceX * 0.005, 0.225, 0.03],
+        rotation: [0, 0, -faceX * 0.35],
+      }, { castShadow: true }),
+    ], { position: [x, tableH + 0.094, z] });
+  }
+  function pieceQueen(x: number, z: number, isCream: boolean): SceneNode {
+    const mat = isCream ? cream : onyx;
+    return f.group("Queen", [
+      f.mesh("Queen Base", cylinder(0.05, 0.06, 0.03, 8), mat, { position: [0, 0.015, 0] }, { castShadow: true }),
+      f.mesh("Queen Body", cylinder(0.028, 0.045, 0.13, 8), mat, { position: [0, 0.095, 0] }, { castShadow: true }),
+      f.mesh("Queen Crown", cylinder(0.04, 0.034, 0.04, 10), mat, { position: [0, 0.18, 0] }, { castShadow: true }),
+      f.mesh("Queen Pearl", sphere(0.022, 10, 7), mat, { position: [0, 0.22, 0] }, { castShadow: true }),
+    ], { position: [x, tableH + 0.094, z] });
+  }
+  // Helper to convert a board cell (0..7,0..7) to (x,z).
+  function cellToXZ(cx: number, cz: number): [number, number] {
+    return [
+      -tableSize / 2 + 0.02 + cellSize * (cx + 0.5),
+      -tableSize / 2 + 0.02 + cellSize * (cz + 0.5),
+    ];
+  }
+  const c1 = cellToXZ(2, 6); parts.push(piecePawn(c1[0], c1[1], true));
+  const c2 = cellToXZ(3, 6); parts.push(piecePawn(c2[0], c2[1], true));
+  const c3 = cellToXZ(4, 4); parts.push(pieceKnight(c3[0], c3[1], true, 1));
+  const c4 = cellToXZ(0, 5); parts.push(pieceKing(c4[0], c4[1], true));
+  const c5 = cellToXZ(2, 5); parts.push(pieceQueen(c5[0], c5[1], true));
+  const c6 = cellToXZ(5, 1); parts.push(piecePawn(c6[0], c6[1], false));
+  const c7 = cellToXZ(4, 1); parts.push(piecePawn(c7[0], c7[1], false));
+  const c8 = cellToXZ(3, 3); parts.push(pieceKnight(c8[0], c8[1], false, -1));
+  const c9 = cellToXZ(7, 2); parts.push(pieceKing(c9[0], c9[1], false));
+  const c10 = cellToXZ(5, 2); parts.push(pieceQueen(c10[0], c10[1], false));
+  // A captured cream pawn lying on its side at one edge of the board.
+  parts.push(
+    f.mesh("Captured Pawn", cylinder(0.025, 0.04, 0.075, 8), cream, {
+      position: [tableSize / 2 + 0.05, tableH + 0.11, 0.2],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Two short stone stools flanking the table.
+  for (const side of [-1, 1] as const) {
+    parts.push(
+      f.group("Garden Stool", [
+        f.mesh("Stool Top", cylinder(0.22, 0.22, 0.07, 14), stoneDark, {
+          position: [0, 0.34, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh("Stool Shaft", cylinder(0.14, 0.18, 0.3, 12), stone, {
+          position: [0, 0.18, 0],
+        }, { castShadow: true, receiveShadow: true }),
+      ], { position: [side * 0.85, 0, 0] }),
+    );
+  }
+  return f.group("Garden Chess", parts, { position: pos, rotation: [0, Math.PI / 7, 0] });
+}
+
+/**
+ * A wisteria-bloom drape across the porch canopy — three cascading panels
+ * of soft purple racemes spilling over the canopy ridge, each panel
+ * surfaced with the `wisteria-bloom` colour map paired with a depth map
+ * so the cells of the bloom clusters read as relief instead of a flat
+ * tile. A leafy vine runs along the canopy ridge as the anchor strand,
+ * and three darker pendant teardrops hang lower than the panels to
+ * emphasise the cascade.
+ */
+function buildPorchWisteria(f: NodeFactory): SceneNode {
+  const canopyZ = FRONT_Z + 0.45;
+  const ridgeY = 2.95;
+  const canopyW = 2.7;
+  const bloomMat: MaterialDef = {
+    color: C.wisteriaPurple,
+    roughness: 0.7,
+    texture: "wisteria-bloom",
+    textureScale: [1.4, 1.6],
+    bumpMap: "wisteria-bloom-bump",
+    bumpScale: 0.06,
+    flatShading: false,
+  };
+  const bloomDeep = std(C.wisteriaPurpleDark, 0.75, { flatShading: true });
+  const leaf = std(C.wisteriaLeaf, 0.85, { flatShading: true });
+  const vine = std(C.wisteriaVine, 0.9, { texture: "bark", flatShading: true });
+  const parts: SceneNode[] = [];
+  // Anchor vine running along the canopy ridge.
+  parts.push(
+    f.mesh("Wisteria Vine", cylinder(0.04, 0.04, canopyW * 1.05, 8), vine, {
+      position: [0, ridgeY + 0.08, canopyZ],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+  );
+  // Three cascading bloom panels — one centred and two flanking.
+  const panelW = 0.78;
+  const panelH = 1.05;
+  const panelOffsets: [number, number][] = [
+    [-0.95, 0.04],
+    [0.05, -0.02],
+    [0.95, 0.04],
+  ];
+  panelOffsets.forEach(([x, zOff], idx) => {
+    parts.push(
+      f.mesh(`Bloom Panel ${idx + 1}`, plane(panelW, panelH), bloomMat, {
+        position: [x, ridgeY - panelH / 2 + 0.04, canopyZ + 0.5 + zOff],
+        rotation: [-0.18, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // A back-side panel facing the porch so the drape reads from both directions.
+    parts.push(
+      f.mesh(`Bloom Panel Back ${idx + 1}`, plane(panelW * 0.82, panelH * 0.9), bloomMat, {
+        position: [x, ridgeY - panelH / 2 + 0.06, canopyZ - 0.45 + zOff * 0.5],
+        rotation: [0.18, Math.PI, 0],
+      }, { castShadow: true }),
+    );
+  });
+  // Leafy vine drape — green spheres flattened to read as leaf clusters.
+  const rng = mulberry32(0xb100ed);
+  for (let i = 0; i < 16; i++) {
+    const x = -canopyW / 2 + (canopyW + 0.2) * (i / 15) + (rng() - 0.5) * 0.1;
+    const yOff = -0.04 + rng() * 0.16;
+    const zOff = (rng() - 0.5) * 0.5;
+    parts.push(
+      f.mesh("Wisteria Leaf Cluster", sphere(0.16, 8, 6), leaf, {
+        position: [x, ridgeY + yOff, canopyZ + 0.4 + zOff],
+        scale: [1, 0.45, 0.95],
+        rotation: [0, rng() * Math.PI, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Three darker pendant teardrops dangling lower than the panels.
+  for (let i = 0; i < 3; i++) {
+    const x = -0.95 + i * 0.95;
+    parts.push(
+      f.mesh(`Pendant ${i + 1}`, sphere(0.16, 10, 8), bloomDeep, {
+        position: [x, ridgeY - 1.25, canopyZ + 0.62],
+        scale: [0.6, 1.6, 0.6],
+      }, { castShadow: true }),
+    );
+  }
+  return f.group("Porch Wisteria", parts);
+}
+
+/* ─────────────── eleventh-pass SW wheat-field extension ─────────────── */
+
+/**
+ * A southwest wheat field — a golden cropland plane bridging the gap
+ * between the west pond garden's south edge and the south heath's west
+ * edge. The plane overlaps each neighbour by ~1.5 units so the ground
+ * layer has no holes along the joins. Carries a Dutch-style four-sail
+ * windmill, scattered wheat sheaves and stooks, a winding cart trail
+ * extending the heath dirt path into the field and a low perimeter
+ * stake-and-twine fence along the field's south edge.
+ */
+function buildSouthwestWheatField(f: NodeFactory): SceneNode {
+  return f.group("Southwest Wheat Field", [
+    // Main wheat ground plane — golden grain with paired bump map so
+    // the wind rows catch glancing light.
+    f.mesh(
+      "Wheat Field Ground",
+      plane(WHEAT_FIELD_W, WHEAT_FIELD_D),
+      {
+        color: C.wheatGold,
+        roughness: 0.95,
+        texture: "wheat-field",
+        textureScale: [6, 4],
+        bumpMap: "wheat-field-bump",
+        bumpScale: 0.05,
+      },
+      { position: WHEAT_FIELD_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the south heath west edge with a paler
+    // stubble strip so the join reads as a harvested fringe.
+    f.mesh(
+      "Wheat North Apron",
+      plane(WHEAT_FIELD_W, 2.5),
+      std(C.wheatStubble, 0.95, { texture: "grass", textureScale: [8, 1] }),
+      {
+        position: [
+          WHEAT_FIELD_POS[0],
+          -0.006,
+          WHEAT_FIELD_POS[2] - WHEAT_FIELD_D / 2 + 1.25,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // South apron — overlaps the west pond garden's south edge with a
+    // greener strip so the seam to the pond garden grass reads as one.
+    f.mesh(
+      "Wheat South Apron",
+      plane(WHEAT_FIELD_W, 2.5),
+      std(C.pondGardenGrass, 0.95, { texture: "grass", textureScale: [8, 1] }),
+      {
+        position: [
+          WHEAT_FIELD_POS[0],
+          -0.006,
+          WHEAT_FIELD_POS[2] + WHEAT_FIELD_D / 2 - 1.25,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildFarmWindmill(f, WINDMILL_POS),
+    buildWheatSheaves(f),
+    buildWheatFieldTrail(f),
+    buildWheatFieldFence(f),
+  ]);
+}
+
+/**
+ * A Dutch-style four-sail tower windmill — a tapered round tower
+ * topped by a small red cap with a cross of four lattice sails, each
+ * sail a slatted rectangle on a wooden frame. The windmill sits at the
+ * field's north edge so its silhouette reads against the heath behind.
+ */
+function buildFarmWindmill(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const tower = std(C.windmillTower, 0.85, { texture: "brick", textureScale: [1.5, 2], flatShading: true });
+  const towerDark = std(C.cartDirtDark, 0.92, { flatShading: true });
+  const cap = std(C.windmillCap, 0.8, { texture: "shingle", textureScale: [2, 1] });
+  const frame = std(C.windmillSailFrame, 0.8, { texture: "wood", flatShading: true });
+  const sail = std(C.windmillSail, 0.85, { flatShading: true });
+  const door = std(C.stableDoor, 0.7, { texture: "wood" });
+  const towerH = 3.6;
+  const baseR = 0.85;
+  const topR = 0.55;
+  const parts: SceneNode[] = [
+    // Stone footing.
+    f.mesh("Mill Footing", cylinder(baseR + 0.1, baseR + 0.15, 0.15, 16), towerDark, {
+      position: [0, 0.075, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tower — a tapered cylinder.
+    f.mesh("Mill Tower", cylinder(topR, baseR, towerH, 18), tower, {
+      position: [0, towerH / 2 + 0.15, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Cap (the roof). A flattened cone for a domed pitch.
+    f.mesh("Mill Cap", cone(topR + 0.12, 0.7, 18), cap, {
+      position: [0, towerH + 0.5, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Cap finial.
+    f.mesh("Cap Finial", cylinder(0.05, 0.05, 0.4, 8), frame, {
+      position: [0, towerH + 1.0, 0],
+    }, { castShadow: true }),
+    // Door at the base on the south face.
+    f.mesh("Mill Door", box(0.38, 0.7, 0.05), door, {
+      position: [0, 0.5, baseR + 0.02],
+    }, { castShadow: true }),
+    f.mesh("Mill Door Frame", box(0.46, 0.78, 0.06), frame, {
+      position: [0, 0.5, baseR + 0.005],
+    }, { castShadow: true }),
+    // Two small windows — short slits on the tower's east and west faces.
+    f.mesh("Mill Window E", box(0.08, 0.22, 0.16), {
+      color: "#a8c4d8",
+      roughness: 0.2,
+      metalness: 0.3,
+      transparent: true,
+      opacity: 0.6,
+    }, {
+      position: [baseR - 0.04, 1.7, 0],
+    }),
+    f.mesh("Mill Window W", box(0.08, 0.22, 0.16), {
+      color: "#a8c4d8",
+      roughness: 0.2,
+      metalness: 0.3,
+      transparent: true,
+      opacity: 0.6,
+    }, {
+      position: [-baseR + 0.04, 1.7, 0],
+    }),
+  ];
+  // Sail assembly — a hub block plus four crossed sails, oriented so the
+  // axle runs along the +Z direction (windmill faces south).
+  const hubY = towerH + 0.05;
+  const hubZ = topR + 0.18;
+  parts.push(
+    // Hub block.
+    f.mesh("Sail Hub", cylinder(0.16, 0.16, 0.34, 12), frame, {
+      position: [0, hubY, hubZ],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Four sails arranged in an X pattern around the hub. Each sail is a
+  // long thin slatted rectangle on a wooden spar, with the lattice
+  // suggested by a few diagonal slats. We use a slight tilt off vertical
+  // so the assembly reads as caught mid-rotation instead of perfectly
+  // square.
+  const sailL = 1.7;
+  const sailW = 0.42;
+  const tiltZ = 0.18; // small twist so the cross is not a perfect plus sign.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 + tiltZ;
+    // Spar — runs from hub outward.
+    parts.push(
+      f.mesh(`Sail Spar ${i + 1}`, box(0.06, sailL, 0.06), frame, {
+        position: [
+          Math.sin(a) * (sailL / 2 + 0.16),
+          hubY + Math.cos(a) * (sailL / 2 + 0.16),
+          hubZ + 0.18,
+        ],
+        rotation: [0, 0, -a],
+      }, { castShadow: true }),
+    );
+    // Sail panel — a thin canvas rectangle offset to one side of the spar.
+    parts.push(
+      f.mesh(`Sail Canvas ${i + 1}`, box(sailW, sailL * 0.9, 0.02), sail, {
+        position: [
+          Math.sin(a) * (sailL / 2 + 0.16) + Math.cos(a) * (sailW / 2 + 0.04),
+          hubY + Math.cos(a) * (sailL / 2 + 0.16) - Math.sin(a) * (sailW / 2 + 0.04),
+          hubZ + 0.22,
+        ],
+        rotation: [0, 0, -a],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Three lattice slats per sail.
+    for (let s = 0; s < 3; s++) {
+      const t = -0.32 + s * 0.32;
+      parts.push(
+        f.mesh(`Sail Slat ${i + 1}-${s + 1}`, box(sailW + 0.04, 0.025, 0.02), frame, {
+          position: [
+            Math.sin(a) * (sailL / 2 + 0.16) + Math.cos(a) * (sailW / 2 + 0.04) + Math.sin(a) * t,
+            hubY + Math.cos(a) * (sailL / 2 + 0.16) - Math.sin(a) * (sailW / 2 + 0.04) + Math.cos(a) * t,
+            hubZ + 0.235,
+          ],
+          rotation: [0, 0, -a],
+        }, { castShadow: true }),
+      );
+    }
+  }
+  return f.group("Farm Windmill", parts, { position: pos, rotation: [0, Math.PI / 6, 0] });
+}
+
+/**
+ * Scattered wheat sheaves on the field — small cones of wheat with thin
+ * stem ribs, instanced for cheap rendering. A few are arranged as stooks
+ * (three or four sheaves leaning together) for visual variety.
+ */
+function buildWheatSheaves(f: NodeFactory): SceneNode {
+  const sheafMat = std(C.wheatGold, 0.95, { flatShading: true });
+  const huskMat = std(C.wheatHusk, 0.92, { flatShading: true });
+  const rng = mulberry32(0x1eaf12);
+  const xMin = WHEAT_FIELD_POS[0] - WHEAT_FIELD_W / 2 + 2;
+  const xMax = WHEAT_FIELD_POS[0] + WHEAT_FIELD_W / 2 - 2;
+  const zMin = WHEAT_FIELD_POS[2] - WHEAT_FIELD_D / 2 + 2.5;
+  const zMax = WHEAT_FIELD_POS[2] + WHEAT_FIELD_D / 2 - 2.5;
+  const sheaves: SceneNode[] = [];
+  const standalone: Transform[] = [];
+  const husks: Transform[] = [];
+  // A few clustered stooks of three sheaves apiece.
+  for (let stook = 0; stook < 4; stook++) {
+    let cx = 0, cz = 0, ok = false;
+    for (let attempt = 0; attempt < 30 && !ok; attempt++) {
+      cx = xMin + rng() * (xMax - xMin);
+      cz = zMin + rng() * (zMax - zMin);
+      if (Math.hypot(cx - WINDMILL_POS[0], cz - WINDMILL_POS[2]) < 2.2) continue;
+      // Avoid the cart trail corridor (north-south stripe near the windmill).
+      if (Math.abs(cx - (WINDMILL_POS[0] + 1.5)) < 1.2) continue;
+      ok = true;
+    }
+    if (!ok) continue;
+    for (let s = 0; s < 3; s++) {
+      const a = (s / 3) * Math.PI * 2;
+      standalone.push({
+        position: [cx + Math.cos(a) * 0.18, 0.32, cz + Math.sin(a) * 0.18],
+        rotation: [Math.cos(a) * 0.25, rng() * Math.PI, Math.sin(a) * 0.25],
+        scale: [1, 1, 1],
+      });
+      husks.push({
+        position: [cx + Math.cos(a) * 0.18, 0.55, cz + Math.sin(a) * 0.18],
+        rotation: [Math.cos(a) * 0.25, rng() * Math.PI, Math.sin(a) * 0.25],
+        scale: [1, 1, 1],
+      });
+    }
+  }
+  // Lone scattered sheaves elsewhere in the field.
+  let attempts = 0;
+  while (standalone.length < 30 && attempts < 240) {
+    attempts++;
+    const x = xMin + rng() * (xMax - xMin);
+    const z = zMin + rng() * (zMax - zMin);
+    if (Math.hypot(x - WINDMILL_POS[0], z - WINDMILL_POS[2]) < 1.8) continue;
+    if (Math.abs(x - (WINDMILL_POS[0] + 1.5)) < 1.0) continue;
+    standalone.push({
+      position: [x, 0.32, z],
+      rotation: [0, rng() * Math.PI, 0],
+      scale: [1, 1, 1],
+    });
+    husks.push({
+      position: [x, 0.55, z],
+      rotation: [0, rng() * Math.PI, 0],
+      scale: [1, 1, 1],
+    });
+  }
+  sheaves.push(
+    f.instanced(
+      "Wheat Sheaf Body",
+      cylinder(0.08, 0.16, 0.42, 8),
+      sheafMat,
+      standalone,
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.instanced(
+      "Wheat Sheaf Husk",
+      cone(0.14, 0.22, 8),
+      huskMat,
+      husks,
+      { castShadow: true },
+    ),
+  );
+  return f.group("Wheat Sheaves", sheaves);
+}
+
+/**
+ * A meandering cart trail across the wheat field — a series of slightly
+ * overlapping dirt-coloured planes shaped into a soft S-curve from the
+ * field's south edge up toward the windmill.
+ */
+function buildWheatFieldTrail(f: NodeFactory): SceneNode {
+  const dirt = std(C.cartDirt, 0.95, { texture: "grass", textureScale: [2, 1] });
+  const rng = mulberry32(0xc417d8);
+  const segments: SceneNode[] = [];
+  const startZ = WHEAT_FIELD_POS[2] + WHEAT_FIELD_D / 2 - 0.5;
+  const endZ = WINDMILL_POS[2] + 0.8;
+  const step = 0.8;
+  let curveX = WINDMILL_POS[0] + 2.5;
+  for (let z = startZ; z >= endZ; z -= step) {
+    // Drift slightly toward the windmill as we approach it.
+    const tWindmill = (startZ - z) / (startZ - endZ);
+    const target = WINDMILL_POS[0] + 1.2;
+    curveX = curveX * 0.85 + target * 0.15 + (rng() - 0.5) * 0.18;
+    const w = 0.95 + (1 - tWindmill) * 0.3;
+    segments.push(
+      f.mesh(
+        "Cart Trail Segment",
+        plane(w, step * 1.15),
+        dirt,
+        {
+          position: [curveX, -0.004, z],
+          rotation: [-Math.PI / 2, 0, (rng() - 0.5) * 0.08],
+        },
+        { receiveShadow: true },
+      ),
+    );
+  }
+  // A pair of long thin wheel ruts darker than the trail to suggest
+  // a recently-passed hay cart.
+  for (const offset of [-0.2, 0.2]) {
+    segments.push(
+      f.mesh(
+        "Wheel Rut",
+        plane(0.12, Math.abs(endZ - startZ)),
+        std(C.cartDirtDark, 0.95),
+        {
+          position: [WINDMILL_POS[0] + 2.0 + offset, -0.003, (startZ + endZ) / 2],
+          rotation: [-Math.PI / 2, 0, 0],
+        },
+      ),
+    );
+  }
+  return f.group("Wheat Field Trail", segments);
+}
+
+/**
+ * A low stake-and-twine fence along the field's south edge — a series
+ * of short wooden posts joined by a single horizontal twine rail. The
+ * fence is shorter than the pasture / yard fences so it reads as a
+ * temporary field marker rather than a permanent boundary.
+ */
+function buildWheatFieldFence(f: NodeFactory): SceneNode {
+  const wood = std(C.windmillSailFrame, 0.9, { texture: "wood", flatShading: true });
+  const twine = std(C.ropeJute, 0.9, { flatShading: true });
+  const posts: Transform[] = [];
+  const postH = 0.55;
+  const xMin = WHEAT_FIELD_POS[0] - WHEAT_FIELD_W / 2 + 1.5;
+  const xMax = WHEAT_FIELD_POS[0] + WHEAT_FIELD_W / 2 - 1.5;
+  const z = WHEAT_FIELD_POS[2] + WHEAT_FIELD_D / 2 - 1.2;
+  for (let x = xMin; x <= xMax + 1e-3; x += 1.4) {
+    posts.push({ position: [x, postH / 2, z], rotation: [0, 0, 0], scale: [1, 1, 1] });
+  }
+  return f.group("Wheat Field Fence", [
+    f.instanced(
+      "Stake",
+      box(0.05, postH, 0.05),
+      wood,
+      posts,
+      { castShadow: true, receiveShadow: true },
+    ),
+    // A single horizontal twine rail strung between the posts.
+    f.mesh(
+      "Twine Rail",
+      cylinder(0.012, 0.012, xMax - xMin, 6),
+      twine,
+      {
+        position: [(xMin + xMax) / 2, postH - 0.06, z],
+        rotation: [0, 0, Math.PI / 2],
+      },
+      { castShadow: true },
+    ),
+  ]);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -7151,6 +8045,25 @@ function buildPastureTufts(f: NodeFactory): SceneNode {
  *    gabled shingle roof and a Dutch-split door, a stack of three
  *    round burlap-bound hay bales and a split-rail pasture fence
  *    running the eastern and southern perimeters.
+ *  - Eleventh pass — yard: a wood-fired stone pizza oven with a
+ *    domed terracotta chamber, a short brick chimney trailing
+ *    drifting steam wisps and a stacked split-wood alcove, a
+ *    slatted-top potting bench with a row of terracotta pots (one
+ *    sprouting fresh herbs) and a leaning trowel, and a stone
+ *    garden chess set with a marble-checkered board on a fluted
+ *    pedestal flanked by two stone stools and a quorum of carved
+ *    chess pieces mid-game; house: a cascading wisteria-bloom
+ *    drape over the porch canopy with three purple bloom panels
+ *    surfaced with the new `wisteria-bloom` colour map paired
+ *    with a matching depth map so the floret cells read as
+ *    relief; scene: a southwest wheat-field plane bridging the
+ *    gap between the west pond garden's south edge and the south
+ *    heath's west edge — golden wheat ground (with the new
+ *    `wheat-field` colour map paired with a wind-row depth map),
+ *    a Dutch-style four-sail tower windmill, scattered wheat
+ *    sheaves and stooks, a winding cart trail with darker wheel
+ *    ruts running between the field and the windmill door, and a
+ *    low stake-and-twine fence along the field's south edge.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -7197,6 +8110,10 @@ export function buildDollhouseDocument(): DollhouseDocument {
     // Tenth-pass keep-outs — hand pump and grape arbor.
     { x: HAND_PUMP_POS[0], z: HAND_PUMP_POS[2], r: 1.4 },
     { x: GRAPE_ARBOR_POS[0], z: GRAPE_ARBOR_POS[2], r: 1.7 },
+    // Eleventh-pass keep-outs — pizza oven, potting bench and garden chess set.
+    { x: PIZZA_OVEN_POS[0], z: PIZZA_OVEN_POS[2], r: 1.6 },
+    { x: POTTING_BENCH_POS[0], z: POTTING_BENCH_POS[2], r: 1.4 },
+    { x: CHESS_GARDEN_POS[0], z: CHESS_GARDEN_POS[2], r: 1.4 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -7240,6 +8157,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildBbqKettle(f, BBQ_GRILL_POS),
     buildHandPump(f, HAND_PUMP_POS),
     buildGrapeArbor(f, GRAPE_ARBOR_POS),
+    buildPizzaOven(f, PIZZA_OVEN_POS),
+    buildPottingBench(f, POTTING_BENCH_POS),
+    buildGardenChess(f, CHESS_GARDEN_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -7247,6 +8167,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const lakefront = buildNorthLakefront(f);
   const heath = buildSouthHeath(f);
   const nePasture = buildNortheastPasture(f);
+  const wheatField = buildSouthwestWheatField(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -7277,13 +8198,14 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildEaveStringLights(f),
     buildFurniture(f),
     buildRainBarrels(f),
+    buildPorchWisteria(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, orchard, pondGarden, lakefront, heath, nePasture, house],
+    children: [garden, meadow, orchard, pondGarden, lakefront, heath, nePasture, wheatField, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,

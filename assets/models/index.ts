@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over eight enhancement passes.
+// house and its courtyard, layered over eleven enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -88,6 +88,33 @@
 //   stable, a stack of three round burlap-bound hay bales and a
 //   weathered split-rail pasture fence around the eastern and
 //   southern perimeters.
+//   Pass 11 — courtyard: a wood-fired stone pizza oven with a
+//   brick base, a domed terracotta cooking chamber, a short brick
+//   chimney trailing translucent smoke wisps and a recessed
+//   firewood alcove with an iron peel; a slatted potting bench
+//   with a row of terracotta pots (one sprouting fresh herbs)
+//   and a leaning trowel; and a stone garden chess set on a
+//   fluted column pedestal flanked by two stone stools, with a
+//   marble-checkered board (surfaced with the marble depth map
+//   so the chequer seams read as relief) and a quorum of carved
+//   chess pieces arranged mid-game. House: a cascading wisteria
+//   bloom drape over the porch canopy with three purple bloom
+//   panels surfaced with the new `wisteria-bloom` colour map
+//   paired with a matching depth map (registered alongside the
+//   other procedural textures) so the floret cells read as relief
+//   on the slope; the canopy ridge anchors a leafy vine and
+//   three darker pendant teardrops below the panels emphasise
+//   the cascade. Scene: a southwest wheat-field ground plane
+//   bridging the gap between the west pond garden's south edge
+//   and the south heath's west edge — golden wheat ground
+//   surfaced with the new `wheat-field` colour map paired with a
+//   wind-row depth map, a Dutch-style four-sail tower windmill
+//   on a stone footing, scattered wheat sheaves and stooks, a
+//   meandering cart trail with darker wheel ruts running between
+//   the field and the windmill door, and a low stake-and-twine
+//   fence along the field's south edge. The new `brick` colour
+//   texture is registered in the texture library so the pizza
+//   oven walls and the windmill tower read as running-bond clay.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

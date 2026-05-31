@@ -784,6 +784,295 @@ function buildDefaultLibrary(): void {
     },
   });
 
+  // ── Eleventh-pass additions ───────────────────────────────────────────
+  // The eleventh enhancement pass introduced three new procedural
+  // textures: a running-bond clay brick (used on the new pizza oven and
+  // the windmill tower), a cascading wisteria bloom paired with a
+  // companion depth map so the floret cells read as relief for the
+  // porch canopy drape, and a golden windrowed wheat field paired with
+  // a wind-row depth map for the new southwest wheat-field scene
+  // extension.
+
+  // Brick — running-bond clay bricks on a mortar bed, with mottled
+  // brick colour and a soft chiselled-edge highlight along each brick
+  // so the courses don't read as a flat rectangle grid at glancing sun.
+  registry.brick = makeCanvasTexture({
+    seed: 0xb1c4ed,
+    draw: (ctx, rng, size) => {
+      // Mortar bed — pale tan-grey.
+      ctx.fillStyle = "#bca78a";
+      ctx.fillRect(0, 0, size, size);
+      // 8 courses high, ~4 bricks per course at standard 2:1 brick aspect.
+      const courses = 8;
+      const bricksPerCourse = 4;
+      const courseH = size / courses;
+      const brickW = size / bricksPerCourse;
+      for (let c = 0; c < courses; c++) {
+        const offset = c % 2 === 0 ? 0 : brickW / 2;
+        const y = c * courseH;
+        for (let b = -1; b <= bricksPerCourse; b++) {
+          const x = b * brickW + offset;
+          const w = brickW - 4;
+          const h = courseH - 4;
+          // Per-brick colour — a warm red-orange with random tonal shift.
+          const hue = 9 + rng() * 18;
+          const sat = 38 + rng() * 22;
+          const lit = 36 + rng() * 12;
+          ctx.fillStyle = `hsl(${hue}, ${sat}%, ${lit}%)`;
+          ctx.fillRect(x + 2, y + 2, w, h);
+          // Darker bottom-right shadow lip suggesting a beveled edge.
+          ctx.fillStyle = `hsla(${hue}, ${sat}%, ${Math.max(18, lit - 16)}%, 0.55)`;
+          ctx.fillRect(x + 2, y + h, w, 2);
+          ctx.fillRect(x + w, y + 2, 2, h);
+          // Lighter top-left highlight lip.
+          ctx.fillStyle = `hsla(${hue}, ${Math.max(20, sat - 12)}%, ${Math.min(80, lit + 18)}%, 0.5)`;
+          ctx.fillRect(x + 2, y + 2, w, 2);
+          ctx.fillRect(x + 2, y + 2, 2, h);
+          // Sparse darker freckles on each brick face.
+          for (let i = 0; i < 6; i++) {
+            ctx.fillStyle = `hsla(${hue - 6}, ${sat + 4}%, ${Math.max(16, lit - 14)}%, 0.4)`;
+            ctx.beginPath();
+            ctx.arc(x + 4 + rng() * (w - 6), y + 4 + rng() * (h - 6), 0.6 + rng() * 1.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+      // A faint speckle wash across the whole tile to keep mip levels lively.
+      paintNoise(ctx, rng, size, "transparent", 30, 0.0018);
+    },
+  });
+
+
+  // Wisteria bloom — a stacked vertical raceme of small lilac florets
+  // tightening toward the bottom of the tile, on a darker leaf-shaded
+  // ground. Layered with soft highlights along the raceme spine so the
+  // canvas reads as a flower cluster rather than a flat band.
+  registry["wisteria-bloom"] = makeCanvasTexture({
+    seed: 0xb100ed,
+    draw: (ctx, rng, size) => {
+      // Background — deep leaf-shadow green so empty space reads as foliage.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#3a523a");
+      bg.addColorStop(1, "#2a3d29");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Several vertical racemes spanning the tile.
+      const racemes = 4;
+      for (let r = 0; r < racemes; r++) {
+        const cx = (size / racemes) * (r + 0.5) + (rng() - 0.5) * size * 0.05;
+        const topY = size * 0.04 + rng() * size * 0.06;
+        const length = size * (0.85 + rng() * 0.1);
+        // A faint stem line down the centre of each raceme.
+        ctx.strokeStyle = `hsla(95, 35%, 28%, 0.6)`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(cx, topY);
+        ctx.bezierCurveTo(
+          cx + (rng() - 0.5) * 6, topY + length * 0.4,
+          cx + (rng() - 0.5) * 6, topY + length * 0.8,
+          cx + (rng() - 0.5) * 6, topY + length,
+        );
+        ctx.stroke();
+        // Florets stamped down the raceme, growing in size and density toward the bottom.
+        const florets = 28;
+        for (let i = 0; i < florets; i++) {
+          const t = i / (florets - 1);
+          const y = topY + length * t;
+          const fwidthBase = 4 + t * 22; // florets fan out lower down.
+          const flatten = 0.7 + rng() * 0.3;
+          // Each floret is a cluster of 3 small petals.
+          for (let p = 0; p < 3; p++) {
+            const px = cx + (rng() - 0.5) * fwidthBase;
+            const py = y + (rng() - 0.5) * 4;
+            const lightness = 55 + rng() * 20;
+            const hue = 268 + rng() * 18;
+            // Pretty mauve-purple petal.
+            ctx.fillStyle = `hsl(${hue}, ${40 + rng() * 25}%, ${lightness}%)`;
+            ctx.beginPath();
+            ctx.ellipse(px, py, 3.4 + rng() * 1.6, (3.4 + rng() * 1.6) * flatten, rng() * Math.PI, 0, Math.PI * 2);
+            ctx.fill();
+            // A small lighter highlight.
+            ctx.fillStyle = `hsla(${hue + 6}, 55%, ${Math.min(90, lightness + 18)}%, 0.55)`;
+            ctx.beginPath();
+            ctx.arc(px - 0.6, py - 0.8, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        // A small green leaf or two scattered along the raceme.
+        for (let l = 0; l < 4; l++) {
+          const y = topY + length * (0.1 + rng() * 0.85);
+          const x = cx + (rng() < 0.5 ? -1 : 1) * (10 + rng() * 14);
+          ctx.fillStyle = `hsl(${95 + rng() * 20}, 35%, ${30 + rng() * 18}%)`;
+          ctx.beginPath();
+          ctx.ellipse(x, y, 4 + rng() * 3, 1.8 + rng() * 1.4, rng() * Math.PI, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      // Faint pollen-yellow speckles atop the bloom for visual interest.
+      for (let i = 0; i < 120; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${48 + rng() * 12}, 70%, 70%, ${0.2 + rng() * 0.25})`;
+        ctx.beginPath();
+        ctx.arc(x, y, 0.6 + rng() * 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Light micro-noise wash to keep deeper mipmap levels from banding.
+      paintNoise(ctx, rng, size, "transparent", 22, 0.0015);
+    },
+  });
+  // Wisteria bloom depth map — the florets sit raised above the leaf
+  // ground (light = high), the raceme stems are neutral and the
+  // background sinks slightly. Drawn with the same deterministic seed
+  // so the relief lines up with the colour blooms.
+  registry["wisteria-bloom-bump"] = makeCanvasTexture({
+    seed: 0xb100ed + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#404040";
+      ctx.fillRect(0, 0, size, size);
+      const racemes = 4;
+      for (let r = 0; r < racemes; r++) {
+        const cx = (size / racemes) * (r + 0.5) + (rng() - 0.5) * size * 0.05;
+        const topY = size * 0.04 + rng() * size * 0.06;
+        const length = size * (0.85 + rng() * 0.1);
+        const florets = 28;
+        for (let i = 0; i < florets; i++) {
+          const t = i / (florets - 1);
+          const y = topY + length * t;
+          const fwidthBase = 4 + t * 22;
+          for (let p = 0; p < 3; p++) {
+            const px = cx + (rng() - 0.5) * fwidthBase;
+            const py = y + (rng() - 0.5) * 4;
+            // Each floret bumps up — a small soft white blob.
+            const blob = ctx.createRadialGradient(px, py, 0, px, py, 6);
+            blob.addColorStop(0, "rgba(245,245,245,0.85)");
+            blob.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = blob;
+            ctx.beginPath();
+            ctx.arc(px, py, 5.4 + rng() * 1.6, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        // Stem line — a slim neutral midtone bar so it reads flat-ish
+        // between the raised florets.
+        ctx.strokeStyle = "rgba(110,110,110,0.6)";
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(cx, topY);
+        ctx.lineTo(cx, topY + length);
+        ctx.stroke();
+      }
+      // High-frequency micro-relief noise so the surface doesn't read
+      // perfectly smooth at glancing angles.
+      for (let i = 0; i < 1200; i++) {
+        const v = 70 + Math.floor(rng() * 80);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
+
+  // Wheat field — close-packed golden grain heads on a warm ochre ground,
+  // arranged in subtle horizontal wind rows so the carpet reads as a
+  // breeze-tilted cropland from above. Authored at a power-of-two size so
+  // the mipmap chain stays clean for the larger field tile repeats.
+  registry["wheat-field"] = makeCanvasTexture({
+    seed: 0x12eaf5,
+    draw: (ctx, rng, size) => {
+      // Warm ochre ground gradient.
+      const grad = ctx.createLinearGradient(0, 0, 0, size);
+      grad.addColorStop(0, "#d0a64d");
+      grad.addColorStop(0.5, "#b88a34");
+      grad.addColorStop(1, "#a07820");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, size, size);
+      // Wind-row bands — a few wide darker stripes across the tile so the
+      // eye reads them as a tilted field from above.
+      const rows = 6;
+      for (let r = 0; r < rows; r++) {
+        const y = (r / rows) * size + (rng() - 0.5) * 4;
+        ctx.fillStyle = `hsla(38, 45%, ${28 + rng() * 10}%, 0.35)`;
+        ctx.fillRect(0, y, size, 1.6);
+      }
+      // Dense stalk specks — many thin tall slivers in muted gold tones.
+      const stalks = 4200;
+      for (let i = 0; i < stalks; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const lightness = 45 + rng() * 30;
+        ctx.fillStyle = `hsla(${35 + rng() * 18}, ${50 + rng() * 25}%, ${lightness}%, 0.75)`;
+        ctx.fillRect(x, y, 0.8 + rng() * 0.4, 2 + rng() * 3);
+      }
+      // Grain heads — small bright tufts arranged in rough rows for a
+      // ripe wheat reading.
+      for (let i = 0; i < 600; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 1.6 + rng() * 1.4;
+        // Bright yellow-cream centre with a slightly warmer halo.
+        ctx.fillStyle = `hsla(46, 70%, ${70 + rng() * 10}%, 0.65)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, r2, r2 * 0.55, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Sparse darker husks and the occasional bare patch to break up the gold.
+      for (let i = 0; i < 90; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${28 + rng() * 12}, 40%, ${20 + rng() * 10}%, 0.5)`;
+        ctx.beginPath();
+        ctx.arc(x, y, 2 + rng() * 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      paintNoise(ctx, rng, size, "transparent", 42, 0.0024);
+    },
+  });
+  // Wheat field depth map — the wind rows raise slightly above the
+  // surrounding stalks (light = high) and the bare patches recess
+  // (dark = low) so the field carpet shows subtle relief on glancing sun.
+  registry["wheat-field-bump"] = makeCanvasTexture({
+    seed: 0x12eaf5 + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Wind row ridges — bright horizontal bands.
+      const rows = 6;
+      for (let r = 0; r < rows; r++) {
+        const y = (r / rows) * size + (rng() - 0.5) * 4;
+        const grad = ctx.createLinearGradient(0, y - 3, 0, y + 6);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, "rgba(235,235,235,0.7)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 3, size, 9);
+      }
+      // Stalk speckles — bright tiny dots, raised.
+      for (let i = 0; i < 2400; i++) {
+        const v = 200 + Math.floor(rng() * 50);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.6)`;
+        ctx.fillRect(rng() * size, rng() * size, 0.9, 2.2 + rng() * 1.5);
+      }
+      // Bare patches — soft dark recesses.
+      for (let i = 0; i < 90; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, 8);
+        blob.addColorStop(0, "rgba(20,20,20,0.6)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, 8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency micro relief so the carpet doesn't ever look smooth.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
+
   // Shingle — rows of overlapping diamond-tipped shingles, weathered cedar.
   // Used on the well roof.
   registry.shingle = makeCanvasTexture({
