@@ -256,6 +256,30 @@ const WHEAT_FIELD_W = 22;
 const WHEAT_FIELD_D = 16;
 const WINDMILL_POS: [number, number, number] = [-36, 0, 28];
 
+/**
+ * Twelfth-pass courtyard prop — a lean-to greenhouse on the back-east lawn
+ * with a sloped glass-paned roof, a white-painted timber frame, an open
+ * door panel and a row of three potted seedlings inside.
+ */
+const GREENHOUSE_POS: [number, number, number] = [3.5, 0, -4.4];
+
+/**
+ * Twelfth-pass scene extension — a northwest woodland plane bridging the
+ * gap between the back meadow's west edge (x ≈ -25) and the west pond
+ * garden's north edge (z ≈ -9). The plane overlaps each neighbour by
+ * ~2 units along its joins so the ground layer has no holes. It carries
+ * a grove of tall conifers (with the new `pine-bark` colour map paired
+ * with a depth map so the trunk ridges read as relief), a mossy fallen
+ * log, a fairy mushroom ring of red toadstools and a small wooden ranger
+ * lookout tower on four stilts with a peaked shingle roof.
+ */
+const NW_WOODLAND_POS: [number, number, number] = [-33, -0.011, -25];
+const NW_WOODLAND_W = 22;
+const NW_WOODLAND_D = 36;
+const LOOKOUT_TOWER_POS: [number, number, number] = [-38, 0, -32];
+const FALLEN_LOG_POS: [number, number, number] = [-30, 0, -18];
+const MUSHROOM_RING_POS: [number, number, number] = [-30, 0, -28];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -494,6 +518,41 @@ const C = {
   windmillCap: "#9e3a36",
   cartDirt: "#6a5236",
   cartDirtDark: "#3f3022",
+  // Twelfth enhancement pass — a lean-to greenhouse on the back lawn, a
+  // row of Victorian gingerbread corbel brackets along the front and
+  // back roof eaves, and a northwest woodland scene extension with a
+  // pine grove (carried on a new `pine-bark` colour + depth map pair), a
+  // mossy fallen log, a fairy mushroom ring and a wooden lookout tower.
+  greenhouseFrame: "#f6efe2",
+  greenhouseFrameShade: "#c2b9a4",
+  greenhouseGlass: "#b9d8df",
+  greenhouseGlassDark: "#5f8b95",
+  greenhouseRoofTrim: "#a8835a",
+  greenhouseSeedling: "#7fb084",
+  greenhouseSeedlingDark: "#3d6f4a",
+  corbelWood: "#fbeed9",
+  corbelShade: "#b6986a",
+  woodlandGrass: "#5f8348",
+  woodlandGrassDark: "#3f5a30",
+  woodlandSoil: "#4a3a26",
+  pineFoliage: "#3a5e3a",
+  pineFoliageDark: "#22422c",
+  pineBark: "#5a3a26",
+  pineBarkDark: "#33231a",
+  pineCone: "#7a4f30",
+  mushroomCap: "#c84a3f",
+  mushroomCapDark: "#7a2620",
+  mushroomStem: "#fbf3e2",
+  mushroomSpot: "#fdf6f0",
+  fallenLogWood: "#7c5536",
+  fallenLogMoss: "#5e8a3a",
+  fallenLogShade: "#3f3022",
+  lookoutPost: "#6e4a2c",
+  lookoutBoard: "#9b7a4e",
+  lookoutRoof: "#5c3f2c",
+  lookoutLadder: "#7a5236",
+  woodlandFern: "#557a3a",
+  woodlandFernShade: "#3a5226",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -7946,6 +8005,676 @@ function buildWheatFieldFence(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────── twelfth-pass courtyard / house props ─────────────── */
+
+/**
+ * A small lean-to greenhouse on the back lawn — a white-painted timber
+ * frame with a sloped translucent roof, four glass-pane walls, an open
+ * door and a row of three potted seedlings inside. Modest in size so it
+ * reads as a hobbyist glasshouse rather than a working nursery.
+ */
+function buildGreenhouse(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const frame = std(C.greenhouseFrame, 0.55, { texture: "wood", textureScale: [1, 1] });
+  const frameDark = std(C.greenhouseFrameShade, 0.85, { flatShading: true });
+  const trim = std(C.greenhouseRoofTrim, 0.85, { texture: "wood", flatShading: true });
+  const slab = std(C.stone, 0.95, { texture: "cobblestone", flatShading: true });
+  const soil = std(C.soil, 0.95, { flatShading: true });
+  const pot = std(C.terracotta, 0.85, { flatShading: true });
+  const leaf = std(C.greenhouseSeedling, 0.85, { flatShading: true });
+  const leafDark = std(C.greenhouseSeedlingDark, 0.85, { flatShading: true });
+  const glass: MaterialDef = {
+    color: C.greenhouseGlass,
+    roughness: 0.15,
+    metalness: 0.25,
+    transparent: true,
+    opacity: 0.42,
+  };
+  const glassDeep: MaterialDef = {
+    color: C.greenhouseGlassDark,
+    roughness: 0.18,
+    metalness: 0.25,
+    transparent: true,
+    opacity: 0.5,
+  };
+  const w = 1.6;
+  const d = 1.2;
+  const wallH = 1.05;
+  const ridgeRise = 0.45;
+  const parts: SceneNode[] = [];
+  // Stone slab footing.
+  parts.push(
+    f.mesh("Greenhouse Footing", box(w + 0.18, 0.08, d + 0.18), slab, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+  );
+  // Four corner posts.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh("Corner Post", box(0.06, wallH + ridgeRise * (sz === 1 ? 1 : 0), 0.06), frame, {
+          position: [sx * (w / 2 - 0.04), 0.08 + (wallH + ridgeRise * (sz === 1 ? 1 : 0)) / 2, sz * (d / 2 - 0.04)],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Top rails — north (low) and south (high) plus side rails sloping up.
+  parts.push(
+    f.mesh("Rail North", box(w, 0.05, 0.06), frame, {
+      position: [0, 0.08 + wallH, -d / 2 + 0.04],
+    }, { castShadow: true }),
+    f.mesh("Rail South", box(w, 0.05, 0.06), frame, {
+      position: [0, 0.08 + wallH + ridgeRise, d / 2 - 0.04],
+    }, { castShadow: true }),
+  );
+  // Two side rails slope from low (back) to high (front) — boxes tilted along X.
+  const sideLen = Math.hypot(d, ridgeRise) + 0.02;
+  const sideTilt = Math.atan2(ridgeRise, d);
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh("Side Rail", box(0.05, 0.05, sideLen), frame, {
+        position: [sx * (w / 2 - 0.04), 0.08 + wallH + ridgeRise / 2, 0],
+        rotation: [-sideTilt, 0, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // North wall (low) — a single glass panel between the rails.
+  parts.push(
+    f.mesh("Wall N Glass", box(w - 0.1, wallH - 0.04, 0.04), glassDeep, {
+      position: [0, 0.08 + wallH / 2, -d / 2 + 0.04],
+    }, { castShadow: false }),
+    // A horizontal mullion across the panel for a paned reading.
+    f.mesh("Wall N Mullion", box(w - 0.05, 0.04, 0.06), frame, {
+      position: [0, 0.08 + wallH / 2, -d / 2 + 0.04],
+    }, { castShadow: true }),
+  );
+  // South wall (high) — split into two panels around the open door.
+  const doorW = 0.5;
+  const sideW = (w - doorW) / 2;
+  parts.push(
+    f.mesh("Wall S Glass L", box(sideW - 0.06, wallH + ridgeRise - 0.04, 0.04), glassDeep, {
+      position: [-doorW / 2 - sideW / 2 + 0.03, 0.08 + (wallH + ridgeRise) / 2, d / 2 - 0.04],
+    }, { castShadow: false }),
+    f.mesh("Wall S Glass R", box(sideW - 0.06, wallH + ridgeRise - 0.04, 0.04), glassDeep, {
+      position: [doorW / 2 + sideW / 2 - 0.03, 0.08 + (wallH + ridgeRise) / 2, d / 2 - 0.04],
+    }, { castShadow: false }),
+    // Two horizontal mullions, splitting each pane into a top and bottom light.
+    f.mesh("Wall S Mullion L", box(sideW - 0.04, 0.04, 0.06), frame, {
+      position: [-doorW / 2 - sideW / 2 + 0.03, 0.08 + (wallH + ridgeRise) / 2, d / 2 - 0.04],
+    }, { castShadow: true }),
+    f.mesh("Wall S Mullion R", box(sideW - 0.04, 0.04, 0.06), frame, {
+      position: [doorW / 2 + sideW / 2 - 0.03, 0.08 + (wallH + ridgeRise) / 2, d / 2 - 0.04],
+    }, { castShadow: true }),
+  );
+  // East/west walls — tilted trapezoid glass panels with a horizontal mullion.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh("Side Glass", plane(sideLen - 0.06, wallH * 0.9), glassDeep, {
+        position: [sx * (w / 2 - 0.05), 0.08 + wallH * 0.65, 0],
+        rotation: [0, sx * Math.PI / 2, 0],
+      }, { castShadow: false }),
+      f.mesh("Side Mullion", box(0.04, 0.04, sideLen - 0.04), frame, {
+        position: [sx * (w / 2 - 0.05), 0.08 + wallH * 0.5, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Sloped translucent roof panel — a single tilted box of glass.
+  parts.push(
+    f.mesh("Roof Glass", box(w + 0.1, 0.03, sideLen + 0.04), glass, {
+      position: [0, 0.08 + wallH + ridgeRise / 2 + 0.04, 0],
+      rotation: [-sideTilt, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Two glazing bars (mullions) running down the slope.
+    f.mesh("Roof Bar L", box(0.04, 0.03, sideLen + 0.04), trim, {
+      position: [-0.42, 0.08 + wallH + ridgeRise / 2 + 0.06, 0],
+      rotation: [-sideTilt, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Roof Bar R", box(0.04, 0.03, sideLen + 0.04), trim, {
+      position: [0.42, 0.08 + wallH + ridgeRise / 2 + 0.06, 0],
+      rotation: [-sideTilt, 0, 0],
+    }, { castShadow: true }),
+    // A ridge cap along the high-south edge.
+    f.mesh("Roof Ridge Cap", box(w + 0.12, 0.04, 0.08), trim, {
+      position: [0, 0.08 + wallH + ridgeRise + 0.04, d / 2 - 0.03],
+    }, { castShadow: true }),
+  );
+  // Open door — a single glass panel hinged ajar.
+  parts.push(
+    f.mesh("Door Glass", box(doorW - 0.04, wallH + ridgeRise - 0.06, 0.03), glassDeep, {
+      position: [doorW / 2 + 0.18, 0.08 + (wallH + ridgeRise) / 2, d / 2 + 0.18],
+      rotation: [0, -0.55, 0],
+    }, { castShadow: false }),
+    f.mesh("Door Frame", box(doorW, wallH + ridgeRise, 0.04), frame, {
+      position: [doorW / 2 + 0.18, 0.08 + (wallH + ridgeRise) / 2, d / 2 + 0.18],
+      rotation: [0, -0.55, 0],
+    }, { castShadow: true }),
+    f.mesh("Door Handle", sphere(0.025, 8, 6), frameDark, {
+      position: [doorW / 2 + 0.18 + Math.cos(-0.55) * (doorW / 2 - 0.06) + Math.sin(-0.55) * 0.02, 0.08 + wallH * 0.6, d / 2 + 0.18 - Math.sin(-0.55) * (doorW / 2 - 0.06) + Math.cos(-0.55) * 0.02],
+    }, { castShadow: true }),
+  );
+  // Inside: a long bench of soil with three potted seedlings on top.
+  parts.push(
+    f.mesh("Bench Soil Box", box(w - 0.32, 0.08, 0.4), soil, {
+      position: [0, 0.16, -0.18],
+    }, { receiveShadow: true }),
+  );
+  for (let i = 0; i < 3; i++) {
+    const px = -0.45 + i * 0.45;
+    const pz = -0.18;
+    parts.push(
+      f.mesh("Seedling Pot", cylinder(0.1, 0.08, 0.14, 10), pot, {
+        position: [px, 0.27, pz],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Seedling Soil", cylinder(0.085, 0.085, 0.02, 10), soil, {
+        position: [px, 0.345, pz],
+      }),
+      // Two leaf clusters per pot — light + dark for a tonal lift.
+      f.mesh("Seedling Leaves Light", sphere(0.1, 8, 6), leaf, {
+        position: [px - 0.03, 0.42, pz - 0.02],
+        scale: [1, 0.6, 1],
+      }, { castShadow: true }),
+      f.mesh("Seedling Leaves Dark", sphere(0.08, 8, 6), leafDark, {
+        position: [px + 0.04, 0.4, pz + 0.04],
+        scale: [1, 0.55, 1],
+      }, { castShadow: true }),
+      // A slender stem cylinder peeking out the top.
+      f.mesh("Seedling Stem", cylinder(0.008, 0.008, 0.16, 5), leafDark, {
+        position: [px, 0.48, pz],
+      }, { castShadow: true }),
+    );
+  }
+  return f.group("Greenhouse", parts, { position: pos, rotation: [0, -Math.PI / 7, 0] });
+}
+
+/**
+ * A row of Victorian gingerbread corbel brackets along the front and back
+ * roof eaves — small carved wooden brackets that tuck under the eave
+ * cornice at regular intervals. Each bracket is a stepped scroll shape
+ * (top plate + diagonal kicker + drop finial) carried on a pair of thin
+ * filigree slats so the silhouette reads as a millwork ornament rather
+ * than a structural support.
+ */
+function buildEaveCorbels(f: NodeFactory): SceneNode {
+  const wood = std(C.corbelWood, 0.7, { texture: "wood", textureScale: [0.6, 0.6] });
+  const shade = std(C.corbelShade, 0.8, { texture: "wood", flatShading: true });
+  const eaveY = ROOF_TOP - 0.05;
+  const wallOffset = 0.08;
+  const positions: number[] = [-3.0, -2.0, -1.0, 1.0, 2.0, 3.0];
+  const corbels: SceneNode[] = [];
+  function bracket(name: string, x: number, z: number, faceFront: boolean): SceneNode {
+    const flip = faceFront ? 1 : -1;
+    const parts: SceneNode[] = [
+      // Top plate — a small horizontal cornice the bracket "hangs" from.
+      f.mesh("Cornice Plate", box(0.32, 0.05, 0.18), wood, {
+        position: [0, 0, 0],
+      }, { castShadow: true }),
+      // Main scroll — a tapered box angled in toward the wall.
+      f.mesh("Scroll Body", box(0.14, 0.34, 0.16), wood, {
+        position: [0, -0.18, flip * 0.04],
+        rotation: [flip * -0.2, 0, 0],
+      }, { castShadow: true }),
+      // A small mid-step suggesting an inner curve.
+      f.mesh("Scroll Step", box(0.14, 0.07, 0.1), shade, {
+        position: [0, -0.34, flip * 0.07],
+      }, { castShadow: true }),
+      // Drop finial — a small turned blob at the bottom.
+      f.mesh("Drop Finial", sphere(0.05, 10, 8), shade, {
+        position: [0, -0.42, flip * 0.08],
+      }, { castShadow: true }),
+      // Two thin filigree slats flanking the scroll.
+      f.mesh("Filigree L", box(0.012, 0.3, 0.08), shade, {
+        position: [-0.085, -0.2, flip * 0.05],
+        rotation: [flip * -0.18, 0, 0],
+      }, { castShadow: true }),
+      f.mesh("Filigree R", box(0.012, 0.3, 0.08), shade, {
+        position: [0.085, -0.2, flip * 0.05],
+        rotation: [flip * -0.18, 0, 0],
+      }, { castShadow: true }),
+    ];
+    return f.group(name, parts, { position: [x, eaveY, z] });
+  }
+  for (const x of positions) {
+    corbels.push(bracket(`Front Corbel ${x.toFixed(0)}`, x, FRONT_Z + wallOffset, true));
+    corbels.push(bracket(`Back Corbel ${x.toFixed(0)}`, x, BACK_Z - wallOffset, false));
+  }
+  return f.group("Eave Corbels", corbels);
+}
+
+/* ─────────────── twelfth-pass NW woodland extension ─────────────── */
+
+/**
+ * A northwest woodland plane — a coniferous-forest-toned ground bridging
+ * the gap between the back meadow's west edge and the west pond garden's
+ * north edge. The plane overlaps each neighbour by ~2 units along its
+ * joins so the ground layer has no holes. It carries a small pine grove
+ * with the new `pine-bark` colour + depth map pair, a mossy fallen log,
+ * a fairy mushroom ring of red toadstools and a wooden ranger lookout
+ * tower on four stilts with a peaked shingle roof.
+ */
+function buildNorthwestWoodland(f: NodeFactory): SceneNode {
+  return f.group("Northwest Woodland", [
+    // The woodland ground plane itself — a darker, mossier green than the
+    // meadow so the eye reads a shaded forest-floor transition. A subtle
+    // heather bump scales the carpet so glancing sun catches loose duff.
+    f.mesh(
+      "Woodland Ground",
+      plane(NW_WOODLAND_W, NW_WOODLAND_D),
+      std(C.woodlandGrass, 0.96, {
+        texture: "grass",
+        textureScale: [10, 16],
+        bumpMap: "heather-bump",
+        bumpScale: 0.03,
+      }),
+      { position: NW_WOODLAND_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // East apron — overlaps the back meadow's west edge with a slightly
+    // greener strip so the join reads as a forest fringe.
+    f.mesh(
+      "Woodland East Apron",
+      plane(2.5, NW_WOODLAND_D),
+      std(C.meadowGrassDark, 0.95, { texture: "grass", textureScale: [1, 10] }),
+      {
+        position: [
+          NW_WOODLAND_POS[0] + NW_WOODLAND_W / 2 - 1.25,
+          -0.008,
+          NW_WOODLAND_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // South apron — overlaps the pond garden's north edge with a darker
+    // moss-toned strip so the seam reads as one continuous understorey.
+    f.mesh(
+      "Woodland South Apron",
+      plane(NW_WOODLAND_W, 2.5),
+      std(C.mossGreen, 0.95, { texture: "grass", textureScale: [10, 1] }),
+      {
+        position: [
+          NW_WOODLAND_POS[0],
+          -0.008,
+          NW_WOODLAND_POS[2] + NW_WOODLAND_D / 2 - 1.25,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildPineGrove(f),
+    buildFallenLog(f, FALLEN_LOG_POS),
+    buildMushroomRing(f, MUSHROOM_RING_POS),
+    buildLookoutTower(f, LOOKOUT_TOWER_POS),
+    buildWoodlandFerns(f),
+  ]);
+}
+
+/**
+ * A small grove of tall conifers — 9 trees with a stacked-cone foliage
+ * profile and a tapered trunk surfaced with the new `pine-bark` colour
+ * map paired with a depth (bump) map so the ridged bark reads as relief
+ * at glancing sun. Trees deterministically scatter across the woodland
+ * plane, avoiding the lookout tower, the fallen log and the mushroom
+ * ring.
+ */
+function buildPineGrove(f: NodeFactory): SceneNode {
+  const trunkMat = std(C.pineBark, 0.95, {
+    texture: "pine-bark",
+    textureScale: [1, 4],
+    bumpMap: "pine-bark-bump",
+    bumpScale: 0.05,
+    flatShading: false,
+  });
+  const foliage = std(C.pineFoliage, 0.85, { flatShading: true });
+  const foliageShade = std(C.pineFoliageDark, 0.9, { flatShading: true });
+  const cone = std(C.pineCone, 0.85, { flatShading: true });
+  const rng = mulberry32(0xb1ec0e);
+  const trees: SceneNode[] = [];
+  const placed: { x: number; z: number }[] = [];
+  const xMin = NW_WOODLAND_POS[0] - NW_WOODLAND_W / 2 + 2;
+  const xMax = NW_WOODLAND_POS[0] + NW_WOODLAND_W / 2 - 2;
+  const zMin = NW_WOODLAND_POS[2] - NW_WOODLAND_D / 2 + 2;
+  const zMax = NW_WOODLAND_POS[2] + NW_WOODLAND_D / 2 - 2;
+  let attempts = 0;
+  while (trees.length < 9 && attempts < 400) {
+    attempts++;
+    const x = xMin + rng() * (xMax - xMin);
+    const z = zMin + rng() * (zMax - zMin);
+    if (Math.hypot(x - LOOKOUT_TOWER_POS[0], z - LOOKOUT_TOWER_POS[2]) < 3.0) continue;
+    if (Math.hypot(x - FALLEN_LOG_POS[0], z - FALLEN_LOG_POS[2]) < 2.0) continue;
+    if (Math.hypot(x - MUSHROOM_RING_POS[0], z - MUSHROOM_RING_POS[2]) < 2.0) continue;
+    if (placed.some((p) => Math.hypot(p.x - x, p.z - z) < 2.4)) continue;
+    placed.push({ x, z });
+
+    const trunkH = 1.0 + rng() * 0.45;
+    const s = 1.2 + rng() * 0.5;
+    const tilt = (rng() - 0.5) * 0.04;
+    const parts: SceneNode[] = [
+      f.mesh("Trunk", cylinder(0.12, 0.18, trunkH, 10), trunkMat, {
+        position: [0, trunkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Three stacked cones for the foliage skirt.
+      f.mesh("Lower Cone", { type: "cone", radius: 0.85, height: 1.05, radialSegments: 9 }, foliage, {
+        position: [0, trunkH + 0.45, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Mid Cone", { type: "cone", radius: 0.62, height: 0.85, radialSegments: 9 }, foliageShade, {
+        position: [0, trunkH + 0.98, 0],
+      }, { castShadow: true }),
+      f.mesh("Top Cone", { type: "cone", radius: 0.4, height: 0.65, radialSegments: 9 }, foliage, {
+        position: [0, trunkH + 1.45, 0],
+      }, { castShadow: true }),
+    ];
+    // A single small cone hanging off one branch — a pine cone decoration.
+    if (rng() > 0.4) {
+      parts.push(
+        f.mesh("Pine Cone", cylinder(0.05, 0.02, 0.1, 6), cone, {
+          position: [0.38, trunkH + 0.62, 0.05],
+          rotation: [0, 0, Math.PI],
+        }, { castShadow: true }),
+      );
+    }
+    trees.push(
+      f.group(
+        `Pine ${trees.length + 1}`,
+        parts,
+        { position: [x, 0, z], scale: [s, s, s], rotation: [tilt, rng() * Math.PI, tilt] },
+      ),
+    );
+  }
+  return f.group("Pine Grove", trees);
+}
+
+/**
+ * A wooden ranger lookout tower — a square cabin perched on four stilts
+ * with a peaked shingle roof, a railed observation deck and a leaning
+ * ladder. Sized to read as a small fire-watch shelter rather than a
+ * permanent post.
+ */
+function buildLookoutTower(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const post = std(C.lookoutPost, 0.95, {
+    texture: "pine-bark",
+    textureScale: [1, 3],
+    bumpMap: "pine-bark-bump",
+    bumpScale: 0.04,
+  });
+  const board = std(C.lookoutBoard, 0.9, { texture: "wood", textureScale: [1.5, 1], flatShading: true });
+  const trim = std(C.windmillSailFrame, 0.85, { texture: "wood", flatShading: true });
+  const roof = std(C.lookoutRoof, 0.85, { texture: "shingle", textureScale: [2, 2] });
+  const ladder = std(C.lookoutLadder, 0.9, { texture: "wood", flatShading: true });
+  const glass: MaterialDef = {
+    color: "#a4cfdb",
+    roughness: 0.2,
+    metalness: 0.3,
+    transparent: true,
+    opacity: 0.45,
+  };
+  const cabinW = 1.4;
+  const cabinD = 1.4;
+  const cabinH = 1.0;
+  const stiltH = 1.6;
+  const roofRise = 0.7;
+  const parts: SceneNode[] = [];
+  // Four stilts.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh("Stilt", cylinder(0.08, 0.1, stiltH, 8), post, {
+          position: [sx * (cabinW / 2 - 0.08), stiltH / 2, sz * (cabinD / 2 - 0.08)],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Two diagonal cross braces between the front legs for visual stability.
+  parts.push(
+    f.mesh("Brace L", box(0.05, 0.05, Math.hypot(stiltH, cabinW - 0.16)), post, {
+      position: [0, stiltH / 2, cabinD / 2 - 0.08],
+      rotation: [0, 0, Math.atan2(stiltH, cabinW - 0.16) - Math.PI / 2],
+      scale: [1, 1, 0.65],
+    }, { castShadow: true }),
+    f.mesh("Brace R", box(0.05, 0.05, Math.hypot(stiltH, cabinW - 0.16)), post, {
+      position: [0, stiltH / 2, -cabinD / 2 + 0.08],
+      rotation: [0, 0, -(Math.atan2(stiltH, cabinW - 0.16) - Math.PI / 2)],
+      scale: [1, 1, 0.65],
+    }, { castShadow: true }),
+  );
+  // Cabin floor / deck.
+  parts.push(
+    f.mesh("Cabin Floor", box(cabinW + 0.12, 0.08, cabinD + 0.12), board, {
+      position: [0, stiltH + 0.04, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Four cabin walls — board-and-batten panels.
+  parts.push(
+    f.mesh("Wall N", box(cabinW, cabinH, 0.06), board, {
+      position: [0, stiltH + 0.08 + cabinH / 2, -cabinD / 2 + 0.03],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall S", box(cabinW, cabinH * 0.4, 0.06), board, {
+      position: [0, stiltH + 0.08 + cabinH * 0.2, cabinD / 2 - 0.03],
+    }, { castShadow: true }),
+    f.mesh("Wall E", box(0.06, cabinH, cabinD), board, {
+      position: [cabinW / 2 - 0.03, stiltH + 0.08 + cabinH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall W", box(0.06, cabinH, cabinD), board, {
+      position: [-cabinW / 2 + 0.03, stiltH + 0.08 + cabinH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // A wide front observation window — a glass panel filling the south wall.
+  parts.push(
+    f.mesh("Front Window", box(cabinW - 0.2, cabinH * 0.55, 0.04), glass, {
+      position: [0, stiltH + 0.08 + cabinH * 0.65, cabinD / 2 - 0.05],
+    }, { castShadow: false }),
+    f.mesh("Window Mullion", box(cabinW - 0.2, 0.04, 0.05), trim, {
+      position: [0, stiltH + 0.08 + cabinH * 0.65, cabinD / 2 - 0.05],
+    }, { castShadow: true }),
+    // A horizontal handrail across the front opening.
+    f.mesh("Front Rail", cylinder(0.025, 0.025, cabinW - 0.2, 8), trim, {
+      position: [0, stiltH + 0.08 + cabinH * 0.4, cabinD / 2 - 0.02],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+  );
+  // Peaked roof — two slabs meeting at a ridge.
+  const slope = Math.atan2(roofRise, cabinW / 2);
+  const hyp = Math.hypot(roofRise, cabinW / 2);
+  parts.push(
+    f.mesh("Roof L", box(hyp + 0.15, 0.06, cabinD + 0.2), roof, {
+      position: [-cabinW / 4 - 0.02, stiltH + 0.08 + cabinH + roofRise / 2, 0],
+      rotation: [0, 0, slope],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof R", box(hyp + 0.15, 0.06, cabinD + 0.2), roof, {
+      position: [cabinW / 4 + 0.02, stiltH + 0.08 + cabinH + roofRise / 2, 0],
+      rotation: [0, 0, -slope],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Ridge", cylinder(0.04, 0.04, cabinD + 0.2, 6), trim, {
+      position: [0, stiltH + 0.08 + cabinH + roofRise + 0.02, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Leaning ladder from the ground up to the front of the cabin floor.
+  const ladderTopY = stiltH + 0.08;
+  const ladderLen = Math.hypot(ladderTopY, 0.65);
+  const ladderTilt = Math.atan2(ladderTopY, 0.65);
+  parts.push(
+    f.mesh("Ladder Rail L", box(0.04, 0.04, ladderLen), ladder, {
+      position: [-0.18, ladderTopY / 2 + 0.04, cabinD / 2 + 0.34],
+      rotation: [Math.PI / 2 - ladderTilt, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Ladder Rail R", box(0.04, 0.04, ladderLen), ladder, {
+      position: [0.18, ladderTopY / 2 + 0.04, cabinD / 2 + 0.34],
+      rotation: [Math.PI / 2 - ladderTilt, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Rungs evenly spaced along the ladder.
+  for (let i = 0; i < 5; i++) {
+    const t = (i + 0.5) / 5;
+    parts.push(
+      f.mesh("Ladder Rung", cylinder(0.018, 0.018, 0.4, 6), ladder, {
+        position: [0, t * ladderTopY + 0.04, cabinD / 2 + 0.34 + (0.5 - t) * 0.65],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: true }),
+    );
+  }
+  return f.group("Lookout Tower", parts, { position: pos, rotation: [0, Math.PI / 5, 0] });
+}
+
+/**
+ * A mossy fallen log — a long horizontal cylinder lying on the forest
+ * floor with a brighter mossy cap along its top and a few small split
+ * shards at one end suggesting it cracked when it fell.
+ */
+function buildFallenLog(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.fallenLogWood, 0.95, {
+    texture: "pine-bark",
+    textureScale: [3, 1],
+    bumpMap: "pine-bark-bump",
+    bumpScale: 0.04,
+    flatShading: false,
+  });
+  const moss = std(C.fallenLogMoss, 0.9, { flatShading: true });
+  const shade = std(C.fallenLogShade, 0.95, { flatShading: true });
+  const logLen = 2.6;
+  const logR = 0.28;
+  const parts: SceneNode[] = [
+    // Main log body lying on its side.
+    f.mesh("Log Body", cylinder(logR, logR, logLen, 14), wood, {
+      position: [0, logR, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Darker rim caps at the cut ends.
+    f.mesh("Cap End A", cylinder(logR * 0.95, logR * 0.95, 0.04, 14), shade, {
+      position: [logLen / 2 + 0.02, logR, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    f.mesh("Cap End B", cylinder(logR * 0.95, logR * 0.95, 0.04, 14), shade, {
+      position: [-logLen / 2 - 0.02, logR, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    // Mossy ridge running along the top — a flattened sphere.
+    f.mesh("Moss Crown", sphere(logR * 0.78, 12, 8), moss, {
+      position: [0, logR + logR * 0.4, 0],
+      scale: [logLen / (logR * 0.78) * 0.85, 0.6, 1.05],
+    }, { castShadow: true, receiveShadow: true }),
+  ];
+  // A few small bark splinters scattered at one end.
+  const rng = mulberry32(0xfa17e7);
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh("Splinter", box(0.18 + rng() * 0.08, 0.04, 0.06), shade, {
+        position: [logLen / 2 + 0.2 + rng() * 0.18, 0.03, (rng() - 0.5) * 0.5],
+        rotation: [0, rng() * Math.PI, 0],
+      }, { castShadow: true }),
+    );
+  }
+  return f.group("Fallen Log", parts, { position: pos, rotation: [0, Math.PI / 4, 0] });
+}
+
+/**
+ * A fairy ring of seven red-capped mushrooms — small toadstools with
+ * cream stems, white spotted caps and a smaller stragler in the centre
+ * of the ring. Each mushroom is a stem cylinder plus a flattened sphere
+ * cap. The ring sits on the woodland floor as a folkloric accent.
+ */
+function buildMushroomRing(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stem = std(C.mushroomStem, 0.85, { flatShading: true });
+  const cap = std(C.mushroomCap, 0.65, { flatShading: true });
+  const capDark = std(C.mushroomCapDark, 0.85, { flatShading: true });
+  const spot = std(C.mushroomSpot, 0.85, { flatShading: true });
+  const mossPatch = std(C.fallenLogMoss, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // A soft moss patch the ring sits on.
+  parts.push(
+    f.mesh("Ring Moss Patch", cylinder(1.05, 1.05, 0.04, 16), mossPatch, {
+      position: [0, 0.02, 0],
+    }, { receiveShadow: true }),
+  );
+  const rng = mulberry32(0xfa17ee);
+  const ringR = 0.85;
+  const n = 7;
+  function mushroom(name: string, mx: number, mz: number, scale: number, dark: boolean): SceneNode {
+    const stemH = 0.22 * scale;
+    const capR = 0.16 * scale;
+    const small: SceneNode[] = [
+      f.mesh("Stem", cylinder(0.04 * scale, 0.05 * scale, stemH, 10), stem, {
+        position: [0, stemH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Cap", sphere(capR, 12, 8), dark ? capDark : cap, {
+        position: [0, stemH + capR * 0.6, 0],
+        scale: [1, 0.55, 1],
+      }, { castShadow: true, receiveShadow: true }),
+    ];
+    // Three white spots on the cap, positioned around the dome.
+    for (let s = 0; s < 3; s++) {
+      const a = (s / 3) * Math.PI * 2 + rng() * 0.4;
+      const r = capR * (0.55 + rng() * 0.25);
+      small.push(
+        f.mesh("Spot", sphere(capR * 0.18, 8, 6), spot, {
+          position: [Math.cos(a) * r, stemH + capR * 0.78, Math.sin(a) * r],
+          scale: [1, 0.4, 1],
+        }),
+      );
+    }
+    return f.group(name, small, { position: [mx, 0.04, mz], rotation: [0, rng() * Math.PI, 0] });
+  }
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + (rng() - 0.5) * 0.12;
+    const r = ringR + (rng() - 0.5) * 0.06;
+    parts.push(
+      mushroom(`Toadstool ${i + 1}`, Math.cos(a) * r, Math.sin(a) * r, 0.95 + rng() * 0.3, rng() < 0.18),
+    );
+  }
+  // One small stragler near the centre.
+  parts.push(mushroom("Centre Toadstool", 0.05, -0.08, 0.7, true));
+  return f.group("Mushroom Ring", parts, { position: pos });
+}
+
+/**
+ * A scatter of small woodland ferns across the forest floor — short
+ * rounded clumps in two foliage tones, instanced for cheap rendering.
+ * Ferns avoid the trees, the log, the mushroom ring and the lookout
+ * tower so the silhouettes don't compete.
+ */
+function buildWoodlandFerns(f: NodeFactory): SceneNode {
+  const fernMat = std(C.woodlandFern, 0.9, { flatShading: true });
+  const fernShade = std(C.woodlandFernShade, 0.9, { flatShading: true });
+  const rng = mulberry32(0xfe2090a);
+  const fernsLight: Transform[] = [];
+  const fernsDark: Transform[] = [];
+  const xMin = NW_WOODLAND_POS[0] - NW_WOODLAND_W / 2 + 2;
+  const xMax = NW_WOODLAND_POS[0] + NW_WOODLAND_W / 2 - 2;
+  const zMin = NW_WOODLAND_POS[2] - NW_WOODLAND_D / 2 + 2;
+  const zMax = NW_WOODLAND_POS[2] + NW_WOODLAND_D / 2 - 2;
+  let attempts = 0;
+  while (fernsLight.length + fernsDark.length < 64 && attempts < 600) {
+    attempts++;
+    const x = xMin + rng() * (xMax - xMin);
+    const z = zMin + rng() * (zMax - zMin);
+    if (Math.hypot(x - LOOKOUT_TOWER_POS[0], z - LOOKOUT_TOWER_POS[2]) < 1.6) continue;
+    if (Math.hypot(x - FALLEN_LOG_POS[0], z - FALLEN_LOG_POS[2]) < 1.4) continue;
+    if (Math.hypot(x - MUSHROOM_RING_POS[0], z - MUSHROOM_RING_POS[2]) < 1.4) continue;
+    const s = 0.18 + rng() * 0.16;
+    const t: Transform = {
+      position: [x, s * 0.4, z],
+      rotation: [0, rng() * Math.PI, 0],
+      scale: [s, s * 0.7, s],
+    };
+    if (rng() < 0.6) fernsLight.push(t);
+    else fernsDark.push(t);
+  }
+  return f.group("Woodland Ferns", [
+    f.instanced(
+      "Fern Light",
+      sphere(1, 8, 6),
+      fernMat,
+      fernsLight,
+      { castShadow: true, receiveShadow: true },
+    ),
+    f.instanced(
+      "Fern Dark",
+      sphere(1, 8, 6),
+      fernShade,
+      fernsDark,
+      { castShadow: true, receiveShadow: true },
+    ),
+  ]);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -8064,6 +8793,20 @@ function buildWheatFieldFence(f: NodeFactory): SceneNode {
  *    sheaves and stooks, a winding cart trail with darker wheel
  *    ruts running between the field and the windmill door, and a
  *    low stake-and-twine fence along the field's south edge.
+ *  - Twelfth pass — yard: a lean-to greenhouse on the back lawn
+ *    with a sloped translucent roof, a white-painted timber frame,
+ *    glass-pane walls, an open door panel and a row of three
+ *    potted seedlings inside; house: a row of Victorian gingerbread
+ *    corbel brackets ringing the front and back roof eaves (small
+ *    stepped scrolls with drop finials, flanked by filigree slats);
+ *    scene: a northwest woodland plane bridging the gap between
+ *    the back meadow's west edge and the west pond garden's north
+ *    edge — a moss-toned ground, a small grove of tall conifers
+ *    (with the new `pine-bark` colour map paired with a depth map
+ *    so the ridged trunks read as relief), a mossy fallen log, a
+ *    fairy mushroom ring of red toadstools and a small wooden
+ *    ranger lookout tower on four stilts with a peaked shingle
+ *    roof and a leaning rung ladder.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -8114,6 +8857,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: PIZZA_OVEN_POS[0], z: PIZZA_OVEN_POS[2], r: 1.6 },
     { x: POTTING_BENCH_POS[0], z: POTTING_BENCH_POS[2], r: 1.4 },
     { x: CHESS_GARDEN_POS[0], z: CHESS_GARDEN_POS[2], r: 1.4 },
+    // Twelfth-pass keep-out — the lean-to greenhouse on the back lawn.
+    { x: GREENHOUSE_POS[0], z: GREENHOUSE_POS[2], r: 1.4 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -8160,6 +8905,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPizzaOven(f, PIZZA_OVEN_POS),
     buildPottingBench(f, POTTING_BENCH_POS),
     buildGardenChess(f, CHESS_GARDEN_POS),
+    buildGreenhouse(f, GREENHOUSE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -8168,6 +8914,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const heath = buildSouthHeath(f);
   const nePasture = buildNortheastPasture(f);
   const wheatField = buildSouthwestWheatField(f);
+  const nwWoodland = buildNorthwestWoodland(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -8199,13 +8946,14 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildFurniture(f),
     buildRainBarrels(f),
     buildPorchWisteria(f),
+    buildEaveCorbels(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, orchard, pondGarden, lakefront, heath, nePasture, wheatField, house],
+    children: [garden, meadow, orchard, pondGarden, lakefront, heath, nePasture, wheatField, nwWoodland, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,
