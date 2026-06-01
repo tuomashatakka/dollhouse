@@ -1116,4 +1116,161 @@ function buildDefaultLibrary(): void {
       paintNoise(ctx, rng, size, "transparent", 50, 0.0018);
     },
   });
+
+  // ── Twelfth-pass additions ───────────────────────────────────────────
+  // The twelfth enhancement pass introduced a single new procedural
+  // texture pair: a coniferous pine bark — vertical ridged plates over a
+  // warmer brown core — paired with a companion depth (bump) map so the
+  // ridge edges read as raised crests at glancing sun. Used on the new
+  // northwest-woodland pine grove trunks, the lookout-tower stilts and
+  // the mossy fallen log.
+
+  // Pine bark — long vertical fissured plates in warm brown tones, with
+  // a sparse litter of darker resin freckles and a faint horizontal
+  // grain wash. Authored on a power-of-two canvas with extra vertical
+  // detail so the mipmap chain still reads as bark on distant trunks.
+  registry["pine-bark"] = makeCanvasTexture({
+    seed: 0xb1ec0e,
+    draw: (ctx, rng, size) => {
+      // Warmer brown base gradient — slightly redder at the centre to
+      // suggest sap-rich heartwood peeking through.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#5e3c24");
+      bg.addColorStop(0.5, "#714a2c");
+      bg.addColorStop(1, "#4a2e1c");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Vertical bark plates — long irregular ridges separated by
+      // darker fissures.
+      const plates = 10;
+      for (let p = 0; p < plates; p++) {
+        const x = (p / plates) * size + (rng() - 0.5) * 6;
+        const w = (size / plates) * (0.55 + rng() * 0.4);
+        const lightness = 24 + rng() * 18;
+        ctx.fillStyle = `hsl(${22 + rng() * 12}, ${32 + rng() * 18}%, ${lightness}%)`;
+        // Draw each plate as a wavering vertical rectangle.
+        ctx.beginPath();
+        const segs = 12;
+        const ribs: [number, number][] = [];
+        for (let s = 0; s <= segs; s++) {
+          const t = s / segs;
+          const y = t * size;
+          const jitter = (rng() - 0.5) * w * 0.18;
+          ribs.push([x + jitter, y]);
+        }
+        const first = ribs[0]!;
+        ctx.moveTo(first[0], first[1]);
+        for (const [rx, ry] of ribs) ctx.lineTo(rx, ry);
+        for (let s = segs; s >= 0; s--) {
+          const t = s / segs;
+          const y = t * size;
+          const jitter = (rng() - 0.5) * w * 0.22;
+          ctx.lineTo(x + w + jitter, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        // A lighter raised highlight along the centre of the plate.
+        ctx.strokeStyle = `hsla(${26 + rng() * 8}, ${40 + rng() * 12}%, ${Math.min(60, lightness + 22)}%, 0.5)`;
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(x + w / 2, 0);
+        for (let s = 1; s <= segs; s++) {
+          const y = (s / segs) * size;
+          ctx.lineTo(x + w / 2 + (rng() - 0.5) * 1.4, y);
+        }
+        ctx.stroke();
+      }
+      // Sparse horizontal cracks across plates — short dark slashes that
+      // read as bark fissures from a distance.
+      ctx.lineWidth = 0.8;
+      for (let i = 0; i < 60; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 6 + rng() * 14;
+        ctx.strokeStyle = `hsla(${20 + rng() * 10}, 30%, ${10 + rng() * 12}%, 0.55)`;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + len, y + (rng() - 0.5) * 3);
+        ctx.stroke();
+      }
+      // Dark resin freckles — small near-black dots scattered over the trunk.
+      for (let i = 0; i < 140; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${20 + rng() * 10}, 30%, ${6 + rng() * 8}%, 0.5)`;
+        ctx.beginPath();
+        ctx.arc(x, y, 0.6 + rng() * 1.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Mossy speckle near the bottom — a faint green wash that suggests
+      // damp bark close to the forest floor.
+      for (let i = 0; i < 160; i++) {
+        const x = rng() * size;
+        const y = size * (0.5 + rng() * 0.5);
+        ctx.fillStyle = `hsla(${88 + rng() * 18}, 32%, ${32 + rng() * 14}%, 0.4)`;
+        ctx.beginPath();
+        ctx.arc(x, y, 0.6 + rng() * 1.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      paintNoise(ctx, rng, size, "transparent", 44, 0.0024);
+    },
+  });
+  // Pine bark depth map — plate centres bump up (light = high), fissures
+  // recess between them (dark = low). Same deterministic seed family so
+  // the relief lines up with the colour ridges.
+  registry["pine-bark-bump"] = makeCanvasTexture({
+    seed: 0xb1ec0e + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#3a3a3a";
+      ctx.fillRect(0, 0, size, size);
+      const plates = 10;
+      for (let p = 0; p < plates; p++) {
+        const x = (p / plates) * size + (rng() - 0.5) * 6;
+        const w = (size / plates) * (0.55 + rng() * 0.4);
+        // Plate body — bright raised band.
+        const grad = ctx.createLinearGradient(x, 0, x + w, 0);
+        grad.addColorStop(0, "rgba(40,40,40,0.6)");
+        grad.addColorStop(0.5, "rgba(230,230,230,0.85)");
+        grad.addColorStop(1, "rgba(40,40,40,0.6)");
+        ctx.fillStyle = grad;
+        // Draw a wavering rectangle along the plate.
+        ctx.beginPath();
+        const segs = 12;
+        for (let s = 0; s <= segs; s++) {
+          const t = s / segs;
+          const y = t * size;
+          const jitter = (rng() - 0.5) * w * 0.18;
+          if (s === 0) ctx.moveTo(x + jitter, y);
+          else ctx.lineTo(x + jitter, y);
+        }
+        for (let s = segs; s >= 0; s--) {
+          const t = s / segs;
+          const y = t * size;
+          const jitter = (rng() - 0.5) * w * 0.22;
+          ctx.lineTo(x + w + jitter, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+      }
+      // Horizontal cracks recess slightly — short dark slashes mirror the
+      // colour map's bark fissures.
+      ctx.lineWidth = 1.4;
+      for (let i = 0; i < 60; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 6 + rng() * 14;
+        ctx.strokeStyle = "rgba(28,28,28,0.6)";
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + len, y + (rng() - 0.5) * 3);
+        ctx.stroke();
+      }
+      // High-frequency speckle for the micro-relief of rough bark.
+      for (let i = 0; i < 1400; i++) {
+        const v = 90 + Math.floor(rng() * 100);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over eleven enhancement passes.
+// house and its courtyard, layered over twelve enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -115,6 +115,28 @@
 //   fence along the field's south edge. The new `brick` colour
 //   texture is registered in the texture library so the pizza
 //   oven walls and the windmill tower read as running-bond clay.
+//   Pass 12 — courtyard: a lean-to greenhouse on the back lawn with
+//   a sloped translucent roof, a white-painted timber frame, glass
+//   pane walls, an open door panel and a row of three potted
+//   seedlings on a soil bench inside. House: a row of Victorian
+//   gingerbread corbel brackets ringing the front and back roof
+//   eaves — each bracket a stepped scroll with a drop finial and
+//   flanking filigree slats so the silhouette reads as millwork
+//   ornament rather than structural support. Scene: a northwest
+//   woodland ground plane bridging the gap between the back
+//   meadow's west edge and the west pond garden's north edge — a
+//   moss-toned ground with darker east + south aprons so the joins
+//   read seamlessly, a grove of nine tall conifers surfaced with
+//   the new `pine-bark` colour map paired with a matching depth
+//   map (registered alongside the other procedural textures) so
+//   the ridged trunk bark reads as relief on the curve, a mossy
+//   fallen log with split shards at one end, a fairy mushroom ring
+//   of seven white-spotted red toadstools around a mossy patch,
+//   and a small wooden ranger lookout tower on four stilts with a
+//   peaked shingle roof, a wide observation window and a leaning
+//   rung ladder. A scatter of small woodland ferns in two foliage
+//   tones rounds out the forest floor and routes around each
+//   feature.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
