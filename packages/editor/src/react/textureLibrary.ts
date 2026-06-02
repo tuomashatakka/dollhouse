@@ -1273,4 +1273,139 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Thirteenth-pass additions ───────────────────────────────────────────
+  // The thirteenth enhancement pass introduced one new procedural texture
+  // pair: a tilled vineyard soil — warm cinnamon earth in clear plough rows
+  // with stubble flecks and scattered pebbles — paired with a companion
+  // depth (bump) map so the row crests read as raised ridges at glancing
+  // sun. Used as the ground surface on the new southeast vineyard plane.
+
+  // Vineyard soil — warm cinnamon-brown earth carved into clear plough
+  // rows running across the tile. Scatter of stubble and small pale
+  // pebbles breaks up the bands so the carpet reads as worked cropland
+  // rather than a flat strip.
+  registry["vineyard-soil"] = makeCanvasTexture({
+    seed: 0x71eb0a,
+    draw: (ctx, rng, size) => {
+      // Warm earth base gradient — slightly redder toward the top, cooler
+      // toward the bottom so the mipmap chain has tonal variation.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#8a5230");
+      bg.addColorStop(0.5, "#6e3f24");
+      bg.addColorStop(1, "#4f2c1a");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Plough rows — horizontal alternating ridge/furrow bands across the
+      // tile. Ridges sit lighter (sun-catching tops) and furrows darker
+      // (shaded soil), with a soft transition between them.
+      const rows = 10;
+      const rowH = size / rows;
+      for (let r = 0; r < rows; r++) {
+        const y0 = r * rowH;
+        // Ridge crest — pale band along the top half of the row.
+        const crest = ctx.createLinearGradient(0, y0, 0, y0 + rowH);
+        crest.addColorStop(0, `hsla(${22 + rng() * 8}, 38%, ${36 + rng() * 8}%, 0.85)`);
+        crest.addColorStop(0.45, `hsla(${22 + rng() * 8}, 36%, ${22 + rng() * 6}%, 0.4)`);
+        crest.addColorStop(1, `hsla(${22 + rng() * 8}, 36%, ${14 + rng() * 6}%, 0.45)`);
+        ctx.fillStyle = crest;
+        ctx.fillRect(0, y0, size, rowH);
+        // A few cross-hatch tractor scratches along each ridge.
+        ctx.strokeStyle = `hsla(${22 + rng() * 8}, 32%, ${10 + rng() * 8}%, 0.45)`;
+        ctx.lineWidth = 0.7;
+        for (let s = 0; s < 18; s++) {
+          const y = y0 + rng() * rowH;
+          const len = 8 + rng() * 22;
+          const xs = rng() * size;
+          ctx.beginPath();
+          ctx.moveTo(xs, y);
+          ctx.lineTo(xs + len, y + (rng() - 0.5) * 1.4);
+          ctx.stroke();
+        }
+      }
+      // Dark furrow lines between rows — thin shadow bands.
+      ctx.strokeStyle = "rgba(28, 18, 12, 0.45)";
+      ctx.lineWidth = 1.4;
+      for (let r = 1; r < rows; r++) {
+        const y = r * rowH;
+        ctx.beginPath();
+        ctx.moveTo(0, y + (rng() - 0.5) * 1);
+        ctx.lineTo(size, y + (rng() - 0.5) * 1);
+        ctx.stroke();
+      }
+      // Stubble flecks — short pale slivers of cut vine cane scattered across.
+      for (let i = 0; i < 280; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${32 + rng() * 14}, 38%, ${48 + rng() * 16}%, 0.55)`;
+        ctx.fillRect(x, y, 1.4 + rng() * 1.8, 0.6 + rng() * 0.8);
+      }
+      // Small pale pebbles dusted across the tile.
+      for (let i = 0; i < 110; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${30 + rng() * 12}, 14%, ${60 + rng() * 18}%, 0.85)`;
+        ctx.beginPath();
+        ctx.arc(x, y, 0.8 + rng() * 1.6, 0, Math.PI * 2);
+        ctx.fill();
+        // Subtle shadow under each pebble for a small relief read.
+        ctx.fillStyle = "rgba(0,0,0,0.25)";
+        ctx.beginPath();
+        ctx.arc(x + 0.6, y + 0.8, 0.8 + rng() * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint micro-noise wash so deeper mipmap levels keep tonal life.
+      paintNoise(ctx, rng, size, "transparent", 38, 0.0026);
+    },
+  });
+  // Vineyard soil depth map — the ridge crests sit raised above the
+  // furrows (light = high), and the dark furrow lines recess. Drawn
+  // with the same row layout so the relief tracks the colour.
+  registry["vineyard-soil-bump"] = makeCanvasTexture({
+    seed: 0x71eb0a + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#404040";
+      ctx.fillRect(0, 0, size, size);
+      const rows = 10;
+      const rowH = size / rows;
+      for (let r = 0; r < rows; r++) {
+        const y0 = r * rowH;
+        // Ridge crest — bright soft band along the upper half.
+        const crest = ctx.createLinearGradient(0, y0, 0, y0 + rowH);
+        crest.addColorStop(0, "rgba(220,220,220,0.8)");
+        crest.addColorStop(0.45, "rgba(120,120,120,0.4)");
+        crest.addColorStop(1, "rgba(30,30,30,0.55)");
+        ctx.fillStyle = crest;
+        ctx.fillRect(0, y0, size, rowH);
+      }
+      // Furrow shadows — dark bands at row boundaries (recess).
+      ctx.strokeStyle = "rgba(10,10,10,0.7)";
+      ctx.lineWidth = 2.2;
+      for (let r = 1; r < rows; r++) {
+        const y = r * rowH;
+        ctx.beginPath();
+        ctx.moveTo(0, y + (rng() - 0.5) * 1);
+        ctx.lineTo(size, y + (rng() - 0.5) * 1);
+        ctx.stroke();
+      }
+      // Pale pebbles — small raised bumps scattered over the soil.
+      for (let i = 0; i < 110; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, 4);
+        blob.addColorStop(0, "rgba(245,245,245,0.85)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, 2.6 + rng() * 1.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the ploughed surface doesn't read smooth.
+      for (let i = 0; i < 1500; i++) {
+        const v = 80 + Math.floor(rng() * 100);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
