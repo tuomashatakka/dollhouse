@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twelve enhancement passes.
+// house and its courtyard, layered over thirteen enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -137,6 +137,32 @@
 //   rung ladder. A scatter of small woodland ferns in two foliage
 //   tones rounds out the forest floor and routes around each
 //   feature.
+//   Pass 13 — courtyard: a wooden rose pergola on the back-west
+//   lawn with a cross-beam lattice top, draped climbing-rose
+//   clusters and a slatted bench tucked beneath; and an
+//   ornamental dovecote tower on a hexagonal slate platform with
+//   four arched bird openings, a four-sided shingle roof, a
+//   turned finial spire and three perched white doves. House: a
+//   central roof cupola (belvedere) atop the main roof ridge — a
+//   small square turret with arched glass windows on each face,
+//   corner pilasters, a cornice cap, a peaked shingle roof and a
+//   copper-patina spire finial that reuses the existing
+//   `copper-patina` colour + bump pair so the verdigris reads as
+//   crusted relief at the crown of the house. Scene: a southeast
+//   vineyard ground plane bridging the gap between the side
+//   orchard's south edge and the south heath's east edge — a
+//   tilled cinnamon-earth ground surfaced with the new
+//   `vineyard-soil` colour map paired with a matching depth map
+//   (registered alongside the other procedural textures) so the
+//   plough furrows read as raised row ridges, with grass and
+//   heather aprons along the joins. Five rows of slim wooden
+//   grape trellises strung with wire carry leaf clusters and
+//   cobalt-purple grape bunches, routing around a small stone
+//   wine press shed with a peaked shingle roof, a slim brick
+//   chimney and a single shuttered door; a stack of four oak
+//   wine barrels with iron hoops and a leaning cooper's mallet
+//   sits beside the shed, and a pair of slim cypress trees
+//   frames the approach from the orchard side.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

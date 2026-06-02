@@ -264,6 +264,14 @@ const WINDMILL_POS: [number, number, number] = [-36, 0, 28];
 const GREENHOUSE_POS: [number, number, number] = [3.5, 0, -4.4];
 
 /**
+ * Thirteenth-pass courtyard props — a rose pergola with a cross-beam lattice
+ * crowned by climbing roses on the back-west lawn, and an ornamental dovecote
+ * tower on a slate platform with three perched white doves.
+ */
+const ROSE_PERGOLA_POS: [number, number, number] = [-5.6, 0, 1.6];
+const DOVECOTE_POS: [number, number, number] = [-9.4, 0, 2.8];
+
+/**
  * Twelfth-pass scene extension — a northwest woodland plane bridging the
  * gap between the back meadow's west edge (x ≈ -25) and the west pond
  * garden's north edge (z ≈ -9). The plane overlaps each neighbour by
@@ -279,6 +287,33 @@ const NW_WOODLAND_D = 36;
 const LOOKOUT_TOWER_POS: [number, number, number] = [-38, 0, -32];
 const FALLEN_LOG_POS: [number, number, number] = [-30, 0, -18];
 const MUSHROOM_RING_POS: [number, number, number] = [-30, 0, -28];
+
+/**
+ * Thirteenth-pass scene extension — a southeast vineyard plane bridging the
+ * gap between the side orchard's south edge (z ≈ 19, x ≈ [24, 42]) and the
+ * south heath's east edge (x ≈ 25, z ≈ [32, 60]). The plane overlaps the
+ * orchard by ~1.5 units along its north edge and the heath by ~1.5 units
+ * along its west edge so the ground layer joins seamlessly. It carries a
+ * tilled cinnamon-earth field (with the new `vineyard-soil` colour map
+ * paired with a row-ridge depth map so the plough furrows read as relief),
+ * five rows of grape trellises with cobalt-purple grape clusters, a small
+ * stone wine press shed with a peaked tile roof, four oak wine barrels
+ * stacked beside the shed and a pair of slender cypress trees framing the
+ * approach from the orchard side.
+ */
+const SE_VINEYARD_POS: [number, number, number] = [30, -0.013, 26];
+const SE_VINEYARD_W = 22;
+const SE_VINEYARD_D = 18;
+const WINE_SHED_POS: [number, number, number] = [37, 0, 29];
+const WINE_BARRELS_POS: [number, number, number] = [34.4, 0, 30];
+
+/**
+ * Thirteenth-pass house detail — a central roof cupola (belvedere) atop the
+ * main roof ridge with four small arched windows, a peaked shingle roof and
+ * a copper-patina spire finial. The cupola sits centred along the ridge so
+ * it reads as a tower lantern rather than a structural chimney.
+ */
+const CUPOLA_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H, 0];
 
 const C = {
   exteriorPink: "#f1aac4",
@@ -553,6 +588,42 @@ const C = {
   lookoutLadder: "#7a5236",
   woodlandFern: "#557a3a",
   woodlandFernShade: "#3a5226",
+  // Thirteenth enhancement pass — a rose pergola with cross-beam lattice and
+  // climbing roses on the back-west lawn, a dovecote tower on a slate platform
+  // with white doves, a central roof cupola with a copper-patina spire, and a
+  // southeast vineyard scene extension (vineyard rows, a stone wine press shed,
+  // stacked oak barrels and slim cypress trees). The new `vineyard-soil` colour
+  // map is paired with a row-ridge depth map registered alongside it so the
+  // plough furrows read as relief at glancing sun.
+  pergolaWood: "#9b6b3e",
+  pergolaWoodDark: "#5e3f24",
+  pergolaRose: "#ea7795",
+  pergolaRoseDark: "#b54665",
+  dovecoteWhite: "#f5ecdc",
+  dovecoteRoof: "#8a4a4a",
+  dovecoteTrim: "#3d2a1c",
+  doveBody: "#fafafa",
+  doveBeak: "#d0a23a",
+  cupolaWall: "#fbeed9",
+  cupolaTrim: "#e89bb5",
+  cupolaRoof: "#5c3f2c",
+  vineyardSoil: "#6e3f24",
+  vineyardSoilDark: "#4a2a18",
+  vineyardLeaf: "#5e8a3a",
+  vineyardLeafDark: "#3d5a28",
+  vineyardGrape: "#4a2a6a",
+  vineyardGrapeHighlight: "#7a5aa4",
+  vinePost: "#7c5536",
+  vineWire: "#4a4540",
+  wineShedStone: "#9c8a72",
+  wineShedStoneDark: "#5e4f3a",
+  wineShedRoof: "#7a3a2c",
+  wineShedDoor: "#3a2218",
+  wineBarrel: "#7a4f30",
+  wineBarrelHoop: "#3a2a1c",
+  cypressFoliage: "#3a5a3a",
+  cypressFoliageDark: "#1f3a24",
+  cypressTrunk: "#5e4530",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -8675,6 +8746,652 @@ function buildWoodlandFerns(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────── thirteenth-pass courtyard props ─────────────── */
+
+/**
+ * A wooden rose pergola — a rectangular open-air arbor on four square posts
+ * with a cross-beam lattice spanning the top, draped with climbing roses
+ * (pink bloom clusters) and a slim wooden bench beneath. Sized to read as a
+ * shaded sitting nook on the back-west lawn rather than a passageway.
+ */
+function buildRosePergola(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const post = std(C.pergolaWood, 0.85, { texture: "wood", textureScale: [0.5, 2], flatShading: false });
+  const postShade = std(C.pergolaWoodDark, 0.9, { flatShading: true });
+  const slat = std(C.pergolaWood, 0.85, { texture: "wood", flatShading: true });
+  const rose = std(C.pergolaRose, 0.7, { flatShading: true });
+  const roseDark = std(C.pergolaRoseDark, 0.75, { flatShading: true });
+  const leaf = std(C.vineyardLeaf, 0.85, { flatShading: true });
+  const w = 2.4;
+  const d = 1.6;
+  const postH = 2.2;
+  const parts: SceneNode[] = [];
+  // Four square corner posts on a slim stone footing.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh("Pergola Footing", box(0.18, 0.06, 0.18), postShade, {
+          position: [sx * (w / 2 - 0.08), 0.03, sz * (d / 2 - 0.08)],
+        }, { receiveShadow: true }),
+        f.mesh("Pergola Post", box(0.1, postH, 0.1), post, {
+          position: [sx * (w / 2 - 0.08), postH / 2 + 0.06, sz * (d / 2 - 0.08)],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Two main beams along the length of the pergola.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh("Pergola Beam", box(w + 0.18, 0.08, 0.12), post, {
+        position: [0, postH + 0.06, sz * (d / 2 - 0.08)],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Lattice slats across the top — six narrow boards spanning the width.
+  for (let i = 0; i < 6; i++) {
+    const t = (i + 0.5) / 6;
+    const z = -d / 2 + 0.12 + (d - 0.24) * t;
+    parts.push(
+      f.mesh("Pergola Slat", box(w + 0.12, 0.04, 0.08), slat, {
+        position: [0, postH + 0.14, z],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Climbing rose vines — twisting along the front-left and back-right posts.
+  const vinePoints: [number, number][] = [
+    [-w / 2 + 0.08, d / 2 - 0.08],
+    [w / 2 - 0.08, -d / 2 + 0.08],
+  ];
+  for (const [vx, vz] of vinePoints) {
+    for (let i = 0; i < 7; i++) {
+      const t = i / 6;
+      const wob = Math.sin(t * Math.PI * 3) * 0.08;
+      parts.push(
+        f.mesh("Vine Leaf", sphere(0.12, 8, 6), leaf, {
+          position: [vx + wob, 0.3 + t * (postH - 0.2), vz + Math.cos(t * Math.PI * 3) * 0.08],
+          scale: [1, 0.7, 1],
+        }, { castShadow: true }),
+      );
+    }
+  }
+  // A scatter of rose bloom clusters along the top lattice.
+  const rng = mulberry32(0xeada1e);
+  for (let i = 0; i < 14; i++) {
+    const bx = -w / 2 + 0.2 + rng() * (w - 0.4);
+    const bz = -d / 2 + 0.2 + rng() * (d - 0.4);
+    const r = 0.1 + rng() * 0.05;
+    const colour = rng() < 0.65 ? rose : roseDark;
+    parts.push(
+      f.mesh("Rose Cluster", sphere(r, 8, 6), colour, {
+        position: [bx, postH + 0.22 + rng() * 0.08, bz],
+        scale: [1, 0.7, 1],
+      }, { castShadow: true }),
+    );
+  }
+  // A slim slatted bench tucked along the back beam.
+  parts.push(
+    f.mesh("Bench Seat", box(w - 0.4, 0.06, 0.34), slat, {
+      position: [0, 0.42, -d / 2 + 0.22],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Bench Back", box(w - 0.4, 0.36, 0.05), slat, {
+      position: [0, 0.62, -d / 2 + 0.08],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  for (const lx of [-(w - 0.4) / 2 + 0.05, (w - 0.4) / 2 - 0.05]) {
+    parts.push(
+      f.mesh("Bench Leg", box(0.06, 0.4, 0.32), postShade, {
+        position: [lx, 0.2, -d / 2 + 0.22],
+      }, { castShadow: true }),
+    );
+  }
+  return f.group("Rose Pergola", parts, { position: pos, rotation: [0, Math.PI / 6, 0] });
+}
+
+/**
+ * An ornamental dovecote — a tall slim square pillar on a slate platform with
+ * four small arched bird openings, a peaked shingle roof and three white doves
+ * (two perched on the entrance ledge, one perched on the roof finial). Sized
+ * to read as a delicate garden ornament rather than a working dove house.
+ */
+function buildDovecote(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.dovecoteWhite, 0.6, { texture: "plaster-pink", textureScale: [1, 2] });
+  const trim = std(C.dovecoteTrim, 0.85, { flatShading: true });
+  const roof = std(C.dovecoteRoof, 0.85, { texture: "shingle", textureScale: [1, 1] });
+  const slate = std(C.slatePlate, 0.95, { texture: "cobblestone", flatShading: true });
+  const dove = std(C.doveBody, 0.7, { flatShading: false });
+  const beak = std(C.doveBeak, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Hexagonal slate platform base.
+  parts.push(
+    f.mesh("Dovecote Base", cylinder(0.55, 0.6, 0.12, 6), slate, {
+      position: [0, 0.06, 0],
+    }, { receiveShadow: true }),
+  );
+  // Central pole/pillar — a slim square shaft with stepped courses.
+  const shaftH = 2.0;
+  parts.push(
+    f.mesh("Dovecote Shaft", box(0.36, shaftH, 0.36), wall, {
+      position: [0, 0.12 + shaftH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Stepped cornice band near the top of the shaft.
+    f.mesh("Cornice Band", box(0.46, 0.06, 0.46), trim, {
+      position: [0, 0.12 + shaftH - 0.12, 0],
+    }, { castShadow: true }),
+    f.mesh("Cornice Cap", box(0.5, 0.05, 0.5), wall, {
+      position: [0, 0.12 + shaftH - 0.04, 0],
+    }, { castShadow: true }),
+  );
+  // Four small arched bird openings — one on each face, near the top.
+  for (let face = 0; face < 4; face++) {
+    const angle = face * Math.PI / 2;
+    const x = Math.sin(angle) * 0.185;
+    const z = Math.cos(angle) * 0.185;
+    parts.push(
+      f.mesh("Bird Hole", box(0.14, 0.16, 0.04), trim, {
+        position: [x, 0.12 + shaftH - 0.4, z],
+        rotation: [0, angle, 0],
+      }, { castShadow: true }),
+      // Small entrance ledge under each opening.
+      f.mesh("Ledge", box(0.22, 0.03, 0.08), trim, {
+        position: [Math.sin(angle) * 0.22, 0.12 + shaftH - 0.5, Math.cos(angle) * 0.22],
+        rotation: [0, angle, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Peaked four-sided shingle roof — a tall pyramid sitting atop the shaft.
+  const roofH = 0.7;
+  parts.push(
+    f.mesh("Dovecote Roof", cone(0.42, roofH, 4), roof, {
+      position: [0, 0.12 + shaftH + roofH / 2, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // A turned finial spire on top.
+    f.mesh("Roof Spire", cylinder(0.018, 0.03, 0.18, 6), trim, {
+      position: [0, 0.12 + shaftH + roofH + 0.09, 0],
+    }, { castShadow: true }),
+    f.mesh("Spire Orb", sphere(0.04, 10, 6), trim, {
+      position: [0, 0.12 + shaftH + roofH + 0.22, 0],
+    }, { castShadow: true }),
+  );
+  // Two doves perched on entrance ledges, one on the spire.
+  const doves: [number, number, number, number][] = [
+    [0.22, 0.12 + shaftH - 0.46, 0, 0],
+    [0, 0.12 + shaftH - 0.46, 0.22, Math.PI / 2],
+    [0, 0.12 + shaftH + roofH + 0.28, 0, Math.PI / 4],
+  ];
+  for (const [dx, dy, dz, rot] of doves) {
+    parts.push(
+      f.group("Dove", [
+        f.mesh("Dove Body", sphere(0.07, 10, 8), dove, {
+          position: [0, 0, 0],
+          scale: [1, 0.8, 1.5],
+        }, { castShadow: true }),
+        f.mesh("Dove Head", sphere(0.045, 8, 6), dove, {
+          position: [0, 0.04, 0.08],
+        }, { castShadow: true }),
+        f.mesh("Dove Beak", cone(0.012, 0.04, 5), beak, {
+          position: [0, 0.04, 0.12],
+          rotation: [Math.PI / 2, 0, 0],
+        }, { castShadow: true }),
+      ], { position: [dx, dy, dz], rotation: [0, rot, 0] }),
+    );
+  }
+  return f.group("Dovecote", parts, { position: pos });
+}
+
+/* ─────────────── thirteenth-pass house detail ─────────────── */
+
+/**
+ * A central roof cupola (belvedere) — a small square turret with four arched
+ * windows, a peaked shingle roof and a copper-patina spire finial, sitting
+ * centred on the main roof ridge. Reads as a lantern crown rather than a
+ * working tower.
+ */
+function buildRoofCupola(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.cupolaWall, 0.7, { texture: "plaster-pink", textureScale: [1, 1.2] });
+  const trim = std(C.cupolaTrim, 0.65, { flatShading: false });
+  const roof = std(C.cupolaRoof, 0.85, { texture: "shingle", textureScale: [1, 1] });
+  const spireMetal = std(C.copperPatina, 0.55, {
+    texture: "copper-patina",
+    textureScale: [1, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.04,
+    metalness: 0.55,
+  });
+  const glass: MaterialDef = {
+    color: "#bcd9e8",
+    roughness: 0.2,
+    metalness: 0.3,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const baseW = 1.4;
+  const baseH = 0.16;
+  const wallH = 0.85;
+  const roofRise = 0.55;
+  const parts: SceneNode[] = [];
+  // Stepped square base sitting on the ridge.
+  parts.push(
+    f.mesh("Cupola Base", box(baseW + 0.18, baseH, baseW + 0.18), trim, {
+      position: [0, baseH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cupola Base Inner", box(baseW + 0.08, baseH * 0.6, baseW + 0.08), wall, {
+      position: [0, baseH + 0.04, 0],
+    }, { castShadow: true }),
+  );
+  // Four cupola walls — each with a tall arched window.
+  const wallY = baseH + 0.08 + wallH / 2;
+  for (let face = 0; face < 4; face++) {
+    const angle = face * Math.PI / 2;
+    const x = Math.sin(angle) * (baseW / 2 - 0.04);
+    const z = Math.cos(angle) * (baseW / 2 - 0.04);
+    parts.push(
+      f.mesh("Cupola Wall", box(baseW - 0.08, wallH, 0.08), wall, {
+        position: [x, wallY, z],
+        rotation: [0, angle, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Arched window — a glass panel with a top mullion.
+      f.mesh("Cupola Window", box(0.36, wallH * 0.7, 0.05), glass, {
+        position: [x, wallY + 0.02, z],
+        rotation: [0, angle, 0],
+      }, { castShadow: false }),
+      f.mesh("Window Mullion", box(0.4, 0.04, 0.06), trim, {
+        position: [x, wallY + wallH * 0.05, z],
+        rotation: [0, angle, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Corner pilasters — slim trim strips at each vertical edge.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh("Cupola Pilaster", box(0.06, wallH + 0.04, 0.06), trim, {
+          position: [sx * (baseW / 2 - 0.04), wallY, sz * (baseW / 2 - 0.04)],
+        }, { castShadow: true }),
+      );
+    }
+  }
+  // Cornice cap above the walls.
+  const cornY = baseH + 0.08 + wallH;
+  parts.push(
+    f.mesh("Cupola Cornice", box(baseW + 0.06, 0.06, baseW + 0.06), trim, {
+      position: [0, cornY + 0.03, 0],
+    }, { castShadow: true }),
+  );
+  // Peaked four-sided shingle roof (a square pyramid).
+  parts.push(
+    f.mesh("Cupola Roof", cone(baseW * 0.72, roofRise, 4), roof, {
+      position: [0, cornY + 0.06 + roofRise / 2, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Copper-patina spire finial — a stepped column ending in a small orb.
+  const spireBase = cornY + 0.06 + roofRise;
+  parts.push(
+    f.mesh("Spire Base", cylinder(0.06, 0.08, 0.1, 8), spireMetal, {
+      position: [0, spireBase + 0.05, 0],
+    }, { castShadow: true }),
+    f.mesh("Spire Shaft", cylinder(0.025, 0.04, 0.42, 8), spireMetal, {
+      position: [0, spireBase + 0.31, 0],
+    }, { castShadow: true }),
+    f.mesh("Spire Orb", sphere(0.08, 12, 8), spireMetal, {
+      position: [0, spireBase + 0.6, 0],
+    }, { castShadow: true }),
+    f.mesh("Spire Cap", cone(0.04, 0.16, 8), spireMetal, {
+      position: [0, spireBase + 0.78, 0],
+    }, { castShadow: true }),
+  );
+  return f.group("Roof Cupola", parts, { position: pos });
+}
+
+/* ─────────────── thirteenth-pass SE vineyard extension ─────────────── */
+
+/**
+ * A southeast vineyard plane — a tilled cinnamon-earth field bridging the
+ * gap between the side orchard's south edge and the south heath's east edge,
+ * carrying rows of grape trellises, a stone wine press shed, stacked oak
+ * wine barrels and a pair of cypress trees. The plane overlaps each
+ * neighbour by ~1.5 units along its joins so the ground layer has no holes.
+ */
+function buildSoutheastVineyard(f: NodeFactory): SceneNode {
+  return f.group("Southeast Vineyard", [
+    // The vineyard ground plane — tilled cinnamon-brown soil with the new
+    // `vineyard-soil` colour map paired with a row-ridge depth map so the
+    // plough furrows read as relief at glancing sun.
+    f.mesh(
+      "Vineyard Ground",
+      plane(SE_VINEYARD_W, SE_VINEYARD_D),
+      std(C.vineyardSoil, 0.95, {
+        texture: "vineyard-soil",
+        textureScale: [4, 3],
+        bumpMap: "vineyard-soil-bump",
+        bumpScale: 0.05,
+      }),
+      { position: SE_VINEYARD_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the side orchard's south edge with a strip of
+    // orchard-toned grass so the join reads as a vineyard headland.
+    f.mesh(
+      "Vineyard North Apron",
+      plane(SE_VINEYARD_W, 2.4),
+      std(C.orchardGrass, 0.95, { texture: "grass", textureScale: [10, 1] }),
+      {
+        position: [
+          SE_VINEYARD_POS[0],
+          -0.01,
+          SE_VINEYARD_POS[2] - SE_VINEYARD_D / 2 + 1.2,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the south heath's east edge with a heather-toned
+    // strip so the join reads seamlessly into the moor.
+    f.mesh(
+      "Vineyard West Apron",
+      plane(2.4, SE_VINEYARD_D),
+      std(C.heathGround, 0.95, { texture: "heather", textureScale: [1, 10] }),
+      {
+        position: [
+          SE_VINEYARD_POS[0] - SE_VINEYARD_W / 2 + 1.2,
+          -0.01,
+          SE_VINEYARD_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildVineyardRows(f),
+    buildWinePressShed(f, WINE_SHED_POS),
+    buildWineBarrels(f, WINE_BARRELS_POS),
+    buildCypressPair(f),
+  ]);
+}
+
+/**
+ * Five rows of grape trellises running across the vineyard — each row is a
+ * line of slim wooden posts strung between with horizontal wire and draped
+ * with grape leaves and cobalt-purple grape clusters. Rows route around the
+ * wine shed and the cypress trees so they look like a working planting.
+ */
+function buildVineyardRows(f: NodeFactory): SceneNode {
+  const post = std(C.vinePost, 0.9, { texture: "wood", flatShading: true });
+  const wire = std(C.vineWire, 0.6, { metalness: 0.5 });
+  const leaf = std(C.vineyardLeaf, 0.85, { flatShading: true });
+  const leafDark = std(C.vineyardLeafDark, 0.9, { flatShading: true });
+  const grape = std(C.vineyardGrape, 0.7, { flatShading: false });
+  const grapeBright = std(C.vineyardGrapeHighlight, 0.7, { flatShading: false });
+  const rows = 5;
+  const rowSpacing = 1.6;
+  const rowLen = 14;
+  const postSpacing = 2.0;
+  const postH = 1.4;
+  const baseZ = SE_VINEYARD_POS[2] - rowSpacing * (rows - 1) / 2 + 1;
+  const groups: SceneNode[] = [];
+  const rng = mulberry32(0x71ed01);
+  for (let r = 0; r < rows; r++) {
+    const z = baseZ + r * rowSpacing;
+    const rowX = SE_VINEYARD_POS[0] - rowLen / 2 - 0.4;
+    // Route the rows so they bend around the wine shed.
+    const dropOut = z > WINE_SHED_POS[2] - 2 && z < WINE_SHED_POS[2] + 2.4;
+    const xStart = dropOut ? rowX : rowX - 1.2;
+    const xEnd = xStart + rowLen + (dropOut ? -3 : 0);
+    const parts: SceneNode[] = [];
+    // Posts spaced along the row.
+    const nPosts = Math.floor((xEnd - xStart) / postSpacing) + 1;
+    for (let p = 0; p < nPosts; p++) {
+      const x = xStart + p * postSpacing;
+      parts.push(
+        f.mesh("Vine Post", box(0.06, postH, 0.06), post, {
+          position: [x, postH / 2, 0],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    // Three horizontal wires at staggered heights connecting posts end-to-end.
+    for (let w = 0; w < 3; w++) {
+      const y = postH * (0.35 + w * 0.22);
+      const len = (nPosts - 1) * postSpacing;
+      parts.push(
+        f.mesh("Trellis Wire", cylinder(0.008, 0.008, len, 5), wire, {
+          position: [xStart + len / 2, y, 0],
+          rotation: [0, 0, Math.PI / 2],
+        }, { castShadow: false }),
+      );
+    }
+    // Leaf clusters strung along the wires — two leaves per post-segment.
+    for (let p = 0; p < nPosts - 1; p++) {
+      const segX = xStart + (p + 0.5) * postSpacing + (rng() - 0.5) * 0.12;
+      const lightLeaf = rng() < 0.55 ? leaf : leafDark;
+      parts.push(
+        f.mesh("Vine Leaf", sphere(0.22, 8, 6), lightLeaf, {
+          position: [segX, postH * 0.78, 0],
+          scale: [1.2, 0.4, 1.2],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh("Vine Leaf Lower", sphere(0.18, 8, 6), leafDark, {
+          position: [segX + 0.18, postH * 0.55, 0],
+          scale: [1.0, 0.4, 1.0],
+        }, { castShadow: true }),
+      );
+      // A grape cluster hanging below the wires.
+      const colour = rng() < 0.6 ? grape : grapeBright;
+      parts.push(
+        f.mesh("Grape Cluster", sphere(0.1, 10, 8), colour, {
+          position: [segX - 0.05, postH * 0.32, 0.04],
+          scale: [1, 1.6, 1],
+        }, { castShadow: true }),
+        // A small leaf perched above the cluster.
+        f.mesh("Cluster Leaf", sphere(0.08, 8, 6), leafDark, {
+          position: [segX - 0.05, postH * 0.5, 0.04],
+          scale: [1, 0.4, 1],
+        }, { castShadow: true }),
+      );
+    }
+    groups.push(f.group(`Vine Row ${r + 1}`, parts, { position: [0, 0, z] }));
+  }
+  return f.group("Vineyard Rows", groups);
+}
+
+/**
+ * A small rustic stone wine press shed — a square stone-walled cottage with a
+ * single shuttered door, a peaked terracotta-tile roof and a slim chimney on
+ * one side. Sized to read as a working press shed rather than a residence.
+ */
+function buildWinePressShed(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.wineShedStone, 0.95, { texture: "cobblestone", textureScale: [2, 2], flatShading: false });
+  const wallShade = std(C.wineShedStoneDark, 0.95, { flatShading: true });
+  const roof = std(C.wineShedRoof, 0.85, { texture: "shingle", textureScale: [2.5, 2] });
+  const door = std(C.wineShedDoor, 0.9, { texture: "wood", flatShading: true });
+  const trim = std(C.cupolaTrim, 0.7, { flatShading: false });
+  const chimney = std(C.brick, 0.95, { texture: "brick", textureScale: [1, 2] });
+  const w = 2.8;
+  const d = 2.4;
+  const wallH = 1.8;
+  const roofRise = 0.9;
+  const parts: SceneNode[] = [];
+  // Footing course — a slightly wider stone base.
+  parts.push(
+    f.mesh("Shed Footing", box(w + 0.18, 0.18, d + 0.18), wallShade, {
+      position: [0, 0.09, 0],
+    }, { receiveShadow: true }),
+  );
+  // Four stone walls.
+  parts.push(
+    f.mesh("Wall N", box(w, wallH, 0.16), wall, {
+      position: [0, 0.18 + wallH / 2, -d / 2 + 0.08],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall S", box(w, wallH, 0.16), wall, {
+      position: [0, 0.18 + wallH / 2, d / 2 - 0.08],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall E", box(0.16, wallH, d), wall, {
+      position: [w / 2 - 0.08, 0.18 + wallH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall W", box(0.16, wallH, d), wall, {
+      position: [-w / 2 + 0.08, 0.18 + wallH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Arched wooden door on the south wall.
+  parts.push(
+    f.mesh("Shed Door", box(0.72, 1.3, 0.06), door, {
+      position: [0, 0.18 + 0.65, d / 2 - 0.04],
+    }, { castShadow: true }),
+    f.mesh("Door Frame", box(0.84, 1.4, 0.08), wallShade, {
+      position: [0, 0.18 + 0.7, d / 2 - 0.05],
+    }, { castShadow: true }),
+    f.mesh("Door Handle", sphere(0.028, 8, 6), trim, {
+      position: [0.18, 0.18 + 0.6, d / 2 - 0.02],
+    }, { castShadow: true }),
+  );
+  // A small square window on the east wall.
+  parts.push(
+    f.mesh("Shed Window", box(0.06, 0.42, 0.42), trim, {
+      position: [w / 2 - 0.04, 0.18 + 1.1, 0],
+    }, { castShadow: true }),
+    f.mesh("Shed Window Pane", box(0.04, 0.34, 0.34), {
+      color: "#bcd9e8", roughness: 0.2, metalness: 0.3, transparent: true, opacity: 0.55,
+    }, {
+      position: [w / 2 - 0.06, 0.18 + 1.1, 0],
+    }, { castShadow: false }),
+  );
+  // Peaked roof — two slabs meeting at a ridge along Z.
+  const slope = Math.atan2(roofRise, w / 2);
+  const hyp = Math.hypot(roofRise, w / 2);
+  parts.push(
+    f.mesh("Roof L", box(hyp + 0.18, 0.1, d + 0.24), roof, {
+      position: [-w / 4 - 0.03, 0.18 + wallH + roofRise / 2, 0],
+      rotation: [0, 0, slope],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof R", box(hyp + 0.18, 0.1, d + 0.24), roof, {
+      position: [w / 4 + 0.03, 0.18 + wallH + roofRise / 2, 0],
+      rotation: [0, 0, -slope],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Ridge", cylinder(0.06, 0.06, d + 0.24, 6), wallShade, {
+      position: [0, 0.18 + wallH + roofRise + 0.05, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Gable ends — small triangular plaster fills above the walls.
+  const gablePoly: GeometryDef = {
+    type: "buffer",
+    attributes: {
+      position: [
+        -w / 2, -roofRise / 2, 0,
+        w / 2, -roofRise / 2, 0,
+        0, roofRise / 2, 0,
+      ],
+      normal: [0, 0, -1, 0, 0, -1, 0, 0, -1],
+    },
+  };
+  parts.push(
+    f.mesh("Gable N", gablePoly, { color: C.wineShedStone, roughness: 0.85, side: "double", texture: "cobblestone" }, {
+      position: [0, 0.18 + wallH + roofRise / 2, -d / 2 + 0.02],
+    }, { castShadow: true }),
+    f.mesh("Gable S", gablePoly, { color: C.wineShedStone, roughness: 0.85, side: "double", texture: "cobblestone" }, {
+      position: [0, 0.18 + wallH + roofRise / 2, d / 2 - 0.02],
+      rotation: [0, Math.PI, 0],
+    }, { castShadow: true }),
+  );
+  // Small brick chimney on the back-left corner.
+  parts.push(
+    f.mesh("Shed Chimney", box(0.28, 0.9, 0.28), chimney, {
+      position: [-w / 2 + 0.25, 0.18 + wallH + 0.45, -d / 2 + 0.35],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Crown", box(0.36, 0.06, 0.36), wallShade, {
+      position: [-w / 2 + 0.25, 0.18 + wallH + 0.93, -d / 2 + 0.35],
+    }, { castShadow: true }),
+  );
+  return f.group("Wine Press Shed", parts, { position: pos, rotation: [0, -Math.PI / 8, 0] });
+}
+
+/**
+ * A small stack of four oak wine barrels beside the press shed — two on the
+ * ground, two on top, with iron bands and a leaning wooden cooper's mallet
+ * on the rearmost barrel.
+ */
+function buildWineBarrels(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.wineBarrel, 0.85, { texture: "wood", textureScale: [1, 2], flatShading: false });
+  const hoop = std(C.wineBarrelHoop, 0.5, { metalness: 0.6, flatShading: true });
+  const mallet = std(C.pergolaWoodDark, 0.9, { texture: "wood", flatShading: true });
+  const barrelR = 0.32;
+  const barrelL = 0.74;
+  const parts: SceneNode[] = [];
+  // Four barrels — two on the ground (touching), two stacked above.
+  const positions: [number, number, number][] = [
+    [-barrelR - 0.02, barrelR, 0],
+    [barrelR + 0.02, barrelR, 0],
+    [0, barrelR * 2 + 0.08, 0],
+    [0, barrelR * 2 + 0.08, -barrelL - 0.06],
+  ];
+  for (let i = 0; i < positions.length; i++) {
+    const [x, y, z] = positions[i]!;
+    parts.push(
+      f.mesh("Barrel Body", cylinder(barrelR, barrelR * 0.9, barrelL, 14), wood, {
+        position: [x, y, z],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Two iron hoops near each end of the barrel.
+    for (const offs of [-barrelL * 0.35, barrelL * 0.35]) {
+      parts.push(
+        f.mesh("Barrel Hoop", cylinder(barrelR + 0.012, barrelR + 0.012, 0.04, 14), hoop, {
+          position: [x, y, z + offs],
+          rotation: [Math.PI / 2, 0, 0],
+        }, { castShadow: true }),
+      );
+    }
+    // A central iron band on the belly.
+    parts.push(
+      f.mesh("Barrel Belly Band", cylinder(barrelR * 0.98, barrelR * 0.98, 0.05, 14), hoop, {
+        position: [x, y, z],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // A cooper's mallet leaning against the rearmost upper barrel.
+  parts.push(
+    f.mesh("Mallet Handle", cylinder(0.018, 0.022, 0.55, 8), mallet, {
+      position: [0.32, barrelR * 2 + 0.34, -barrelL - 0.06],
+      rotation: [0.4, 0, 0.6],
+    }, { castShadow: true }),
+    f.mesh("Mallet Head", cylinder(0.07, 0.07, 0.16, 10), mallet, {
+      position: [0.48, barrelR * 2 + 0.62, -barrelL - 0.06],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+  );
+  return f.group("Wine Barrels", parts, { position: pos, rotation: [0, Math.PI / 7, 0] });
+}
+
+/**
+ * A pair of slim cypress trees flanking the approach from the orchard side
+ * of the vineyard — tall narrow conical foliage on a short brown trunk.
+ */
+function buildCypressPair(f: NodeFactory): SceneNode {
+  const trunk = std(C.cypressTrunk, 0.95, { texture: "bark", textureScale: [1, 3], flatShading: true });
+  const foliage = std(C.cypressFoliage, 0.9, { flatShading: true });
+  const foliageDark = std(C.cypressFoliageDark, 0.9, { flatShading: true });
+  function tree(name: string, x: number, z: number, scale: number): SceneNode {
+    const trunkH = 0.35 * scale;
+    return f.group(name, [
+      f.mesh("Trunk", cylinder(0.08, 0.12, trunkH, 8), trunk, {
+        position: [0, trunkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Three stacked tall cones for a narrow cypress silhouette.
+      f.mesh("Lower Foliage", cone(0.42, 1.6 * scale, 9), foliage, {
+        position: [0, trunkH + 0.8 * scale, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Mid Foliage", cone(0.32, 1.1 * scale, 9), foliageDark, {
+        position: [0, trunkH + 1.7 * scale, 0],
+      }, { castShadow: true }),
+      f.mesh("Top Foliage", cone(0.2, 0.7 * scale, 9), foliage, {
+        position: [0, trunkH + 2.35 * scale, 0],
+      }, { castShadow: true }),
+    ], { position: [x, 0, z] });
+  }
+  return f.group("Cypress Pair", [
+    tree("Cypress L", SE_VINEYARD_POS[0] - SE_VINEYARD_W / 2 + 3, SE_VINEYARD_POS[2] - SE_VINEYARD_D / 2 + 2, 1.05),
+    tree("Cypress R", SE_VINEYARD_POS[0] - SE_VINEYARD_W / 2 + 3, SE_VINEYARD_POS[2] + SE_VINEYARD_D / 2 - 2, 1.15),
+  ]);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -8807,6 +9524,27 @@ function buildWoodlandFerns(f: NodeFactory): SceneNode {
  *    fairy mushroom ring of red toadstools and a small wooden
  *    ranger lookout tower on four stilts with a peaked shingle
  *    roof and a leaning rung ladder.
+ *  - Thirteenth pass — yard: a wooden rose pergola on the back-west
+ *    lawn with a cross-beam lattice top, draped climbing-rose
+ *    clusters and a slatted bench tucked beneath, and an ornamental
+ *    dovecote tower on a hexagonal slate platform with four arched
+ *    bird openings, a four-sided shingle roof, a turned finial
+ *    spire and three perched white doves; house: a central roof
+ *    cupola (belvedere) atop the main roof ridge — a small square
+ *    turret with arched windows on each face, corner pilasters, a
+ *    cornice cap, a peaked shingle roof and a copper-patina spire
+ *    finial that reuses the existing `copper-patina` colour + bump
+ *    pair so the verdigris reads as crusted relief at the crown of
+ *    the house; scene: a southeast vineyard plane bridging the gap
+ *    between the side orchard's south edge and the south heath's
+ *    east edge — tilled cinnamon-earth ground (with the new
+ *    `vineyard-soil` colour map paired with a row-ridge depth map
+ *    so the plough furrows read as relief), five rows of grape
+ *    trellises with leaf clusters and cobalt-purple grape bunches,
+ *    a small stone wine press shed with a peaked shingle roof and
+ *    a slim brick chimney, a stack of four oak wine barrels with
+ *    iron hoops and a leaning cooper's mallet, and a pair of slim
+ *    cypress trees framing the approach from the orchard side.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -8859,6 +9597,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: CHESS_GARDEN_POS[0], z: CHESS_GARDEN_POS[2], r: 1.4 },
     // Twelfth-pass keep-out — the lean-to greenhouse on the back lawn.
     { x: GREENHOUSE_POS[0], z: GREENHOUSE_POS[2], r: 1.4 },
+    // Thirteenth-pass keep-outs — rose pergola and dovecote tower.
+    { x: ROSE_PERGOLA_POS[0], z: ROSE_PERGOLA_POS[2], r: 1.6 },
+    { x: DOVECOTE_POS[0], z: DOVECOTE_POS[2], r: 0.8 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -8906,6 +9647,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPottingBench(f, POTTING_BENCH_POS),
     buildGardenChess(f, CHESS_GARDEN_POS),
     buildGreenhouse(f, GREENHOUSE_POS),
+    buildRosePergola(f, ROSE_PERGOLA_POS),
+    buildDovecote(f, DOVECOTE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -8915,6 +9658,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const nePasture = buildNortheastPasture(f);
   const wheatField = buildSouthwestWheatField(f);
   const nwWoodland = buildNorthwestWoodland(f);
+  const seVineyard = buildSoutheastVineyard(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -8947,13 +9691,14 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildRainBarrels(f),
     buildPorchWisteria(f),
     buildEaveCorbels(f),
+    buildRoofCupola(f, CUPOLA_POS),
   ]);
   const root: SceneNode = {
     id: "dh-root",
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, orchard, pondGarden, lakefront, heath, nePasture, wheatField, nwWoodland, house],
+    children: [garden, meadow, orchard, pondGarden, lakefront, heath, nePasture, wheatField, nwWoodland, seVineyard, house],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,
