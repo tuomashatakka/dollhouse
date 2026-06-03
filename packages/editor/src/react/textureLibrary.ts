@@ -1408,4 +1408,157 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Fourteenth-pass additions ────────────────────────────────────────
+  // The fourteenth enhancement pass introduces a single new procedural
+  // texture pair: a Mediterranean olive-grove ground — sun-bleached khaki
+  // earth strewn with rosemary tufts, scattered olive pits and pale dry
+  // pebbles — paired with a companion depth (bump) map so the pits and
+  // pebbles read as raised relief at glancing sun. Used as the ground
+  // surface on the new southeast olive grove plane.
+
+  // Olive-grove ground — warm khaki earth with rosemary-green tufts,
+  // dark olive-pit specks and pale flat pebbles. Authored on a
+  // power-of-two canvas so the mipmap chain stays clean at the long
+  // tile repeats used across the grove.
+  registry["olive-grove"] = makeCanvasTexture({
+    seed: 0x0117e91,
+    draw: (ctx, rng, size) => {
+      // Warm earth base gradient — slightly lighter top-left (sun-side),
+      // dustier toward the bottom-right.
+      const bg = ctx.createLinearGradient(0, 0, size, size);
+      bg.addColorStop(0, "#c7ac72");
+      bg.addColorStop(0.5, "#a48b54");
+      bg.addColorStop(1, "#7c6638");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Pale sun-bleached patches — soft cream blooms scattered across.
+      for (let i = 0; i < 18; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 14 + rng() * 22;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, r);
+        blob.addColorStop(0, `hsla(40, 38%, ${70 + rng() * 10}%, 0.35)`);
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Dusty rosemary tufts — short irregular green clumps in two shades.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const dark = rng() < 0.45;
+        ctx.fillStyle = dark
+          ? `hsla(80, 28%, ${24 + rng() * 14}%, 0.7)`
+          : `hsla(78, 32%, ${42 + rng() * 12}%, 0.7)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 1.6 + rng() * 1.4, 0.9 + rng() * 0.7, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+        // A few short stem flicks above the tuft.
+        ctx.strokeStyle = `hsla(78, 30%, ${28 + rng() * 14}%, 0.55)`;
+        ctx.lineWidth = 0.6;
+        for (let s = 0; s < 3; s++) {
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + (rng() - 0.5) * 2.5, y - 1.4 - rng() * 1.6);
+          ctx.stroke();
+        }
+      }
+      // Olive pits — small dark almond-shaped specks.
+      for (let i = 0; i < 200; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${20 + rng() * 14}, 30%, ${10 + rng() * 8}%, 0.85)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 1.5 + rng() * 0.8, 0.9 + rng() * 0.4, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+        // A tiny glint at one tip.
+        ctx.fillStyle = "rgba(255,240,200,0.35)";
+        ctx.fillRect(x - 0.5, y - 0.6, 1, 0.6);
+      }
+      // Pale dry pebbles — flat round dots in cream/grey tones.
+      for (let i = 0; i < 130; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 1.4 + rng() * 1.8;
+        ctx.fillStyle = `hsla(${36 + rng() * 14}, 12%, ${64 + rng() * 16}%, 0.9)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+        // Soft shadow under each pebble for a small relief read.
+        ctx.fillStyle = "rgba(0,0,0,0.22)";
+        ctx.beginPath();
+        ctx.arc(x + 0.7, y + 0.9, r * 0.95, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Fine micro-noise wash so deeper mipmap levels keep tonal life.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0028);
+    },
+  });
+  // Olive-grove depth map — pebbles raised as small bumps, rosemary tufts
+  // sit slightly above the soil, and the sun-bleached patches recess
+  // gently so the relief tracks the warmth of the colour map.
+  registry["olive-grove-bump"] = makeCanvasTexture({
+    seed: 0x0117e91 + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#666666";
+      ctx.fillRect(0, 0, size, size);
+      // Sun-bleached patches recess (soft dark blobs).
+      for (let i = 0; i < 18; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 14 + rng() * 22;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, r);
+        blob.addColorStop(0, "rgba(40,40,40,0.55)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Rosemary tufts — soft raised blobs.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, 3);
+        blob.addColorStop(0, "rgba(210,210,210,0.6)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, 2 + rng() * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Pale pebbles — small bright rounded bumps with a soft falloff.
+      for (let i = 0; i < 130; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 2.4 + rng() * 1.4;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, r);
+        blob.addColorStop(0, "rgba(245,245,245,0.92)");
+        blob.addColorStop(0.6, "rgba(150,150,150,0.4)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Olive pit specks — tiny dark recesses.
+      for (let i = 0; i < 200; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = "rgba(20,20,20,0.7)";
+        ctx.beginPath();
+        ctx.ellipse(x, y, 1.4 + rng() * 0.7, 0.85 + rng() * 0.35, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the dry soil never looks smooth.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

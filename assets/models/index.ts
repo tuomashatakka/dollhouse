@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirteen enhancement passes.
+// house and its courtyard, layered over fourteen enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -163,6 +163,33 @@
 //   wine barrels with iron hoops and a leaning cooper's mallet
 //   sits beside the shed, and a pair of slim cypress trees
 //   frames the approach from the orchard side.
+//   Pass 14 — courtyard: a wrought-iron Victorian two-seater
+//   garden glider with a striped canvas canopy on the west side
+//   lawn just outside the fence (curved iron cradle, slatted bench
+//   on chains, cushioned seats and a pitched scalloped canopy), and
+//   an ornamental brass armillary sphere on a fluted stone pedestal
+//   on the east side lawn just outside the fence — three intersecting
+//   metal rings (equator, prime meridian, tilted meridian) around a
+//   small dark globe with an offset gnomon arrow. The rings are
+//   built from instanced arc segments and reuse the existing
+//   `copper-patina` colour + bump pair so the verdigris reads as
+//   crusted relief on the metal arcs. House: a pair of round oculus
+//   windows centred in the front and back gables, each ringed by a
+//   copper-patina trim disc (reusing the existing `copper-patina`
+//   colour + bump pair) with a cross of slim trim muntins dividing
+//   the tinted glass pane. Scene: a southeast olive grove plane
+//   mirroring the side orchard's east edge — a sun-bleached khaki
+//   ground surfaced with the new `olive-grove` colour map paired
+//   with a pebble depth map (registered alongside the other
+//   procedural textures) so the scattered olive pits and pale
+//   pebbles read as raised relief at glancing sun, an orchard-grass
+//   apron along the west join, a dry-stone retaining wall along the
+//   orchard edge with a doll-width gap, a grove of six silver-leaved
+//   olive trees with gnarled twin trunks and a sparse scatter of
+//   dark and ripe olive fruits, a south-corner cluster of three
+//   clay amphora urns leaning together on a slate base, and a focal
+//   old olive-press millstone wheel ringed with decorative pebbles
+//   in the middle of the grove.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
