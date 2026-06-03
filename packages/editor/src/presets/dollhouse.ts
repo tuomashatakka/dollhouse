@@ -315,6 +315,47 @@ const WINE_BARRELS_POS: [number, number, number] = [34.4, 0, 30];
  */
 const CUPOLA_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H, 0];
 
+/**
+ * Fourteenth-pass courtyard props — a wrought-iron Victorian two-seater
+ * garden glider with a striped canvas canopy on the west lawn just outside
+ * the fence (between the lawn and the west pond garden), and an ornamental
+ * brass armillary sphere on a fluted stone pedestal on the east lawn just
+ * outside the fence (between the lawn and the side orchard's stone wall).
+ * The armillary's intersecting rings reuse the `copper-patina` colour +
+ * bump pair so the verdigris reads as crusted relief on the metal arcs.
+ */
+const GLIDER_POS: [number, number, number] = [-13.5, 0, 5.0];
+const ARMILLARY_POS: [number, number, number] = [14.0, 0, 1.5];
+
+/**
+ * Fourteenth-pass house detail — a pair of round oculus windows centred in
+ * the front and back gables, each ringed by a copper-patina trim band that
+ * reuses the existing `copper-patina` colour + bump pair so the metal frame
+ * reads as crusted relief at the top of each gable.
+ */
+const FRONT_OCULUS_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H / 2, FRONT_Z + 0.06];
+const BACK_OCULUS_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H / 2, BACK_Z - 0.06];
+
+/**
+ * Fourteenth-pass scene extension — a southeast olive grove plane mirroring
+ * the side orchard's east edge. The plane overlaps the orchard by ~1 unit
+ * along its west join so the ground layer has no holes. It carries a sun-
+ * bleached khaki ground (with the new `olive-grove` colour map paired with
+ * a pebble depth map so the scattered olive pits and pale pebbles read as
+ * raised relief at glancing sun), a grove of six silver-leaved olive trees
+ * with gnarled twin trunks, a rustic dry-stone retaining wall along the
+ * orchard join with a doll-width gap, a cluster of three clay amphora urns
+ * by the south corner and an old olive-press millstone wheel on a flat
+ * slate base in the middle of the grove.
+ */
+const OLIVE_GROVE_POS: [number, number, number] = [50, -0.014, 5];
+const OLIVE_GROVE_W = 18;
+const OLIVE_GROVE_D = 28;
+/** The dry-stone wall sits just inside the olive grove's west edge, marking the join. */
+const OLIVE_GROVE_WALL_X = 42;
+const AMPHORA_CLUSTER_POS: [number, number, number] = [55, 0, 16];
+const OLIVE_MILLSTONE_POS: [number, number, number] = [51, 0, 5];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -624,6 +665,41 @@ const C = {
   cypressFoliage: "#3a5a3a",
   cypressFoliageDark: "#1f3a24",
   cypressTrunk: "#5e4530",
+  // Fourteenth enhancement pass — a wrought-iron Victorian glider with a
+  // striped canvas canopy, a brass armillary sphere on a fluted stone
+  // pedestal (rings reuse the copper-patina pair), gable oculus windows
+  // with copper-patina trim, and a southeast olive grove scene extension
+  // (silver-leaved olives with gnarled twin trunks, a dry-stone wall, a
+  // cluster of clay amphora urns and an old olive-press millstone). The
+  // new `olive-grove` colour map is paired with a pebble depth map so the
+  // pits and pebbles read as relief at glancing sun.
+  gliderIron: "#1f1c1a",
+  gliderIronHi: "#3a3636",
+  gliderCanopyCream: "#f3ead4",
+  gliderCanopyStripe: "#a83e30",
+  gliderCushion: "#6d8aa6",
+  gliderCushionTrim: "#3a4c63",
+  armillaryStone: "#c0b59c",
+  armillaryStoneDark: "#7a6f5a",
+  armillaryGlobe: "#3a496a",
+  oculusGlass: "#bcd9e8",
+  oliveGround: "#a48b54",
+  oliveGroundDark: "#6e5836",
+  oliveTuft: "#7a8a4a",
+  oliveTrunk: "#5e4530",
+  oliveTrunkShade: "#3a2e1f",
+  oliveFoliage: "#94a584",
+  oliveFoliageSilver: "#c7d2ba",
+  oliveFruitDark: "#3a4530",
+  oliveFruitRipe: "#7c4a26",
+  oliveWallStone: "#a89776",
+  oliveWallStoneDark: "#6e5e44",
+  amphoraClay: "#a85a2e",
+  amphoraClayDark: "#7a3a1c",
+  amphoraRim: "#5e2a14",
+  millstoneStone: "#8a8278",
+  millstoneCenter: "#3a3631",
+  millstoneBase: "#5e564c",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -9392,6 +9468,662 @@ function buildCypressPair(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────── fourteenth-pass courtyard props ─────────────── */
+
+/**
+ * A wrought-iron Victorian two-seater garden glider — a curved cradle frame
+ * holds a slatted iron bench on chains, dressed with a pair of cushions and
+ * crowned by a striped canvas canopy. Sized to read as a romantic side-lawn
+ * piece rather than a structural arbour.
+ */
+function buildVictorianGlider(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const iron = std(C.gliderIron, 0.5, { metalness: 0.45, flatShading: false });
+  const ironHi = std(C.gliderIronHi, 0.55, { metalness: 0.4 });
+  const canopy = std(C.gliderCanopyCream, 0.85, { texture: "awning-stripe", textureScale: [1.4, 1] });
+  const cushion = std(C.gliderCushion, 0.78, { flatShading: false });
+  const cushionTrim = std(C.gliderCushionTrim, 0.85, { flatShading: true });
+  const w = 1.6;
+  const d = 0.7;
+  const seatY = 0.46;
+  const parts: SceneNode[] = [];
+  // A-frame cradle stands at each end — two angled iron uprights meeting a
+  // crossbar at the top, with a flared foot at the bottom.
+  for (const sx of [-1, 1] as const) {
+    parts.push(
+      // Outer angled upright (top leans toward the centre, foot flares out).
+      f.mesh("Glider Upright Outer", cylinder(0.025, 0.025, 1.9, 6), iron, {
+        position: [sx * (w / 2 + 0.05), 0.95, 0],
+        rotation: [0, 0, -sx * 0.16],
+      }, { castShadow: true }),
+      // Inner angled upright — the cradle's diagonal brace.
+      f.mesh("Glider Upright Inner", cylinder(0.022, 0.022, 1.75, 6), iron, {
+        position: [sx * (w / 2 - 0.05), 0.88, 0],
+        rotation: [0, 0, sx * 0.18],
+      }, { castShadow: true }),
+      // Flared foot — short horizontal box across both upright bottoms.
+      f.mesh("Glider Foot", box(0.36, 0.05, 0.16), ironHi, {
+        position: [sx * (w / 2 - 0.02), 0.025, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Decorative scroll at the foot's outside corner.
+      f.mesh("Foot Scroll", sphere(0.045, 8, 6), ironHi, {
+        position: [sx * (w / 2 + 0.16), 0.06, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Top crossbar joining the two A-frames — runs along the length.
+  parts.push(
+    f.mesh("Glider Top Bar", cylinder(0.03, 0.03, w + 0.2, 6), iron, {
+      position: [0, 1.9, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+  );
+  // Chains hanging from the crossbar that suspend the bench (front + back).
+  for (const sx of [-1, 1] as const) {
+    for (const sz of [-1, 1] as const) {
+      parts.push(
+        f.mesh("Glider Chain", cylinder(0.012, 0.012, 1.4, 4), ironHi, {
+          position: [sx * (w / 2 - 0.18), 1.2, sz * (d / 2 - 0.04)],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Bench seat — a slim plank slung between the chains.
+  parts.push(
+    f.mesh("Bench Seat", box(w - 0.2, 0.05, d), iron, {
+      position: [0, seatY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Bench back — a leaning slatted backrest.
+    f.mesh("Bench Back", box(w - 0.2, 0.42, 0.04), iron, {
+      position: [0, seatY + 0.25, -d / 2 + 0.04],
+      rotation: [-0.18, 0, 0],
+    }, { castShadow: true }),
+    // Three decorative back slats — vertical thin rods.
+    f.mesh("Back Slat L", box(0.018, 0.36, 0.018), ironHi, {
+      position: [-(w - 0.4) / 2, seatY + 0.22, -d / 2 + 0.04],
+    }, { castShadow: true }),
+    f.mesh("Back Slat C", box(0.018, 0.36, 0.018), ironHi, {
+      position: [0, seatY + 0.22, -d / 2 + 0.04],
+    }, { castShadow: true }),
+    f.mesh("Back Slat R", box(0.018, 0.36, 0.018), ironHi, {
+      position: [(w - 0.4) / 2, seatY + 0.22, -d / 2 + 0.04],
+    }, { castShadow: true }),
+  );
+  // Two cushions on the seat and one bolster against the back.
+  parts.push(
+    f.mesh("Seat Cushion L", box((w - 0.32) / 2, 0.08, d - 0.1), cushion, {
+      position: [-(w / 2 - 0.22) / 1, seatY + 0.07, 0.04],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Seat Cushion R", box((w - 0.32) / 2, 0.08, d - 0.1), cushion, {
+      position: [(w / 2 - 0.22) / 1, seatY + 0.07, 0.04],
+    }, { castShadow: true, receiveShadow: true }),
+    // Piping trim around each cushion — thin dark strip.
+    f.mesh("Cushion Piping L", box((w - 0.32) / 2 + 0.02, 0.02, d - 0.06), cushionTrim, {
+      position: [-(w / 2 - 0.22), seatY + 0.03, 0.04],
+    }, { castShadow: false }),
+    f.mesh("Cushion Piping R", box((w - 0.32) / 2 + 0.02, 0.02, d - 0.06), cushionTrim, {
+      position: [(w / 2 - 0.22), seatY + 0.03, 0.04],
+    }, { castShadow: false }),
+    // Back bolster — long sausage cushion against the back slats.
+    f.mesh("Back Bolster", cylinder(0.07, 0.07, w - 0.36, 8), cushion, {
+      position: [0, seatY + 0.18, -d / 2 + 0.12],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+  );
+  // Striped canvas canopy — a pitched roof crowning the top crossbar.
+  const canopyW = w + 0.45;
+  const canopyD = d + 0.45;
+  parts.push(
+    f.mesh("Canopy L", box(canopyW, 0.04, canopyD * 0.55), canopy, {
+      position: [0, 2.06, -canopyD * 0.22],
+      rotation: [-0.3, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Canopy R", box(canopyW, 0.04, canopyD * 0.55), canopy, {
+      position: [0, 2.06, canopyD * 0.22],
+      rotation: [0.3, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Canopy front scallop — three small drape bumps along the front edge.
+    f.mesh("Canopy Scallop L", sphere(0.06, 8, 6), canopy, {
+      position: [-canopyW / 3, 1.95, canopyD * 0.45],
+      scale: [1.2, 0.6, 0.6],
+    }, { castShadow: false }),
+    f.mesh("Canopy Scallop C", sphere(0.06, 8, 6), canopy, {
+      position: [0, 1.95, canopyD * 0.45],
+      scale: [1.2, 0.6, 0.6],
+    }, { castShadow: false }),
+    f.mesh("Canopy Scallop R", sphere(0.06, 8, 6), canopy, {
+      position: [canopyW / 3, 1.95, canopyD * 0.45],
+      scale: [1.2, 0.6, 0.6],
+    }, { castShadow: false }),
+    // Ridge cap — a slim iron rod along the canopy peak.
+    f.mesh("Canopy Ridge", cylinder(0.012, 0.012, canopyW, 4), iron, {
+      position: [0, 2.1, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  return f.group("Victorian Glider", parts, { position: pos, rotation: [0, Math.PI / 7, 0] });
+}
+
+/**
+ * An ornamental brass armillary sphere on a fluted stone pedestal — three
+ * intersecting copper-patina rings (equator + two meridians) around a small
+ * dark sphere, with an offset gnomon arrow. The rings carry the existing
+ * `copper-patina` colour map paired with its depth map so the verdigris
+ * mottling reads as crusted relief on the metal arcs.
+ */
+function buildArmillarySphere(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.armillaryStone, 0.85, { texture: "cobblestone", textureScale: [1, 1], flatShading: false });
+  const stoneShade = std(C.armillaryStoneDark, 0.9, { flatShading: true });
+  const ring = std(C.copperPatina, 0.55, {
+    texture: "copper-patina",
+    textureScale: [3, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.04,
+    metalness: 0.35,
+  });
+  const globe = std(C.armillaryGlobe, 0.5, { metalness: 0.45 });
+  const parts: SceneNode[] = [];
+  // Square footing + fluted column + capital — classical pedestal stack.
+  parts.push(
+    f.mesh("Pedestal Footing", box(0.7, 0.12, 0.7), stoneShade, {
+      position: [0, 0.06, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pedestal Base", box(0.56, 0.08, 0.56), stone, {
+      position: [0, 0.16, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pedestal Shaft", cylinder(0.18, 0.21, 0.95, 10), stone, {
+      position: [0, 0.68, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Vertical flutes — six slim recess columns evenly spaced around the shaft.
+  );
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh("Flute", cylinder(0.018, 0.022, 0.85, 5), stoneShade, {
+        position: [Math.sin(a) * 0.19, 0.66, Math.cos(a) * 0.19],
+      }, { castShadow: false }),
+    );
+  }
+  parts.push(
+    f.mesh("Pedestal Capital", box(0.56, 0.08, 0.56), stone, {
+      position: [0, 1.2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Capital Cap", box(0.4, 0.04, 0.4), stoneShade, {
+      position: [0, 1.26, 0],
+    }, { castShadow: true }),
+  );
+  // Three intersecting metal rings — equator (XZ plane), prime meridian
+  // (XY plane) and tilted secondary meridian (rotated about the polar axis).
+  // Each ring is built as a circle of short instanced segment boxes so the
+  // arc reads as continuous from a normal viewing distance.
+  const ringY = 1.7;
+  const ringR = 0.36;
+  const segCount = 24;
+  const seg = (Math.PI * 2 * ringR) / segCount;
+  function ringSegments(rotX: number, rotY: number): Transform[] {
+    const out: Transform[] = [];
+    const cx = Math.cos(rotX);
+    const sx = Math.sin(rotX);
+    const cy = Math.cos(rotY);
+    const sy = Math.sin(rotY);
+    for (let i = 0; i < segCount; i++) {
+      const a = (i / segCount) * Math.PI * 2;
+      // Local circle point lies in XY before rotation.
+      const lx = Math.cos(a) * ringR;
+      const ly = Math.sin(a) * ringR;
+      const lz = 0;
+      // Apply X rotation (about local X), then Y rotation.
+      const y1 = ly * cx - lz * sx;
+      const z1 = ly * sx + lz * cx;
+      const x1 = lx;
+      const x2 = x1 * cy + z1 * sy;
+      const z2 = -x1 * sy + z1 * cy;
+      out.push({
+        position: [x2, ringY + y1, z2],
+        // Each segment box's local long axis (X) is rotated to align with
+        // the tangent of the circle at angle a, with the ring's own
+        // orientation (rotX about X, rotY about Y) layered on top.
+        rotation: [rotX, rotY, a + Math.PI / 2],
+        scale: [seg, 0.038, 0.038],
+      });
+    }
+    return out;
+  }
+  parts.push(
+    // Equator — instanced ring lying in XZ.
+    f.instanced("Equator Ring", box(1, 1, 1), ring, ringSegments(Math.PI / 2, 0), {
+      castShadow: true,
+    }),
+    // Prime meridian — vertical ring in XY.
+    f.instanced("Prime Meridian", box(1, 1, 1), ring, ringSegments(0, 0), {
+      castShadow: true,
+    }),
+    // Tilted secondary meridian — vertical ring yawed 45° about Y.
+    f.instanced("Tilted Meridian", box(1, 1, 1), ring, ringSegments(0, Math.PI / 4), {
+      castShadow: true,
+    }),
+    // Polar axis rod — runs through the equator's centre.
+    f.mesh("Polar Axis", cylinder(0.014, 0.014, ringR * 2.5, 6), ring, {
+      position: [0, ringY, 0],
+      rotation: [0, 0, -0.4],
+    }, { castShadow: true }),
+    // Central globe.
+    f.mesh("Central Globe", sphere(0.075, 12, 8), globe, {
+      position: [0, ringY, 0],
+    }, { castShadow: true }),
+    // Gnomon arrow — a slim rod with a tiny pyramid tip pointing outward.
+    f.mesh("Gnomon Rod", cylinder(0.008, 0.008, ringR + 0.18, 4), ring, {
+      position: [Math.cos(0.4) * (ringR / 2 + 0.06), ringY + Math.sin(0.4) * (ringR / 2 + 0.06), 0],
+      rotation: [0, 0, Math.PI / 2 - 0.4],
+    }, { castShadow: false }),
+    f.mesh("Gnomon Tip", cone(0.022, 0.05, 5), ring, {
+      position: [Math.cos(0.4) * (ringR + 0.22), ringY + Math.sin(0.4) * (ringR + 0.22), 0],
+      rotation: [0, 0, -(Math.PI / 2 - 0.4)],
+    }, { castShadow: false }),
+  );
+  return f.group("Armillary Sphere", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
+}
+
+/* ─────────────── fourteenth-pass house detail ─────────────── */
+
+/**
+ * A round oculus window centred in a gable — a wide copper-patina trim
+ * band ringing a tinted glass disc, with two thin radial muntins forming
+ * a cross. Used twice (once for the front gable, once for the back) so
+ * the house ridge reads as a properly trimmed Victorian gable.
+ */
+function buildGableOculus(
+  f: NodeFactory,
+  pos: [number, number, number],
+  yaw: number,
+): SceneNode {
+  const trim = std(C.copperPatina, 0.55, {
+    texture: "copper-patina",
+    textureScale: [2, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.04,
+    metalness: 0.35,
+  });
+  const glass: MaterialDef = {
+    color: C.oculusGlass,
+    roughness: 0.18,
+    metalness: 0.35,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const trimR = 0.36;
+  const glassR = 0.28;
+  const parts: SceneNode[] = [
+    // Copper-patina trim disc — a thin disc behind the glass, sized
+    // wider than the glass so its rim shows as a ring around the pane.
+    f.mesh("Oculus Trim", cylinder(trimR, trimR, 0.05, 28), trim, {
+      position: [0, 0, -0.03],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Tinted glass disc, slightly proud of the trim so the rim is visible.
+    f.mesh("Oculus Glass", cylinder(glassR, glassR, 0.04, 28), glass, {
+      position: [0, 0, 0.005],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Cross muntins — two slim trim bars forming a + over the glass.
+    f.mesh("Muntin H", box(glassR * 2, 0.025, 0.04), trim, {
+      position: [0, 0, 0.035],
+    }, { castShadow: false }),
+    f.mesh("Muntin V", box(0.025, glassR * 2, 0.04), trim, {
+      position: [0, 0, 0.035],
+    }, { castShadow: false }),
+    // Central trim boss covering the cross intersection.
+    f.mesh("Muntin Boss", sphere(0.05, 10, 7), trim, {
+      position: [0, 0, 0.06],
+    }, { castShadow: false }),
+  ];
+  return f.group("Gable Oculus", parts, { position: pos, rotation: [0, yaw, 0] });
+}
+
+/** Pair of gable oculus windows — one centred in the front gable, one in the back. */
+function buildGableOculi(f: NodeFactory): SceneNode {
+  return f.group("Gable Oculi", [
+    buildGableOculus(f, FRONT_OCULUS_POS, 0),
+    buildGableOculus(f, BACK_OCULUS_POS, Math.PI),
+  ]);
+}
+
+/* ─────────────── fourteenth-pass scene extension ─────────────── */
+
+/**
+ * Southeast olive grove ground plane and props — mirrors the side orchard's
+ * east edge with a Mediterranean character. Carries an olive-grove ground
+ * surface (with companion depth map), a dry-stone retaining wall along the
+ * orchard join, a grove of silver-leaved olive trees, a south-corner cluster
+ * of clay amphora urns and a focal stone millstone wheel.
+ */
+function buildSoutheastOliveGrove(f: NodeFactory): SceneNode {
+  return f.group("Southeast Olive Grove", [
+    // Olive grove ground plane — sun-bleached khaki earth with the new
+    // `olive-grove` colour map paired with a pebble depth map so the
+    // scattered olive pits and pale pebbles read as relief at glancing sun.
+    f.mesh(
+      "Olive Grove Ground",
+      plane(OLIVE_GROVE_W, OLIVE_GROVE_D),
+      std(C.oliveGround, 0.95, {
+        texture: "olive-grove",
+        textureScale: [4, 6],
+        bumpMap: "olive-grove-bump",
+        bumpScale: 0.04,
+      }),
+      { position: OLIVE_GROVE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the side orchard's east edge with a strip of
+    // orchard-grass tone so the join feathers into the orchard's pasture.
+    f.mesh(
+      "Olive Grove West Apron",
+      plane(2.4, OLIVE_GROVE_D),
+      std(C.orchardGrass, 0.95, { texture: "grass", textureScale: [1, 12] }),
+      {
+        position: [
+          OLIVE_GROVE_POS[0] - OLIVE_GROVE_W / 2 + 1.2,
+          -0.01,
+          OLIVE_GROVE_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildOliveGroveWall(f),
+    buildOliveTrees(f),
+    buildAmphoraCluster(f, AMPHORA_CLUSTER_POS),
+    buildOliveMillstone(f, OLIVE_MILLSTONE_POS),
+  ]);
+}
+
+/**
+ * Dry-stone retaining wall along the olive grove's west edge — two courses
+ * of irregular field stones capped by a wider course of flat capstones. A
+ * 1.4-unit gap in the middle lets a doll walk between the orchard and the
+ * olive grove.
+ */
+function buildOliveGroveWall(f: NodeFactory): SceneNode {
+  const stone = std(C.oliveWallStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.oliveWallStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const capstone = std(C.oliveWallStoneDark, 0.92, { flatShading: true });
+  const rng = mulberry32(0x017ec01e);
+  const zMin = OLIVE_GROVE_POS[2] - OLIVE_GROVE_D / 2 + 1;
+  const zMax = OLIVE_GROVE_POS[2] + OLIVE_GROVE_D / 2 - 1;
+  const gapHalf = 0.7;
+  const gapZ = OLIVE_GROVE_POS[2];
+  const stones: Transform[] = [];
+  const stonesDark: Transform[] = [];
+  const courseHeights = [0.18, 0.45];
+  for (const y of courseHeights) {
+    let z = zMin;
+    while (z < zMax) {
+      const w = 0.42 + rng() * 0.36;
+      if (Math.abs(z - gapZ) < gapHalf || Math.abs(z + w - gapZ) < gapHalf) {
+        z += w;
+        continue;
+      }
+      const inst: Transform = {
+        position: [OLIVE_GROVE_WALL_X + (rng() - 0.5) * 0.1, y, z + w / 2],
+        rotation: [0, rng() * 0.3 - 0.15, 0],
+        scale: [w, 0.26, 0.4 + rng() * 0.16],
+      };
+      (rng() < 0.38 ? stonesDark : stones).push(inst);
+      z += w * 0.97;
+    }
+  }
+  const caps: Transform[] = [];
+  let cz = zMin;
+  while (cz < zMax) {
+    const w = 0.55 + rng() * 0.3;
+    if (Math.abs(cz - gapZ) < gapHalf || Math.abs(cz + w - gapZ) < gapHalf) {
+      cz += w;
+      continue;
+    }
+    caps.push({
+      position: [OLIVE_GROVE_WALL_X, 0.62, cz + w / 2],
+      rotation: [0, rng() * 0.18 - 0.09, 0],
+      scale: [w, 0.1, 0.58],
+    });
+    cz += w * 0.99;
+  }
+  return f.group("Olive Grove Wall", [
+    f.instanced("Wall Stones", box(1, 1, 1), stone, stones, {
+      castShadow: true, receiveShadow: true,
+    }),
+    f.instanced("Wall Stones Dark", box(1, 1, 1), stoneDark, stonesDark, {
+      castShadow: true, receiveShadow: true,
+    }),
+    f.instanced("Wall Capstones", box(1, 1, 1), capstone, caps, {
+      castShadow: true, receiveShadow: true,
+    }),
+  ]);
+}
+
+/**
+ * A grove of six silver-leaved olive trees with gnarled twin trunks. Each
+ * tree pairs two leaning trunks meeting at a low canopy, with three overlapping
+ * silvered-green foliage spheres and a sparse scatter of dark olive fruits.
+ * Layouts are deterministic and route around the wall, the amphora cluster
+ * and the central millstone.
+ */
+function buildOliveTrees(f: NodeFactory): SceneNode {
+  const trunk = std(C.oliveTrunk, 0.95, { texture: "bark", textureScale: [1, 2], flatShading: true });
+  const trunkShade = std(C.oliveTrunkShade, 0.95, { flatShading: true });
+  const foliage = std(C.oliveFoliage, 0.85, { flatShading: true });
+  const foliageSilver = std(C.oliveFoliageSilver, 0.8, { flatShading: true });
+  const fruitDark = std(C.oliveFruitDark, 0.6, { flatShading: false });
+  const fruitRipe = std(C.oliveFruitRipe, 0.6, { flatShading: false });
+  // Deterministic positions inside the grove, all comfortably east of the wall.
+  const layouts: { x: number; z: number; s: number; r: number }[] = [
+    { x: 45, z: -6, s: 1.0, r: 0.3 },
+    { x: 47, z: 2, s: 1.1, r: -0.2 },
+    { x: 46, z: 11, s: 0.95, r: 0.8 },
+    { x: 53, z: -3, s: 1.05, r: 1.4 },
+    { x: 55, z: 7, s: 1.15, r: -0.5 },
+    { x: 57, z: -8, s: 0.9, r: 2.1 },
+  ];
+  const trees: SceneNode[] = [];
+  for (let i = 0; i < layouts.length; i++) {
+    const lay = layouts[i]!;
+    const rng = mulberry32(0x017e0 + i * 23);
+    const parts: SceneNode[] = [
+      // Lower base / root ball — squat darker mound at ground.
+      f.mesh("Root Ball", sphere(0.32, 10, 7), trunkShade, {
+        position: [0, 0.12, 0],
+        scale: [1.2, 0.4, 1.2],
+      }, { castShadow: true, receiveShadow: true }),
+      // Twin trunks — two cylinders leaning slightly outward.
+      f.mesh("Trunk L", cylinder(0.1, 0.14, 0.95, 7), trunk, {
+        position: [-0.1, 0.55, 0],
+        rotation: [0, 0, 0.16],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Trunk R", cylinder(0.09, 0.13, 1.0, 7), trunk, {
+        position: [0.11, 0.55, 0.05],
+        rotation: [0.05, 0, -0.18],
+      }, { castShadow: true, receiveShadow: true }),
+      // A gnarled knot where the trunks meet — a small darker bulge.
+      f.mesh("Trunk Knot", sphere(0.18, 10, 7), trunkShade, {
+        position: [0, 1.02, 0],
+        scale: [1.1, 0.7, 1.1],
+      }, { castShadow: true }),
+      // Three overlapping silver-green foliage canopies — softer than the
+      // apple trees, flatter and broader for a Mediterranean silhouette.
+      f.mesh("Canopy A", sphere(0.78, 12, 9), foliageSilver, {
+        position: [0, 1.6, 0],
+        scale: [1.2, 0.7, 1.2],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Canopy B", sphere(0.62, 12, 9), foliage, {
+        position: [0.32, 1.85, -0.18],
+        scale: [1.1, 0.6, 1.1],
+      }, { castShadow: true }),
+      f.mesh("Canopy C", sphere(0.55, 12, 9), foliageSilver, {
+        position: [-0.34, 1.78, 0.22],
+        scale: [1.05, 0.6, 1.05],
+      }, { castShadow: true }),
+    ];
+    // A small sparse cloud of dark olive fruits inside the canopy.
+    const fruitCount = 14;
+    const fruitInstances: Transform[] = [];
+    const fruitRipeInstances: Transform[] = [];
+    for (let p = 0; p < fruitCount; p++) {
+      const a = rng() * Math.PI * 2;
+      const radius = 0.45 + rng() * 0.35;
+      const fx = Math.cos(a) * radius;
+      const fz = Math.sin(a) * radius * 0.85;
+      const fy = 1.45 + rng() * 0.55;
+      const inst: Transform = {
+        position: [fx, fy, fz],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1],
+      };
+      (rng() < 0.3 ? fruitRipeInstances : fruitInstances).push(inst);
+    }
+    parts.push(
+      f.instanced("Olive Fruits", sphere(0.04, 6, 5), fruitDark, fruitInstances, {
+        castShadow: false,
+      }),
+      f.instanced("Olive Fruits Ripe", sphere(0.04, 6, 5), fruitRipe, fruitRipeInstances, {
+        castShadow: false,
+      }),
+    );
+    trees.push(
+      f.group(`Olive Tree ${i + 1}`, parts, {
+        position: [lay.x, 0, lay.z],
+        rotation: [0, lay.r, 0],
+        scale: [lay.s, lay.s, lay.s],
+      }),
+    );
+  }
+  return f.group("Olive Trees", trees);
+}
+
+/**
+ * A cluster of three clay amphora urns leaning against each other on a flat
+ * slate base. Each amphora has a swelled body, a narrow neck and two small
+ * handles. Used as a south-corner focal cluster in the olive grove.
+ */
+function buildAmphoraCluster(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const clay = std(C.amphoraClay, 0.85, { flatShading: false });
+  const clayDark = std(C.amphoraClayDark, 0.9, { flatShading: true });
+  const rim = std(C.amphoraRim, 0.9, { flatShading: true });
+  const slate = std(C.slatePlate, 0.95, { texture: "cobblestone", flatShading: true });
+  function amphora(
+    name: string,
+    x: number,
+    z: number,
+    tilt: number,
+    rot: number,
+    scale: number,
+  ): SceneNode {
+    const h = 0.95 * scale;
+    return f.group(name, [
+      // Pointed foot — a small cone tucked under the body.
+      f.mesh("Amphora Foot", cone(0.06 * scale, 0.12 * scale, 6), clayDark, {
+        position: [0, 0.06 * scale, 0],
+        rotation: [Math.PI, 0, 0],
+      }, { castShadow: true }),
+      // Swelled body — a stretched sphere for the amphora belly.
+      f.mesh("Amphora Body", sphere(0.22 * scale, 12, 8), clay, {
+        position: [0, 0.38 * scale, 0],
+        scale: [1.0, 1.4, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Narrow neck — a short cylinder above the body.
+      f.mesh("Amphora Neck", cylinder(0.1 * scale, 0.13 * scale, 0.22 * scale, 10), clay, {
+        position: [0, h - 0.18 * scale, 0],
+      }, { castShadow: true }),
+      // Flared rim.
+      f.mesh("Amphora Rim", cylinder(0.13 * scale, 0.11 * scale, 0.05 * scale, 10), rim, {
+        position: [0, h - 0.04 * scale, 0],
+      }, { castShadow: true }),
+      // Two small handles arcing from neck to shoulder — each handle is a
+      // short curved span approximated by three slim cylinders forming an
+      // arch from the shoulder up to the neck.
+      ...(["L", "R"] as const).flatMap((side) => {
+        const sx = side === "L" ? -1 : 1;
+        const topY = h - 0.14 * scale;
+        const midY = h - 0.06 * scale;
+        const baseY = h - 0.26 * scale;
+        const handleX = sx * 0.18 * scale;
+        const innerX = sx * 0.13 * scale;
+        return [
+          f.mesh(`Handle ${side} Lower`, cylinder(0.014 * scale, 0.014 * scale, 0.14 * scale, 5), clay, {
+            position: [(handleX + innerX) / 2, (baseY + midY) / 2, 0],
+            rotation: [0, 0, sx * 0.7],
+          }, { castShadow: true }),
+          f.mesh(`Handle ${side} Top`, cylinder(0.014 * scale, 0.014 * scale, 0.07 * scale, 5), clay, {
+            position: [(handleX + innerX) / 2 + sx * 0.005 * scale, (midY + topY) / 2, 0],
+            rotation: [0, 0, sx * -0.5],
+          }, { castShadow: true }),
+        ];
+      }),
+      // A faint dark drip down the body — paints a small weathering streak.
+      f.mesh("Amphora Drip", box(0.018 * scale, 0.4 * scale, 0.018 * scale), clayDark, {
+        position: [0.18 * scale, 0.45 * scale, 0],
+      }, { castShadow: false }),
+    ], { position: [x, 0, z], rotation: [tilt, rot, 0] });
+  }
+  return f.group("Amphora Cluster", [
+    // Slate base plate that the amphorae rest on.
+    f.mesh("Amphora Base", cylinder(0.55, 0.58, 0.08, 8), slate, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    // Three amphorae arranged in a small triangle, one leaning against another.
+    amphora("Amphora A", -0.18, 0.05, 0, 0.2, 1.0),
+    amphora("Amphora B", 0.18, -0.04, -0.18, 1.1, 0.92),
+    amphora("Amphora C", 0.04, 0.22, 0.06, 2.4, 1.05),
+  ], { position: pos });
+}
+
+/**
+ * An old olive-press millstone — a stout stone disc with a darker recess
+ * around its central hub, resting flat on a wider slate base ringed with a
+ * few decorative pebbles. Reads as a Mediterranean garden focal piece.
+ */
+function buildOliveMillstone(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.millstoneStone, 0.95, { texture: "cobblestone", textureScale: [1, 1], flatShading: false });
+  const stoneDark = std(C.millstoneCenter, 0.95, { flatShading: true });
+  const slate = std(C.millstoneBase, 0.95, { texture: "cobblestone", flatShading: true });
+  const pebble = std(C.dryStone, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Wider slate base plate.
+    f.mesh("Millstone Base", cylinder(0.85, 0.9, 0.1, 14), slate, {
+      position: [0, 0.05, 0],
+    }, { receiveShadow: true }),
+    // The millstone disc itself — a stout broad cylinder lying flat.
+    f.mesh("Millstone Disc", cylinder(0.6, 0.62, 0.22, 16), stone, {
+      position: [0, 0.21, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Central recessed hub — a smaller dark disc sitting on top.
+    f.mesh("Millstone Hub", cylinder(0.14, 0.16, 0.06, 10), stoneDark, {
+      position: [0, 0.35, 0],
+    }, { castShadow: true }),
+    // A radial groove worn across the disc — slim dark band.
+    f.mesh("Millstone Groove", box(1.2, 0.02, 0.05), stoneDark, {
+      position: [0, 0.32, 0],
+      rotation: [0, 0.3, 0],
+    }, { castShadow: false }),
+  ];
+  // A ring of small decorative pebbles around the slate base.
+  const pebbleCount = 9;
+  const pebbleInstances: Transform[] = [];
+  const rng = mulberry32(0x017e51c);
+  for (let i = 0; i < pebbleCount; i++) {
+    const a = (i / pebbleCount) * Math.PI * 2 + rng() * 0.15;
+    const r = 0.95 + rng() * 0.12;
+    pebbleInstances.push({
+      position: [Math.cos(a) * r, 0.08, Math.sin(a) * r],
+      rotation: [0, rng() * Math.PI, 0],
+      scale: [0.18 + rng() * 0.08, 0.1, 0.18 + rng() * 0.08],
+    });
+  }
+  parts.push(
+    f.instanced("Millstone Pebbles", sphere(1, 8, 6), pebble, pebbleInstances, {
+      castShadow: true, receiveShadow: true,
+    }),
+  );
+  return f.group("Olive Millstone", parts, { position: pos });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -9545,6 +10277,31 @@ function buildCypressPair(f: NodeFactory): SceneNode {
  *    a slim brick chimney, a stack of four oak wine barrels with
  *    iron hoops and a leaning cooper's mallet, and a pair of slim
  *    cypress trees framing the approach from the orchard side.
+ *  - Fourteenth pass — yard: a wrought-iron Victorian two-seater
+ *    garden glider with a striped canvas canopy on the west side
+ *    lawn just outside the fence, and an ornamental brass armillary
+ *    sphere on a fluted stone pedestal on the east side lawn just
+ *    outside the fence; the armillary's intersecting rings (equator,
+ *    prime meridian, tilted meridian) are built from instanced arc
+ *    segments and reuse the existing `copper-patina` colour + bump
+ *    pair so the verdigris reads as crusted relief on the metal
+ *    arcs. House: a pair of round oculus windows centred in the
+ *    front and back gables, each ringed by a copper-patina trim
+ *    disc that reuses the existing `copper-patina` pair so the
+ *    metal frame reads as crusted relief on the gable face, with a
+ *    cross of slim trim muntins dividing the tinted glass pane.
+ *    Scene: a southeast olive grove plane mirroring the side
+ *    orchard's east edge, with a sun-bleached khaki ground (the
+ *    new `olive-grove` colour map paired with a pebble depth map
+ *    so the scattered olive pits and pale pebbles read as raised
+ *    relief at glancing sun), an orchard-grass apron along the
+ *    west join, a dry-stone retaining wall along the orchard edge
+ *    with a doll-width gap, a grove of six silver-leaved olive
+ *    trees with gnarled twin trunks and a sparse scatter of olive
+ *    fruits, a south-corner cluster of three clay amphora urns
+ *    leaning together on a slate base and a focal old olive-press
+ *    millstone wheel ringed with decorative pebbles in the middle
+ *    of the grove.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -9600,6 +10357,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     // Thirteenth-pass keep-outs — rose pergola and dovecote tower.
     { x: ROSE_PERGOLA_POS[0], z: ROSE_PERGOLA_POS[2], r: 1.6 },
     { x: DOVECOTE_POS[0], z: DOVECOTE_POS[2], r: 0.8 },
+    // Fourteenth-pass keep-outs — Victorian glider and armillary sphere.
+    { x: GLIDER_POS[0], z: GLIDER_POS[2], r: 1.5 },
+    { x: ARMILLARY_POS[0], z: ARMILLARY_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -9649,6 +10409,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildGreenhouse(f, GREENHOUSE_POS),
     buildRosePergola(f, ROSE_PERGOLA_POS),
     buildDovecote(f, DOVECOTE_POS),
+    buildVictorianGlider(f, GLIDER_POS),
+    buildArmillarySphere(f, ARMILLARY_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -9659,6 +10421,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const wheatField = buildSouthwestWheatField(f);
   const nwWoodland = buildNorthwestWoodland(f);
   const seVineyard = buildSoutheastVineyard(f);
+  const oliveGrove = buildSoutheastOliveGrove(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -9692,13 +10455,27 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchWisteria(f),
     buildEaveCorbels(f),
     buildRoofCupola(f, CUPOLA_POS),
+    buildGableOculi(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
     name: "Dollhouse",
     kind: "group",
     transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-    children: [garden, meadow, orchard, pondGarden, lakefront, heath, nePasture, wheatField, nwWoodland, seVineyard, house],
+    children: [
+      garden,
+      meadow,
+      orchard,
+      pondGarden,
+      lakefront,
+      heath,
+      nePasture,
+      wheatField,
+      nwWoodland,
+      seVineyard,
+      oliveGrove,
+      house,
+    ],
   };
   return {
     schemaVersion: DOLLHOUSE_SCHEMA_VERSION,
