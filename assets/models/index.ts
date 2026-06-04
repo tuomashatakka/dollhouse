@@ -190,6 +190,36 @@
 //   clay amphora urns leaning together on a slate base, and a focal
 //   old olive-press millstone wheel ringed with decorative pebbles
 //   in the middle of the grove.
+//   Pass 15 — courtyard: a pair of cedar Adirondack chairs facing
+//   each other across a slatted side table with a frosted lemonade
+//   pitcher and two short tumblers on the back lawn near the patio
+//   set, and a tall ornamental cascading-flower urn on a fluted
+//   marble pedestal — a swelled terracotta vessel brimming with
+//   foliage and coral / yellow / cream bloom dabs that cascade past
+//   the rim — on the south lawn as a focal piece near the path's
+//   first bend. House: a verdigris brass door knocker (square
+//   backplate with a twelve-segment hoop ring and a striker stud)
+//   and a small house number plaque (stained pine board on a
+//   copper-patina trim frame with three carved-out numerals)
+//   mounted on the front wall beside the arched doorway — both
+//   reuse the existing `copper-patina` colour + bump pair so the
+//   metal fittings carry crusted relief on the door surround.
+//   Scene: a southwest lavender field plane mirroring the southeast
+//   olive grove's footprint on the west side of the lawn — a
+//   cultivated sage-green ground surfaced with the new
+//   `lavender-field` colour map paired with a row-crest depth map
+//   (registered alongside the other procedural textures) so the
+//   bloom rows and gravel pebbles read as raised relief at glancing
+//   sun, a pond-garden-grass apron along the east join, a mirror
+//   dry-stone retaining wall along the pond-garden edge with a
+//   doll-width gap, five rows of cultivated lavender bushes (each a
+//   silver-green cushion crowned by a ring of purple bloom dabs in
+//   three shades), a south-corner cluster of three straw bee skeps
+//   on a slate platform, a focal antique stone watering trough on a
+//   slate plinth with an iron spigot lip dripping a thin water
+//   column into the basin, and a weathered wooden flower cart at
+//   the north end loaded with three cut-lavender bundles, a coral
+//   bloom pop on top and a long handle pole with a cross-bar grip.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
