@@ -1561,4 +1561,173 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Fifteenth-pass additions ────────────────────────────────────────
+  // The fifteenth enhancement pass introduces a single new procedural
+  // texture pair: a cultivated lavender-field ground — sage-green tilled
+  // earth strewn with purple bloom dabs from cultivated lavender rows,
+  // dusty pale gravel and a sparse scatter of fallen florets — paired
+  // with a companion depth (bump) map so the bloom-row crests and gravel
+  // pebbles read as raised relief at glancing sun. Used as the ground
+  // surface on the new southwest lavender-field plane.
+
+  // Lavender-field ground — sage-green earth with rows of cultivated
+  // lavender (purple bloom dabs), pale gravel pebbles, fallen florets
+  // and a soft sun-bleached cast across the bloom rows.
+  registry["lavender-field"] = makeCanvasTexture({
+    seed: 0x015a7e7,
+    draw: (ctx, rng, size) => {
+      // Sage-green earth base gradient — warmer along the top-right
+      // (afternoon sun) and slightly cooler toward the lower-left.
+      const bg = ctx.createLinearGradient(size, 0, 0, size);
+      bg.addColorStop(0, "#8a9a64");
+      bg.addColorStop(0.5, "#6c8049");
+      bg.addColorStop(1, "#4c603a");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Tilled cultivation rows — long faint stripes running the length
+      // of the canvas, alternating lighter / darker bands. These are the
+      // bands along which the lavender bloom dabs cluster.
+      const rowCount = 7;
+      for (let r = 0; r < rowCount; r++) {
+        const y = (r + 0.5) * (size / rowCount) + (rng() - 0.5) * 3;
+        ctx.fillStyle = r % 2 === 0
+          ? "rgba(184,184,140,0.18)"
+          : "rgba(60,80,52,0.22)";
+        ctx.fillRect(0, y - 5, size, 10);
+      }
+      // Lavender bloom dabs — small purple cluster dots along each row,
+      // shifting between bright bloom-purple and a deeper muted shade.
+      for (let r = 0; r < rowCount; r++) {
+        const yRow = (r + 0.5) * (size / rowCount);
+        const dabCount = 80;
+        for (let i = 0; i < dabCount; i++) {
+          const x = rng() * size;
+          const y = yRow + (rng() - 0.5) * 7;
+          const radius = 1.4 + rng() * 1.6;
+          const hue = 268 + Math.floor(rng() * 18);
+          const light = 38 + Math.floor(rng() * 14);
+          ctx.fillStyle = `hsla(${hue}, 42%, ${light}%, 0.85)`;
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+          ctx.fill();
+          // Soft bloom halo for the brighter dabs.
+          if (rng() < 0.32) {
+            const glow = ctx.createRadialGradient(x, y, 0, x, y, radius * 2.2);
+            glow.addColorStop(0, `hsla(${hue}, 60%, 70%, 0.34)`);
+            glow.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = glow;
+            ctx.beginPath();
+            ctx.arc(x, y, radius * 2.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+      // Pale gravel pebbles — small bright dots scattered between rows.
+      for (let i = 0; i < 140; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 1.4 + rng() * 1.6;
+        ctx.fillStyle = `hsla(${42 + rng() * 16}, 12%, ${66 + rng() * 14}%, 0.86)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+        // Soft drop shadow under the pebble.
+        ctx.fillStyle = "rgba(0,0,0,0.22)";
+        ctx.beginPath();
+        ctx.arc(x + 0.7, y + 0.9, r * 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Fallen florets — tiny purple specks adrift over the rows.
+      for (let i = 0; i < 220; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${272 + rng() * 12}, 36%, ${44 + rng() * 16}%, 0.6)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 0.9 + rng() * 0.5, 0.55 + rng() * 0.3, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Subtle warm sun-cast blooms — a soft cream wash on the bloom rows.
+      for (let i = 0; i < 14; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 20 + rng() * 22;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, r);
+        blob.addColorStop(0, `hsla(50, 32%, ${70 + rng() * 12}%, 0.18)`);
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Fine micro-noise wash so the soil keeps tonal life at deeper mips.
+      paintNoise(ctx, rng, size, "transparent", 30, 0.0028);
+    },
+  });
+  // Lavender-field depth map — bloom row crests sit slightly above the
+  // soil, gravel pebbles are small bright bumps and fallen florets recess
+  // gently so the relief tracks the bloom rhythm of the colour map.
+  registry["lavender-field-bump"] = makeCanvasTexture({
+    seed: 0x015a7e7 + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#5e5e5e";
+      ctx.fillRect(0, 0, size, size);
+      const rowCount = 7;
+      // Row crests — long subtle raised bands of lavender.
+      for (let r = 0; r < rowCount; r++) {
+        const y = (r + 0.5) * (size / rowCount);
+        const grad = ctx.createLinearGradient(0, y - 6, 0, y + 6);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, "rgba(220,220,220,0.6)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 6, size, 12);
+      }
+      // Bloom dabs — small raised bright bumps on each row.
+      for (let r = 0; r < rowCount; r++) {
+        const yRow = (r + 0.5) * (size / rowCount);
+        for (let i = 0; i < 80; i++) {
+          const x = rng() * size;
+          const y = yRow + (rng() - 0.5) * 6;
+          const radius = 1.6 + rng() * 1.4;
+          const blob = ctx.createRadialGradient(x, y, 0, x, y, radius);
+          blob.addColorStop(0, "rgba(250,250,250,0.85)");
+          blob.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = blob;
+          ctx.beginPath();
+          ctx.arc(x, y, radius * 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      // Gravel pebbles — bright rounded bumps with soft falloff.
+      for (let i = 0; i < 140; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 2.4 + rng() * 1.4;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, r);
+        blob.addColorStop(0, "rgba(245,245,245,0.92)");
+        blob.addColorStop(0.6, "rgba(150,150,150,0.4)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Fallen florets — tiny dark recess specks.
+      for (let i = 0; i < 220; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = "rgba(20,20,20,0.65)";
+        ctx.beginPath();
+        ctx.ellipse(x, y, 1.0 + rng() * 0.5, 0.6 + rng() * 0.3, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the cultivation surface never reads smooth.
+      for (let i = 0; i < 1500; i++) {
+        const v = 80 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

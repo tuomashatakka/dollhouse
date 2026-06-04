@@ -356,6 +356,49 @@ const OLIVE_GROVE_WALL_X = 42;
 const AMPHORA_CLUSTER_POS: [number, number, number] = [55, 0, 16];
 const OLIVE_MILLSTONE_POS: [number, number, number] = [51, 0, 5];
 
+/**
+ * Fifteenth-pass courtyard props — a pair of Adirondack chairs facing each
+ * other across a small slatted side table on the back lawn near the patio
+ * set, and a tall ornamental cascading-flower urn on a fluted pedestal as
+ * a focal piece on the south lawn near the path's first bend.
+ */
+const ADIRONDACK_PAIR_POS: [number, number, number] = [-5.7, 0, 3.8];
+const CASCADE_URN_POS: [number, number, number] = [1.6, 0, 7.4];
+
+/**
+ * Fifteenth-pass house detail — a verdigris brass door knocker and a small
+ * house number plaque on the front wall beside the open arched doorway.
+ * Both reuse the existing `copper-patina` colour + bump pair so the metal
+ * carries crusted relief on the door surround.
+ */
+const DOOR_KNOCKER_POS: [number, number, number] = [0.62, 1.6, FRONT_Z + WALL_T / 2 + 0.01];
+const HOUSE_PLAQUE_POS: [number, number, number] = [0.92, 2.05, FRONT_Z + WALL_T / 2 + 0.01];
+
+/**
+ * Fifteenth-pass scene extension — a southwest lavender field plane
+ * mirroring the southeast olive grove on the west side of the lawn. The
+ * plane overlaps the west pond garden by ~1 unit along its east join so
+ * the ground layer has no holes. It carries a sage-green cultivated
+ * ground surfaced with the new `lavender-field` colour map paired with
+ * a row-crest depth map (registered alongside the other procedural
+ * textures) so the bloom rows read as raised relief at glancing sun,
+ * a pond-garden-grass apron along the east join, a mirror dry-stone
+ * retaining wall along the pond-garden edge with a doll-width gap,
+ * five rows of cultivated lavender bushes with purple bloom tops, a
+ * trio of straw bee skeps on a slate platform in the south corner, a
+ * focal antique stone watering trough on a slate plinth in the middle
+ * of the field, and a weathered wooden flower cart parked at the
+ * north corner of the field.
+ */
+const LAVENDER_FIELD_POS: [number, number, number] = [-50, -0.015, 5];
+const LAVENDER_FIELD_W = 18;
+const LAVENDER_FIELD_D = 28;
+/** The mirror dry-stone wall sits just inside the lavender field's east edge. */
+const LAVENDER_WALL_X = -42;
+const BEE_SKEP_CLUSTER_POS: [number, number, number] = [-55, 0, 16];
+const STONE_TROUGH_POS: [number, number, number] = [-51, 0, 5];
+const FLOWER_CART_POS: [number, number, number] = [-47, 0, -8];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -700,6 +743,51 @@ const C = {
   millstoneStone: "#8a8278",
   millstoneCenter: "#3a3631",
   millstoneBase: "#5e564c",
+  // Fifteenth enhancement pass — a pair of Adirondack chairs with a slatted
+  // side table on the back lawn, a tall cascading-flower urn on a fluted
+  // pedestal as a south-lawn focal piece, a verdigris brass door knocker and
+  // house number plaque on the front wall (both reuse the copper-patina
+  // pair) and a southwest lavender-field scene extension (cultivated rows
+  // of lavender bushes with purple blooms, straw bee skeps on a slate
+  // platform, a stone watering trough and a weathered wooden flower cart).
+  // The new `lavender-field` colour map is paired with a row-crest depth
+  // map registered alongside it so the bloom rows read as relief at
+  // glancing sun.
+  adirondackCedar: "#a07452",
+  adirondackCedarDark: "#6b4a2e",
+  adirondackSeat: "#c08c5a",
+  sideTableTop: "#8a5c34",
+  lemonadeGlass: "#fdf7c4",
+  lemonadeYellow: "#f3c440",
+  cascadeUrnClay: "#bf7548",
+  cascadeUrnClayDark: "#7c4423",
+  cascadeUrnPedestal: "#d5c4a2",
+  cascadeUrnPedestalDark: "#7e6f50",
+  cascadeFoliage: "#5e8a3a",
+  cascadeFoliageDark: "#3d5e26",
+  cascadeBloomCoral: "#ef6a5a",
+  cascadeBloomYellow: "#f3c34a",
+  cascadeBloomWhite: "#fbf3e2",
+  knockerPlate: "#4a4540",
+  plaquePine: "#c8a06a",
+  plaqueText: "#2a2622",
+  lavenderGround: "#6c8049",
+  lavenderGroundDark: "#4c603a",
+  lavenderBush: "#5e8045",
+  lavenderBushDark: "#3a5430",
+  lavenderBloom: "#9166c4",
+  lavenderBloomDark: "#5d3a92",
+  lavenderBloomHi: "#b990dc",
+  beeSkep: "#cfa367",
+  beeSkepDark: "#8a6738",
+  beeSkepEntry: "#3a2818",
+  troughStoneAged: "#9c8d7a",
+  troughStoneAgedDark: "#5e544a",
+  troughInteriorWater: "#5b91a4",
+  flowerCartWood: "#7c5536",
+  flowerCartWoodDark: "#4a3220",
+  flowerCartTrim: "#9b3a3a",
+  flowerCartWheel: "#5e4030",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -10124,6 +10212,887 @@ function buildOliveMillstone(f: NodeFactory, pos: [number, number, number]): Sce
   return f.group("Olive Millstone", parts, { position: pos });
 }
 
+/* ─────────────── fifteenth-pass courtyard props ─────────────── */
+
+/**
+ * A pair of cedar Adirondack chairs facing each other across a small
+ * slatted side table. Each chair is built from a back panel of seven
+ * vertical slats, a sloped seat plank, two flared armrests on short
+ * supports and four legs. A side table between them carries a lemonade
+ * pitcher and two short glasses for an outdoor-living tableau.
+ */
+function buildAdirondackPair(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const cedar = std(C.adirondackCedar, 0.85, { texture: "wood", textureScale: [0.6, 1.2] });
+  const cedarDark = std(C.adirondackCedarDark, 0.9, { texture: "wood", textureScale: [0.6, 1.2] });
+  const seat = std(C.adirondackSeat, 0.85, { texture: "wood", textureScale: [0.5, 1.2] });
+  const glass: MaterialDef = {
+    color: C.lemonadeGlass,
+    roughness: 0.2,
+    metalness: 0.15,
+    transparent: true,
+    opacity: 0.65,
+  };
+  const lemon = std(C.lemonadeYellow, 0.55);
+  function chair(yaw: number, sx: number): SceneNode {
+    const parts: SceneNode[] = [];
+    // Four chair legs — front pair short, back pair taller to support
+    // the high back panel.
+    parts.push(
+      f.mesh("Leg FL", box(0.05, 0.32, 0.05), cedarDark, {
+        position: [-0.28, 0.16, 0.36],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Leg FR", box(0.05, 0.32, 0.05), cedarDark, {
+        position: [0.28, 0.16, 0.36],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Leg BL", box(0.05, 0.46, 0.05), cedarDark, {
+        position: [-0.28, 0.23, -0.32],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Leg BR", box(0.05, 0.46, 0.05), cedarDark, {
+        position: [0.28, 0.23, -0.32],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Seat — a sloped plank that tilts down at the back, supported by
+    // the rear edge of the leg block.
+    parts.push(
+      f.mesh("Seat Plank", box(0.66, 0.04, 0.7), seat, {
+        position: [0, 0.36, 0.02],
+        rotation: [-0.12, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // A short front rail under the seat.
+      f.mesh("Seat Front Rail", box(0.66, 0.05, 0.05), cedarDark, {
+        position: [0, 0.32, 0.36],
+      }, { castShadow: true }),
+    );
+    // Back panel — five vertical slats fanning out slightly at the top.
+    const slatCount = 5;
+    const backY = 0.7;
+    for (let i = 0; i < slatCount; i++) {
+      const t = (i - (slatCount - 1) / 2) / ((slatCount - 1) / 2);
+      const fan = t * 0.06;
+      parts.push(
+        f.mesh(`Back Slat ${i}`, box(0.08, 0.6, 0.03), cedar, {
+          position: [t * 0.24, backY, -0.32],
+          rotation: [-0.16, fan, 0],
+        }, { castShadow: true }),
+      );
+    }
+    // Top crest rail joining the back slats.
+    parts.push(
+      f.mesh("Back Crest", box(0.66, 0.06, 0.04), cedarDark, {
+        position: [0, 0.96, -0.36],
+        rotation: [-0.16, 0, 0],
+      }, { castShadow: true }),
+    );
+    // Two flared armrests resting on a short upright on each side.
+    for (const side of [-1, 1] as const) {
+      parts.push(
+        f.mesh("Arm Support", box(0.05, 0.16, 0.05), cedarDark, {
+          position: [side * 0.32, 0.44, 0.16],
+        }, { castShadow: true }),
+        f.mesh("Armrest", box(0.1, 0.04, 0.78), cedar, {
+          position: [side * 0.34, 0.54, 0],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    return f.group("Adirondack Chair", parts, {
+      position: [sx * 0.62, 0, 0],
+      rotation: [0, yaw, 0],
+    });
+  }
+  const parts: SceneNode[] = [
+    // Two chairs facing each other along the X axis.
+    chair(-Math.PI / 2, -1),
+    chair(Math.PI / 2, 1),
+    // Slatted side table sitting between the chairs.
+    f.mesh("Table Top", box(0.4, 0.04, 0.5), seat, {
+      position: [0, 0.34, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Three slats running across the top for a slatted look.
+    f.mesh("Table Slat L", box(0.4, 0.05, 0.12), cedarDark, {
+      position: [0, 0.355, -0.16],
+    }, { castShadow: false }),
+    f.mesh("Table Slat C", box(0.4, 0.05, 0.12), cedarDark, {
+      position: [0, 0.355, 0],
+    }, { castShadow: false }),
+    f.mesh("Table Slat R", box(0.4, 0.05, 0.12), cedarDark, {
+      position: [0, 0.355, 0.16],
+    }, { castShadow: false }),
+    // Four legs.
+    f.mesh("Table Leg FL", box(0.04, 0.32, 0.04), cedarDark, {
+      position: [-0.16, 0.16, 0.2],
+    }, { castShadow: true }),
+    f.mesh("Table Leg FR", box(0.04, 0.32, 0.04), cedarDark, {
+      position: [0.16, 0.16, 0.2],
+    }, { castShadow: true }),
+    f.mesh("Table Leg BL", box(0.04, 0.32, 0.04), cedarDark, {
+      position: [-0.16, 0.16, -0.2],
+    }, { castShadow: true }),
+    f.mesh("Table Leg BR", box(0.04, 0.32, 0.04), cedarDark, {
+      position: [0.16, 0.16, -0.2],
+    }, { castShadow: true }),
+    // Lemonade pitcher — a small frosted cylinder with a yellow drink core
+    // and a tiny handle box on its side.
+    f.mesh("Pitcher Body", cylinder(0.075, 0.085, 0.22, 12), glass, {
+      position: [0, 0.47, -0.08],
+    }, { castShadow: true }),
+    f.mesh("Pitcher Drink", cylinder(0.066, 0.076, 0.18, 12), lemon, {
+      position: [0, 0.46, -0.08],
+    }, { castShadow: false }),
+    f.mesh("Pitcher Handle", box(0.02, 0.12, 0.02), glass, {
+      position: [0.08, 0.49, -0.08],
+    }, { castShadow: false }),
+    // Two short tumbler glasses with a faint yellow fill.
+    f.mesh("Glass A Body", cylinder(0.04, 0.045, 0.1, 10), glass, {
+      position: [0.1, 0.41, 0.1],
+    }, { castShadow: true }),
+    f.mesh("Glass A Fill", cylinder(0.035, 0.04, 0.07, 10), lemon, {
+      position: [0.1, 0.4, 0.1],
+    }, { castShadow: false }),
+    f.mesh("Glass B Body", cylinder(0.04, 0.045, 0.1, 10), glass, {
+      position: [-0.1, 0.41, 0.1],
+    }, { castShadow: true }),
+    f.mesh("Glass B Fill", cylinder(0.035, 0.04, 0.07, 10), lemon, {
+      position: [-0.1, 0.4, 0.1],
+    }, { castShadow: false }),
+  ];
+  return f.group("Adirondack Pair", parts, { position: pos, rotation: [0, Math.PI / 6, 0] });
+}
+
+/**
+ * A tall ornamental cascading-flower urn on a fluted stone pedestal — a
+ * broad terracotta urn brimming with overflowing foliage and a sparse
+ * mix of coral, yellow and cream bloom dabs that cascade over the rim.
+ * Used as a focal piece on the south lawn near the path's first bend.
+ */
+function buildCascadeUrn(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const clay = std(C.cascadeUrnClay, 0.85, { texture: "burlap", textureScale: [1, 1] });
+  const clayDark = std(C.cascadeUrnClayDark, 0.9, { flatShading: true });
+  const pedestal = std(C.cascadeUrnPedestal, 0.95, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+    flatShading: false,
+  });
+  const pedestalDark = std(C.cascadeUrnPedestalDark, 0.95, { flatShading: true });
+  const foliage = std(C.cascadeFoliage, 0.85, { flatShading: true });
+  const foliageDark = std(C.cascadeFoliageDark, 0.9, { flatShading: true });
+  const bloomCoral = std(C.cascadeBloomCoral, 0.6);
+  const bloomYellow = std(C.cascadeBloomYellow, 0.6);
+  const bloomWhite = std(C.cascadeBloomWhite, 0.6);
+  const parts: SceneNode[] = [];
+  // Pedestal — square footing, fluted column shaft and a capital cap.
+  parts.push(
+    f.mesh("Pedestal Footing", box(0.62, 0.1, 0.62), pedestalDark, {
+      position: [0, 0.05, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pedestal Base", box(0.5, 0.08, 0.5), pedestal, {
+      position: [0, 0.14, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pedestal Shaft", cylinder(0.18, 0.21, 0.7, 12), pedestal, {
+      position: [0, 0.54, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Six slim flute recess columns around the shaft.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh("Flute", cylinder(0.02, 0.024, 0.62, 5), pedestalDark, {
+        position: [Math.sin(a) * 0.19, 0.55, Math.cos(a) * 0.19],
+      }, { castShadow: false }),
+    );
+  }
+  parts.push(
+    f.mesh("Pedestal Capital", box(0.5, 0.08, 0.5), pedestal, {
+      position: [0, 0.94, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pedestal Cap", box(0.34, 0.04, 0.34), pedestalDark, {
+      position: [0, 1.0, 0],
+    }, { castShadow: true }),
+  );
+  // Urn body — a swelled terracotta vessel with a flared rim and a
+  // darker drip wash along the lower belly.
+  const urnY = 1.18;
+  parts.push(
+    f.mesh("Urn Foot", cylinder(0.13, 0.16, 0.08, 12), clayDark, {
+      position: [0, urnY - 0.16, 0],
+    }, { castShadow: true }),
+    f.mesh("Urn Belly", sphere(0.28, 14, 10), clay, {
+      position: [0, urnY, 0],
+      scale: [1.0, 0.85, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Urn Neck", cylinder(0.22, 0.24, 0.16, 14), clay, {
+      position: [0, urnY + 0.24, 0],
+    }, { castShadow: true }),
+    f.mesh("Urn Rim", cylinder(0.27, 0.24, 0.05, 14), clayDark, {
+      position: [0, urnY + 0.34, 0],
+    }, { castShadow: true }),
+    // A faint weathering streak down the belly.
+    f.mesh("Urn Drip", box(0.022, 0.32, 0.022), clayDark, {
+      position: [0.22, urnY - 0.05, 0],
+    }, { castShadow: false }),
+  );
+  // Foliage mound — three overlapping flattened spheres on top of the urn
+  // with the canopy spilling slightly past the rim.
+  const foliageY = urnY + 0.45;
+  parts.push(
+    f.mesh("Foliage Crown", sphere(0.32, 14, 10), foliage, {
+      position: [0, foliageY, 0],
+      scale: [1.2, 0.9, 1.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Foliage Inner", sphere(0.26, 12, 9), foliageDark, {
+      position: [0, foliageY + 0.04, 0],
+      scale: [1.0, 0.8, 1.0],
+    }, { castShadow: true }),
+    f.mesh("Foliage Side L", sphere(0.22, 12, 9), foliage, {
+      position: [-0.22, foliageY - 0.04, 0.1],
+      scale: [1.0, 0.7, 1.0],
+    }, { castShadow: true }),
+    f.mesh("Foliage Side R", sphere(0.22, 12, 9), foliageDark, {
+      position: [0.22, foliageY - 0.06, -0.1],
+      scale: [1.0, 0.7, 1.0],
+    }, { castShadow: true }),
+  );
+  // Bloom dabs — sparse instanced spheres in three colours scattered across
+  // the foliage crown for a cottage-garden cascade.
+  const coralInstances: Transform[] = [];
+  const yellowInstances: Transform[] = [];
+  const whiteInstances: Transform[] = [];
+  const bloomRng = mulberry32(0x015abf01);
+  const bloomCount = 26;
+  for (let i = 0; i < bloomCount; i++) {
+    const a = bloomRng() * Math.PI * 2;
+    const radius = 0.16 + bloomRng() * 0.22;
+    const yOff = bloomRng() * 0.22;
+    const inst: Transform = {
+      position: [
+        Math.cos(a) * radius,
+        foliageY + 0.04 + yOff,
+        Math.sin(a) * radius * 0.85,
+      ],
+      rotation: [0, bloomRng() * Math.PI, 0],
+      scale: [1, 1, 1],
+    };
+    const which = bloomRng();
+    if (which < 0.4) coralInstances.push(inst);
+    else if (which < 0.75) yellowInstances.push(inst);
+    else whiteInstances.push(inst);
+  }
+  // Cascading bloom dabs that spill below the rim — a few extras hanging
+  // outside the urn's rim line.
+  for (let i = 0; i < 8; i++) {
+    const side = i / 8 * Math.PI * 2;
+    const inst: Transform = {
+      position: [
+        Math.cos(side) * 0.28,
+        foliageY - 0.18 - bloomRng() * 0.16,
+        Math.sin(side) * 0.24,
+      ],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+    };
+    const which = bloomRng();
+    if (which < 0.45) coralInstances.push(inst);
+    else if (which < 0.78) yellowInstances.push(inst);
+    else whiteInstances.push(inst);
+  }
+  parts.push(
+    f.instanced("Coral Blooms", sphere(0.04, 6, 5), bloomCoral, coralInstances, {
+      castShadow: false,
+    }),
+    f.instanced("Yellow Blooms", sphere(0.038, 6, 5), bloomYellow, yellowInstances, {
+      castShadow: false,
+    }),
+    f.instanced("White Blooms", sphere(0.04, 6, 5), bloomWhite, whiteInstances, {
+      castShadow: false,
+    }),
+  );
+  return f.group("Cascade Urn", parts, { position: pos, rotation: [0, Math.PI / 5, 0] });
+}
+
+/* ─────────────── fifteenth-pass house detail ─────────────── */
+
+/**
+ * A verdigris brass door knocker mounted on the front wall beside the
+ * arched doorway — a small square back plate with a hinged hoop ring
+ * and a striker plate. Reuses the `copper-patina` colour + bump pair so
+ * the metal shows crusted relief at glancing afternoon sun.
+ */
+function buildDoorKnocker(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const patina = std(C.copperPatina, 0.55, {
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.05,
+    metalness: 0.45,
+  });
+  const plate = std(C.knockerPlate, 0.6, { metalness: 0.4 });
+  const parts: SceneNode[] = [
+    // Dark backplate against the wall, framing the knocker.
+    f.mesh("Knocker Backplate", box(0.16, 0.16, 0.02), plate, {
+      position: [0, 0, 0],
+    }, { castShadow: true }),
+    // Patina hinge mount — a small horizontal cap at the top of the plate.
+    f.mesh("Knocker Mount", box(0.1, 0.04, 0.03), patina, {
+      position: [0, 0.06, 0.02],
+    }, { castShadow: true }),
+    // Ring — a circle of eight small instanced segment boxes approximating
+    // a hoop hanging from the mount.
+  ];
+  const ringR = 0.05;
+  const segCount = 12;
+  const seg = (Math.PI * 2 * ringR) / segCount;
+  const ringInstances: Transform[] = [];
+  // Place the ring just below the mount, hanging straight down.
+  for (let i = 0; i < segCount; i++) {
+    const a = (i / segCount) * Math.PI * 2;
+    ringInstances.push({
+      position: [Math.cos(a) * ringR, Math.sin(a) * ringR - 0.02, 0.025],
+      rotation: [0, 0, a + Math.PI / 2],
+      scale: [seg, 0.018, 0.018],
+    });
+  }
+  parts.push(
+    f.instanced("Knocker Ring", box(1, 1, 1), patina, ringInstances, {
+      castShadow: true,
+    }),
+    // Striker stud — a small bump on the backplate beneath the ring where
+    // the ring lands when knocked.
+    f.mesh("Knocker Striker", sphere(0.013, 8, 6), patina, {
+      position: [0, -0.08, 0.025],
+    }, { castShadow: false }),
+  );
+  return f.group("Door Knocker", parts, { position: pos });
+}
+
+/**
+ * A small house number plaque mounted on the front wall above the door
+ * knocker — a stained-pine board with three carved-out copper numerals.
+ */
+function buildHousePlaque(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const pine = std(C.plaquePine, 0.85, { texture: "wood", textureScale: [0.6, 1] });
+  const trim = std(C.copperPatina, 0.55, {
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.04,
+    metalness: 0.35,
+  });
+  const text = std(C.plaqueText, 0.7);
+  const parts: SceneNode[] = [
+    // Plaque body — a small horizontal pine board.
+    f.mesh("Plaque Body", box(0.32, 0.14, 0.025), pine, {
+      position: [0, 0, 0],
+    }, { castShadow: true }),
+    // Patina trim border — a slightly larger frame behind the body.
+    f.mesh("Plaque Trim", box(0.36, 0.18, 0.018), trim, {
+      position: [0, 0, -0.01],
+    }, { castShadow: true }),
+    // Two patina trim screw bosses at the corners.
+    f.mesh("Plaque Screw L", sphere(0.012, 6, 5), trim, {
+      position: [-0.15, 0.07, 0.01],
+    }, { castShadow: false }),
+    f.mesh("Plaque Screw R", sphere(0.012, 6, 5), trim, {
+      position: [0.15, 0.07, 0.01],
+    }, { castShadow: false }),
+    f.mesh("Plaque Screw BL", sphere(0.012, 6, 5), trim, {
+      position: [-0.15, -0.07, 0.01],
+    }, { castShadow: false }),
+    f.mesh("Plaque Screw BR", sphere(0.012, 6, 5), trim, {
+      position: [0.15, -0.07, 0.01],
+    }, { castShadow: false }),
+    // Three carved-out numerals "1", "0", "1" represented as slim recessed
+    // boxes — the leading 1 is a short vertical bar, the 0 is two ovals
+    // approximated by slim boxes forming a rectangle, and the trailing 1
+    // mirrors the leading one.
+    f.mesh("Digit 1 L", box(0.018, 0.07, 0.012), text, {
+      position: [-0.085, 0, 0.014],
+    }, { castShadow: false }),
+    // "0" - assembled as four thin segment boxes around an oval centre.
+    f.mesh("Digit 0 Top", box(0.045, 0.018, 0.012), text, {
+      position: [0, 0.025, 0.014],
+    }, { castShadow: false }),
+    f.mesh("Digit 0 Bottom", box(0.045, 0.018, 0.012), text, {
+      position: [0, -0.025, 0.014],
+    }, { castShadow: false }),
+    f.mesh("Digit 0 Left", box(0.018, 0.07, 0.012), text, {
+      position: [-0.022, 0, 0.014],
+    }, { castShadow: false }),
+    f.mesh("Digit 0 Right", box(0.018, 0.07, 0.012), text, {
+      position: [0.022, 0, 0.014],
+    }, { castShadow: false }),
+    f.mesh("Digit 1 R", box(0.018, 0.07, 0.012), text, {
+      position: [0.085, 0, 0.014],
+    }, { castShadow: false }),
+  ];
+  return f.group("House Plaque", parts, { position: pos });
+}
+
+/** A small fitting group bundling the door knocker and house number plaque. */
+function buildFrontDoorFittings(f: NodeFactory): SceneNode {
+  return f.group("Front Door Fittings", [
+    buildDoorKnocker(f, DOOR_KNOCKER_POS),
+    buildHousePlaque(f, HOUSE_PLAQUE_POS),
+  ]);
+}
+
+/* ─────────────── fifteenth-pass scene extension ─────────────── */
+
+/**
+ * Southwest lavender field ground plane and props — mirrors the southeast
+ * olive grove's footprint on the west side of the lawn. Carries the new
+ * `lavender-field` colour map paired with a row-crest depth map so the
+ * bloom rows read as relief at glancing sun, a mirror dry-stone retaining
+ * wall along the pond-garden edge, five rows of cultivated lavender
+ * bushes, a south-corner cluster of straw bee skeps and a focal stone
+ * watering trough with a weathered wooden flower cart at the north end.
+ */
+function buildSouthwestLavenderField(f: NodeFactory): SceneNode {
+  return f.group("Southwest Lavender Field", [
+    // Lavender field ground plane — cultivated sage earth surfaced with the
+    // new colour + depth map pair.
+    f.mesh(
+      "Lavender Field Ground",
+      plane(LAVENDER_FIELD_W, LAVENDER_FIELD_D),
+      std(C.lavenderGround, 0.95, {
+        texture: "lavender-field",
+        textureScale: [4, 6],
+        bumpMap: "lavender-field-bump",
+        bumpScale: 0.04,
+      }),
+      { position: LAVENDER_FIELD_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // East apron — overlaps the pond garden's west edge with a pond-garden
+    // grass tone so the join feathers cleanly under raking light.
+    f.mesh(
+      "Lavender Field East Apron",
+      plane(2.4, LAVENDER_FIELD_D),
+      std(C.pondGardenGrass, 0.95, { texture: "grass", textureScale: [1, 12] }),
+      {
+        position: [
+          LAVENDER_FIELD_POS[0] + LAVENDER_FIELD_W / 2 - 1.2,
+          -0.01,
+          LAVENDER_FIELD_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildLavenderWall(f),
+    buildLavenderRows(f),
+    buildBeeSkepCluster(f, BEE_SKEP_CLUSTER_POS),
+    buildStoneTrough(f, STONE_TROUGH_POS),
+    buildFlowerCart(f, FLOWER_CART_POS),
+  ]);
+}
+
+/**
+ * Mirror dry-stone retaining wall along the lavender field's east edge —
+ * two courses of irregular field stones capped by a wider course of flat
+ * capstones, with a 1.4-unit gap in the middle for a doll-width passage
+ * between the pond garden and the lavender field.
+ */
+function buildLavenderWall(f: NodeFactory): SceneNode {
+  const stone = std(C.dryStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.dryStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const capstone = std(C.dryStoneDark, 0.92, { flatShading: true });
+  const rng = mulberry32(0x015b9a01);
+  const zMin = LAVENDER_FIELD_POS[2] - LAVENDER_FIELD_D / 2 + 1;
+  const zMax = LAVENDER_FIELD_POS[2] + LAVENDER_FIELD_D / 2 - 1;
+  const gapHalf = 0.7;
+  const gapZ = LAVENDER_FIELD_POS[2];
+  const stones: Transform[] = [];
+  const stonesDark: Transform[] = [];
+  const courseHeights = [0.18, 0.45];
+  for (const y of courseHeights) {
+    let z = zMin;
+    while (z < zMax) {
+      const w = 0.42 + rng() * 0.36;
+      if (Math.abs(z - gapZ) < gapHalf || Math.abs(z + w - gapZ) < gapHalf) {
+        z += w;
+        continue;
+      }
+      const inst: Transform = {
+        position: [LAVENDER_WALL_X + (rng() - 0.5) * 0.1, y, z + w / 2],
+        rotation: [0, rng() * 0.3 - 0.15, 0],
+        scale: [w, 0.26, 0.4 + rng() * 0.16],
+      };
+      (rng() < 0.38 ? stonesDark : stones).push(inst);
+      z += w * 0.97;
+    }
+  }
+  const caps: Transform[] = [];
+  let cz = zMin;
+  while (cz < zMax) {
+    const w = 0.55 + rng() * 0.3;
+    if (Math.abs(cz - gapZ) < gapHalf || Math.abs(cz + w - gapZ) < gapHalf) {
+      cz += w;
+      continue;
+    }
+    caps.push({
+      position: [LAVENDER_WALL_X, 0.62, cz + w / 2],
+      rotation: [0, rng() * 0.18 - 0.09, 0],
+      scale: [w, 0.1, 0.58],
+    });
+    cz += w * 0.99;
+  }
+  return f.group("Lavender Field Wall", [
+    f.instanced("Wall Stones", box(1, 1, 1), stone, stones, {
+      castShadow: true, receiveShadow: true,
+    }),
+    f.instanced("Wall Stones Dark", box(1, 1, 1), stoneDark, stonesDark, {
+      castShadow: true, receiveShadow: true,
+    }),
+    f.instanced("Wall Capstones", box(1, 1, 1), capstone, caps, {
+      castShadow: true, receiveShadow: true,
+    }),
+  ]);
+}
+
+/**
+ * Five rows of cultivated lavender bushes spanning the field. Each bush
+ * is a low silver-green dome topped by a denser ring of purple bloom
+ * spheres so the row reads as a cushion of lavender heads at distance.
+ * Rows route around the wall, the south-corner bee-skep cluster, the
+ * central watering trough and the north-corner flower cart.
+ */
+function buildLavenderRows(f: NodeFactory): SceneNode {
+  const foliage = std(C.lavenderBush, 0.85, { flatShading: true });
+  const foliageDark = std(C.lavenderBushDark, 0.9, { flatShading: true });
+  const bloom = std(C.lavenderBloom, 0.6, { flatShading: false });
+  const bloomDark = std(C.lavenderBloomDark, 0.7, { flatShading: false });
+  const bloomHi = std(C.lavenderBloomHi, 0.55, { flatShading: false });
+  const rng = mulberry32(0x015b1ea2);
+  const rowCount = 5;
+  const rowSpacing = 1.5;
+  const xCenter = LAVENDER_FIELD_POS[0] - 2.5;
+  const bushPerRow = 7;
+  const groups: SceneNode[] = [];
+  // Keep-out radii for the props that sit on the field, to skip bushes that
+  // would overlap them.
+  const keepOuts: { x: number; z: number; r: number }[] = [
+    { x: BEE_SKEP_CLUSTER_POS[0], z: BEE_SKEP_CLUSTER_POS[2], r: 1.6 },
+    { x: STONE_TROUGH_POS[0], z: STONE_TROUGH_POS[2], r: 1.4 },
+    { x: FLOWER_CART_POS[0], z: FLOWER_CART_POS[2], r: 1.8 },
+  ];
+  const allBushInstances: Transform[] = [];
+  const allBushDarkInstances: Transform[] = [];
+  const allBloomInstances: Transform[] = [];
+  const allBloomDarkInstances: Transform[] = [];
+  const allBloomHiInstances: Transform[] = [];
+  for (let r = 0; r < rowCount; r++) {
+    const x = xCenter + (r - (rowCount - 1) / 2) * rowSpacing;
+    for (let i = 0; i < bushPerRow; i++) {
+      const t = (i - (bushPerRow - 1) / 2) / ((bushPerRow - 1) / 2);
+      const z = LAVENDER_FIELD_POS[2] + t * 9;
+      // Skip bushes that would clash with the keep-outs.
+      let skip = false;
+      for (const k of keepOuts) {
+        const dx = x - k.x;
+        const dz = z - k.z;
+        if (dx * dx + dz * dz < k.r * k.r) {
+          skip = true;
+          break;
+        }
+      }
+      if (skip) continue;
+      const scale = 0.85 + rng() * 0.25;
+      const rot = rng() * Math.PI * 2;
+      // The cushion of the bush.
+      allBushInstances.push({
+        position: [x + (rng() - 0.5) * 0.1, 0.22 * scale, z + (rng() - 0.5) * 0.1],
+        rotation: [0, rot, 0],
+        scale: [0.45 * scale, 0.32 * scale, 0.45 * scale],
+      });
+      // A slightly darker shaded sub-bush sitting beneath.
+      allBushDarkInstances.push({
+        position: [x + (rng() - 0.5) * 0.08, 0.16 * scale, z + (rng() - 0.5) * 0.08],
+        rotation: [0, rot + 0.3, 0],
+        scale: [0.5 * scale, 0.2 * scale, 0.5 * scale],
+      });
+      // Purple bloom dabs crowning the top of the cushion.
+      const dabCount = 8;
+      for (let d = 0; d < dabCount; d++) {
+        const a = (d / dabCount) * Math.PI * 2 + rng() * 0.2;
+        const radius = 0.22 + rng() * 0.1;
+        const inst: Transform = {
+          position: [
+            x + Math.cos(a) * radius * scale,
+            0.42 * scale + rng() * 0.06,
+            z + Math.sin(a) * radius * scale,
+          ],
+          rotation: [0, rng() * Math.PI, 0],
+          scale: [1, 1, 1],
+        };
+        const which = rng();
+        if (which < 0.55) allBloomInstances.push(inst);
+        else if (which < 0.85) allBloomDarkInstances.push(inst);
+        else allBloomHiInstances.push(inst);
+      }
+    }
+  }
+  groups.push(
+    f.instanced("Lavender Cushions", sphere(1, 10, 7), foliage, allBushInstances, {
+      castShadow: true, receiveShadow: true,
+    }),
+    f.instanced("Lavender Cushions Shade", sphere(1, 10, 7), foliageDark, allBushDarkInstances, {
+      castShadow: true,
+    }),
+    f.instanced("Lavender Blooms", sphere(0.06, 6, 5), bloom, allBloomInstances, {
+      castShadow: false,
+    }),
+    f.instanced("Lavender Blooms Dark", sphere(0.058, 6, 5), bloomDark, allBloomDarkInstances, {
+      castShadow: false,
+    }),
+    f.instanced("Lavender Blooms Bright", sphere(0.062, 6, 5), bloomHi, allBloomHiInstances, {
+      castShadow: false,
+    }),
+  );
+  return f.group("Lavender Rows", groups);
+}
+
+/**
+ * A trio of straw bee skeps — traditional dome-shaped beehives — on a
+ * slate platform with a sparse scatter of fallen bloom petals around the
+ * base. Each skep is a stack of three burlap-textured discs of decreasing
+ * radius forming the characteristic coiled-rope dome silhouette, with a
+ * small dark entry hole at the base front.
+ */
+function buildBeeSkepCluster(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const skep = std(C.beeSkep, 0.95, { texture: "burlap", textureScale: [0.6, 0.6] });
+  const skepDark = std(C.beeSkepDark, 0.95, { flatShading: true });
+  const entry = std(C.beeSkepEntry, 0.6);
+  const slate = std(C.slatePlate, 0.95, { texture: "cobblestone", flatShading: true });
+  function skepUnit(x: number, z: number, scale: number, yaw: number): SceneNode {
+    const tiers = [
+      { r: 0.32, h: 0.16 },
+      { r: 0.26, h: 0.18 },
+      { r: 0.2, h: 0.18 },
+      { r: 0.12, h: 0.12 },
+    ];
+    const parts: SceneNode[] = [];
+    let y = 0;
+    for (let i = 0; i < tiers.length; i++) {
+      const tier = tiers[i]!;
+      parts.push(
+        f.mesh(`Skep Tier ${i}`, cylinder(tier.r * 0.85, tier.r, tier.h, 12), skep, {
+          position: [0, y + tier.h / 2, 0],
+          scale: [scale, scale, scale],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+      y += tier.h * 0.9;
+    }
+    // A small crown finial on top.
+    parts.push(
+      f.mesh("Skep Crown", sphere(0.05, 8, 6), skepDark, {
+        position: [0, y * scale + 0.04, 0],
+      }, { castShadow: true }),
+      // Dark entry hole at the bottom front.
+      f.mesh("Skep Entry", box(0.06, 0.04, 0.02), entry, {
+        position: [0, 0.06 * scale, tiers[0]!.r * scale * 0.85],
+      }, { castShadow: false }),
+    );
+    return f.group("Bee Skep", parts, {
+      position: [x, 0, z],
+      rotation: [0, yaw, 0],
+    });
+  }
+  return f.group("Bee Skep Cluster", [
+    // Slate base plate the skeps stand on.
+    f.mesh("Skep Base", cylinder(0.85, 0.9, 0.08, 12), slate, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    skepUnit(-0.35, 0.05, 1.0, 0.4),
+    skepUnit(0.4, -0.1, 0.95, -0.3),
+    skepUnit(0.05, 0.45, 0.9, 1.2),
+  ], { position: pos });
+}
+
+/**
+ * A focal antique stone watering trough on a slate plinth — a long,
+ * weathered rectangular basin with a recessed water surface. A small
+ * iron spigot lip at the south end suggests where the trough was
+ * traditionally filled.
+ */
+function buildStoneTrough(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.troughStoneAged, 0.95, { texture: "cobblestone", textureScale: [1.2, 1], flatShading: false });
+  const stoneDark = std(C.troughStoneAgedDark, 0.95, { flatShading: true });
+  const water: MaterialDef = {
+    color: C.troughInteriorWater,
+    roughness: 0.32,
+    metalness: 0.18,
+    transparent: true,
+    opacity: 0.7,
+  };
+  const iron = std(C.gliderIron, 0.55, { metalness: 0.4 });
+  const parts: SceneNode[] = [
+    // Slate plinth — a wider flat base under the trough.
+    f.mesh("Trough Plinth", box(1.7, 0.08, 0.85), stoneDark, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    // Trough outer body — a long rectangular block.
+    f.mesh("Trough Body", box(1.5, 0.42, 0.65), stone, {
+      position: [0, 0.29, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Recessed water basin — a slightly inset darker block carved into the
+    // top of the body, with a translucent water surface on top.
+    f.mesh("Trough Interior", box(1.34, 0.36, 0.49), stoneDark, {
+      position: [0, 0.31, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Trough Water", box(1.32, 0.04, 0.47), water, {
+      position: [0, 0.47, 0],
+    }, { castShadow: false, receiveShadow: false }),
+    // End cap stones — short slim blocks tucked against the short ends
+    // for a more shaped silhouette.
+    f.mesh("Trough Cap L", box(0.08, 0.12, 0.7), stoneDark, {
+      position: [-0.75, 0.54, 0],
+    }, { castShadow: true }),
+    f.mesh("Trough Cap R", box(0.08, 0.12, 0.7), stoneDark, {
+      position: [0.75, 0.54, 0],
+    }, { castShadow: true }),
+    // Iron spigot lip rising at the south end — a small horizontal pipe
+    // overhanging the basin.
+    f.mesh("Spigot Riser", cylinder(0.03, 0.03, 0.45, 8), iron, {
+      position: [-0.78, 0.7, 0.4],
+    }, { castShadow: true }),
+    f.mesh("Spigot Arm", cylinder(0.03, 0.03, 0.32, 8), iron, {
+      position: [-0.66, 0.92, 0.4],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    f.mesh("Spigot Tip", cylinder(0.04, 0.022, 0.06, 8), iron, {
+      position: [-0.52, 0.86, 0.4],
+      rotation: [Math.PI, 0, 0],
+    }, { castShadow: true }),
+    // A thin water column dripping from the spigot to the basin.
+    f.mesh("Water Drip", cylinder(0.012, 0.012, 0.32, 6), water, {
+      position: [-0.52, 0.66, 0.4],
+    }, { castShadow: false }),
+  ];
+  // A small mossy patch on the trough's north shoulder — short flattened
+  // sphere in the foliage colour, suggesting wet stone microclimate.
+  parts.push(
+    f.mesh("Trough Moss", sphere(0.12, 8, 6), std(C.mossGreen, 0.85, { flatShading: true }), {
+      position: [0.4, 0.52, -0.32],
+      scale: [1, 0.4, 1],
+    }, { castShadow: false }),
+  );
+  return f.group("Stone Trough", parts, { position: pos, rotation: [0, Math.PI / 12, 0] });
+}
+
+/**
+ * A weathered wooden flower cart parked at the north corner of the
+ * lavender field — a small two-wheeled hand cart loaded with cut
+ * lavender bundles and a single coral bloom for colour. The cart's
+ * wagon-bed sits on two spoked wheels with a short handle pole and a
+ * faded red trim along its sideboards.
+ */
+function buildFlowerCart(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.flowerCartWood, 0.9, { texture: "wood", textureScale: [0.6, 1.2] });
+  const woodDark = std(C.flowerCartWoodDark, 0.9, { texture: "wood", textureScale: [0.6, 1.2] });
+  const trim = std(C.flowerCartTrim, 0.85);
+  const wheel = std(C.flowerCartWheel, 0.9, { flatShading: true });
+  const bloom = std(C.lavenderBloom, 0.6);
+  const bloomDark = std(C.lavenderBloomDark, 0.7);
+  const bloomCoral = std(C.cascadeBloomCoral, 0.6);
+  const foliage = std(C.lavenderBush, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Cart bed — a shallow open box with a faded red top trim and
+    // upturned end boards.
+    f.mesh("Cart Bed Floor", box(1.4, 0.06, 0.7), wood, {
+      position: [0, 0.55, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cart Side Front", box(1.4, 0.18, 0.05), woodDark, {
+      position: [0, 0.66, 0.34],
+    }, { castShadow: true }),
+    f.mesh("Cart Side Back", box(1.4, 0.18, 0.05), woodDark, {
+      position: [0, 0.66, -0.34],
+    }, { castShadow: true }),
+    f.mesh("Cart End L", box(0.05, 0.24, 0.72), woodDark, {
+      position: [-0.69, 0.7, 0],
+    }, { castShadow: true }),
+    f.mesh("Cart End R", box(0.05, 0.24, 0.72), woodDark, {
+      position: [0.69, 0.7, 0],
+    }, { castShadow: true }),
+    // Faded red trim band along the top of the sideboards.
+    f.mesh("Trim Front", box(1.42, 0.04, 0.06), trim, {
+      position: [0, 0.77, 0.34],
+    }, { castShadow: false }),
+    f.mesh("Trim Back", box(1.42, 0.04, 0.06), trim, {
+      position: [0, 0.77, -0.34],
+    }, { castShadow: false }),
+    // Two wagon wheels — flat spoked discs flanking the bed.
+    f.mesh("Wheel L", cylinder(0.36, 0.36, 0.05, 14), wheel, {
+      position: [0, 0.36, -0.42],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wheel R", cylinder(0.36, 0.36, 0.05, 14), wheel, {
+      position: [0, 0.36, 0.42],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Wheel hubs — small dark caps on each wheel.
+    f.mesh("Hub L", cylinder(0.08, 0.08, 0.07, 8), wood, {
+      position: [0, 0.36, -0.4],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Hub R", cylinder(0.08, 0.08, 0.07, 8), wood, {
+      position: [0, 0.36, 0.4],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  ];
+  // Spokes — four per wheel, slim crossing rods.
+  for (const z of [-0.42, 0.42] as const) {
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI;
+      parts.push(
+        f.mesh(`Spoke ${z}-${i}`, box(0.62, 0.025, 0.025), woodDark, {
+          position: [0, 0.36, z],
+          rotation: [0, 0, a],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Handle pole — a long shaft extending from the front of the cart, with
+  // a small grip cross-bar at its end.
+  parts.push(
+    f.mesh("Handle Pole", cylinder(0.025, 0.025, 1.0, 6), wood, {
+      position: [0.94, 0.62, 0],
+      rotation: [0, 0, -0.2],
+    }, { castShadow: true }),
+    f.mesh("Handle Grip", box(0.25, 0.04, 0.04), woodDark, {
+      position: [1.38, 0.5, 0],
+    }, { castShadow: true }),
+  );
+  // Cut-lavender bundles — three stacked elongated cushions of foliage
+  // topped by a denser bloom strip, evoking harvested stalks tied for sale.
+  function bundle(x: number, z: number, yaw: number): SceneNode[] {
+    return [
+      f.mesh("Bundle Stalks", box(0.36, 0.08, 0.16), foliage, {
+        position: [x, 0.62, z],
+        rotation: [0, yaw, 0],
+      }, { castShadow: true }),
+      f.mesh("Bundle Blooms", box(0.36, 0.06, 0.16), bloom, {
+        position: [x, 0.7, z],
+        rotation: [0, yaw, 0],
+      }, { castShadow: false }),
+      // A tiny darker bloom highlight along the bundle's crown.
+      f.mesh("Bundle Bloom Hi", box(0.34, 0.025, 0.14), bloomDark, {
+        position: [x, 0.73, z],
+        rotation: [0, yaw, 0],
+      }, { castShadow: false }),
+    ];
+  }
+  parts.push(
+    ...bundle(-0.42, 0.1, 0.1),
+    ...bundle(0.05, -0.1, -0.18),
+    ...bundle(0.45, 0.08, 0.24),
+    // A single coral bloom for colour contrast on top of the bundles.
+    f.mesh("Coral Bloom Pop", sphere(0.06, 8, 6), bloomCoral, {
+      position: [0.05, 0.83, -0.05],
+    }, { castShadow: false }),
+  );
+  return f.group("Flower Cart", parts, { position: pos, rotation: [0, -Math.PI / 5, 0] });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -10302,6 +11271,39 @@ function buildOliveMillstone(f: NodeFactory, pos: [number, number, number]): Sce
  *    leaning together on a slate base and a focal old olive-press
  *    millstone wheel ringed with decorative pebbles in the middle
  *    of the grove.
+ *  - Fifteenth pass — yard: a pair of cedar Adirondack chairs
+ *    facing each other across a slatted side table with a
+ *    lemonade pitcher and two tumblers on the back lawn, and a
+ *    tall ornamental cascading-flower urn on a fluted marble
+ *    pedestal — a swelled terracotta vessel brimming with foliage
+ *    and coral / yellow / cream bloom dabs that cascade past the
+ *    rim — on the south lawn near the path's first bend. House:
+ *    a verdigris brass door knocker (square backplate with a
+ *    twelve-segment hoop ring and a striker stud) and a small
+ *    house number plaque (stained pine board on a copper-patina
+ *    trim frame with three carved-out numerals) mounted on the
+ *    front wall beside the arched doorway — both reuse the
+ *    existing `copper-patina` colour + bump pair so the metal
+ *    fittings carry crusted relief on the door surround. Scene:
+ *    a southwest lavender field plane mirroring the southeast
+ *    olive grove's footprint on the west side of the lawn, with
+ *    a cultivated sage-green ground surfaced with the new
+ *    `lavender-field` colour map paired with a row-crest depth
+ *    map (registered alongside the other procedural textures)
+ *    so the bloom rows read as raised relief at glancing sun, a
+ *    pond-garden-grass apron along the east join, a mirror
+ *    dry-stone retaining wall along the pond-garden edge with a
+ *    doll-width gap, five rows of cultivated lavender bushes
+ *    (each a silver-green cushion crowned by a ring of purple
+ *    bloom dabs in three shades), a south-corner cluster of
+ *    three straw bee skeps on a slate platform, a focal antique
+ *    stone watering trough on a slate plinth (with an iron
+ *    spigot lip dripping a thin water column into the basin and
+ *    a small mossy patch on its shoulder) and a weathered
+ *    wooden flower cart parked at the north corner of the field
+ *    (loaded with three cut-lavender bundles, faded red sideboard
+ *    trim, two spoked wagon wheels and a long handle pole with a
+ *    cross-bar grip).
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -10360,6 +11362,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     // Fourteenth-pass keep-outs — Victorian glider and armillary sphere.
     { x: GLIDER_POS[0], z: GLIDER_POS[2], r: 1.5 },
     { x: ARMILLARY_POS[0], z: ARMILLARY_POS[2], r: 0.9 },
+    // Fifteenth-pass keep-outs — Adirondack pair and cascade urn.
+    { x: ADIRONDACK_PAIR_POS[0], z: ADIRONDACK_PAIR_POS[2], r: 1.6 },
+    { x: CASCADE_URN_POS[0], z: CASCADE_URN_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -10411,6 +11416,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildDovecote(f, DOVECOTE_POS),
     buildVictorianGlider(f, GLIDER_POS),
     buildArmillarySphere(f, ARMILLARY_POS),
+    buildAdirondackPair(f, ADIRONDACK_PAIR_POS),
+    buildCascadeUrn(f, CASCADE_URN_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -10422,6 +11429,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const nwWoodland = buildNorthwestWoodland(f);
   const seVineyard = buildSoutheastVineyard(f);
   const oliveGrove = buildSoutheastOliveGrove(f);
+  const lavenderField = buildSouthwestLavenderField(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -10456,6 +11464,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildEaveCorbels(f),
     buildRoofCupola(f, CUPOLA_POS),
     buildGableOculi(f),
+    buildFrontDoorFittings(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -10474,6 +11483,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       nwWoodland,
       seVineyard,
       oliveGrove,
+      lavenderField,
       house,
     ],
   };
