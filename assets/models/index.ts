@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over fourteen enhancement passes.
+// house and its courtyard, layered over sixteen enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -220,6 +220,35 @@
 //   column into the basin, and a weathered wooden flower cart at
 //   the north end loaded with three cut-lavender bundles, a coral
 //   bloom pop on top and a long handle pole with a cross-bar grip.
+//   Pass 16 — courtyard: a Victorian garden gazing ball on a swirling
+//   iron stand (slate footing, central shaft, four C-curve scrolls
+//   fanning up to a cradle holding a polished mirror-finish chrome
+//   sphere) near the south end of the cobble path's first bend, and a
+//   small stone cherub statue holding a basket of pink and cream
+//   blooms on a low marble plinth opposite the gazing ball across the
+//   path — the cherub plinth reuses the existing `marble` colour +
+//   bump pair so the stone reads with veined relief; house: a pair of
+//   climbing-rose trellises mounted on the east and west exterior
+//   side walls, each a lattice grid of slim painted slats framed by a
+//   slightly thicker border, with two snaking dark vines climbing the
+//   verticals and a sparse scatter of leaf clusters and pink rose
+//   bloom dabs across the upper two thirds of the lattice; scene: a
+//   far-north alpine foothills plane reaching beyond the lakefront's
+//   far edge — a snow-dusted moss ground surfaced with the new
+//   `alpine-foothills` colour map paired with a snowdrift-and-scree
+//   depth map (registered alongside the other procedural textures)
+//   so the drifts and rock heads read as raised relief at glancing
+//   sun, a lakefront-grass apron along the south join, a small log
+//   cabin (six stacked log courses per wall, a peaked shingle roof
+//   with snow caps, a dark front door with a brass knob, a square
+//   window with a warm interior glow and a tall stone chimney
+//   trailing three translucent smoke wisps), a grove of six snow-
+//   dusted conifers (three cone tiers each crowned by pale snow
+//   caps), three rounded snowdrift mounds with shaded lee cores, a
+//   pair of mossy boulders framing a focal small frozen tarn pond
+//   with a deep-water core, a pale-blue ice surface, slim crack
+//   highlights and a fringe of exposed alpine pebbles around the
+//   shore.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

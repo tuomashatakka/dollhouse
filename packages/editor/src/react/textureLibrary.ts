@@ -1730,4 +1730,185 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Sixteenth-pass additions ────────────────────────────────────────
+  // The sixteenth enhancement pass introduces a single new procedural
+  // texture pair: a snow-dusted alpine foothills ground — a pale snow
+  // base mottled with exposed mossy patches, scattered grey scree pebbles
+  // and a fringe of dark pine needle litter — paired with a companion
+  // depth (bump) map so the snowdrifts and rock heads read as raised
+  // relief at glancing sun. Used as the ground surface on the new far-
+  // north alpine foothills plane.
+
+  // Alpine-foothills ground — a pale snow base with exposed mossy
+  // patches, scattered grey scree pebbles, dark pine needle litter and
+  // soft drifted ridges crossing the surface.
+  registry["alpine-foothills"] = makeCanvasTexture({
+    seed: 0x16a17ee5,
+    draw: (ctx, rng, size) => {
+      // Cool snow base gradient — warmer along the top-right (low
+      // afternoon sun) and slightly cooler toward the lower-left where
+      // drifts shadow gathers.
+      const bg = ctx.createLinearGradient(size, 0, 0, size);
+      bg.addColorStop(0, "#f6f7f9");
+      bg.addColorStop(0.5, "#dde2e8");
+      bg.addColorStop(1, "#b8c2cc");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Exposed mossy patches — soft irregular green blobs where the
+      // snow has melted off and revealed alpine moss / lichen beneath.
+      for (let i = 0; i < 36; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = 14 + rng() * 28;
+        const blob = ctx.createRadialGradient(cx, cy, r * 0.15, cx, cy, r);
+        const hue = 70 + Math.floor(rng() * 30);
+        const light = 30 + Math.floor(rng() * 18);
+        blob.addColorStop(0, `hsla(${hue}, 35%, ${light}%, 0.72)`);
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        const verts = 7 + Math.floor(rng() * 4);
+        for (let v = 0; v < verts; v++) {
+          const a = (v / verts) * Math.PI * 2;
+          const rr = r * (0.6 + rng() * 0.7);
+          const px = cx + Math.cos(a) * rr;
+          const py = cy + Math.sin(a) * rr;
+          if (v === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fill();
+      }
+      // Drifted snow ridges — long faint pale stripes running diagonally
+      // across the canvas, suggesting wind-carved snow.
+      ctx.save();
+      ctx.translate(size / 2, size / 2);
+      ctx.rotate(Math.PI / 6);
+      ctx.translate(-size / 2, -size / 2);
+      for (let i = 0; i < 9; i++) {
+        const y = (i / 9) * size + (rng() - 0.5) * 8;
+        const grad = ctx.createLinearGradient(0, y - 6, 0, y + 6);
+        grad.addColorStop(0, "rgba(255,255,255,0)");
+        grad.addColorStop(0.5, "rgba(255,255,255,0.5)");
+        grad.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 6, size, 12);
+      }
+      ctx.restore();
+      // Grey scree pebbles — small darker rounded specks scattered over
+      // the snow, with a tiny shadow on the lower-right side of each.
+      for (let i = 0; i < 220; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 1.4 + rng() * 1.6;
+        const light = 24 + Math.floor(rng() * 24);
+        ctx.fillStyle = `hsl(${30 + rng() * 20}, 8%, ${light}%)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+        // Tiny shadow under each pebble.
+        ctx.fillStyle = "rgba(0,0,0,0.28)";
+        ctx.beginPath();
+        ctx.arc(x + 0.8, y + 0.9, r * 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Dark pine needle litter — slim dark slivers scattered through
+      // the moss patches, reading as fallen needles on the alpine floor.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${22 + rng() * 14}, 38%, ${14 + rng() * 12}%, 0.7)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 0.6 + rng() * 0.5, 2.4 + rng() * 1.8, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // A faint cool sun-cast wash on the drifts — pale blue-cream
+      // highlight blobs that mimic indirect light off the snow surface.
+      for (let i = 0; i < 16; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 24 + rng() * 28;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, r);
+        blob.addColorStop(0, `hsla(210, 28%, ${82 + rng() * 8}%, 0.22)`);
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Fine micro-noise wash so the snow retains tonal life at deeper mips.
+      paintNoise(ctx, rng, size, "transparent", 28, 0.003);
+    },
+  });
+  // Alpine-foothills depth map — snowdrifts ride above the base ground,
+  // exposed moss patches recess slightly, pebbles read as small rounded
+  // bumps and pine needle litter sits at the base height.
+  registry["alpine-foothills-bump"] = makeCanvasTexture({
+    seed: 0x16a17ee5 + 1,
+    draw: (ctx, rng, size) => {
+      ctx.fillStyle = "#5e5e5e";
+      ctx.fillRect(0, 0, size, size);
+      // Drifted snow ridges — long bright raised bands of snow drift.
+      ctx.save();
+      ctx.translate(size / 2, size / 2);
+      ctx.rotate(Math.PI / 6);
+      ctx.translate(-size / 2, -size / 2);
+      for (let i = 0; i < 9; i++) {
+        const y = (i / 9) * size;
+        const grad = ctx.createLinearGradient(0, y - 8, 0, y + 8);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, "rgba(225,225,225,0.7)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 8, size, 16);
+      }
+      ctx.restore();
+      // Exposed moss patches — gentle recess so the patches sit below
+      // the surrounding snow line.
+      for (let i = 0; i < 36; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = 14 + rng() * 28;
+        const blob = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        blob.addColorStop(0, "rgba(45,45,45,0.65)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Scree pebbles — bright rounded bumps with soft falloff so they
+      // read as small rocks poking through the snow.
+      for (let i = 0; i < 220; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 2.0 + rng() * 1.4;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, r);
+        blob.addColorStop(0, "rgba(245,245,245,0.92)");
+        blob.addColorStop(0.6, "rgba(150,150,150,0.4)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Pine needle litter — slim recess slivers that read as scattered
+      // dark fallen needles.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = "rgba(30,30,30,0.55)";
+        ctx.beginPath();
+        ctx.ellipse(x, y, 0.7 + rng() * 0.5, 2.6 + rng() * 1.6, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the snow surface never reads flat.
+      for (let i = 0; i < 1600; i++) {
+        const v = 80 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

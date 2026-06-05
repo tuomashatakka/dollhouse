@@ -399,6 +399,47 @@ const BEE_SKEP_CLUSTER_POS: [number, number, number] = [-55, 0, 16];
 const STONE_TROUGH_POS: [number, number, number] = [-51, 0, 5];
 const FLOWER_CART_POS: [number, number, number] = [-47, 0, -8];
 
+/**
+ * Sixteenth-pass courtyard props — a Victorian garden gazing ball on a
+ * swirling iron stand near the south end of the cobble path's first bend
+ * and a small stone cherub statue holding a basket of blooms on a low
+ * plinth opposite the gazing ball across the path. The gazing ball uses a
+ * polished mirror-finish material so it reads as a metallic reflective
+ * sphere from any angle of approach.
+ */
+const GAZING_BALL_POS: [number, number, number] = [2.4, 0, 5.5];
+const CHERUB_STATUE_POS: [number, number, number] = [-1.4, 0, 6.6];
+
+/**
+ * Sixteenth-pass house detail — a pair of climbing-rose trellises mounted
+ * on the east and west exterior side walls. Each trellis is a lattice grid
+ * of slim painted slats with climbing-rose vines and pink bloom dabs
+ * scattered up the grid, the south half of each side wall (so the east
+ * trellis sits clear of the hose reel at z = -1.8 and the west trellis
+ * sits clear of the clothesline path).
+ */
+const TRELLIS_E_POS: [number, number, number] = [W / 2 + 0.06, 0, 1.05];
+const TRELLIS_W_POS: [number, number, number] = [-W / 2 - 0.06, 0, 1.05];
+
+/**
+ * Sixteenth-pass scene extension — a far-north alpine foothills plane
+ * reaching beyond the lakefront's far edge. The plane overlaps the
+ * lakefront by ~1.5 units along its south join so the ground layer has
+ * no holes. It carries a snow-dusted alpine ground (with the new
+ * `alpine-foothills` colour map paired with a snowdrift-and-scree depth
+ * map so the drifts read as raised relief at glancing sun), a south
+ * lakefront-grass apron along the join, a small log cabin with a stone
+ * chimney trailing translucent smoke and a warm glow in its window, a
+ * grove of six snow-dusted conifers, three rounded snowdrift mounds, a
+ * pair of mossy boulders and a small frozen tarn pond with a thin sheet
+ * of pale-blue ice.
+ */
+const ALPINE_POS: [number, number, number] = [0, -0.016, -86];
+const ALPINE_W = 56;
+const ALPINE_D = 28;
+const LOG_CABIN_POS: [number, number, number] = [-6, 0, -90];
+const ALPINE_TARN_POS: [number, number, number] = [10, 0, -88];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -788,6 +829,41 @@ const C = {
   flowerCartWoodDark: "#4a3220",
   flowerCartTrim: "#9b3a3a",
   flowerCartWheel: "#5e4030",
+  // Sixteenth enhancement pass — a polished mirror-finish gazing ball on a
+  // swirling iron stand and a small stone cherub statue holding a basket
+  // of blooms on the courtyard lawn; a pair of climbing-rose trellises on
+  // the east and west side walls; and a far-north alpine foothills scene
+  // extension with a snow-dusted log cabin, a grove of conifers, snowdrifts,
+  // mossy boulders and a small frozen tarn. The new `alpine-foothills`
+  // colour map is paired with a snowdrift-and-scree depth map registered
+  // alongside the other procedural textures so the drifts and rock heads
+  // read as raised relief at glancing sun.
+  gazingBallChrome: "#5f8aa8",
+  gazingBallHi: "#bcd9e8",
+  gazingBallBase: "#1f1c1a",
+  cherubMarble: "#f4ead6",
+  cherubMarbleShade: "#c4b8a0",
+  cherubBasket: "#a85a2e",
+  cherubBloomPink: "#ef89a8",
+  cherubBloomCream: "#fdf6f0",
+  trellisLattice: "#fbeed9",
+  trellisLatticeShade: "#a8956e",
+  trellisRose: "#ef6a85",
+  trellisRoseDark: "#a8344f",
+  trellisLeaf: "#5e8a3a",
+  trellisLeafDark: "#3d5a28",
+  alpineSnow: "#f4f5f7",
+  alpineSnowShade: "#c4cdd6",
+  alpineRock: "#7a7268",
+  alpineRockDark: "#3f3a36",
+  alpineMoss: "#5e6a3a",
+  cabinLog: "#7c5536",
+  cabinLogDark: "#4a3220",
+  cabinRoof: "#3a2a1c",
+  cabinWindow: "#ffd989",
+  cabinSmoke: "#dad6cf",
+  tarnIce: "#a8c8d6",
+  tarnIceDeep: "#5e8aa6",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -11093,6 +11169,749 @@ function buildFlowerCart(f: NodeFactory, pos: [number, number, number]): SceneNo
   return f.group("Flower Cart", parts, { position: pos, rotation: [0, -Math.PI / 5, 0] });
 }
 
+/* ─────────────── sixteenth-pass courtyard props ─────────────── */
+
+/**
+ * A Victorian garden gazing ball — a polished mirror-finish sphere
+ * resting in a small iron cradle atop a swirling wrought-iron stand.
+ * The stand is a stack of a flat slate footing, a slim shaft and four
+ * C-curve scrolls arranged radially that fan up to hold the sphere. The
+ * sphere uses a chrome-blue colour with high metalness and low roughness
+ * so it reads as a reflective ornament from any approach angle.
+ */
+function buildGazingBall(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const iron = std(C.gazingBallBase, 0.45, { metalness: 0.5, flatShading: true });
+  const ironHi = std(C.gliderIronHi, 0.45, { metalness: 0.5 });
+  const slate = std(C.slatePlate, 0.95, { texture: "cobblestone", flatShading: true });
+  const chrome: MaterialDef = {
+    color: C.gazingBallChrome,
+    roughness: 0.08,
+    metalness: 0.95,
+  };
+  const chromeHi: MaterialDef = {
+    color: C.gazingBallHi,
+    roughness: 0.04,
+    metalness: 1.0,
+    emissive: "#1a2a36",
+  };
+  const parts: SceneNode[] = [
+    // Slate footing — a small flat disc the stand rests on.
+    f.mesh("Footing", cylinder(0.22, 0.24, 0.05, 14), slate, {
+      position: [0, 0.025, 0],
+    }, { receiveShadow: true }),
+    // Decorative iron flange on top of the footing.
+    f.mesh("Flange", cylinder(0.12, 0.14, 0.04, 12), iron, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true }),
+    // Central shaft — slim iron rod climbing from the flange.
+    f.mesh("Shaft", cylinder(0.025, 0.025, 0.62, 8), iron, {
+      position: [0, 0.4, 0],
+    }, { castShadow: true }),
+    // A pair of decorative iron rings stacked along the shaft.
+    f.mesh("Ring Lo", cylinder(0.07, 0.07, 0.04, 12), iron, {
+      position: [0, 0.18, 0],
+    }, { castShadow: true }),
+    f.mesh("Ring Mid", cylinder(0.06, 0.06, 0.035, 12), iron, {
+      position: [0, 0.38, 0],
+    }, { castShadow: true }),
+  ];
+  // Four C-curve scrolls fanning out from below the cradle — each curve
+  // is approximated by a chain of three small slim boxes at increasing
+  // angles, giving the silhouette of a wrought-iron scroll.
+  const scrollSegs = [
+    { y: 0.55, len: 0.16, tilt: -0.55 },
+    { y: 0.66, len: 0.13, tilt: -0.95 },
+    { y: 0.74, len: 0.1, tilt: -1.35 },
+  ];
+  for (let s = 0; s < 4; s++) {
+    const yaw = (s / 4) * Math.PI * 2;
+    for (const seg of scrollSegs) {
+      const rx = Math.sin(yaw) * 0.12;
+      const rz = Math.cos(yaw) * 0.12;
+      parts.push(
+        f.mesh(`Scroll ${s}-${seg.y}`, box(seg.len, 0.024, 0.024), iron, {
+          position: [rx, seg.y, rz],
+          rotation: [0, yaw + Math.PI / 2, seg.tilt],
+        }, { castShadow: true }),
+      );
+    }
+  }
+  // Cradle disc — a small ring just below the sphere that visually
+  // supports the orb.
+  parts.push(
+    f.mesh("Cradle", cylinder(0.1, 0.08, 0.05, 12), ironHi, {
+      position: [0, 0.82, 0],
+    }, { castShadow: true }),
+    // Mirror-finish gazing sphere.
+    f.mesh("Gazing Sphere", sphere(0.18, 24, 18), chrome, {
+      position: [0, 1.0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // A small bright highlight sphere offset inside the chrome ball so
+    // the polished surface reads with a sun glint even on a flat-shaded
+    // viewport.
+    f.mesh("Sphere Glint", sphere(0.06, 12, 9), chromeHi, {
+      position: [0.08, 1.08, 0.08],
+    }, { castShadow: false }),
+  );
+  return f.group("Gazing Ball", parts, { position: pos, rotation: [0, Math.PI / 7, 0] });
+}
+
+/**
+ * A small stone cherub statue holding a basket of blooms — a classical
+ * garden ornament on a low square plinth. The cherub is built from a
+ * rounded torso sphere, a small head sphere, two squat leg cylinders, two
+ * arm cylinders cradling a terracotta basket and a pair of folded wing
+ * panels at the back. The basket carries a few pink and cream bloom dabs.
+ */
+function buildCherubStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const marble = std(C.cherubMarble, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  });
+  const marbleShade = std(C.cherubMarbleShade, 0.9, { flatShading: true });
+  const basket = std(C.cherubBasket, 0.9, { texture: "burlap", textureScale: [0.6, 0.6] });
+  const bloomPink = std(C.cherubBloomPink, 0.6);
+  const bloomCream = std(C.cherubBloomCream, 0.6);
+  const parts: SceneNode[] = [
+    // Square plinth — a low stone block the cherub kneels on.
+    f.mesh("Plinth Footing", box(0.52, 0.06, 0.52), marbleShade, {
+      position: [0, 0.03, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Body", box(0.44, 0.28, 0.44), marble, {
+      position: [0, 0.2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.5, 0.04, 0.5), marbleShade, {
+      position: [0, 0.36, 0],
+    }, { castShadow: true }),
+  ];
+  const baseY = 0.38;
+  // Two squat leg cylinders — the cherub kneels.
+  parts.push(
+    f.mesh("Leg L", cylinder(0.06, 0.07, 0.16, 10), marble, {
+      position: [-0.08, baseY + 0.08, 0],
+    }, { castShadow: true }),
+    f.mesh("Leg R", cylinder(0.06, 0.07, 0.16, 10), marble, {
+      position: [0.08, baseY + 0.08, 0],
+    }, { castShadow: true }),
+  );
+  // Torso — a flattened sphere as a pudgy cherub body.
+  parts.push(
+    f.mesh("Torso", sphere(0.16, 14, 10), marble, {
+      position: [0, baseY + 0.3, 0],
+      scale: [1.0, 1.1, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Head — a small round sphere atop the torso.
+  parts.push(
+    f.mesh("Head", sphere(0.12, 14, 10), marble, {
+      position: [0, baseY + 0.5, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // A small marble curl on top of the head — a stylised hair lock.
+    f.mesh("Hair Curl", sphere(0.05, 10, 7), marbleShade, {
+      position: [0, baseY + 0.59, -0.04],
+    }, { castShadow: false }),
+  );
+  // Two arms cradling the basket out in front — slim cylinders angled
+  // forward from the shoulders.
+  parts.push(
+    f.mesh("Arm L", cylinder(0.035, 0.035, 0.22, 8), marble, {
+      position: [-0.13, baseY + 0.32, 0.1],
+      rotation: [0.6, 0, 0.35],
+    }, { castShadow: true }),
+    f.mesh("Arm R", cylinder(0.035, 0.035, 0.22, 8), marble, {
+      position: [0.13, baseY + 0.32, 0.1],
+      rotation: [0.6, 0, -0.35],
+    }, { castShadow: true }),
+  );
+  // Two folded wing panels at the back — small angled rounded boxes.
+  parts.push(
+    f.mesh("Wing L", box(0.04, 0.18, 0.1), marble, {
+      position: [-0.12, baseY + 0.38, -0.1],
+      rotation: [0.2, -0.25, 0.4],
+    }, { castShadow: true }),
+    f.mesh("Wing R", box(0.04, 0.18, 0.1), marble, {
+      position: [0.12, baseY + 0.38, -0.1],
+      rotation: [0.2, 0.25, -0.4],
+    }, { castShadow: true }),
+  );
+  // Basket cradled in front — a small terracotta cylinder with a flared
+  // rim, sitting in the cherub's arms.
+  const basketY = baseY + 0.26;
+  const basketZ = 0.2;
+  parts.push(
+    f.mesh("Basket Body", cylinder(0.085, 0.07, 0.1, 12), basket, {
+      position: [0, basketY, basketZ],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Basket Rim", cylinder(0.095, 0.085, 0.025, 12), basket, {
+      position: [0, basketY + 0.05, basketZ],
+    }, { castShadow: true }),
+  );
+  // Bloom dabs in the basket — a small mound of pink and cream blooms
+  // overflowing slightly past the rim.
+  const blooms: { c: "p" | "c"; off: [number, number, number] }[] = [
+    { c: "p", off: [0, 0.07, 0] },
+    { c: "c", off: [-0.04, 0.08, 0.02] },
+    { c: "p", off: [0.04, 0.08, -0.02] },
+    { c: "c", off: [0.02, 0.075, 0.04] },
+    { c: "p", off: [-0.03, 0.065, -0.04] },
+    { c: "c", off: [-0.06, 0.06, 0.0] },
+    { c: "p", off: [0.06, 0.06, 0.0] },
+  ];
+  for (const b of blooms) {
+    parts.push(
+      f.mesh(`Bloom`, sphere(0.025, 8, 6), b.c === "p" ? bloomPink : bloomCream, {
+        position: [b.off[0], basketY + b.off[1], basketZ + b.off[2]],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Cherub Statue", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
+}
+
+/* ─────────────── sixteenth-pass house detail ─────────────── */
+
+/**
+ * A single climbing-rose trellis mounted flat against an exterior side
+ * wall. The trellis is a lattice grid of slim painted slats (six
+ * verticals crossed by five horizontals) framed by a slightly thicker
+ * border. Climbing-rose vines snake up the lattice and a sparse scatter
+ * of pink bloom dabs and leaf clusters reads as the climbing growth.
+ *
+ * `side` is the X-direction the trellis faces away from the wall — `+1`
+ * for the east wall (faces east), `-1` for the west wall (faces west).
+ */
+function buildSideTrellis(
+  f: NodeFactory,
+  pos: [number, number, number],
+  side: 1 | -1,
+): SceneNode {
+  const lattice = std(C.trellisLattice, 0.9, { texture: "wood", textureScale: [0.4, 1] });
+  const latticeShade = std(C.trellisLatticeShade, 0.95, { flatShading: true });
+  const leaf = std(C.trellisLeaf, 0.85, { flatShading: true });
+  const leafDark = std(C.trellisLeafDark, 0.9, { flatShading: true });
+  const rose = std(C.trellisRose, 0.6);
+  const roseDark = std(C.trellisRoseDark, 0.7);
+  const vine = std(C.pergolaWoodDark, 0.95, { flatShading: true });
+  // Trellis lives in the YZ plane — width along Z (along the side wall),
+  // height along Y. The face normal points in `side * +X` (toward the
+  // outside of the house).
+  const W_T = 2.4; // trellis width along Z
+  const H_T = 2.4; // trellis height along Y
+  const standoff = 0.04 * side; // small distance proud of the wall in +X / -X
+  const slatT = 0.025;
+  const parts: SceneNode[] = [];
+  // Outer frame — four slats forming a rectangle.
+  parts.push(
+    f.mesh("Frame Top", box(slatT * 1.4, slatT * 1.4, W_T), latticeShade, {
+      position: [standoff, H_T, 0],
+    }, { castShadow: true }),
+    f.mesh("Frame Bottom", box(slatT * 1.4, slatT * 1.4, W_T), latticeShade, {
+      position: [standoff, 0.2, 0],
+    }, { castShadow: true }),
+    f.mesh("Frame L", box(slatT * 1.4, H_T - 0.2, slatT * 1.4), latticeShade, {
+      position: [standoff, 0.2 + (H_T - 0.2) / 2, -W_T / 2],
+    }, { castShadow: true }),
+    f.mesh("Frame R", box(slatT * 1.4, H_T - 0.2, slatT * 1.4), latticeShade, {
+      position: [standoff, 0.2 + (H_T - 0.2) / 2, W_T / 2],
+    }, { castShadow: true }),
+  );
+  // Vertical slats (6) — slim painted columns across the trellis.
+  const vCount = 6;
+  for (let i = 0; i < vCount; i++) {
+    const t = i / (vCount - 1) - 0.5;
+    parts.push(
+      f.mesh(`V ${i}`, box(slatT, H_T - 0.3, slatT), lattice, {
+        position: [standoff, 0.25 + (H_T - 0.3) / 2, t * (W_T - 0.2)],
+      }, { castShadow: true }),
+    );
+  }
+  // Horizontal slats (5) — slim painted rails crossing the verticals.
+  const hCount = 5;
+  for (let i = 0; i < hCount; i++) {
+    const t = i / (hCount - 1) - 0.5;
+    parts.push(
+      f.mesh(`H ${i}`, box(slatT, slatT, W_T - 0.18), lattice, {
+        position: [standoff + 0.008 * side, H_T / 2 + t * (H_T - 0.5), 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Two climbing-rose vines — slim dark wooden stems snaking up the
+  // trellis in a gentle zig-zag. Each vine is approximated by a stack of
+  // short box segments that step left/right as they rise.
+  const vineXOff = standoff + 0.025 * side;
+  function vineStem(zStart: number, segs: number): SceneNode[] {
+    const out: SceneNode[] = [];
+    let z = zStart;
+    for (let i = 0; i < segs; i++) {
+      const y = 0.3 + i * 0.18;
+      const dz = (i % 2 === 0 ? 0.08 : -0.08) + (i % 3 === 0 ? 0.04 : -0.04);
+      out.push(
+        f.mesh(`Vine`, box(0.018, 0.2, 0.018), vine, {
+          position: [vineXOff, y, z + dz / 2],
+          rotation: [0, 0, dz > 0 ? 0.3 : -0.3],
+        }, { castShadow: false }),
+      );
+      z += dz;
+    }
+    return out;
+  }
+  parts.push(...vineStem(-W_T / 2 + 0.35, 11));
+  parts.push(...vineStem(W_T / 2 - 0.35, 11));
+  // Leaf cluster + rose bloom instances — scattered up the trellis face.
+  const rng = mulberry32(0x16ad11e5);
+  const leafInst: Transform[] = [];
+  const leafDarkInst: Transform[] = [];
+  const roseInst: Transform[] = [];
+  const roseDarkInst: Transform[] = [];
+  const leafCount = 56;
+  for (let i = 0; i < leafCount; i++) {
+    const z = (rng() - 0.5) * (W_T - 0.2);
+    const y = 0.3 + rng() * (H_T - 0.4);
+    const inst: Transform = {
+      position: [vineXOff + 0.018 * side, y, z],
+      rotation: [0, rng() * Math.PI * 2, 0],
+      scale: [1, 1, 1],
+    };
+    (rng() < 0.5 ? leafInst : leafDarkInst).push(inst);
+  }
+  // Roses — fewer than leaves, clustered toward the upper two-thirds of the
+  // trellis for the classic climbing-rose silhouette.
+  const roseCount = 22;
+  for (let i = 0; i < roseCount; i++) {
+    const z = (rng() - 0.5) * (W_T - 0.3);
+    const y = 0.6 + rng() * (H_T - 0.8);
+    const inst: Transform = {
+      position: [vineXOff + 0.034 * side, y, z],
+      rotation: [0, rng() * Math.PI * 2, 0],
+      scale: [1, 1, 1],
+    };
+    (rng() < 0.7 ? roseInst : roseDarkInst).push(inst);
+  }
+  parts.push(
+    f.instanced("Trellis Leaves", sphere(0.075, 8, 6), leaf, leafInst, {
+      castShadow: false,
+    }),
+    f.instanced("Trellis Leaves Dark", sphere(0.07, 8, 6), leafDark, leafDarkInst, {
+      castShadow: false,
+    }),
+    f.instanced("Trellis Roses", sphere(0.05, 8, 6), rose, roseInst, {
+      castShadow: false,
+    }),
+    f.instanced("Trellis Roses Dark", sphere(0.045, 8, 6), roseDark, roseDarkInst, {
+      castShadow: false,
+    }),
+  );
+  return f.group("Side Trellis", parts, { position: pos });
+}
+
+/** Pair of climbing-rose trellises — one on the east wall, one on the west. */
+function buildSideTrellises(f: NodeFactory): SceneNode {
+  return f.group("Side Trellises", [
+    buildSideTrellis(f, TRELLIS_E_POS, 1),
+    buildSideTrellis(f, TRELLIS_W_POS, -1),
+  ]);
+}
+
+/* ─────────────── sixteenth-pass scene extension ─────────────── */
+
+/**
+ * Far-north alpine foothills ground plane and props — reaches beyond the
+ * lakefront's far edge with a snowy alpine character. Carries a new
+ * `alpine-foothills` colour map paired with a snowdrift-and-scree depth
+ * map so the drifts and rock heads read as raised relief at glancing sun,
+ * a south lakefront-grass apron along the join, a small log cabin with a
+ * stone chimney trailing translucent smoke and a glowing window, a grove
+ * of snow-dusted conifers, three rounded snowdrift mounds, a pair of
+ * mossy boulders and a small frozen tarn pond.
+ */
+function buildAlpineFoothills(f: NodeFactory): SceneNode {
+  return f.group("Far North Alpine Foothills", [
+    // Alpine ground plane — snow-dusted moss with patches of bare rock and
+    // pine needle litter, surfaced with the new colour + depth map pair.
+    f.mesh(
+      "Alpine Ground",
+      plane(ALPINE_W, ALPINE_D),
+      std(C.alpineSnow, 0.95, {
+        texture: "alpine-foothills",
+        textureScale: [6, 4],
+        bumpMap: "alpine-foothills-bump",
+        bumpScale: 0.05,
+      }),
+      { position: ALPINE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // South apron — overlaps the lakefront's far edge with a lakefront-
+    // grass tone so the seam reads as one continuous ground layer.
+    f.mesh(
+      "Alpine South Apron",
+      plane(ALPINE_W, 3),
+      std(C.lakefrontGrass, 0.95, { texture: "grass", textureScale: [14, 1] }),
+      {
+        position: [0, -0.012, ALPINE_POS[2] + ALPINE_D / 2 - 1.5],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildLogCabin(f, LOG_CABIN_POS),
+    buildAlpineTrees(f),
+    buildSnowdrifts(f),
+    buildAlpineBoulders(f),
+    buildAlpineTarn(f, ALPINE_TARN_POS),
+  ]);
+}
+
+/**
+ * A small log cabin — six stacked horizontal log courses on each face,
+ * a peaked shingle roof, a dark front door, a square front window with a
+ * warm glow behind it and a tall stone chimney on the east face trailing
+ * translucent smoke wisps from its crown.
+ */
+function buildLogCabin(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const log = std(C.cabinLog, 0.95, { texture: "wood", textureScale: [1, 0.4] });
+  const logDark = std(C.cabinLogDark, 0.95, { texture: "wood", textureScale: [1, 0.4], flatShading: true });
+  const roof = std(C.cabinRoof, 0.9, { texture: "shingle", textureScale: [1.5, 1.5] });
+  const door = std(C.shedTrim, 0.85, { texture: "wood" });
+  const windowGlow: MaterialDef = {
+    color: C.cabinWindow,
+    roughness: 0.4,
+    emissive: "#f7d28c",
+    transparent: true,
+    opacity: 0.95,
+  };
+  const stone = std(C.firePitStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const smoke: MaterialDef = {
+    color: C.cabinSmoke,
+    roughness: 1.0,
+    transparent: true,
+    opacity: 0.32,
+  };
+  const cabinW = 2.4;
+  const cabinD = 1.8;
+  const cabinH = 1.4;
+  const courseH = cabinH / 6;
+  const parts: SceneNode[] = [];
+  // Six log courses on each of four walls — stacked horizontal cylinders
+  // along the wall length. Alternate light/dark courses for a chinked-log
+  // reading without modelling individual logs.
+  for (let i = 0; i < 6; i++) {
+    const m = i % 2 === 0 ? log : logDark;
+    const y = courseH / 2 + i * courseH;
+    // Front + back log courses — run along X (cabin width).
+    parts.push(
+      f.mesh(`Front Course ${i}`, cylinder(courseH / 2, courseH / 2, cabinW, 8), m, {
+        position: [0, y, cabinD / 2],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Back Course ${i}`, cylinder(courseH / 2, courseH / 2, cabinW, 8), m, {
+        position: [0, y, -cabinD / 2],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      // Side log courses — run along Z (cabin depth).
+      f.mesh(`Side L Course ${i}`, cylinder(courseH / 2, courseH / 2, cabinD, 8), m, {
+        position: [-cabinW / 2, y, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Side R Course ${i}`, cylinder(courseH / 2, courseH / 2, cabinD, 8), m, {
+        position: [cabinW / 2, y, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Roof — two angled rectangular planes meeting at the ridge. Built from
+  // a pair of boxes rotated about Z so they peak above the cabin.
+  const roofPitch = 0.6;
+  const roofW = cabinW + 0.4;
+  const roofRun = cabinD * 0.7;
+  parts.push(
+    f.mesh("Roof L", box(roofW, 0.08, roofRun), roof, {
+      position: [0, cabinH + Math.sin(roofPitch) * (roofRun / 2) * 0.4, -roofRun / 2 + 0.05],
+      rotation: [roofPitch, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof R", box(roofW, 0.08, roofRun), roof, {
+      position: [0, cabinH + Math.sin(roofPitch) * (roofRun / 2) * 0.4, roofRun / 2 - 0.05],
+      rotation: [-roofPitch, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Snow caps on the roof slopes — two pale boxes slightly proud of the
+    // shingles, reading as drifted snow on the peaks.
+    f.mesh("Snow Cap L", box(roofW - 0.3, 0.04, roofRun * 0.7), std(C.alpineSnow, 0.95), {
+      position: [0, cabinH + Math.sin(roofPitch) * (roofRun / 2) * 0.4 + 0.06, -roofRun / 2 + 0.1],
+      rotation: [roofPitch, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Snow Cap R", box(roofW - 0.3, 0.04, roofRun * 0.7), std(C.alpineSnow, 0.95), {
+      position: [0, cabinH + Math.sin(roofPitch) * (roofRun / 2) * 0.4 + 0.06, roofRun / 2 - 0.1],
+      rotation: [-roofPitch, 0, 0],
+    }, { castShadow: false }),
+  );
+  // Front door — a tall dark panel centred on the front (+Z) face.
+  parts.push(
+    f.mesh("Cabin Door", box(0.48, 1.0, 0.04), door, {
+      position: [-0.4, 0.5, cabinD / 2 + 0.04],
+    }, { castShadow: true }),
+    // Door knob — a small bright sphere.
+    f.mesh("Door Knob", sphere(0.025, 8, 6), std(C.brass, 0.4, { metalness: 0.7 }), {
+      position: [-0.18, 0.5, cabinD / 2 + 0.07],
+    }, { castShadow: false }),
+  );
+  // Front window — square pane on the front face with a warm glow behind.
+  parts.push(
+    f.mesh("Cabin Window", box(0.42, 0.42, 0.05), windowGlow, {
+      position: [0.55, 0.78, cabinD / 2 + 0.03],
+    }, { castShadow: false }),
+    // Cross muntin — slim wooden + dividing the window into four panes.
+    f.mesh("Window Muntin H", box(0.44, 0.03, 0.06), logDark, {
+      position: [0.55, 0.78, cabinD / 2 + 0.05],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin V", box(0.03, 0.44, 0.06), logDark, {
+      position: [0.55, 0.78, cabinD / 2 + 0.05],
+    }, { castShadow: false }),
+    // Window sill — a slim shelf below the pane.
+    f.mesh("Window Sill", box(0.5, 0.04, 0.1), logDark, {
+      position: [0.55, 0.55, cabinD / 2 + 0.04],
+    }, { castShadow: true }),
+  );
+  // Stone chimney rising along the east face — a tall square stack with a
+  // capped crown.
+  const chimneyY = 1.0;
+  parts.push(
+    f.mesh("Chimney Stack", box(0.34, chimneyY, 0.36), stone, {
+      position: [cabinW / 2 + 0.18, chimneyY / 2 + 0.2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Cap", box(0.42, 0.06, 0.44), stone, {
+      position: [cabinW / 2 + 0.18, chimneyY + 0.23, 0],
+    }, { castShadow: true }),
+    // Three translucent smoke wisps rising from the chimney crown, each
+    // slightly smaller and more transparent than the last.
+    f.mesh("Smoke 1", sphere(0.14, 8, 6), smoke, {
+      position: [cabinW / 2 + 0.2, chimneyY + 0.4, 0.05],
+      scale: [1, 0.6, 1],
+    }, { castShadow: false }),
+    f.mesh("Smoke 2", sphere(0.18, 8, 6),
+      { ...smoke, opacity: 0.24 }, {
+      position: [cabinW / 2 + 0.3, chimneyY + 0.6, 0.12],
+      scale: [1, 0.7, 1],
+    }, { castShadow: false }),
+    f.mesh("Smoke 3", sphere(0.22, 8, 6),
+      { ...smoke, opacity: 0.16 }, {
+      position: [cabinW / 2 + 0.42, chimneyY + 0.85, 0.22],
+      scale: [1, 0.7, 1],
+    }, { castShadow: false }),
+  );
+  // A small log step in front of the door.
+  parts.push(
+    f.mesh("Door Step", box(0.7, 0.08, 0.24), logDark, {
+      position: [-0.4, 0.04, cabinD / 2 + 0.18],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  return f.group("Log Cabin", parts, { position: pos, rotation: [0, Math.PI / 9, 0] });
+}
+
+/**
+ * A small grove of six snow-dusted conifers on the alpine plane — each a
+ * stylised stack of three cone tiers on a slim cylinder trunk, crowned
+ * with a small pale snow cap so the foliage reads as winter-dusted.
+ */
+function buildAlpineTrees(f: NodeFactory): SceneNode {
+  const trunk = std(C.cabinLog, 0.95, { texture: "bark", flatShading: true });
+  const foliage = std(C.pineFoliageDark, 0.9, { flatShading: true });
+  const foliageSnow = std(C.alpineSnow, 0.95, { flatShading: true });
+  const rng = mulberry32(0x16a17ee5);
+  const positions: [number, number][] = [
+    [-14, -82],
+    [-10, -80],
+    [12, -84],
+    [16, -82],
+    [-2, -92],
+    [-18, -94],
+  ];
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < positions.length; i++) {
+    const [x, z] = positions[i]!;
+    const scale = 1.3 + rng() * 0.5;
+    const yaw = rng() * Math.PI * 2;
+    const parts: SceneNode[] = [
+      // Trunk — a slim cylinder.
+      f.mesh(`Trunk ${i}`, cylinder(0.16, 0.22, 1.1, 6), trunk, {
+        position: [0, 0.55, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Three cone tiers tapering up, with a pale snow-dust ring on top
+      // of each tier reading as winter accumulation.
+      f.mesh(`Cone Lo ${i}`, cone(0.95, 1.5, 8), foliage, {
+        position: [0, 1.4, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Cone Mid ${i}`, cone(0.7, 1.2, 8), foliage, {
+        position: [0, 2.1, 0],
+      }, { castShadow: true }),
+      f.mesh(`Cone Hi ${i}`, cone(0.45, 0.9, 8), foliage, {
+        position: [0, 2.75, 0],
+      }, { castShadow: true }),
+      // Snow caps — slim cone tops sitting just above each tier's apex.
+      f.mesh(`Snow Lo ${i}`, cone(0.55, 0.3, 8), foliageSnow, {
+        position: [0, 1.95, 0],
+      }, { castShadow: false }),
+      f.mesh(`Snow Mid ${i}`, cone(0.4, 0.25, 8), foliageSnow, {
+        position: [0, 2.55, 0],
+      }, { castShadow: false }),
+      f.mesh(`Snow Top ${i}`, cone(0.3, 0.3, 8), foliageSnow, {
+        position: [0, 3.2, 0],
+      }, { castShadow: false }),
+    ];
+    groups.push(
+      f.group(`Alpine Tree ${i + 1}`, parts, {
+        position: [x, 0, z],
+        rotation: [0, yaw, 0],
+        scale: [scale, scale, scale],
+      }),
+    );
+  }
+  return f.group("Alpine Trees", groups);
+}
+
+/**
+ * Three rounded snowdrift mounds scattered around the alpine plane —
+ * each a wide flattened sphere of pure white so they read as drifted
+ * snow gathering against the ground undulations.
+ */
+function buildSnowdrifts(f: NodeFactory): SceneNode {
+  const snow = std(C.alpineSnow, 0.95, { flatShading: true });
+  const snowShade = std(C.alpineSnowShade, 0.95, { flatShading: true });
+  const drifts: { x: number; z: number; r: number }[] = [
+    { x: -22, z: -88, r: 1.4 },
+    { x: 6, z: -90, r: 1.0 },
+    { x: 20, z: -94, r: 1.2 },
+    { x: -8, z: -76, r: 0.9 },
+    { x: 24, z: -78, r: 0.7 },
+  ];
+  const driftMain: Transform[] = [];
+  const driftShade: Transform[] = [];
+  for (const d of drifts) {
+    driftMain.push({
+      position: [d.x, d.r * 0.3, d.z],
+      rotation: [0, 0, 0],
+      scale: [d.r, d.r * 0.45, d.r * 1.2],
+    });
+    // A slightly smaller shaded core under the main drift, suggesting
+    // wind-shadow on the lee side.
+    driftShade.push({
+      position: [d.x + 0.2, d.r * 0.22, d.z + 0.2],
+      rotation: [0, 0, 0],
+      scale: [d.r * 0.7, d.r * 0.3, d.r * 0.8],
+    });
+  }
+  return f.group("Snowdrifts", [
+    f.instanced("Drift Crowns", sphere(1, 12, 8), snow, driftMain, {
+      castShadow: true, receiveShadow: true,
+    }),
+    f.instanced("Drift Shades", sphere(1, 10, 7), snowShade, driftShade, {
+      castShadow: false,
+    }),
+  ]);
+}
+
+/**
+ * A pair of mossy boulders on the alpine plane — each a chunky stone
+ * mound topped by a small moss patch, framing the tarn pond between
+ * them. Built as a flattened sphere with a thinner moss cap on top.
+ */
+function buildAlpineBoulders(f: NodeFactory): SceneNode {
+  const rock = std(C.alpineRock, 0.95, { texture: "cobblestone", flatShading: true });
+  const rockDark = std(C.alpineRockDark, 0.95, { flatShading: true });
+  const moss = std(C.alpineMoss, 0.95, { flatShading: true });
+  const boulders: { x: number; z: number; r: number; yaw: number }[] = [
+    { x: 6, z: -86, r: 0.8, yaw: 0.4 },
+    { x: 14, z: -91, r: 0.65, yaw: -0.6 },
+  ];
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < boulders.length; i++) {
+    const b = boulders[i]!;
+    groups.push(
+      f.group(`Boulder ${i + 1}`, [
+        f.mesh("Stone Body", sphere(1, 12, 9), rock, {
+          position: [0, b.r * 0.6, 0],
+          scale: [b.r, b.r * 0.85, b.r * 1.1],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh("Stone Shade", sphere(1, 10, 7), rockDark, {
+          position: [b.r * 0.15, b.r * 0.45, b.r * 0.15],
+          scale: [b.r * 0.7, b.r * 0.6, b.r * 0.8],
+        }, { castShadow: false }),
+        // A small moss patch on the boulder's north shoulder.
+        f.mesh("Moss Patch", sphere(0.4, 10, 7), moss, {
+          position: [b.r * 0.2, b.r * 1.05, -b.r * 0.3],
+          scale: [b.r, b.r * 0.4, b.r * 0.8],
+        }, { castShadow: false }),
+      ], { position: [b.x, 0, b.z], rotation: [0, b.yaw, 0] }),
+    );
+  }
+  return f.group("Alpine Boulders", groups);
+}
+
+/**
+ * A small frozen tarn pond on the alpine plane — a wide flat ellipse of
+ * pale-blue ice with a slightly darker deep-water ring underneath and a
+ * thin rim of pebbles around the shore.
+ */
+function buildAlpineTarn(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const ice: MaterialDef = {
+    color: C.tarnIce,
+    roughness: 0.12,
+    metalness: 0.25,
+    transparent: true,
+    opacity: 0.88,
+  };
+  const iceDeep: MaterialDef = {
+    color: C.tarnIceDeep,
+    roughness: 0.2,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.6,
+  };
+  const pebble = std(C.alpineRockDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const parts: SceneNode[] = [
+    // Outer pebble rim — a wide flat disc just below the ice line.
+    f.mesh("Tarn Shore", cylinder(2.6, 2.6, 0.03, 18), pebble, {
+      position: [0, 0.015, 0],
+    }, { receiveShadow: true }),
+    // Deep water plate (slightly darker underneath).
+    f.mesh("Tarn Deep", cylinder(2.2, 2.2, 0.03, 18), iceDeep, {
+      position: [0, 0.025, 0],
+    }, { receiveShadow: true }),
+    // Ice surface plate on top.
+    f.mesh("Tarn Ice", cylinder(2.05, 2.05, 0.03, 18), ice, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+  ];
+  // A few small crack highlights — slim slivers across the ice surface.
+  const crack: MaterialDef = {
+    color: C.laundryWhite,
+    roughness: 0.2,
+    transparent: true,
+    opacity: 0.45,
+  };
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI;
+    parts.push(
+      f.mesh(`Crack ${i}`, box(1.8 + (i * 0.2), 0.005, 0.02), crack, {
+        position: [Math.cos(a) * 0.3, 0.05, Math.sin(a) * 0.3],
+        rotation: [0, a + 0.4, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // A few small pebbles scattered along the shore, reading as exposed
+  // alpine rock at the water's edge.
+  const rng = mulberry32(0x16a7a8a8);
+  for (let i = 0; i < 9; i++) {
+    const a = (i / 9) * Math.PI * 2;
+    const r = 2.55 + rng() * 0.18;
+    parts.push(
+      f.mesh(`Shore Pebble ${i}`, box(0.18, 0.12, 0.22), pebble, {
+        position: [Math.cos(a) * r, 0.06, Math.sin(a) * r],
+        rotation: [0, rng() * Math.PI, 0],
+        scale: [0.7 + rng() * 0.4, 0.7 + rng() * 0.4, 0.7 + rng() * 0.4],
+      }, { castShadow: true }),
+    );
+  }
+  return f.group("Alpine Tarn", parts, { position: pos });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -11304,6 +12123,35 @@ function buildFlowerCart(f: NodeFactory, pos: [number, number, number]): SceneNo
  *    (loaded with three cut-lavender bundles, faded red sideboard
  *    trim, two spoked wagon wheels and a long handle pole with a
  *    cross-bar grip).
+ *  - Sixteenth pass — yard: a Victorian garden gazing ball on a
+ *    swirling iron stand (slate footing, central shaft, four C-curve
+ *    scrolls fanning up to a cradle holding a polished mirror-finish
+ *    chrome sphere) near the south end of the cobble path's first
+ *    bend, and a small stone cherub statue holding a basket of
+ *    blooms on a low marble plinth opposite the gazing ball across
+ *    the path; the cherub reuses the existing `marble` colour + bump
+ *    pair so the stone reads with veined relief on the plinth.
+ *    House: a pair of climbing-rose trellises mounted on the east
+ *    and west exterior side walls — each a lattice grid of slim
+ *    painted slats framed by a slightly thicker border, with two
+ *    snaking dark vines climbing the verticals and a sparse scatter
+ *    of leaf clusters and pink rose bloom dabs across the upper two
+ *    thirds of the lattice. Scene: a far-north alpine foothills
+ *    plane reaching beyond the lakefront's far edge — a snow-dusted
+ *    moss ground surfaced with the new `alpine-foothills` colour map
+ *    paired with a snowdrift-and-scree depth map (registered
+ *    alongside the other procedural textures) so the drifts and
+ *    rock heads read as raised relief at glancing sun, a lakefront-
+ *    grass apron along the south join, a small log cabin with six
+ *    stacked log courses per wall, a peaked shingle roof with snow
+ *    caps, a dark front door, a square window with a warm interior
+ *    glow and a tall stone chimney trailing three translucent smoke
+ *    wisps, a grove of six snow-dusted conifers (three cone tiers
+ *    each, crowned by pale snow caps), three rounded snowdrift
+ *    mounds with shaded lee cores, a pair of mossy boulders framing
+ *    a focal small frozen tarn pond with a deep-water core, a
+ *    pale-blue ice surface, slim crack highlights and a fringe of
+ *    exposed alpine pebbles around the shore.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -11365,6 +12213,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     // Fifteenth-pass keep-outs — Adirondack pair and cascade urn.
     { x: ADIRONDACK_PAIR_POS[0], z: ADIRONDACK_PAIR_POS[2], r: 1.6 },
     { x: CASCADE_URN_POS[0], z: CASCADE_URN_POS[2], r: 0.9 },
+    // Sixteenth-pass keep-outs — gazing ball and cherub statue.
+    { x: GAZING_BALL_POS[0], z: GAZING_BALL_POS[2], r: 0.8 },
+    { x: CHERUB_STATUE_POS[0], z: CHERUB_STATUE_POS[2], r: 0.8 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -11418,6 +12269,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildArmillarySphere(f, ARMILLARY_POS),
     buildAdirondackPair(f, ADIRONDACK_PAIR_POS),
     buildCascadeUrn(f, CASCADE_URN_POS),
+    buildGazingBall(f, GAZING_BALL_POS),
+    buildCherubStatue(f, CHERUB_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -11430,6 +12283,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const seVineyard = buildSoutheastVineyard(f);
   const oliveGrove = buildSoutheastOliveGrove(f);
   const lavenderField = buildSouthwestLavenderField(f);
+  const alpineFoothills = buildAlpineFoothills(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -11465,6 +12319,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildRoofCupola(f, CUPOLA_POS),
     buildGableOculi(f),
     buildFrontDoorFittings(f),
+    buildSideTrellises(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -11484,6 +12339,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       seVineyard,
       oliveGrove,
       lavenderField,
+      alpineFoothills,
       house,
     ],
   };
