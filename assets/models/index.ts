@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over sixteen enhancement passes.
+// house and its courtyard, layered over seventeen enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -249,6 +249,40 @@
 //   with a deep-water core, a pale-blue ice surface, slim crack
 //   highlights and a fringe of exposed alpine pebbles around the
 //   shore.
+//   Pass 17 — courtyard: a wrought-iron Victorian tea table set on
+//   the back-east lawn (round iron pedestal table flanked by two
+//   ornate scrollback chairs, with a porcelain teapot, two cups on
+//   saucers and a three-tier pastry stand laid out for tea), and a
+//   pair of stone owl sentinel statues on slate plinths flanking the
+//   cobble path entrance near the gate — both owl bodies reuse the
+//   existing `marble` colour + bump pair so the stone reads with
+//   veined relief on the rounded shoulders, and the amber eyes carry
+//   a soft emissive glow so the sentinels read at low light; house:
+//   a stained-glass arched fanlight transom panel centred above the
+//   front door, between the door arch trim and the porch canopy —
+//   the panel uses the new `stained-glass` colour map paired with a
+//   leaded-muntin depth map (registered alongside the other
+//   procedural textures) so the lead cames read as raised relief on
+//   the glass plane, with a copper-patina trim arch framing the panel
+//   (reusing the existing copper-patina colour + bump pair) and a
+//   warm glow plate behind the colour panel so the fanlight reads as
+//   lit from the interior; scene: a northeast autumn maple grove
+//   plane bridging the gap between the lakefront's east edge and the
+//   northeast pasture's north edge — an auburn ground surfaced with
+//   the new `autumn-canopy` colour map paired with a leaf-litter
+//   depth map (registered alongside the other procedural textures)
+//   so the leaf piles and exposed soil patches read as raised relief
+//   at glancing sun, a lakefront-grass apron along the west join and
+//   a pasture-grass apron along the south join, a grove of five
+//   maple trees each with three layered foliage clusters in crimson,
+//   amber and gold (different dominant tint per tree), a small
+//   wooden hunting lodge with board-and-batten siding, a peaked
+//   shingle roof, a brass-knob plank front door, a glowing square
+//   front window with cross muntin and a tall stone chimney trailing
+//   pale smoke wisps, a pair of moss-jacketed fallen logs lying at
+//   different yaws across the grove floor, a small stacked-stone
+//   cairn marking a clearing at the back of the grove and a scatter
+//   of windblown crimson / amber / gold leaf dabs across the ground.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

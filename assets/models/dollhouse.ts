@@ -440,6 +440,54 @@ const ALPINE_D = 28;
 const LOG_CABIN_POS: [number, number, number] = [-6, 0, -90];
 const ALPINE_TARN_POS: [number, number, number] = [10, 0, -88];
 
+/**
+ * Seventeenth-pass courtyard props — a wrought-iron Victorian tea table
+ * set on the back-east lawn (round iron table with crossed legs, two
+ * ornate scrollback iron chairs, a porcelain teapot, two cups on saucers
+ * and a three-tier pastry stand), and a pair of stone owl sentinel
+ * statues on slate plinths flanking the cobble path entrance near the
+ * front gate. The owl bodies reuse the existing `marble` colour + bump
+ * pair so the stone reads with veined relief on the rounded shoulders.
+ */
+const TEA_TABLE_POS: [number, number, number] = [10.5, 0, -7.0];
+const OWL_L_POS: [number, number, number] = [-1.8, 0, 12.5];
+const OWL_R_POS: [number, number, number] = [1.8, 0, 12.5];
+
+/**
+ * Seventeenth-pass house detail — a stained-glass arched fanlight
+ * transom panel centred above the front door, tucked between the door
+ * trim and the porch canopy. The panel uses a new procedural
+ * `stained-glass` colour map paired with a `stained-glass-bump` depth
+ * map (registered alongside the other procedural textures) so the
+ * leaded muntins read as crusted relief on the glass plane, with a
+ * dim warm glow plate sitting just behind it to suggest interior light
+ * filtering through the rose-window medallion.
+ */
+const FANLIGHT_POS: [number, number, number] = [0, 2.5, FRONT_Z + WALL_T / 2 + 0.005];
+
+/**
+ * Seventeenth-pass scene extension — a northeast autumn maple grove
+ * plane bridging the gap between the lakefront's east edge (x ≈ 30,
+ * z ≈ [-73, -39]) and the northeast pasture's north edge (z ≈ -40,
+ * x ≈ [25, 43]). The plane overlaps the lakefront by ~1 unit along
+ * its west join and the pasture by ~2 units along its south join so
+ * the ground layer has no holes at the seams. It carries an auburn-
+ * orange ground (the new `autumn-canopy` colour map paired with a
+ * leaf-litter depth map so the leaf piles and exposed soil patches
+ * read as raised relief at glancing sun), a grove of five maple trees
+ * with crimson, amber and gold foliage layers, a small wooden hunting
+ * lodge with a stone chimney trailing pale smoke and a warm window
+ * glow, a pair of moss-jacketed fallen logs and a small stacked-stone
+ * cairn marking a clearing at the back of the grove.
+ */
+const NE_MAPLE_POS: [number, number, number] = [36, -0.017, -55.5];
+const NE_MAPLE_W = 14;
+const NE_MAPLE_D = 35;
+const HUNTING_LODGE_POS: [number, number, number] = [38, 0, -60];
+const MAPLE_LOG_A_POS: [number, number, number] = [33, 0, -50];
+const MAPLE_LOG_B_POS: [number, number, number] = [40, 0, -45];
+const MAPLE_CAIRN_POS: [number, number, number] = [34, 0, -68];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -864,6 +912,57 @@ const C = {
   cabinSmoke: "#dad6cf",
   tarnIce: "#a8c8d6",
   tarnIceDeep: "#5e8aa6",
+  // Seventeenth enhancement pass — a wrought-iron Victorian tea table
+  // set with two ornate chairs and a three-tier pastry stand on the
+  // back-east lawn, a pair of stone owl sentinel statues on slate
+  // plinths flanking the cobble path entrance (owl bodies reuse the
+  // existing `marble` colour + bump pair so the stone reads with
+  // veined relief on the shoulders), a stained-glass arched fanlight
+  // panel centred above the front door (new `stained-glass` colour
+  // map paired with a leaded-muntin depth map so the lead cames read
+  // as raised relief on the glass plane), and a northeast autumn maple
+  // grove scene extension with an auburn ground (new `autumn-canopy`
+  // colour map paired with a leaf-litter depth map so the leaf piles
+  // and exposed soil patches read as raised relief at glancing sun), a
+  // grove of five maple trees with crimson / amber / gold foliage
+  // layers, a small wooden hunting lodge with a stone chimney, a pair
+  // of moss-jacketed fallen logs and a small stacked-stone cairn.
+  teaTableIron: "#1f1c1a",
+  teaTableIronHi: "#3a3636",
+  teaTableTop: "#2a2622",
+  teaPorcelain: "#fbf3e2",
+  teaPorcelainTrim: "#c6a25a",
+  teaPastry: "#f0b774",
+  teaPastryDark: "#a86c2c",
+  teaCake: "#f4ddc1",
+  owlMarble: "#e8dec8",
+  owlMarbleShade: "#a8997e",
+  owlEye: "#f3a83a",
+  owlBeak: "#5e3f2c",
+  fanlightLead: "#3a3a3a",
+  fanlightAmber: "#f0b664",
+  fanlightRose: "#ef89a8",
+  fanlightTeal: "#3f7780",
+  fanlightGold: "#f4c542",
+  fanlightGlow: "#fff1c4",
+  mapleGround: "#9a5b2c",
+  mapleGroundDark: "#5e3618",
+  mapleLeafLitter: "#c8702a",
+  mapleSoil: "#4a2e1a",
+  mapleTrunk: "#5e4530",
+  mapleTrunkShade: "#3a2818",
+  mapleCrimson: "#b03830",
+  mapleCrimsonDark: "#7a2620",
+  mapleAmber: "#dc7a26",
+  mapleGold: "#e8b338",
+  mapleFoliage: "#a8543a",
+  lodgeWood: "#7c5238",
+  lodgeWoodDark: "#4a3220",
+  lodgeRoof: "#3a2818",
+  lodgeChimney: "#7a6d5c",
+  lodgeWindow: "#ffd989",
+  cairnStone: "#8a8278",
+  cairnStoneDark: "#5e564c",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -11912,6 +12011,850 @@ function buildAlpineTarn(f: NodeFactory, pos: [number, number, number]): SceneNo
   return f.group("Alpine Tarn", parts, { position: pos });
 }
 
+/* ─────────────── seventeenth-pass courtyard props ─────────────── */
+
+/**
+ * A wrought-iron Victorian tea table set — a round black iron table on a
+ * crossed-leg pedestal, flanked by two ornate scrollback chairs and laid
+ * with a porcelain teapot, two cups on saucers and a three-tier pastry
+ * stand. The table top is a slim dark disc rendered with low roughness so
+ * highlights sketch across it; the chair scrollbacks are built from a
+ * stack of slim arc segments that fan out from the seat.
+ */
+function buildVictorianTeaSet(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const iron = std(C.teaTableIron, 0.45, { metalness: 0.5, flatShading: true });
+  const ironHi = std(C.teaTableIronHi, 0.4, { metalness: 0.6 });
+  const tabletop = std(C.teaTableTop, 0.35, { metalness: 0.4 });
+  const porcelain = std(C.teaPorcelain, 0.4);
+  const porcelainTrim = std(C.teaPorcelainTrim, 0.3, { metalness: 0.5 });
+  const cake = std(C.teaCake, 0.6);
+  const pastry = std(C.teaPastry, 0.65);
+  const pastryDark = std(C.teaPastryDark, 0.7);
+  const parts: SceneNode[] = [];
+  // ── Table ──
+  const tableR = 0.45;
+  const tableY = 0.62;
+  // Crossed-leg pedestal — four slim iron rods rising from a low ring
+  // and meeting under the table top.
+  parts.push(
+    // Base ring resting on the lawn.
+    f.mesh("Table Base Ring", cylinder(0.22, 0.24, 0.04, 14), iron, {
+      position: [0, 0.02, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  for (let i = 0; i < 4; i++) {
+    const yaw = (i / 4) * Math.PI * 2 + Math.PI / 4;
+    parts.push(
+      f.mesh(`Table Leg ${i}`, box(0.028, 0.62, 0.028), iron, {
+        position: [Math.cos(yaw) * 0.18, 0.32, Math.sin(yaw) * 0.18],
+        rotation: [Math.cos(yaw) * 0.2, 0, -Math.sin(yaw) * 0.2],
+      }, { castShadow: true }),
+    );
+  }
+  parts.push(
+    // Central rod connecting base to top.
+    f.mesh("Table Rod", cylinder(0.04, 0.04, 0.6, 8), iron, {
+      position: [0, 0.32, 0],
+    }, { castShadow: true }),
+    // Slim collar where the rod meets the underside.
+    f.mesh("Table Collar", cylinder(0.08, 0.08, 0.03, 12), ironHi, {
+      position: [0, tableY - 0.05, 0],
+    }, { castShadow: true }),
+    // Round table top — slim dark disc.
+    f.mesh("Table Top", cylinder(tableR, tableR, 0.04, 28), tabletop, {
+      position: [0, tableY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Decorative iron rim around the table edge.
+    f.mesh("Table Rim", cylinder(tableR + 0.02, tableR + 0.02, 0.02, 28), iron, {
+      position: [0, tableY + 0.025, 0],
+    }, { castShadow: true }),
+  );
+  // ── Two chairs facing the table ──
+  function chair(seatYaw: number, distance: number): SceneNode[] {
+    const cx = Math.cos(seatYaw) * distance;
+    const cz = Math.sin(seatYaw) * distance;
+    const seatY = 0.45;
+    const backYaw = seatYaw + Math.PI; // back faces away from the table
+    const seatNode: SceneNode[] = [];
+    // Seat disc.
+    seatNode.push(
+      f.mesh("Chair Seat", cylinder(0.18, 0.18, 0.04, 18), iron, {
+        position: [cx, seatY, cz],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Four splayed iron legs.
+    for (let i = 0; i < 4; i++) {
+      const lYaw = (i / 4) * Math.PI * 2 + Math.PI / 4;
+      const lx = cx + Math.cos(lYaw) * 0.13;
+      const lz = cz + Math.sin(lYaw) * 0.13;
+      seatNode.push(
+        f.mesh(`Chair Leg ${i}`, box(0.022, seatY, 0.022), iron, {
+          position: [lx, seatY / 2, lz],
+          rotation: [Math.cos(lYaw) * 0.12, 0, -Math.sin(lYaw) * 0.12],
+        }, { castShadow: true }),
+      );
+    }
+    // Scrollback — a stack of slim arc segments fanning up behind the seat.
+    const backX = cx + Math.cos(backYaw) * 0.17;
+    const backZ = cz + Math.sin(backYaw) * 0.17;
+    for (let i = 0; i < 5; i++) {
+      const y = seatY + 0.06 + i * 0.08;
+      const w = 0.32 - i * 0.04;
+      seatNode.push(
+        f.mesh(`Chair Back ${i}`, box(w, 0.02, 0.02), iron, {
+          position: [backX, y, backZ],
+          rotation: [0, backYaw + Math.PI / 2, 0],
+        }, { castShadow: true }),
+      );
+    }
+    // Two slim posts framing the scrollback.
+    for (const side of [-1, 1] as const) {
+      const px = backX + Math.cos(backYaw + Math.PI / 2) * side * 0.14;
+      const pz = backZ + Math.sin(backYaw + Math.PI / 2) * side * 0.14;
+      seatNode.push(
+        f.mesh(`Chair Post ${side}`, box(0.022, 0.5, 0.022), iron, {
+          position: [px, seatY + 0.26, pz],
+        }, { castShadow: true }),
+      );
+    }
+    // A small scroll curl at the top of each post — a tiny iron sphere.
+    for (const side of [-1, 1] as const) {
+      const px = backX + Math.cos(backYaw + Math.PI / 2) * side * 0.14;
+      const pz = backZ + Math.sin(backYaw + Math.PI / 2) * side * 0.14;
+      seatNode.push(
+        f.mesh(`Chair Curl ${side}`, sphere(0.03, 8, 6), ironHi, {
+          position: [px, seatY + 0.52, pz],
+        }, { castShadow: false }),
+      );
+    }
+    return seatNode;
+  }
+  parts.push(...chair(Math.PI * 0.25, 0.85));
+  parts.push(...chair(Math.PI * 1.25, 0.85));
+  // ── Tableware ──
+  // Teapot — squat porcelain bulb with a stout spout, curved handle and
+  // a domed lid topped by a tiny brass knob.
+  const potX = -0.16, potZ = 0.06;
+  parts.push(
+    f.mesh("Teapot Body", sphere(0.085, 14, 10), porcelain, {
+      position: [potX, tableY + 0.11, potZ],
+      scale: [1.1, 0.95, 1.1],
+    }, { castShadow: true, receiveShadow: true }),
+    // Spout.
+    f.mesh("Teapot Spout", cylinder(0.018, 0.025, 0.12, 8), porcelain, {
+      position: [potX - 0.13, tableY + 0.12, potZ - 0.02],
+      rotation: [0, 0, Math.PI / 3],
+    }, { castShadow: true }),
+    // Handle — small arc box.
+    f.mesh("Teapot Handle", box(0.022, 0.08, 0.022), porcelain, {
+      position: [potX + 0.1, tableY + 0.12, potZ + 0.01],
+      rotation: [0, 0, Math.PI / 8],
+    }, { castShadow: true }),
+    // Domed lid.
+    f.mesh("Teapot Lid", sphere(0.06, 12, 8), porcelain, {
+      position: [potX, tableY + 0.18, potZ],
+      scale: [1, 0.5, 1],
+    }, { castShadow: true }),
+    // Lid knob.
+    f.mesh("Teapot Knob", sphere(0.018, 8, 6), porcelainTrim, {
+      position: [potX, tableY + 0.21, potZ],
+    }, { castShadow: false }),
+    // Gilt rim around the body.
+    f.mesh("Teapot Rim", cylinder(0.09, 0.09, 0.012, 14), porcelainTrim, {
+      position: [potX, tableY + 0.16, potZ],
+    }, { castShadow: false }),
+  );
+  // Two cups on saucers — set across the table from the teapot.
+  const cupPositions: [number, number][] = [
+    [0.16, -0.18],
+    [0.22, 0.18],
+  ];
+  for (let i = 0; i < cupPositions.length; i++) {
+    const [cxOff, czOff] = cupPositions[i]!;
+    parts.push(
+      f.mesh(`Saucer ${i}`, cylinder(0.07, 0.07, 0.012, 14), porcelain, {
+        position: [cxOff, tableY + 0.025, czOff],
+      }, { castShadow: false, receiveShadow: true }),
+      f.mesh(`Saucer Rim ${i}`, cylinder(0.07, 0.07, 0.005, 14), porcelainTrim, {
+        position: [cxOff, tableY + 0.032, czOff],
+      }, { castShadow: false }),
+      f.mesh(`Cup Body ${i}`, cylinder(0.038, 0.04, 0.055, 14), porcelain, {
+        position: [cxOff, tableY + 0.062, czOff],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Cup Rim ${i}`, cylinder(0.04, 0.04, 0.005, 14), porcelainTrim, {
+        position: [cxOff, tableY + 0.092, czOff],
+      }, { castShadow: false }),
+      f.mesh(`Cup Handle ${i}`, box(0.018, 0.028, 0.012), porcelain, {
+        position: [cxOff + 0.044, tableY + 0.064, czOff],
+      }, { castShadow: true }),
+      // A small disc of tea inside the cup — a darker top surface.
+      f.mesh(`Cup Tea ${i}`, cylinder(0.035, 0.035, 0.005, 12), std(C.teaPastryDark, 0.3, { metalness: 0.2 }), {
+        position: [cxOff, tableY + 0.088, czOff],
+      }, { castShadow: false }),
+    );
+  }
+  // Three-tier pastry stand — three porcelain plates of decreasing radius
+  // on a thin central rod, topped by a small ring handle.
+  const standX = 0, standZ = 0;
+  const plateR = [0.12, 0.095, 0.07];
+  const plateY = [tableY + 0.05, tableY + 0.17, tableY + 0.27];
+  for (let i = 0; i < 3; i++) {
+    parts.push(
+      f.mesh(`Stand Plate ${i}`, cylinder(plateR[i]!, plateR[i]!, 0.014, 18), porcelain, {
+        position: [standX, plateY[i]!, standZ],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Stand Plate Rim ${i}`, cylinder(plateR[i]!, plateR[i]!, 0.005, 18), porcelainTrim, {
+        position: [standX, plateY[i]! + 0.009, standZ],
+      }, { castShadow: false }),
+    );
+  }
+  parts.push(
+    f.mesh("Stand Rod", cylinder(0.012, 0.012, 0.3, 8), porcelainTrim, {
+      position: [standX, tableY + 0.18, standZ],
+    }, { castShadow: true }),
+    // Top ring handle — small donut hint as a flattened cylinder.
+    f.mesh("Stand Handle", cylinder(0.028, 0.028, 0.012, 14), porcelainTrim, {
+      position: [standX, tableY + 0.33, standZ],
+    }, { castShadow: false }),
+  );
+  // A few pastries on each plate — flat round dabs and a small frosted
+  // cake on the top tier.
+  const pastryDabs: { tier: 0 | 1 | 2; r: number; dx: number; dz: number; mat: "p" | "d" | "c" }[] = [
+    { tier: 0, r: 0.035, dx: -0.06, dz: 0.02, mat: "p" },
+    { tier: 0, r: 0.03, dx: 0.04, dz: -0.05, mat: "d" },
+    { tier: 0, r: 0.032, dx: 0.06, dz: 0.04, mat: "p" },
+    { tier: 0, r: 0.028, dx: -0.02, dz: -0.06, mat: "c" },
+    { tier: 1, r: 0.03, dx: -0.04, dz: 0.02, mat: "p" },
+    { tier: 1, r: 0.026, dx: 0.04, dz: -0.03, mat: "d" },
+    { tier: 1, r: 0.026, dx: 0.02, dz: 0.04, mat: "c" },
+  ];
+  for (const p of pastryDabs) {
+    const mat = p.mat === "p" ? pastry : p.mat === "d" ? pastryDark : cake;
+    parts.push(
+      f.mesh("Pastry", cylinder(p.r, p.r * 0.9, 0.022, 12), mat, {
+        position: [standX + p.dx, plateY[p.tier]! + 0.022, standZ + p.dz],
+      }, { castShadow: true }),
+    );
+  }
+  // Top tier — a small layered frosted cake.
+  parts.push(
+    f.mesh("Top Cake Body", cylinder(0.048, 0.05, 0.04, 14), cake, {
+      position: [standX, plateY[2]! + 0.03, standZ],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Top Cake Frosting", cylinder(0.052, 0.045, 0.02, 14), porcelain, {
+      position: [standX, plateY[2]! + 0.06, standZ],
+    }, { castShadow: true }),
+    // A tiny pink cherry on top.
+    f.mesh("Top Cake Cherry", sphere(0.014, 8, 6), std(C.flowerRed, 0.4), {
+      position: [standX, plateY[2]! + 0.078, standZ],
+    }, { castShadow: false }),
+  );
+  return f.group("Victorian Tea Set", parts, { position: pos, rotation: [0, -Math.PI / 5, 0] });
+}
+
+/**
+ * A single stone owl sentinel on a slate plinth — a round-bodied owl
+ * with a small head, two prominent eye discs, a short hooked beak, two
+ * ear tufts and a pair of folded wing slats down each flank. The owl
+ * body reuses the existing `marble` colour + bump pair so the stone
+ * reads with veined relief on the rounded shoulders.
+ *
+ * `facing` rotates the owl about Y so the carved eyes look down the path.
+ */
+function buildOwlStatue(
+  f: NodeFactory,
+  pos: [number, number, number],
+  facing: number,
+): SceneNode {
+  const marble = std(C.owlMarble, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  });
+  const marbleShade = std(C.owlMarbleShade, 0.95, { flatShading: true });
+  const slate = std(C.slatePlate, 0.95, { texture: "cobblestone", flatShading: true });
+  const eye: MaterialDef = {
+    color: C.owlEye,
+    roughness: 0.45,
+    metalness: 0.2,
+    emissive: "#3a2a14",
+  };
+  const beak = std(C.owlBeak, 0.9, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Slate plinth — two slate slabs stacked.
+    f.mesh("Plinth Footing", box(0.42, 0.05, 0.42), slate, {
+      position: [0, 0.025, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Body", box(0.34, 0.22, 0.34), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.38, 0.04, 0.38), slate, {
+      position: [0, 0.29, 0],
+    }, { castShadow: true }),
+  ];
+  // Body — egg-shaped marble torso.
+  const bodyY = 0.6;
+  parts.push(
+    f.mesh("Owl Body", sphere(0.2, 16, 12), marble, {
+      position: [0, bodyY, 0],
+      scale: [1.0, 1.2, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Subtle belly highlight — a slim sphere offset forward.
+    f.mesh("Owl Belly", sphere(0.16, 12, 9), marbleShade, {
+      position: [Math.cos(facing) * 0.05, bodyY - 0.04, Math.sin(facing) * 0.05],
+      scale: [0.9, 0.95, 0.85],
+    }, { castShadow: false }),
+  );
+  // Head — round marble dome resting on the body.
+  const headY = bodyY + 0.27;
+  parts.push(
+    f.mesh("Owl Head", sphere(0.14, 14, 10), marble, {
+      position: [0, headY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Two large eye discs on the front of the head.
+  for (const side of [-1, 1] as const) {
+    const ex = Math.cos(facing) * 0.1 + Math.cos(facing + Math.PI / 2) * side * 0.06;
+    const ez = Math.sin(facing) * 0.1 + Math.sin(facing + Math.PI / 2) * side * 0.06;
+    parts.push(
+      // White marble eye disc.
+      f.mesh(`Eye Disc ${side}`, cylinder(0.04, 0.04, 0.015, 12), marbleShade, {
+        position: [ex, headY + 0.02, ez],
+        rotation: [Math.PI / 2 - facing * 0, facing, 0],
+      }, { castShadow: false }),
+      // Amber pupil.
+      f.mesh(`Eye Pupil ${side}`, sphere(0.025, 10, 8), eye, {
+        position: [ex + Math.cos(facing) * 0.008, headY + 0.02, ez + Math.sin(facing) * 0.008],
+      }, { castShadow: false }),
+    );
+  }
+  // Beak — small downward triangle of marble at the front of the head.
+  parts.push(
+    f.mesh("Owl Beak", cone(0.025, 0.06, 6), beak, {
+      position: [Math.cos(facing) * 0.13, headY - 0.04, Math.sin(facing) * 0.13],
+      rotation: [-Math.PI / 2 + Math.cos(facing) * 0.0, 0, 0],
+    }, { castShadow: false }),
+  );
+  // Two ear tufts on top of the head — slim marble cones.
+  for (const side of [-1, 1] as const) {
+    const ex = Math.cos(facing + Math.PI / 2) * side * 0.08;
+    const ez = Math.sin(facing + Math.PI / 2) * side * 0.08;
+    parts.push(
+      f.mesh(`Ear Tuft ${side}`, cone(0.035, 0.1, 6), marble, {
+        position: [ex, headY + 0.14, ez],
+        rotation: [0, 0, side * 0.25],
+      }, { castShadow: true }),
+    );
+  }
+  // Folded wings — two slim curved panels down each flank.
+  for (const side of [-1, 1] as const) {
+    const wx = Math.cos(facing + Math.PI / 2) * side * 0.18;
+    const wz = Math.sin(facing + Math.PI / 2) * side * 0.18;
+    parts.push(
+      f.mesh(`Wing Slat A ${side}`, box(0.03, 0.22, 0.05), marble, {
+        position: [wx, bodyY - 0.04, wz],
+        rotation: [0, facing, side * 0.15],
+      }, { castShadow: true }),
+      f.mesh(`Wing Slat B ${side}`, box(0.022, 0.16, 0.04), marbleShade, {
+        position: [wx * 0.9, bodyY - 0.14, wz * 0.9],
+        rotation: [0, facing, side * 0.25],
+      }, { castShadow: true }),
+    );
+  }
+  // Two stubby marble talons peeking out below the body.
+  for (const side of [-1, 1] as const) {
+    const tx = Math.cos(facing + Math.PI / 2) * side * 0.06;
+    const tz = Math.sin(facing + Math.PI / 2) * side * 0.06;
+    parts.push(
+      f.mesh(`Talon ${side}`, sphere(0.04, 8, 6), marbleShade, {
+        position: [tx + Math.cos(facing) * 0.05, 0.33, tz + Math.sin(facing) * 0.05],
+        scale: [1.2, 0.7, 1.0],
+      }, { castShadow: true }),
+    );
+  }
+  return f.group("Owl Statue", parts, { position: pos, rotation: [0, facing, 0] });
+}
+
+function buildOwlSentinels(f: NodeFactory): SceneNode {
+  return f.group("Owl Sentinels", [
+    // Both face inward toward the cobble path so the eyes meet the gate-
+    // bound visitor — the left owl looks east (+X), the right looks west.
+    buildOwlStatue(f, OWL_L_POS, 0),
+    buildOwlStatue(f, OWL_R_POS, Math.PI),
+  ]);
+}
+
+/* ─────────────── seventeenth-pass house detail ─────────────── */
+
+/**
+ * A stained-glass arched fanlight transom panel centred above the
+ * front door, between the door arch trim and the porch canopy. The
+ * panel is a slim flat box surfaced with the new `stained-glass` colour
+ * map paired with the `stained-glass-bump` depth map so the leaded
+ * muntins read as raised relief on the glass. A second slim warm-glow
+ * plate sits a hair behind the colour plate so the panel reads as a
+ * lit fanlight, and a copper-patina trim arch surrounds the whole
+ * panel reusing the existing copper-patina pair for verdigris relief.
+ */
+function buildFanlight(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const fanlight: MaterialDef = {
+    color: C.fanlightGlow,
+    roughness: 0.25,
+    metalness: 0.1,
+    texture: "stained-glass",
+    textureScale: [1, 1],
+    bumpMap: "stained-glass-bump",
+    bumpScale: 0.03,
+    emissive: "#5e3818",
+  };
+  const glowMat: MaterialDef = {
+    color: C.fanlightGlow,
+    roughness: 0.4,
+    emissive: "#f7d28c",
+    transparent: true,
+    opacity: 0.7,
+  };
+  const trim: MaterialDef = {
+    color: C.copperPatina,
+    roughness: 0.55,
+    metalness: 0.55,
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const lead = std(C.fanlightLead, 0.65, { metalness: 0.4, flatShading: true });
+  const panelW = 1.3;
+  const panelH = 0.4;
+  const parts: SceneNode[] = [
+    // Warm interior glow plate behind the stained glass.
+    f.mesh("Fanlight Glow", box(panelW - 0.04, panelH - 0.04, 0.01), glowMat, {
+      position: [0, 0, -0.02],
+    }, { castShadow: false }),
+    // Stained-glass colour plate carrying the leaded-muntin texture.
+    f.mesh("Fanlight Glass", box(panelW, panelH, 0.02), fanlight, {
+      position: [0, 0, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Copper-patina trim arch — four slim bands framing the panel.
+    f.mesh("Trim Top", box(panelW + 0.1, 0.04, 0.03), trim, {
+      position: [0, panelH / 2 + 0.02, 0.005],
+    }, { castShadow: true }),
+    f.mesh("Trim Bottom", box(panelW + 0.1, 0.04, 0.03), trim, {
+      position: [0, -panelH / 2 - 0.02, 0.005],
+    }, { castShadow: true }),
+    f.mesh("Trim L", box(0.04, panelH, 0.03), trim, {
+      position: [-panelW / 2 - 0.02, 0, 0.005],
+    }, { castShadow: true }),
+    f.mesh("Trim R", box(0.04, panelH, 0.03), trim, {
+      position: [panelW / 2 + 0.02, 0, 0.005],
+    }, { castShadow: true }),
+  ];
+  // A central vertical lead came dividing the panel into two halves
+  // and a horizontal cross came at the middle — these read as the
+  // major lead lines on top of the procedural muntin texture.
+  parts.push(
+    f.mesh("Lead Vertical", box(0.022, panelH - 0.02, 0.025), lead, {
+      position: [0, 0, 0.012],
+    }, { castShadow: false }),
+    f.mesh("Lead Horizontal", box(panelW - 0.02, 0.018, 0.025), lead, {
+      position: [0, 0, 0.012],
+    }, { castShadow: false }),
+  );
+  // Small decorative keystone medallion at the centre — a slim disc.
+  parts.push(
+    f.mesh("Keystone Medallion", cylinder(0.06, 0.06, 0.02, 16), trim, {
+      position: [0, 0, 0.025],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Stained Glass Fanlight", parts, { position: pos });
+}
+
+/* ─────────────── seventeenth-pass scene extension ─────────────── */
+
+function buildNortheastMapleGrove(f: NodeFactory): SceneNode {
+  return f.group("Northeast Autumn Maple Grove", [
+    // Auburn maple-grove ground plane — surfaced with the new colour +
+    // depth map pair so leaf piles and exposed soil patches read as
+    // raised relief at glancing sun.
+    f.mesh(
+      "Maple Grove Ground",
+      plane(NE_MAPLE_W, NE_MAPLE_D),
+      std(C.mapleGround, 0.95, {
+        texture: "autumn-canopy",
+        textureScale: [3, 5],
+        bumpMap: "autumn-canopy-bump",
+        bumpScale: 0.05,
+      }),
+      { position: NE_MAPLE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the lakefront's east edge with the
+    // lakefront-grass tone so the seam reads as one continuous ground.
+    f.mesh(
+      "Maple Grove West Apron",
+      plane(2, NE_MAPLE_D),
+      std(C.lakefrontGrass, 0.95, { texture: "grass", textureScale: [1, 12] }),
+      {
+        position: [NE_MAPLE_POS[0] - NE_MAPLE_W / 2 + 1, -0.013, NE_MAPLE_POS[2]],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // South apron — overlaps the NE pasture's north edge with the
+    // pasture-grass tone so the seam reads as continuous ground.
+    f.mesh(
+      "Maple Grove South Apron",
+      plane(NE_MAPLE_W, 3),
+      std(C.pastureGrass, 0.95, { texture: "grass", textureScale: [10, 1] }),
+      {
+        position: [NE_MAPLE_POS[0], -0.013, NE_MAPLE_POS[2] + NE_MAPLE_D / 2 - 1.5],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildMapleTrees(f),
+    buildHuntingLodge(f, HUNTING_LODGE_POS),
+    buildMossyFallenLog(f, MAPLE_LOG_A_POS, 0.4),
+    buildMossyFallenLog(f, MAPLE_LOG_B_POS, -1.1),
+    buildStoneCairn(f, MAPLE_CAIRN_POS),
+    buildMapleLeafLitter(f),
+  ]);
+}
+
+/**
+ * A grove of five maple trees scattered across the maple grove plane —
+ * each a stout trunk crowned by three layered foliage clusters in
+ * crimson, amber and gold, giving a tiered autumn canopy silhouette
+ * that varies tree to tree by which crown tint dominates.
+ */
+function buildMapleTrees(f: NodeFactory): SceneNode {
+  const trunk = std(C.mapleTrunk, 0.95, { texture: "bark", flatShading: true });
+  const trunkShade = std(C.mapleTrunkShade, 0.95, { flatShading: true });
+  const crimson = std(C.mapleCrimson, 0.85, { flatShading: true });
+  const crimsonDark = std(C.mapleCrimsonDark, 0.9, { flatShading: true });
+  const amber = std(C.mapleAmber, 0.85, { flatShading: true });
+  const gold = std(C.mapleGold, 0.85, { flatShading: true });
+  // Five maple positions inside the plane, routing around the lodge.
+  const trees: { x: number; z: number; scale: number; dominant: "c" | "a" | "g" }[] = [
+    { x: 32, z: -48, scale: 1.1, dominant: "c" },
+    { x: 33, z: -57, scale: 1.0, dominant: "a" },
+    { x: 41, z: -42, scale: 0.95, dominant: "g" },
+    { x: 41, z: -52, scale: 1.05, dominant: "c" },
+    { x: 35, z: -64, scale: 0.9, dominant: "a" },
+  ];
+  const rng = mulberry32(0x17a91e7e);
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < trees.length; i++) {
+    const t = trees[i]!;
+    const yaw = rng() * Math.PI * 2;
+    const parts: SceneNode[] = [];
+    // Stout trunk — a tapered cylinder.
+    parts.push(
+      f.mesh("Maple Trunk", cylinder(0.18, 0.28, 1.5, 9), trunk, {
+        position: [0, 0.75, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // A darker buttress flare at the base of the trunk.
+      f.mesh("Trunk Flare", cylinder(0.36, 0.42, 0.16, 9), trunkShade, {
+        position: [0, 0.08, 0],
+      }, { castShadow: true }),
+    );
+    // Three layered foliage clusters — the dominant tint defines the
+    // bottom (largest) cluster, while the other two crown above with
+    // contrasting tints. Each cluster is a flattened sphere.
+    const dominantMat = t.dominant === "c" ? crimson : t.dominant === "a" ? amber : gold;
+    const accentA = t.dominant === "c" ? amber : t.dominant === "a" ? crimson : amber;
+    const accentB = t.dominant === "c" ? gold : t.dominant === "a" ? gold : crimsonDark;
+    parts.push(
+      f.mesh("Crown Bottom", sphere(0.95, 12, 9), dominantMat, {
+        position: [0, 1.7, 0],
+        scale: [1.1, 0.85, 1.1],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Crown Mid", sphere(0.75, 12, 9), accentA, {
+        position: [0.12, 2.1, -0.08],
+        scale: [1.0, 0.9, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Crown Top", sphere(0.55, 12, 9), accentB, {
+        position: [-0.08, 2.45, 0.1],
+        scale: [1.0, 0.95, 1.0],
+      }, { castShadow: true }),
+      // A small lower side cluster on the dominant tint to break the
+      // silhouette and read as a side branch.
+      f.mesh("Crown Side", sphere(0.45, 10, 7), crimsonDark, {
+        position: [0.5, 1.5, 0.25],
+        scale: [1.0, 0.85, 1.0],
+      }, { castShadow: true }),
+    );
+    groups.push(
+      f.group(`Maple ${i + 1}`, parts, {
+        position: [t.x, 0, t.z],
+        rotation: [0, yaw, 0],
+        scale: [t.scale, t.scale, t.scale],
+      }),
+    );
+  }
+  return f.group("Maple Trees", groups);
+}
+
+/**
+ * A small wooden hunting lodge — a single-storey timber cabin with
+ * board-and-batten siding, a peaked shingle roof, a square front
+ * window with a warm interior glow, a slim plank front door with a
+ * brass knob and a tall stone chimney trailing a translucent smoke
+ * wisp from its crown.
+ */
+function buildHuntingLodge(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.lodgeWood, 0.92, { texture: "wood", textureScale: [0.6, 1] });
+  const woodDark = std(C.lodgeWoodDark, 0.95, { texture: "wood", textureScale: [0.4, 0.4], flatShading: true });
+  const roof = std(C.lodgeRoof, 0.9, { texture: "shingle", textureScale: [1.4, 1.4] });
+  const stone = std(C.lodgeChimney, 0.95, { texture: "cobblestone", flatShading: true });
+  const door = std(C.shedTrim, 0.9, { texture: "wood" });
+  const windowGlow: MaterialDef = {
+    color: C.lodgeWindow,
+    roughness: 0.35,
+    emissive: "#f7d28c",
+    transparent: true,
+    opacity: 0.95,
+  };
+  const smoke: MaterialDef = {
+    color: C.cabinSmoke,
+    roughness: 1.0,
+    transparent: true,
+    opacity: 0.3,
+  };
+  const lodgeW = 2.6;
+  const lodgeD = 2.0;
+  const lodgeH = 1.6;
+  const parts: SceneNode[] = [
+    // Four wall panels — board-and-batten timber on a low stone footing.
+    f.mesh("Footing", box(lodgeW + 0.2, 0.18, lodgeD + 0.2), stone, {
+      position: [0, 0.09, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Wall Front", box(lodgeW, lodgeH, 0.1), wood, {
+      position: [0, 0.18 + lodgeH / 2, lodgeD / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall Back", box(lodgeW, lodgeH, 0.1), wood, {
+      position: [0, 0.18 + lodgeH / 2, -lodgeD / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall L", box(0.1, lodgeH, lodgeD), wood, {
+      position: [-lodgeW / 2, 0.18 + lodgeH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall R", box(0.1, lodgeH, lodgeD), wood, {
+      position: [lodgeW / 2, 0.18 + lodgeH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  ];
+  // Six slim battens on the front face — slim vertical dark slats.
+  for (let i = 0; i < 6; i++) {
+    const t = i / 5 - 0.5;
+    parts.push(
+      f.mesh(`Batten ${i}`, box(0.05, lodgeH - 0.1, 0.04), woodDark, {
+        position: [t * (lodgeW - 0.3), 0.18 + lodgeH / 2, lodgeD / 2 + 0.05],
+      }, { castShadow: true }),
+    );
+  }
+  // Peaked roof — two angled box slabs meeting at a ridge.
+  const ridgeY = 0.18 + lodgeH + 0.5;
+  const roofRun = lodgeD * 0.7;
+  const roofPitch = 0.55;
+  parts.push(
+    f.mesh("Roof Front", box(lodgeW + 0.5, 0.08, roofRun), roof, {
+      position: [0, ridgeY - 0.18, roofRun / 2 - 0.05],
+      rotation: [-roofPitch, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Back", box(lodgeW + 0.5, 0.08, roofRun), roof, {
+      position: [0, ridgeY - 0.18, -roofRun / 2 + 0.05],
+      rotation: [roofPitch, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Roof ridge cap — a slim plank along the peak.
+    f.mesh("Ridge Cap", box(lodgeW + 0.55, 0.06, 0.16), woodDark, {
+      position: [0, ridgeY + 0.02, 0],
+    }, { castShadow: true }),
+  );
+  // Front door — slim dark plank panel with a brass knob.
+  parts.push(
+    f.mesh("Lodge Door", box(0.46, 1.0, 0.04), door, {
+      position: [-0.5, 0.18 + 0.5, lodgeD / 2 + 0.06],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Door Knob", sphere(0.028, 8, 6), std(C.brass, 0.4, { metalness: 0.7 }), {
+      position: [-0.3, 0.18 + 0.5, lodgeD / 2 + 0.09],
+    }, { castShadow: false }),
+    // Door step — small wooden plank below the door.
+    f.mesh("Door Step", box(0.7, 0.06, 0.22), woodDark, {
+      position: [-0.5, 0.21, lodgeD / 2 + 0.15],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Square front window with cross muntin — warm glow behind.
+  const windowY = 0.18 + 0.95;
+  parts.push(
+    f.mesh("Lodge Window", box(0.46, 0.46, 0.04), windowGlow, {
+      position: [0.6, windowY, lodgeD / 2 + 0.05],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin H", box(0.48, 0.03, 0.05), woodDark, {
+      position: [0.6, windowY, lodgeD / 2 + 0.06],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin V", box(0.03, 0.48, 0.05), woodDark, {
+      position: [0.6, windowY, lodgeD / 2 + 0.06],
+    }, { castShadow: false }),
+    f.mesh("Window Sill", box(0.55, 0.04, 0.1), woodDark, {
+      position: [0.6, windowY - 0.27, lodgeD / 2 + 0.05],
+    }, { castShadow: true }),
+  );
+  // Stone chimney on the right side wall — tall square stack with cap.
+  const chimneyH = 1.6;
+  parts.push(
+    f.mesh("Chimney Stack", box(0.38, chimneyH, 0.4), stone, {
+      position: [lodgeW / 2 + 0.18, 0.18 + chimneyH / 2 + 0.2, -0.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Cap", box(0.46, 0.06, 0.48), stone, {
+      position: [lodgeW / 2 + 0.18, 0.18 + chimneyH + 0.23, -0.2],
+    }, { castShadow: true }),
+    // Two translucent smoke wisps rising from the crown.
+    f.mesh("Smoke 1", sphere(0.16, 8, 6), smoke, {
+      position: [lodgeW / 2 + 0.2, 0.18 + chimneyH + 0.42, -0.16],
+      scale: [1, 0.65, 1],
+    }, { castShadow: false }),
+    f.mesh("Smoke 2", sphere(0.22, 8, 6), { ...smoke, opacity: 0.18 }, {
+      position: [lodgeW / 2 + 0.32, 0.18 + chimneyH + 0.7, -0.08],
+      scale: [1, 0.7, 1],
+    }, { castShadow: false }),
+  );
+  return f.group("Hunting Lodge", parts, { position: pos, rotation: [0, -Math.PI / 8, 0] });
+}
+
+/**
+ * A moss-jacketed fallen log lying on the maple grove floor — a long
+ * cylinder of weathered timber with a leafy moss cap across the top
+ * surface and a darker shaded underbelly. `yaw` rotates the log on
+ * the ground so the pair don't lie parallel.
+ */
+function buildMossyFallenLog(
+  f: NodeFactory,
+  pos: [number, number, number],
+  yaw: number,
+): SceneNode {
+  const log = std(C.mapleTrunk, 0.95, { texture: "bark", flatShading: true });
+  const logShade = std(C.mapleTrunkShade, 0.95, { flatShading: true });
+  const moss = std(C.fallenLogMoss, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Main log body lying along Z.
+    f.mesh("Log Body", cylinder(0.18, 0.2, 1.8, 12), log, {
+      position: [0, 0.18, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slightly darker underbelly slab.
+    f.mesh("Log Shade", cylinder(0.16, 0.18, 1.8, 10), logShade, {
+      position: [0, 0.1, 0],
+      rotation: [Math.PI / 2, 0, 0],
+      scale: [1, 1, 0.95],
+    }, { castShadow: false }),
+    // Moss cap riding along the top of the log.
+    f.mesh("Moss Cap", box(0.3, 0.05, 1.7), moss, {
+      position: [0, 0.34, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Two end caps — slim discs with ring grain.
+    f.mesh("End Cap A", cylinder(0.21, 0.21, 0.04, 10), logShade, {
+      position: [0, 0.18, -0.92],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("End Cap B", cylinder(0.21, 0.21, 0.04, 10), logShade, {
+      position: [0, 0.18, 0.92],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  ];
+  // Three small moss tufts on the log.
+  const tufts: [number, number][] = [
+    [0.0, -0.45],
+    [-0.04, 0.1],
+    [0.05, 0.55],
+  ];
+  for (let i = 0; i < tufts.length; i++) {
+    parts.push(
+      f.mesh(`Moss Tuft ${i}`, sphere(0.1, 10, 7), moss, {
+        position: [tufts[i]![0], 0.4, tufts[i]![1]],
+        scale: [1, 0.55, 1],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Mossy Log", parts, { position: pos, rotation: [0, yaw, 0] });
+}
+
+/**
+ * A small stacked-stone cairn at the back of the maple grove — three
+ * stones of decreasing size stacked atop a flat slate footing, with a
+ * thin moss fleck on the bottom stone's shoulder. Acts as a quiet
+ * waypoint marker in the clearing.
+ */
+function buildStoneCairn(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stoneA = std(C.cairnStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneB = std(C.cairnStoneDark, 0.95, { flatShading: true });
+  const moss = std(C.fallenLogMoss, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [
+    f.mesh("Cairn Footing", cylinder(0.42, 0.46, 0.04, 14), stoneB, {
+      position: [0, 0.02, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Cairn Stone Bottom", sphere(0.36, 12, 9), stoneA, {
+      position: [0, 0.24, 0],
+      scale: [1.0, 0.6, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cairn Stone Middle", sphere(0.26, 12, 9), stoneB, {
+      position: [0.04, 0.5, -0.02],
+      scale: [1.0, 0.65, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cairn Stone Top", sphere(0.18, 12, 9), stoneA, {
+      position: [-0.02, 0.72, 0.03],
+      scale: [1.0, 0.7, 1.0],
+    }, { castShadow: true }),
+    // Moss fleck on the bottom stone's shoulder.
+    f.mesh("Cairn Moss", sphere(0.12, 10, 7), moss, {
+      position: [-0.22, 0.32, 0.18],
+      scale: [1.0, 0.4, 0.9],
+    }, { castShadow: false }),
+  ];
+  return f.group("Stone Cairn", parts, { position: pos, rotation: [0, 0.4, 0] });
+}
+
+/**
+ * Windblown maple-leaf litter — a scatter of small flat leaf dabs in
+ * crimson, amber and gold tones across the maple grove ground plane,
+ * with thicker drifts banked against the lodge footing and the cairn.
+ * The leaves sit just above the ground so they read as resting on the
+ * surface, not embedded.
+ */
+function buildMapleLeafLitter(f: NodeFactory): SceneNode {
+  const rng = mulberry32(0x17a91eaf);
+  const cZ = NE_MAPLE_POS[2];
+  const cX = NE_MAPLE_POS[0];
+  const w = NE_MAPLE_W - 1.5;
+  const d = NE_MAPLE_D - 1.5;
+  const crimson: Transform[] = [];
+  const amber: Transform[] = [];
+  const gold: Transform[] = [];
+  // Even scatter across the plane (but skip a small radius around the
+  // lodge so leaves don't sit on the roof).
+  for (let i = 0; i < 90; i++) {
+    const lx = cX + (rng() - 0.5) * w;
+    const lz = cZ + (rng() - 0.5) * d;
+    if (Math.hypot(lx - HUNTING_LODGE_POS[0], lz - HUNTING_LODGE_POS[2]) < 2.0) continue;
+    const bucket = i % 3 === 0 ? crimson : i % 3 === 1 ? amber : gold;
+    bucket.push({
+      position: [lx, 0.018, lz],
+      rotation: [-Math.PI / 2, 0, rng() * Math.PI * 2],
+      scale: [0.9 + rng() * 0.4, 1, 0.7 + rng() * 0.3],
+    });
+  }
+  return f.group("Maple Leaf Litter", [
+    f.instanced("Crimson Leaves", box(0.12, 0.01, 0.16), std(C.mapleCrimson, 0.85, { flatShading: true }), crimson, {
+      castShadow: false, receiveShadow: true,
+    }),
+    f.instanced("Amber Leaves", box(0.12, 0.01, 0.16), std(C.mapleAmber, 0.85, { flatShading: true }), amber, {
+      castShadow: false, receiveShadow: true,
+    }),
+    f.instanced("Gold Leaves", box(0.12, 0.01, 0.16), std(C.mapleGold, 0.85, { flatShading: true }), gold, {
+      castShadow: false, receiveShadow: true,
+    }),
+  ]);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -12152,6 +13095,40 @@ function buildAlpineTarn(f: NodeFactory, pos: [number, number, number]): SceneNo
  *    a focal small frozen tarn pond with a deep-water core, a
  *    pale-blue ice surface, slim crack highlights and a fringe of
  *    exposed alpine pebbles around the shore.
+ *  - Seventeenth pass — yard: a wrought-iron Victorian tea table set
+ *    on the back-east lawn (round iron pedestal table flanked by two
+ *    ornate scrollback chairs, with a porcelain teapot, two cups on
+ *    saucers and a three-tier pastry stand laid out for tea), and a
+ *    pair of stone owl sentinel statues on slate plinths flanking the
+ *    cobble path entrance near the gate — both owl bodies reuse the
+ *    existing `marble` colour + bump pair so the stone reads with
+ *    veined relief on the rounded shoulders, and the amber eyes carry
+ *    a soft emissive glow so the sentinels read at low light. House:
+ *    a stained-glass arched fanlight transom panel centred above the
+ *    front door, between the door arch trim and the porch canopy — the
+ *    panel is surfaced with the new `stained-glass` colour map paired
+ *    with a leaded-muntin depth map (registered alongside the other
+ *    procedural textures) so the lead cames read as raised relief on
+ *    the glass plane, a copper-patina trim arch frames the panel
+ *    (reusing the existing copper-patina pair for verdigris relief),
+ *    and a warm glow plate behind the colour panel makes the fanlight
+ *    read as lit from the interior. Scene: a northeast autumn maple
+ *    grove plane bridging the gap between the lakefront's east edge
+ *    and the northeast pasture's north edge — an auburn ground
+ *    surfaced with the new `autumn-canopy` colour map paired with a
+ *    leaf-litter depth map (registered alongside the other procedural
+ *    textures) so the leaf piles and exposed soil patches read as
+ *    raised relief at glancing sun, a lakefront-grass apron along the
+ *    west join and a pasture-grass apron along the south join, a
+ *    grove of five maple trees each with three layered foliage clusters
+ *    in crimson, amber and gold (different dominant tint per tree), a
+ *    small wooden hunting lodge with board-and-batten siding, a peaked
+ *    shingle roof, a brass-knob plank front door, a glowing square
+ *    front window with cross muntin and a tall stone chimney trailing
+ *    pale smoke wisps, a pair of moss-jacketed fallen logs lying at
+ *    different yaws across the grove floor, a small stacked-stone
+ *    cairn marking a clearing at the back of the grove and a scatter
+ *    of windblown crimson / amber / gold leaf dabs across the ground.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -12216,6 +13193,11 @@ export function buildDollhouseDocument(): DollhouseDocument {
     // Sixteenth-pass keep-outs — gazing ball and cherub statue.
     { x: GAZING_BALL_POS[0], z: GAZING_BALL_POS[2], r: 0.8 },
     { x: CHERUB_STATUE_POS[0], z: CHERUB_STATUE_POS[2], r: 0.8 },
+    // Seventeenth-pass keep-outs — tea table set and the pair of owl
+    // sentinels flanking the cobble path near the gate.
+    { x: TEA_TABLE_POS[0], z: TEA_TABLE_POS[2], r: 1.6 },
+    { x: OWL_L_POS[0], z: OWL_L_POS[2], r: 0.7 },
+    { x: OWL_R_POS[0], z: OWL_R_POS[2], r: 0.7 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -12271,6 +13253,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildCascadeUrn(f, CASCADE_URN_POS),
     buildGazingBall(f, GAZING_BALL_POS),
     buildCherubStatue(f, CHERUB_STATUE_POS),
+    buildVictorianTeaSet(f, TEA_TABLE_POS),
+    buildOwlSentinels(f),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -12284,6 +13268,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const oliveGrove = buildSoutheastOliveGrove(f);
   const lavenderField = buildSouthwestLavenderField(f);
   const alpineFoothills = buildAlpineFoothills(f);
+  const neMapleGrove = buildNortheastMapleGrove(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -12320,6 +13305,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildGableOculi(f),
     buildFrontDoorFittings(f),
     buildSideTrellises(f),
+    buildFanlight(f, FANLIGHT_POS),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -12340,6 +13326,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       oliveGrove,
       lavenderField,
       alpineFoothills,
+      neMapleGrove,
       house,
     ],
   };

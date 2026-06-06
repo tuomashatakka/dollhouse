@@ -1911,4 +1911,376 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Seventeenth-pass additions ──────────────────────────────────────
+  // The seventeenth enhancement pass introduces two new procedural
+  // texture pairs: a leaded `stained-glass` panel of saturated
+  // amber / rose / teal / gold wedges around a central rose-window
+  // medallion (paired with a depth map so the lead cames read as
+  // raised relief at glancing light), used as the surface of the
+  // arched fanlight transom above the front door; and an
+  // `autumn-canopy` ground — an auburn earth base mottled with
+  // crimson / amber / gold leaf piles, exposed soil patches and
+  // scattered twigs — paired with a leaf-litter depth map so the
+  // piles and soil patches read as raised relief at glancing sun.
+  // Used as the ground surface on the new northeast autumn maple
+  // grove plane.
+
+  // Stained-glass colour map — a Victorian rose-window medallion: a
+  // central amber roundel ringed by alternating rose / teal / gold
+  // petal wedges, divided into quadrants by a leaded cross.
+  registry["stained-glass"] = makeCanvasTexture({
+    seed: 0x17a91e7e,
+    draw: (ctx, rng, size) => {
+      // Dark lead base — every glass panel sits over a slim dark gap.
+      ctx.fillStyle = "#1f1c18";
+      ctx.fillRect(0, 0, size, size);
+      const cx = size / 2;
+      const cy = size / 2;
+      // Outer rectangular field — fill with a deep teal ground.
+      ctx.fillStyle = "#3f6e80";
+      ctx.fillRect(8, 8, size - 16, size - 16);
+      // Eight petal wedges fanning around the centre — alternate
+      // amber / rose / gold / teal so the rose-window pattern reads.
+      const petalCount = 8;
+      const palette = ["#f0b664", "#ef89a8", "#f4c542", "#3f7780", "#f0b664", "#ef89a8", "#f4c542", "#3f7780"];
+      const petalR = size * 0.36;
+      for (let i = 0; i < petalCount; i++) {
+        const a0 = (i / petalCount) * Math.PI * 2;
+        const a1 = ((i + 1) / petalCount) * Math.PI * 2;
+        ctx.fillStyle = palette[i]!;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, petalR, a0 + 0.04, a1 - 0.04);
+        ctx.closePath();
+        ctx.fill();
+        // Slim painted highlight strip near the outer edge of the petal
+        // so each wedge reads with a tonal lift toward the rim.
+        ctx.fillStyle = `rgba(255,255,255,${0.16 + rng() * 0.1})`;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos((a0 + a1) / 2) * petalR * 0.65, cy + Math.sin((a0 + a1) / 2) * petalR * 0.65);
+        ctx.arc(cx, cy, petalR - 6, a0 + 0.12, a1 - 0.12);
+        ctx.closePath();
+        ctx.fill();
+      }
+      // Central amber roundel — small bright disc at the centre of the
+      // rose window with a slim gold highlight ring.
+      ctx.fillStyle = "#f0b664";
+      ctx.beginPath();
+      ctx.arc(cx, cy, size * 0.13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255,210,140,0.4)";
+      ctx.beginPath();
+      ctx.arc(cx - size * 0.03, cy - size * 0.04, size * 0.06, 0, Math.PI * 2);
+      ctx.fill();
+      // Leaded mullions — eight radial cames + a circular came at the
+      // petal radius and a smaller circular came at the roundel rim.
+      ctx.strokeStyle = "#1f1c18";
+      ctx.lineWidth = 6;
+      for (let i = 0; i < petalCount; i++) {
+        const a = (i / petalCount) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(a) * petalR, cy + Math.sin(a) * petalR);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.arc(cx, cy, petalR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx, cy, size * 0.13, 0, Math.PI * 2);
+      ctx.stroke();
+      // Outer frame came — a thick dark border around the whole panel.
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = "#1a1816";
+      ctx.strokeRect(8, 8, size - 16, size - 16);
+      // Four corner spandrels filled with a deep teal so the rectangle
+      // outside the circular rose reads as inset glass not blank lead.
+      const cornerR = size * 0.18;
+      const corners: [number, number][] = [
+        [16 + cornerR * 0.4, 16 + cornerR * 0.4],
+        [size - 16 - cornerR * 0.4, 16 + cornerR * 0.4],
+        [16 + cornerR * 0.4, size - 16 - cornerR * 0.4],
+        [size - 16 - cornerR * 0.4, size - 16 - cornerR * 0.4],
+      ];
+      for (let i = 0; i < corners.length; i++) {
+        const [x, y] = corners[i]!;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, cornerR);
+        grad.addColorStop(0, i % 2 === 0 ? "rgba(63,119,128,0.85)" : "rgba(63,119,128,0.85)");
+        grad.addColorStop(1, "rgba(20,40,52,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, cornerR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Small painted highlight on each glass wedge — slim white smudge
+      // suggesting a reflection across the cathedral glass.
+      for (let i = 0; i < 18; i++) {
+        const a = rng() * Math.PI * 2;
+        const r = (0.15 + rng() * 0.25) * size;
+        const x = cx + Math.cos(a) * r;
+        const y = cy + Math.sin(a) * r;
+        ctx.fillStyle = `rgba(255,255,255,${0.18 + rng() * 0.18})`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 2 + rng() * 5, 8 + rng() * 14, a, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency tinted glass speckle so deeper mips still read
+      // as patterned glass rather than a smooth tint.
+      paintNoise(ctx, rng, size, "transparent", 38, 0.004);
+    },
+  });
+
+  // Stained-glass depth map — bright lead cames as raised relief, glass
+  // panels as flat / very slightly recessed.
+  registry["stained-glass-bump"] = makeCanvasTexture({
+    seed: 0x17a91e7e + 1,
+    draw: (ctx, rng, size) => {
+      // Glass panels recess slightly below the lead lines.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      const cx = size / 2;
+      const cy = size / 2;
+      const petalCount = 8;
+      const petalR = size * 0.36;
+      // Lead came + outer frame — bright bands the glass sits between.
+      ctx.strokeStyle = "#f5f5f5";
+      ctx.lineWidth = 7;
+      for (let i = 0; i < petalCount; i++) {
+        const a = (i / petalCount) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(a) * petalR, cy + Math.sin(a) * petalR);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.arc(cx, cy, petalR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx, cy, size * 0.13, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.lineWidth = 12;
+      ctx.strokeStyle = "#ffffff";
+      ctx.strokeRect(8, 8, size - 16, size - 16);
+      // A central raised disc at the keystone medallion.
+      ctx.fillStyle = "#f0f0f0";
+      ctx.beginPath();
+      ctx.arc(cx, cy, size * 0.05, 0, Math.PI * 2);
+      ctx.fill();
+      // Slim raised highlight strips on each petal — read as the
+      // bevelled glass edge along the inner curve of the came.
+      for (let i = 0; i < petalCount; i++) {
+        const a0 = (i / petalCount) * Math.PI * 2;
+        const a1 = ((i + 1) / petalCount) * Math.PI * 2;
+        const am = (a0 + a1) / 2;
+        ctx.strokeStyle = "rgba(220,220,220,0.5)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const r0 = petalR * 0.5;
+        const r1 = petalR * 0.95;
+        ctx.moveTo(cx + Math.cos(am) * r0, cy + Math.sin(am) * r0);
+        ctx.lineTo(cx + Math.cos(am) * r1, cy + Math.sin(am) * r1);
+        ctx.stroke();
+      }
+      // Speckled glass micro-relief so the panels never look perfectly
+      // flat at deeper mip levels.
+      for (let i = 0; i < 900; i++) {
+        const v = 100 + Math.floor(rng() * 60);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
+
+  // Autumn-canopy ground colour map — an auburn earth base mottled with
+  // crimson / amber / gold leaf piles, exposed soil patches and dark
+  // scattered twigs, suggesting a thick blanket of fallen maple leaves.
+  registry["autumn-canopy"] = makeCanvasTexture({
+    seed: 0x17a91eaf,
+    draw: (ctx, rng, size) => {
+      // Auburn earth base — slightly warmer toward the top-right where
+      // afternoon sun hits, cooler toward the lower-left in shadow.
+      const bg = ctx.createLinearGradient(size, 0, 0, size);
+      bg.addColorStop(0, "#9a5b2c");
+      bg.addColorStop(0.5, "#7a4a25");
+      bg.addColorStop(1, "#4e2e18");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Exposed soil patches — soft irregular dark mottling where leaves
+      // have blown clear and bare earth shows through.
+      for (let i = 0; i < 40; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = 12 + rng() * 26;
+        const blob = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r);
+        const hue = 22 + Math.floor(rng() * 14);
+        const light = 14 + Math.floor(rng() * 12);
+        blob.addColorStop(0, `hsla(${hue}, 40%, ${light}%, 0.85)`);
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        const verts = 7 + Math.floor(rng() * 4);
+        for (let v = 0; v < verts; v++) {
+          const a = (v / verts) * Math.PI * 2;
+          const rr = r * (0.6 + rng() * 0.7);
+          const px = cx + Math.cos(a) * rr;
+          const py = cy + Math.sin(a) * rr;
+          if (v === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fill();
+      }
+      // Crimson maple-leaf clusters — flat irregular leaf shapes painted
+      // as dark red ovals with a fine pointed tip.
+      for (let i = 0; i < 260; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const rot = rng() * Math.PI * 2;
+        const hue = 350 + rng() * 25;
+        const light = 30 + Math.floor(rng() * 18);
+        ctx.fillStyle = `hsl(${hue}, 60%, ${light}%)`;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 3 + rng() * 3, 6 + rng() * 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Amber maple leaves — warmer orange tones scattered above the
+      // crimson layer, slightly larger so they read as the dominant
+      // canopy tone at distance.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const rot = rng() * Math.PI * 2;
+        const hue = 22 + rng() * 14;
+        const light = 42 + Math.floor(rng() * 14);
+        ctx.fillStyle = `hsl(${hue}, 70%, ${light}%)`;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 4 + rng() * 3, 7 + rng() * 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Gold maple leaves — bright yellow flecks scattered through the
+      // canopy litter to lift the colour.
+      for (let i = 0; i < 180; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const rot = rng() * Math.PI * 2;
+        const hue = 38 + rng() * 12;
+        const light = 50 + Math.floor(rng() * 14);
+        ctx.fillStyle = `hsl(${hue}, 75%, ${light}%)`;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 3 + rng() * 3, 6 + rng() * 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Dark scattered twigs — slim brown slivers strewn through the
+      // leaf litter to break the colour rhythm.
+      for (let i = 0; i < 120; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = `hsla(${22 + rng() * 12}, 50%, ${16 + rng() * 14}%, 0.8)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 0.7 + rng() * 0.5, 8 + rng() * 6, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // A faint warm sun-cast wash — large pale blobs lifted toward the
+      // top-right of the canvas so the ground catches a gold sun glow.
+      for (let i = 0; i < 12; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 28 + rng() * 32;
+        const blob = ctx.createRadialGradient(x, y, 0, x, y, r);
+        blob.addColorStop(0, `hsla(${30 + rng() * 12}, 75%, ${64 + rng() * 8}%, 0.22)`);
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Fine micro-noise so the surface retains tonal life at deep mips.
+      paintNoise(ctx, rng, size, "transparent", 38, 0.004);
+    },
+  });
+
+  // Autumn-canopy depth map — raised leaf piles where leaves cluster, a
+  // gentle recess in the exposed soil patches and small bumps for the
+  // scattered twigs and pebbles.
+  registry["autumn-canopy-bump"] = makeCanvasTexture({
+    seed: 0x17a91eaf + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average leaf-blanket height.
+      ctx.fillStyle = "#7c7c7c";
+      ctx.fillRect(0, 0, size, size);
+      // Exposed soil patches — soft recess so the bare earth sits below
+      // the leaf piles around it.
+      for (let i = 0; i < 40; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = 12 + rng() * 26;
+        const blob = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        blob.addColorStop(0, "rgba(40,40,40,0.7)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Raised leaf piles — bright ringed mounds where leaves bank up.
+      for (let i = 0; i < 30; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = 18 + rng() * 28;
+        const blob = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        blob.addColorStop(0, "rgba(245,245,245,0.6)");
+        blob.addColorStop(0.5, "rgba(180,180,180,0.4)");
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim leaf flecks — small bright spots scattered through the
+      // surface so each individual leaf reads as a tiny bump.
+      for (let i = 0; i < 600; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const rot = rng() * Math.PI * 2;
+        ctx.fillStyle = `rgba(${180 + Math.floor(rng() * 60)},${180 + Math.floor(rng() * 60)},${180 + Math.floor(rng() * 60)},0.65)`;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 1.6 + rng() * 1.5, 3.5 + rng() * 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Dark twig recesses — slim dark slivers reading as twigs pressed
+      // into the leaf surface.
+      for (let i = 0; i < 120; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        ctx.fillStyle = "rgba(40,40,40,0.55)";
+        ctx.beginPath();
+        ctx.ellipse(x, y, 0.7 + rng() * 0.5, 8 + rng() * 6, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1400; i++) {
+        const v = 90 + Math.floor(rng() * 80);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
