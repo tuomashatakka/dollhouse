@@ -488,6 +488,55 @@ const MAPLE_LOG_A_POS: [number, number, number] = [33, 0, -50];
 const MAPLE_LOG_B_POS: [number, number, number] = [40, 0, -45];
 const MAPLE_CAIRN_POS: [number, number, number] = [34, 0, -68];
 
+/**
+ * Eighteenth-pass courtyard props — a bronze knight sentinel statue on
+ * a fluted marble pedestal on the east lawn (verdigris bronze figure
+ * with sword and shield, reusing the existing `copper-patina` colour +
+ * bump pair so the patina mottling reads as crusted relief on the
+ * armour), and a raised wooden cold frame planted with three glass
+ * cloches (bell jars) sheltering seedlings on the back lawn. The
+ * cloche bells are translucent so the seedlings inside read as
+ * dappled silhouettes through the glass.
+ */
+const KNIGHT_STATUE_POS: [number, number, number] = [5.5, 0, 1.5];
+const CLOCHE_BED_POS: [number, number, number] = [4.0, 0, -7.0];
+
+/**
+ * Eighteenth-pass house detail — a pair of carved Victorian bargeboards
+ * with pendant drop finials trimming the front and back gable rakes.
+ * Each bargeboard is a stepped scroll panel hugging the eave slope with
+ * three pendant finial drops below it, giving the gable a lacy
+ * silhouette against the sky.
+ */
+const FRONT_BARGEBOARD_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H / 2, FRONT_Z + 0.04];
+const BACK_BARGEBOARD_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H / 2, BACK_Z - 0.04];
+
+/**
+ * Eighteenth-pass scene extension — a northwest waterfall ravine plane
+ * tucked into the gap between the northwest woodland's north edge
+ * (z ≈ -43, x ≈ [-44, -22]) and the alpine foothills' west edge
+ * (x ≈ -28, z ≈ [-100, -72]). The plane overlaps the woodland by ~1.5
+ * units along its south join, the alpine foothills by ~1.5 units
+ * along its north join and the lakefront by ~1.5 units along its east
+ * join so the ground layer has no holes at any of the three seams. It
+ * carries a granite-toned ground surfaced with the new `granite-cliff`
+ * colour map paired with a fissure depth map (registered alongside
+ * the other procedural textures) so the bedding cracks and lichen
+ * patches read as raised relief at glancing sun, a tall north-edge
+ * granite cliff face, a tumbling three-tier waterfall cascading off
+ * the cliff into a fern-fringed plunge pool, a wooden plank footbridge
+ * crossing the outflow stream at the south end, three alpine pine
+ * trees clinging to the rim of the cliff and a scatter of mossy
+ * boulders ringing the pool.
+ */
+const NW_RAVINE_POS: [number, number, number] = [-37, -0.018, -57];
+const NW_RAVINE_W = 16;
+const NW_RAVINE_D = 32;
+const RAVINE_CLIFF_Z = NW_RAVINE_POS[2] - NW_RAVINE_D / 2 + 3.5;
+const WATERFALL_POS: [number, number, number] = [-37, 0, RAVINE_CLIFF_Z + 0.6];
+const PLUNGE_POOL_POS: [number, number, number] = [-37, 0, RAVINE_CLIFF_Z + 3.4];
+const PLANK_BRIDGE_POS: [number, number, number] = [-37, 0, NW_RAVINE_POS[2] + NW_RAVINE_D / 2 - 5];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -963,6 +1012,54 @@ const C = {
   lodgeWindow: "#ffd989",
   cairnStone: "#8a8278",
   cairnStoneDark: "#5e564c",
+  // Eighteenth enhancement pass — a bronze knight sentinel statue on a
+  // fluted marble pedestal on the east lawn (the bronze armour reuses
+  // the existing `copper-patina` colour + bump pair so the verdigris
+  // mottling reads as crusted relief), a raised wooden cold frame
+  // planted with three translucent glass cloche bell jars sheltering
+  // seedlings on the back lawn, a pair of carved Victorian bargeboards
+  // with pendant drop finials trimming the front and back gable rakes,
+  // and a northwest waterfall ravine scene extension with a tall
+  // granite cliff face (new `granite-cliff` colour map paired with a
+  // fissure depth map so the bedding cracks and lichen patches read
+  // as raised relief at glancing sun), a tumbling three-tier
+  // waterfall cascading into a fern-fringed plunge pool, a wooden
+  // plank footbridge across the outflow stream, three alpine pines
+  // clinging to the rim of the cliff and a scatter of mossy boulders
+  // ringing the pool.
+  knightBronze: "#5d8a6a",
+  knightBronzeShade: "#2f5840",
+  knightBronzeHi: "#9bc4a8",
+  knightPedestalCream: "#ede2cd",
+  knightPedestalShade: "#a8997e",
+  knightAccent: "#c6a25a",
+  cloches: "#cfe6ec",
+  clochesGlow: "#f4fdfe",
+  clocheFrame: "#b89466",
+  clocheFrameShade: "#6e5436",
+  clocheSoil: "#3f2e1c",
+  clocheSeedling: "#6ea84b",
+  clocheSeedlingDark: "#3d6e2a",
+  bargeboardWood: "#fbeed9",
+  bargeboardShade: "#b6986a",
+  bargeboardFinial: "#e89bb5",
+  ravineGround: "#7a7268",
+  ravineGroundDark: "#4a4540",
+  ravineGrass: "#5e7a4a",
+  ravineCliff: "#7a746a",
+  ravineCliffShade: "#3f3a36",
+  ravineLichen: "#a8b06a",
+  waterfallBlue: "#a8c8d6",
+  waterfallHi: "#f4fafd",
+  waterfallMist: "#e0e8ed",
+  plungePoolDeep: "#3a5e74",
+  plungePoolSurface: "#7eb6cf",
+  ravinePineFoliage: "#3a5a3a",
+  ravinePineTrunk: "#5a3a26",
+  ravineBoulderMoss: "#5e8a3a",
+  bridgePlank: "#7a5238",
+  bridgePlankDark: "#4a3220",
+  bridgeRope: "#a87f5a",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -12855,6 +12952,804 @@ function buildMapleLeafLitter(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────── eighteenth-pass courtyard props ─────────────── */
+
+/**
+ * A bronze knight sentinel statue on a fluted marble pedestal — a slim
+ * armoured figure standing watch on the east lawn, carrying a short
+ * sword at his side and an upright kite shield in front of his chest.
+ * The bronze body reuses the existing `copper-patina` colour + bump
+ * pair so the verdigris mottling reads as crusted relief on the
+ * shoulder pauldrons, the breastplate and the rounded helm. A small
+ * cast plaque on the front face of the pedestal carries a slim raised
+ * inscription disc.
+ */
+function buildKnightStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.knightBronze,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const bronzeShade: MaterialDef = {
+    color: C.knightBronzeShade,
+    roughness: 0.7,
+    metalness: 0.5,
+    flatShading: true,
+  };
+  const bronzeHi = std(C.knightBronzeHi, 0.4, { metalness: 0.85 });
+  const pedestal = std(C.knightPedestalCream, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const pedestalShade = std(C.knightPedestalShade, 0.95, { flatShading: true });
+  const accent = std(C.knightAccent, 0.4, { metalness: 0.6 });
+  const parts: SceneNode[] = [];
+  // ── Fluted marble pedestal ──
+  const pedH = 0.78;
+  parts.push(
+    // Wide stepped footing — two slate-ish slabs stacked.
+    f.mesh("Pedestal Footing", box(0.62, 0.06, 0.62), pedestalShade, {
+      position: [0, 0.03, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Pedestal Plinth", box(0.5, 0.08, 0.5), pedestalShade, {
+      position: [0, 0.1, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Central fluted column drum.
+    f.mesh("Pedestal Drum", cylinder(0.18, 0.2, pedH - 0.3, 14), pedestal, {
+      position: [0, 0.14 + (pedH - 0.3) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Eight vertical fluting grooves around the drum — slim dark slats.
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Pedestal Flute ${i}`, box(0.02, pedH - 0.34, 0.04), pedestalShade, {
+        position: [Math.cos(a) * 0.19, 0.14 + (pedH - 0.3) / 2, Math.sin(a) * 0.19],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  parts.push(
+    // Top capital — slightly wider than the drum.
+    f.mesh("Pedestal Capital", box(0.46, 0.08, 0.46), pedestalShade, {
+      position: [0, pedH - 0.04, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // A slim bronze plaque medallion on the front face.
+    f.mesh("Pedestal Plaque", cylinder(0.08, 0.08, 0.02, 14), accent, {
+      position: [0, pedH * 0.45, 0.22],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Knight body ──
+  const bodyY = pedH;
+  // Boots / greaves — two slim cylinders at the base.
+  for (const side of [-1, 1] as const) {
+    parts.push(
+      f.mesh(`Greave ${side}`, cylinder(0.06, 0.07, 0.28, 10), bronzeShade, {
+        position: [side * 0.07, bodyY + 0.14, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Boot ${side}`, box(0.1, 0.06, 0.16), bronze, {
+        position: [side * 0.07, bodyY + 0.03, 0.04],
+      }, { castShadow: true }),
+    );
+  }
+  // Tasset / leg armour — slim trapezoid skirt.
+  parts.push(
+    f.mesh("Tasset Front", box(0.22, 0.18, 0.06), bronze, {
+      position: [0, bodyY + 0.36, 0.08],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Tasset Back", box(0.22, 0.18, 0.06), bronzeShade, {
+      position: [0, bodyY + 0.36, -0.08],
+    }, { castShadow: true }),
+    // Belt sash — slim raised band at the waist.
+    f.mesh("Belt", cylinder(0.16, 0.16, 0.04, 16), accent, {
+      position: [0, bodyY + 0.46, 0],
+    }, { castShadow: false }),
+  );
+  // Breastplate — a wider, slightly rounded torso.
+  parts.push(
+    f.mesh("Breastplate", box(0.32, 0.36, 0.22), bronze, {
+      position: [0, bodyY + 0.68, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Vertical centre rib on the breastplate.
+    f.mesh("Breastplate Rib", box(0.04, 0.32, 0.24), bronzeHi, {
+      position: [0, bodyY + 0.68, 0],
+    }, { castShadow: false }),
+    // Shoulder pauldrons — two slim spheres on each shoulder.
+    f.mesh("Pauldron L", sphere(0.1, 12, 8), bronze, {
+      position: [-0.18, bodyY + 0.88, 0],
+      scale: [1.2, 0.8, 1.2],
+    }, { castShadow: true }),
+    f.mesh("Pauldron R", sphere(0.1, 12, 8), bronze, {
+      position: [0.18, bodyY + 0.88, 0],
+      scale: [1.2, 0.8, 1.2],
+    }, { castShadow: true }),
+  );
+  // Arms — two slim bronze cylinders hanging at the sides.
+  parts.push(
+    f.mesh("Arm L", cylinder(0.05, 0.06, 0.38, 10), bronze, {
+      position: [-0.22, bodyY + 0.66, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Arm R", cylinder(0.05, 0.06, 0.38, 10), bronze, {
+      position: [0.22, bodyY + 0.66, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Gauntlets — slim cubes at the wrists.
+    f.mesh("Gauntlet L", box(0.07, 0.06, 0.08), bronzeShade, {
+      position: [-0.22, bodyY + 0.42, 0.02],
+    }, { castShadow: true }),
+    f.mesh("Gauntlet R", box(0.07, 0.06, 0.08), bronzeShade, {
+      position: [0.22, bodyY + 0.42, 0.02],
+    }, { castShadow: true }),
+  );
+  // Head + helm — a domed helm with a slim eye slit and a small crest plume.
+  const headY = bodyY + 1.02;
+  parts.push(
+    // Neck collar.
+    f.mesh("Gorget", cylinder(0.07, 0.09, 0.05, 12), bronzeShade, {
+      position: [0, bodyY + 0.92, 0],
+    }, { castShadow: false }),
+    // Helm dome.
+    f.mesh("Helm", sphere(0.12, 14, 10), bronze, {
+      position: [0, headY, 0],
+      scale: [1, 1.05, 1.05],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim eye slit — a dark horizontal band.
+    f.mesh("Helm Slit", box(0.18, 0.025, 0.03), { color: "#1a1816", roughness: 0.9 }, {
+      position: [0, headY + 0.02, 0.12],
+    }, { castShadow: false }),
+    // Crest comb — a slim raised fin along the top of the helm.
+    f.mesh("Helm Crest", box(0.04, 0.06, 0.2), bronzeHi, {
+      position: [0, headY + 0.11, 0],
+    }, { castShadow: false }),
+    // Pendant plume hanging from the crest.
+    f.mesh("Helm Plume", box(0.04, 0.18, 0.04), std(C.mapleCrimson, 0.85, { flatShading: true }), {
+      position: [0, headY + 0.04, -0.12],
+      rotation: [-0.4, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Sword at the right hip — a long slim cylinder with a guard and pommel.
+  parts.push(
+    f.mesh("Sword Blade", cylinder(0.012, 0.012, 0.7, 6), bronzeHi, {
+      position: [0.32, bodyY + 0.42, 0],
+      rotation: [0, 0, 0.05],
+    }, { castShadow: true }),
+    f.mesh("Sword Guard", box(0.12, 0.025, 0.04), bronzeShade, {
+      position: [0.32, bodyY + 0.76, 0],
+    }, { castShadow: false }),
+    f.mesh("Sword Grip", cylinder(0.018, 0.018, 0.08, 8), bronzeShade, {
+      position: [0.32, bodyY + 0.82, 0],
+    }, { castShadow: false }),
+    f.mesh("Sword Pommel", sphere(0.022, 8, 6), accent, {
+      position: [0.32, bodyY + 0.88, 0],
+    }, { castShadow: false }),
+  );
+  // Kite shield held in front of the chest — a slim teardrop slab.
+  parts.push(
+    f.mesh("Shield Body", box(0.22, 0.42, 0.04), bronze, {
+      position: [-0.18, bodyY + 0.62, 0.18],
+      rotation: [0.1, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Decorative boss at the centre of the shield.
+    f.mesh("Shield Boss", sphere(0.04, 12, 8), accent, {
+      position: [-0.18, bodyY + 0.62, 0.21],
+    }, { castShadow: false }),
+    // Bronze trim around the shield edge — top horizontal band.
+    f.mesh("Shield Trim", box(0.24, 0.025, 0.05), bronzeHi, {
+      position: [-0.18, bodyY + 0.82, 0.18],
+    }, { castShadow: false }),
+  );
+  return f.group("Bronze Knight Statue", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
+}
+
+/**
+ * A raised wooden cold frame planted with a row of three translucent
+ * glass cloches (bell jars) sheltering seedlings — a small kitchen-
+ * garden detail tucked onto the back lawn. The wooden bed sits on
+ * short cross-stretcher posts so it reads as a raised box, and each
+ * cloche encloses a small green seedling cluster so the silhouettes
+ * read as dappled forms through the glass.
+ */
+function buildGlassCloches(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const frame = std(C.clocheFrame, 0.9, { texture: "wood", textureScale: [1.4, 0.4] });
+  const frameShade = std(C.clocheFrameShade, 0.95, { flatShading: true });
+  const soil = std(C.clocheSoil, 0.95, { flatShading: true });
+  const seedling = std(C.clocheSeedling, 0.85, { flatShading: true });
+  const seedlingShade = std(C.clocheSeedlingDark, 0.9, { flatShading: true });
+  const glass: MaterialDef = {
+    color: C.cloches,
+    roughness: 0.15,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.32,
+  };
+  const glassGlow: MaterialDef = {
+    color: C.clochesGlow,
+    roughness: 0.18,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.18,
+  };
+  const parts: SceneNode[] = [];
+  // Raised wooden bed — a slim rectangular crate on four short posts.
+  const bedW = 1.6;
+  const bedD = 0.5;
+  const bedH = 0.14;
+  const bedY = 0.18;
+  parts.push(
+    // Four corner posts holding the box up off the ground.
+    f.mesh("Post FL", box(0.06, bedY, 0.06), frameShade, {
+      position: [-bedW / 2 + 0.06, bedY / 2, -bedD / 2 + 0.06],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Post FR", box(0.06, bedY, 0.06), frameShade, {
+      position: [bedW / 2 - 0.06, bedY / 2, -bedD / 2 + 0.06],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Post BL", box(0.06, bedY, 0.06), frameShade, {
+      position: [-bedW / 2 + 0.06, bedY / 2, bedD / 2 - 0.06],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Post BR", box(0.06, bedY, 0.06), frameShade, {
+      position: [bedW / 2 - 0.06, bedY / 2, bedD / 2 - 0.06],
+    }, { castShadow: true, receiveShadow: true }),
+    // Bed frame — four plank slats around the soil rim.
+    f.mesh("Bed Front Plank", box(bedW, bedH, 0.05), frame, {
+      position: [0, bedY + bedH / 2, -bedD / 2 + 0.025],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Bed Back Plank", box(bedW, bedH, 0.05), frame, {
+      position: [0, bedY + bedH / 2, bedD / 2 - 0.025],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Bed Left Plank", box(0.05, bedH, bedD), frame, {
+      position: [-bedW / 2 + 0.025, bedY + bedH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Bed Right Plank", box(0.05, bedH, bedD), frame, {
+      position: [bedW / 2 - 0.025, bedY + bedH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Soil surface — a slim dark slab filling the bed.
+    f.mesh("Bed Soil", box(bedW - 0.1, 0.02, bedD - 0.1), soil, {
+      position: [0, bedY + bedH - 0.02, 0],
+    }, { receiveShadow: true }),
+  );
+  // Three cloches stamped along the bed — each a dome-and-knob bell jar
+  // covering a small seedling cluster.
+  for (let i = 0; i < 3; i++) {
+    const cx = (i - 1) * 0.5;
+    const cz = 0;
+    const cloy = bedY + bedH;
+    // Seedling — three small leaves clustered on the soil.
+    parts.push(
+      f.mesh(`Seedling Leaf A ${i}`, sphere(0.07, 10, 7), seedling, {
+        position: [cx - 0.04, cloy + 0.05, cz - 0.03],
+        scale: [1, 0.4, 1],
+      }, { castShadow: false }),
+      f.mesh(`Seedling Leaf B ${i}`, sphere(0.06, 10, 7), seedlingShade, {
+        position: [cx + 0.04, cloy + 0.06, cz + 0.02],
+        scale: [1, 0.4, 1],
+      }, { castShadow: false }),
+      f.mesh(`Seedling Stem ${i}`, cylinder(0.012, 0.012, 0.1, 6), seedlingShade, {
+        position: [cx, cloy + 0.05, cz],
+      }, { castShadow: false }),
+    );
+    // Glass bell jar — a dome (squashed sphere) with a small finial knob.
+    parts.push(
+      f.mesh(`Cloche Dome ${i}`, sphere(0.18, 18, 12), glass, {
+        position: [cx, cloy + 0.18, cz],
+        scale: [1, 1.4, 1],
+      }, { castShadow: false, receiveShadow: true }),
+      // Glow inner core — a slim plate inside the cloche that lifts the tone.
+      f.mesh(`Cloche Glow ${i}`, sphere(0.15, 14, 10), glassGlow, {
+        position: [cx, cloy + 0.16, cz],
+        scale: [1, 1.3, 1],
+      }, { castShadow: false }),
+      // Rim at the base of the cloche where it meets the soil.
+      f.mesh(`Cloche Rim ${i}`, cylinder(0.18, 0.18, 0.012, 18), frameShade, {
+        position: [cx, cloy + 0.006, cz],
+      }, { castShadow: false }),
+      // Finial knob at the top of the cloche.
+      f.mesh(`Cloche Knob ${i}`, sphere(0.025, 10, 8), frame, {
+        position: [cx, cloy + 0.38, cz],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Glass Cloche Cold Frame", parts, { position: pos, rotation: [0, Math.PI / 7, 0] });
+}
+
+/* ─────────────── eighteenth-pass house detail ─────────────── */
+
+/**
+ * A pair of carved Victorian bargeboards with pendant drop finials —
+ * one trimming the front gable rake, one the back. Each bargeboard is
+ * a two-sided scroll panel hugging the gable's two pitches and meets
+ * at the peak, with three pendant finial drops hanging from the lower
+ * edge that emphasise the lacy silhouette against the sky. A small
+ * carved central medallion at the gable peak frames the finial drops.
+ */
+function buildGableBargeboard(
+  f: NodeFactory,
+  pos: [number, number, number],
+  facing: 1 | -1,
+): SceneNode {
+  const wood = std(C.bargeboardWood, 0.75, { texture: "wood", textureScale: [3, 1] });
+  const shade = std(C.bargeboardShade, 0.85, { flatShading: true });
+  const finial = std(C.bargeboardFinial, 0.65);
+  // Each bargeboard panel spans the gable slope from peak to eave —
+  // we'll mount two slim slabs that mirror the roof pitch.
+  // Gable spans W=7, ROOF_H=2.2 → slope length ≈ sqrt((W/2)^2 + ROOF_H^2).
+  const slope = Math.hypot(W / 2, ROOF_H);
+  const slopeAngle = Math.atan2(ROOF_H, W / 2);
+  const parts: SceneNode[] = [];
+  // Two angled panels — left and right of the peak.
+  for (const side of [-1, 1] as const) {
+    const midX = (side * W) / 4;
+    const midY = ROOF_H / 2 - 0.05;
+    parts.push(
+      // Main scalloped scroll panel — slim slab angled to the rake.
+      f.mesh(`Bargeboard ${side}`, box(slope - 0.2, 0.22, 0.05), wood, {
+        position: [midX, midY, 0],
+        rotation: [0, 0, side * slopeAngle],
+      }, { castShadow: true, receiveShadow: true }),
+      // Decorative shade slat just below the panel.
+      f.mesh(`Bargeboard Shade ${side}`, box(slope - 0.4, 0.06, 0.04), shade, {
+        position: [midX, midY - 0.13, 0.01],
+        rotation: [0, 0, side * slopeAngle],
+      }, { castShadow: false }),
+    );
+    // Three pendant finial drops along the lower edge of each panel.
+    for (let i = 0; i < 3; i++) {
+      const t = -0.6 + i * 0.6;
+      const dx = midX + Math.cos(side * slopeAngle) * t * (slope * 0.45);
+      const dy = midY + Math.sin(side * slopeAngle) * t * (slope * 0.45) - 0.18;
+      parts.push(
+        f.mesh(`Drop Finial ${side} ${i}`, cone(0.05, 0.18, 6), finial, {
+          position: [dx, dy, 0.01],
+          rotation: [0, 0, Math.PI],
+        }, { castShadow: true }),
+        // Small connector knob between panel and finial.
+        f.mesh(`Drop Knob ${side} ${i}`, sphere(0.03, 10, 6), wood, {
+          position: [dx, dy + 0.13, 0.01],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Central peak medallion — a small carved disc where the two
+  // bargeboard panels meet at the gable peak.
+  parts.push(
+    f.mesh("Peak Medallion", cylinder(0.12, 0.12, 0.05, 16), wood, {
+      position: [0, ROOF_H * 0.95, 0.02],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Small finial on top of the medallion.
+    f.mesh("Peak Finial", cone(0.04, 0.16, 8), finial, {
+      position: [0, ROOF_H * 1.02, 0.02],
+    }, { castShadow: true }),
+    // Pendant drop hanging from the medallion centre.
+    f.mesh("Peak Drop", cone(0.06, 0.22, 6), finial, {
+      position: [0, ROOF_H * 0.78, 0.02],
+      rotation: [0, 0, Math.PI],
+    }, { castShadow: true }),
+  );
+  // Rotate the whole bargeboard so the face points outward (front gable
+  // faces +Z, back gable faces -Z). `facing` is +1 for front, -1 for back.
+  const yaw = facing === 1 ? 0 : Math.PI;
+  return f.group("Gable Bargeboard", parts, { position: pos, rotation: [0, yaw, 0] });
+}
+
+function buildGableBargeboards(f: NodeFactory): SceneNode {
+  return f.group("Gable Bargeboards", [
+    buildGableBargeboard(f, FRONT_BARGEBOARD_POS, 1),
+    buildGableBargeboard(f, BACK_BARGEBOARD_POS, -1),
+  ]);
+}
+
+/* ─────────────── eighteenth-pass scene extension ─────────────── */
+
+/**
+ * The northwest waterfall ravine — a granite-toned ground plane filling
+ * the gap between the northwest woodland's north edge, the alpine
+ * foothills' west edge and the lakefront's west edge. Aprons along all
+ * three joins overlap the neighbours by ~1.5 units so the ground layer
+ * has no holes at the seams. Inside the plane: a tall granite cliff
+ * face along the north side, a tumbling three-tier waterfall cascading
+ * off it into a fern-fringed plunge pool, an outflow stream that runs
+ * south to a wooden plank footbridge, three alpine pines clinging to
+ * the cliff rim and a scatter of mossy boulders ringing the pool.
+ */
+function buildNorthwestWaterfallRavine(f: NodeFactory): SceneNode {
+  return f.group("Northwest Waterfall Ravine", [
+    // Granite-toned ravine ground plane — surfaced with the new colour +
+    // depth map pair so bedding cracks and lichen patches read as
+    // raised relief at glancing sun.
+    f.mesh(
+      "Ravine Ground",
+      plane(NW_RAVINE_W, NW_RAVINE_D),
+      std(C.ravineGround, 0.96, {
+        texture: "granite-cliff",
+        textureScale: [3, 5],
+        bumpMap: "granite-cliff-bump",
+        bumpScale: 0.06,
+      }),
+      { position: NW_RAVINE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // South apron — overlaps the northwest woodland's north edge with
+    // the woodland's moss-toned grass so the seam reads as continuous.
+    f.mesh(
+      "Ravine South Apron",
+      plane(NW_RAVINE_W, 3),
+      std(C.woodlandGrass, 0.95, { texture: "grass", textureScale: [10, 1] }),
+      {
+        position: [NW_RAVINE_POS[0], -0.015, NW_RAVINE_POS[2] + NW_RAVINE_D / 2 - 1.5],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the alpine foothills' south edge with the
+    // alpine snow-toned moss so the seam reads as a continuous foothill.
+    f.mesh(
+      "Ravine North Apron",
+      plane(NW_RAVINE_W, 3),
+      std(C.alpineMoss, 0.95, { texture: "grass", textureScale: [10, 1] }),
+      {
+        position: [NW_RAVINE_POS[0], -0.015, NW_RAVINE_POS[2] - NW_RAVINE_D / 2 + 1.5],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // East apron — overlaps the lakefront's west edge with a slim
+    // grass apron so the seam reads as a continuous shore.
+    f.mesh(
+      "Ravine East Apron",
+      plane(2.5, NW_RAVINE_D),
+      std(C.lakefrontGrass, 0.95, { texture: "grass", textureScale: [1, 12] }),
+      {
+        position: [NW_RAVINE_POS[0] + NW_RAVINE_W / 2 - 1.25, -0.015, NW_RAVINE_POS[2]],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildGraniteCliff(f),
+    buildWaterfall(f, WATERFALL_POS),
+    buildPlungePool(f, PLUNGE_POOL_POS),
+    buildPlankBridge(f, PLANK_BRIDGE_POS),
+    buildRavinePines(f),
+    buildRavineBoulders(f),
+  ]);
+}
+
+/**
+ * A tall granite cliff face along the north edge of the ravine — a
+ * wide stepped wall built from four staggered stone slabs so the
+ * silhouette reads as a layered rock face rather than a flat plank.
+ * The slabs reuse the new `granite-cliff` colour map paired with a
+ * fissure depth map so the bedding cracks and lichen patches read as
+ * raised relief at glancing sun.
+ */
+function buildGraniteCliff(f: NodeFactory): SceneNode {
+  const granite = std(C.ravineCliff, 0.92, {
+    texture: "granite-cliff",
+    textureScale: [2, 2],
+    bumpMap: "granite-cliff-bump",
+    bumpScale: 0.08,
+  });
+  const graniteShade = std(C.ravineCliffShade, 0.95, { flatShading: true });
+  const lichen = std(C.ravineLichen, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  const cliffZ = RAVINE_CLIFF_Z - 1.5;
+  // Four staggered slabs forming the cliff face — alternating wider /
+  // narrower so the silhouette reads as a layered rock face.
+  const slabs: { w: number; h: number; d: number; xo: number; yo: number; zo: number }[] = [
+    { w: NW_RAVINE_W - 1, h: 3.0, d: 1.6, xo: 0, yo: 1.5, zo: 0 },
+    { w: NW_RAVINE_W - 3, h: 1.6, d: 1.0, xo: -0.6, yo: 2.8, zo: 0.6 },
+    { w: NW_RAVINE_W - 5, h: 1.1, d: 0.8, xo: 1.4, yo: 3.2, zo: 0.4 },
+    { w: NW_RAVINE_W - 7, h: 0.8, d: 0.6, xo: -1.0, yo: 3.6, zo: 0.8 },
+  ];
+  for (let i = 0; i < slabs.length; i++) {
+    const s = slabs[i]!;
+    const mat = i % 2 === 0 ? granite : graniteShade;
+    parts.push(
+      f.mesh(`Cliff Slab ${i}`, box(s.w, s.h, s.d), mat, {
+        position: [-37 + s.xo, s.yo, cliffZ + s.zo],
+        rotation: [(i % 2 === 0 ? 0 : 0.04), i * 0.04, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Notch for the waterfall — a slim dark recess running down the
+  // centre of the cliff face where the water tumbles.
+  parts.push(
+    f.mesh("Cliff Notch", box(1.2, 2.8, 0.2), graniteShade, {
+      position: [-37, 1.6, cliffZ + 0.95],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  // Lichen patches — three slim flat boxes splashed across the face.
+  const lichens: [number, number, number][] = [
+    [-37 - 3.5, 2.6, cliffZ + 0.85],
+    [-37 + 2.4, 1.4, cliffZ + 0.9],
+    [-37 - 1.2, 3.1, cliffZ + 0.75],
+  ];
+  for (let i = 0; i < lichens.length; i++) {
+    const p = lichens[i]!;
+    parts.push(
+      f.mesh(`Lichen Patch ${i}`, box(0.7, 0.5, 0.05), lichen, {
+        position: p,
+        rotation: [0, 0, (i % 2 === 0 ? 0.15 : -0.2)],
+        scale: [1, 0.6, 1],
+      }, { castShadow: false }),
+    );
+  }
+  // A scatter of fallen stones piled at the base of the cliff face.
+  const rng = mulberry32(0xface5a11);
+  for (let i = 0; i < 10; i++) {
+    const x = -37 + (rng() - 0.5) * (NW_RAVINE_W - 2);
+    const z = cliffZ + 1.2 + rng() * 0.6;
+    const r = 0.18 + rng() * 0.18;
+    parts.push(
+      f.mesh(`Base Stone ${i}`, sphere(r, 10, 8), i % 2 === 0 ? granite : graniteShade, {
+        position: [x, r * 0.7, z],
+        rotation: [0, rng() * Math.PI, 0],
+        scale: [1, 0.7, 1],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  return f.group("Granite Cliff", parts);
+}
+
+/**
+ * A tumbling three-tier waterfall cascading off the cliff face — three
+ * stacked translucent panes carry the falling water column, with a
+ * brighter highlight strip in the centre of each pane so the column
+ * reads with depth. A small mist cloud at the base of the column
+ * suggests spray where the water meets the plunge pool.
+ */
+function buildWaterfall(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const water: MaterialDef = {
+    color: C.waterfallBlue,
+    roughness: 0.18,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.78,
+    emissive: "#3a6e8c",
+  };
+  const waterHi: MaterialDef = {
+    color: C.waterfallHi,
+    roughness: 0.12,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const mist: MaterialDef = {
+    color: C.waterfallMist,
+    roughness: 1.0,
+    transparent: true,
+    opacity: 0.3,
+  };
+  const parts: SceneNode[] = [
+    // Top tier — water hitting the upper lip of the cliff.
+    f.mesh("Falls Tier Top", box(0.9, 0.4, 0.06), water, {
+      position: [0, 3.6, 0],
+      rotation: [-0.1, 0, 0],
+    }, { castShadow: false }),
+    // Middle tier — the main column tumbling down the notch.
+    f.mesh("Falls Tier Middle", box(0.8, 2.0, 0.06), water, {
+      position: [0, 2.0, 0.12],
+    }, { castShadow: false }),
+    // Slim bright highlight strip in the centre of the main column.
+    f.mesh("Falls Highlight", box(0.18, 1.8, 0.05), waterHi, {
+      position: [0, 2.0, 0.16],
+    }, { castShadow: false }),
+    // Bottom tier — the column hitting the plunge pool, spreading out.
+    f.mesh("Falls Tier Bottom", box(1.1, 0.4, 0.06), water, {
+      position: [0, 0.3, 0.28],
+      rotation: [0.18, 0, 0],
+    }, { castShadow: false }),
+    // Mist cloud at the base — two translucent spheres softening the
+    // landing of the column.
+    f.mesh("Mist A", sphere(0.42, 12, 8), mist, {
+      position: [-0.2, 0.35, 0.4],
+      scale: [1.2, 0.7, 1.0],
+    }, { castShadow: false }),
+    f.mesh("Mist B", sphere(0.35, 12, 8), { ...mist, opacity: 0.22 }, {
+      position: [0.25, 0.5, 0.45],
+      scale: [1.1, 0.8, 1.0],
+    }, { castShadow: false }),
+    f.mesh("Mist C", sphere(0.5, 12, 8), { ...mist, opacity: 0.16 }, {
+      position: [0.0, 0.7, 0.32],
+      scale: [1.3, 0.6, 1.1],
+    }, { castShadow: false }),
+  ];
+  return f.group("Waterfall", parts, { position: pos });
+}
+
+/**
+ * A fern-fringed plunge pool at the base of the waterfall — a flat
+ * pool surface with a darker deep core, a brighter shoreline ring and
+ * a scatter of fern fronds along the south rim where the outflow
+ * stream begins. The pool surface sits just slightly above ground so
+ * it reads as a calm sheet of water rather than a hole in the ground.
+ */
+function buildPlungePool(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const water = std(C.plungePoolSurface, 0.25, { metalness: 0.2 });
+  const deepWater: MaterialDef = {
+    color: C.plungePoolDeep,
+    roughness: 0.35,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.85,
+  };
+  const fernLight = std(C.ravineGrass, 0.85, { flatShading: true });
+  const fernDark = std(C.ravinePineFoliage, 0.9, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Pool surface — a flat disc just above ground level.
+    f.mesh("Pool Surface", cylinder(1.7, 1.7, 0.02, 28), water, {
+      position: [0, 0.02, 0],
+    }, { receiveShadow: true }),
+    // Deeper-water core — a smaller darker disc inside the surface.
+    f.mesh("Pool Deep", cylinder(1.2, 1.2, 0.02, 24), deepWater, {
+      position: [0, 0.025, 0],
+    }, { receiveShadow: true }),
+    // Subtle splash ring around the pool's centre where the water lands.
+    f.mesh("Splash Ring", cylinder(0.4, 0.45, 0.025, 18), std(C.waterfallHi, 0.2), {
+      position: [0, 0.035, -0.4],
+    }, { castShadow: false }),
+    // Outflow stream — a slim channel flowing south from the pool's
+    // south rim toward the plank bridge.
+    f.mesh("Outflow Stream", box(0.5, 0.02, 4.0), deepWater, {
+      position: [0, 0.025, 2.4],
+    }, { receiveShadow: true }),
+  ];
+  // Eight fern fronds scattered along the south rim of the pool.
+  const rng = mulberry32(0xfee15a11);
+  for (let i = 0; i < 8; i++) {
+    const a = -Math.PI / 4 + (rng() * Math.PI / 2);
+    const r = 1.75 + rng() * 0.25;
+    const fx = Math.cos(a) * r;
+    const fz = Math.sin(a) * r + 0.6;
+    const mat = i % 2 === 0 ? fernLight : fernDark;
+    parts.push(
+      f.mesh(`Fern Frond ${i}`, cone(0.16, 0.5, 6), mat, {
+        position: [fx, 0.25, fz],
+        rotation: [0, rng() * Math.PI, 0],
+      }, { castShadow: false, receiveShadow: true }),
+    );
+  }
+  return f.group("Plunge Pool", parts, { position: pos });
+}
+
+/**
+ * A wooden plank footbridge crossing the outflow stream — six dark
+ * planks running across the stream on two slim joists, with low rope
+ * railings on each side anchored by short corner posts. Provides a
+ * walking surface across the south end of the ravine.
+ */
+function buildPlankBridge(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const plank = std(C.bridgePlank, 0.95, { texture: "wood", textureScale: [1, 0.6] });
+  const plankDark = std(C.bridgePlankDark, 0.95, { flatShading: true });
+  const rope = std(C.bridgeRope, 0.92, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Two joists running across the stream.
+    f.mesh("Joist L", box(2.2, 0.08, 0.08), plankDark, {
+      position: [-0.55, 0.12, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Joist R", box(2.2, 0.08, 0.08), plankDark, {
+      position: [0.55, 0.12, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  ];
+  // Six planks running perpendicular to the joists.
+  for (let i = 0; i < 6; i++) {
+    const t = -1.0 + i * 0.4;
+    parts.push(
+      f.mesh(`Plank ${i}`, box(1.5, 0.04, 0.34), plank, {
+        position: [0, 0.18, t],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Four short corner posts holding rope railings.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh("Bridge Post", box(0.08, 0.5, 0.08), plankDark, {
+          position: [sx * 0.7, 0.25 + 0.18, sz * 1.0],
+        }, { castShadow: true }),
+      );
+    }
+    // Rope railings running along each side — top + lower rope.
+    parts.push(
+      f.mesh("Rope Top", cylinder(0.025, 0.025, 2.0, 6), rope, {
+        position: [sx * 0.7, 0.62, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+      f.mesh("Rope Lower", cylinder(0.02, 0.02, 2.0, 6), rope, {
+        position: [sx * 0.7, 0.42, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Plank Bridge", parts, { position: pos, rotation: [0, Math.PI / 16, 0] });
+}
+
+/**
+ * Three alpine pine trees clinging to the rim of the cliff at the
+ * north edge of the ravine — small slim conifers with a tapered
+ * trunk and a stack of three foliage cones. Sized smaller than the
+ * woodland pines so they read as scrubby cliff-clinging growth
+ * rather than full-grown forest trees.
+ */
+function buildRavinePines(f: NodeFactory): SceneNode {
+  const trunk = std(C.ravinePineTrunk, 0.95, { texture: "bark", textureScale: [1, 2] });
+  const foliage = std(C.ravinePineFoliage, 0.85, { flatShading: true });
+  const foliageDark = std(C.pineFoliageDark, 0.9, { flatShading: true });
+  const trees: { x: number; z: number; scale: number }[] = [
+    { x: -39, z: RAVINE_CLIFF_Z - 0.6, scale: 0.95 },
+    { x: -34.5, z: RAVINE_CLIFF_Z - 1.2, scale: 0.85 },
+    { x: -36, z: RAVINE_CLIFF_Z - 1.6, scale: 1.05 },
+  ];
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < trees.length; i++) {
+    const t = trees[i]!;
+    const yt = 4.5; // pines sit on top of the cliff slabs
+    const parts: SceneNode[] = [
+      f.mesh("Trunk", cylinder(0.1, 0.14, 0.85, 8), trunk, {
+        position: [0, yt + 0.42, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Lower Cone", cone(0.5, 0.65, 8), foliage, {
+        position: [0, yt + 0.95, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Mid Cone", cone(0.36, 0.55, 8), foliageDark, {
+        position: [0, yt + 1.3, 0],
+      }, { castShadow: true }),
+      f.mesh("Top Cone", cone(0.22, 0.4, 8), foliage, {
+        position: [0, yt + 1.62, 0],
+      }, { castShadow: true }),
+    ];
+    groups.push(
+      f.group(`Alpine Pine ${i + 1}`, parts, {
+        position: [t.x, 0, t.z],
+        scale: [t.scale, t.scale, t.scale],
+      }),
+    );
+  }
+  return f.group("Ravine Alpine Pines", groups);
+}
+
+/**
+ * Mossy boulders ringing the plunge pool — five rounded stones of
+ * varying sizes scattered around the pool's south and east rims, each
+ * crowned with a slim moss cap so they read as long-settled rocks
+ * weathered by the spray.
+ */
+function buildRavineBoulders(f: NodeFactory): SceneNode {
+  const stone = std(C.ravineCliff, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneShade = std(C.ravineCliffShade, 0.95, { flatShading: true });
+  const moss = std(C.ravineBoulderMoss, 0.95, { flatShading: true });
+  const positions: { x: number; z: number; r: number; tilt: number }[] = [
+    { x: -34.6, z: -53.4, r: 0.55, tilt: 0.2 },
+    { x: -39.2, z: -53.0, r: 0.48, tilt: -0.15 },
+    { x: -35.5, z: -55.0, r: 0.42, tilt: 0.1 },
+    { x: -38.8, z: -55.5, r: 0.36, tilt: -0.25 },
+    { x: -37.0, z: -52.0, r: 0.5, tilt: 0.15 },
+  ];
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < positions.length; i++) {
+    const p = positions[i]!;
+    const mat = i % 2 === 0 ? stone : stoneShade;
+    const parts: SceneNode[] = [
+      f.mesh("Boulder", sphere(p.r, 12, 9), mat, {
+        position: [0, p.r * 0.6, 0],
+        scale: [1, 0.7, 1],
+        rotation: [p.tilt, i * 0.7, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Moss cap on top of the boulder.
+      f.mesh("Moss Cap", sphere(p.r * 0.85, 12, 8), moss, {
+        position: [0, p.r * 0.95, 0],
+        scale: [1, 0.25, 1],
+      }, { castShadow: false }),
+    ];
+    groups.push(f.group(`Boulder ${i + 1}`, parts, { position: [p.x, 0, p.z] }));
+  }
+  return f.group("Ravine Boulders", groups);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -13129,6 +14024,34 @@ function buildMapleLeafLitter(f: NodeFactory): SceneNode {
  *    different yaws across the grove floor, a small stacked-stone
  *    cairn marking a clearing at the back of the grove and a scatter
  *    of windblown crimson / amber / gold leaf dabs across the ground.
+ *  - Eighteenth pass — yard: a bronze knight sentinel statue on a
+ *    fluted marble pedestal on the east lawn (the bronze armour reuses
+ *    the existing `copper-patina` colour + bump pair so the verdigris
+ *    mottling reads as crusted relief on the shoulder pauldrons, the
+ *    breastplate and the rounded helm), and a raised wooden cold
+ *    frame planted with three translucent glass cloche bell jars
+ *    sheltering seedlings on the back lawn. House: a pair of carved
+ *    Victorian bargeboards with pendant drop finials trimming the
+ *    front and back gable rakes — each bargeboard a stepped scroll
+ *    panel hugging the eave slope with three pendant finial drops
+ *    below it and a small carved central medallion at the gable peak
+ *    framing the finial drops. Scene: a northwest waterfall ravine
+ *    plane tucked into the gap between the northwest woodland's north
+ *    edge, the alpine foothills' west edge and the lakefront's west
+ *    edge — a granite-toned ground surfaced with the new
+ *    `granite-cliff` colour map paired with a fissure depth map
+ *    (registered alongside the other procedural textures) so the
+ *    bedding cracks and lichen patches read as raised relief at
+ *    glancing sun, a woodland-grass apron along the south join, an
+ *    alpine-moss apron along the north join and a lakefront-grass
+ *    apron along the east join so the ground layer has no holes at
+ *    any of the three seams, a tall four-slab stepped granite cliff
+ *    face along the north edge, a tumbling three-tier waterfall
+ *    cascading off the cliff into a fern-fringed plunge pool, a
+ *    wooden plank footbridge crossing the outflow stream at the
+ *    south end with rope railings on slim corner posts, three alpine
+ *    pine trees clinging to the cliff rim and a scatter of five
+ *    moss-capped boulders ringing the pool.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -13198,6 +14121,9 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: TEA_TABLE_POS[0], z: TEA_TABLE_POS[2], r: 1.6 },
     { x: OWL_L_POS[0], z: OWL_L_POS[2], r: 0.7 },
     { x: OWL_R_POS[0], z: OWL_R_POS[2], r: 0.7 },
+    // Eighteenth-pass keep-outs — bronze knight statue and glass cloche bed.
+    { x: KNIGHT_STATUE_POS[0], z: KNIGHT_STATUE_POS[2], r: 0.8 },
+    { x: CLOCHE_BED_POS[0], z: CLOCHE_BED_POS[2], r: 1.2 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -13255,6 +14181,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildCherubStatue(f, CHERUB_STATUE_POS),
     buildVictorianTeaSet(f, TEA_TABLE_POS),
     buildOwlSentinels(f),
+    buildKnightStatue(f, KNIGHT_STATUE_POS),
+    buildGlassCloches(f, CLOCHE_BED_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -13269,6 +14197,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const lavenderField = buildSouthwestLavenderField(f);
   const alpineFoothills = buildAlpineFoothills(f);
   const neMapleGrove = buildNortheastMapleGrove(f);
+  const nwRavine = buildNorthwestWaterfallRavine(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -13306,6 +14235,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildFrontDoorFittings(f),
     buildSideTrellises(f),
     buildFanlight(f, FANLIGHT_POS),
+    buildGableBargeboards(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -13327,6 +14257,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       lavenderField,
       alpineFoothills,
       neMapleGrove,
+      nwRavine,
       house,
     ],
   };

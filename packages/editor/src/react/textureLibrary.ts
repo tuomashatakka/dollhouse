@@ -2283,4 +2283,213 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Eighteenth-pass additions ──────────────────────────────────────
+  // The eighteenth enhancement pass introduces a new procedural texture
+  // pair for the northwest waterfall ravine: a `granite-cliff` colour
+  // map that suggests blocky granite with horizontal bedding cracks,
+  // lichen mottling and a scatter of dark mineral flecks, paired with
+  // a `granite-cliff-bump` depth map that lifts the bedding cracks and
+  // lichen patches as raised relief at glancing sun. Both maps are used
+  // on the ravine ground plane and the cliff-face slabs.
+
+  // Granite-cliff colour map — a cool stone ground with horizontal
+  // bedding cracks, lichen patches and dark mineral flecks suggesting
+  // a weathered granite outcrop.
+  registry["granite-cliff"] = makeCanvasTexture({
+    seed: 0x9ee2a17e,
+    draw: (ctx, rng, size) => {
+      // Cool-grey granite base — slightly warmer toward the top where
+      // afternoon sun catches the rim, cooler toward the lower edge in
+      // shadow.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#8a8278");
+      bg.addColorStop(0.5, "#6e6660");
+      bg.addColorStop(1, "#4a4540");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide blocky granite faces — soft irregular polygon patches in
+      // varied warm + cool greys giving the rock a layered look.
+      const blocks = 28;
+      for (let i = 0; i < blocks; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = size * (0.06 + rng() * 0.07);
+        const hue = 22 + rng() * 28;
+        const sat = 6 + rng() * 8;
+        const light = 32 + rng() * 22;
+        ctx.fillStyle = `hsl(${hue}, ${sat}%, ${light}%)`;
+        ctx.beginPath();
+        const verts = 6 + Math.floor(rng() * 3);
+        for (let v = 0; v < verts; v++) {
+          const a = (v / verts) * Math.PI * 2 + rng() * 0.2;
+          const rr = r * (0.7 + rng() * 0.6);
+          const px = cx + Math.cos(a) * rr;
+          const py = cy + Math.sin(a) * rr;
+          if (v === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fill();
+        // Slim painted highlight strip along the upper rim of the block.
+        ctx.fillStyle = `hsla(${hue}, ${sat}%, ${Math.min(85, light + 28)}%, 0.18)`;
+        ctx.beginPath();
+        ctx.ellipse(cx - r * 0.2, cy - r * 0.35, r * 0.7, r * 0.18, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Horizontal bedding cracks — eight slim dark lines running
+      // mostly horizontally across the canvas, breaking the granite
+      // into layered bedding planes.
+      for (let i = 0; i < 8; i++) {
+        const y = (i / 8) * size + (rng() - 0.5) * (size * 0.06);
+        const segs = 6 + Math.floor(rng() * 5);
+        ctx.strokeStyle = "rgba(28,26,22,0.7)";
+        ctx.lineWidth = 1.4 + rng() * 1.6;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        for (let s = 0; s < segs; s++) {
+          const x = ((s + 1) / segs) * size;
+          const yy = y + (rng() - 0.5) * (size * 0.04);
+          ctx.lineTo(x, yy);
+        }
+        ctx.stroke();
+      }
+      // Lichen patches — soft yellow-green mottles scattered across the
+      // face suggesting weathered rock-clinging growth.
+      for (let i = 0; i < 18; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 8 + rng() * 22;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        const hue = 60 + rng() * 30;
+        grad.addColorStop(0, `hsla(${hue}, 35%, ${48 + rng() * 14}%, 0.55)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Vertical fracture lines — slim broken dark slivers running
+      // mostly vertically across the surface.
+      for (let i = 0; i < 14; i++) {
+        const x = rng() * size;
+        const segs = 4 + Math.floor(rng() * 3);
+        ctx.strokeStyle = "rgba(20,18,16,0.55)";
+        ctx.lineWidth = 0.8 + rng() * 1.2;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        for (let s = 0; s < segs; s++) {
+          const y = ((s + 1) / segs) * size;
+          const xx = x + (rng() - 0.5) * (size * 0.08);
+          ctx.lineTo(xx, y);
+        }
+        ctx.stroke();
+      }
+      // Dark mineral flecks — small black dots speckled across the
+      // surface so the granite reads as a freckled, mineral-rich rock.
+      for (let i = 0; i < 800; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const v = Math.floor(rng() * 22);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(x, y, 1 + rng(), 1 + rng());
+      }
+      // Faint sun-cast highlight — a wide pale wash drifting across
+      // the upper third so glancing sun catches the rim.
+      const sun = ctx.createRadialGradient(size * 0.7, size * 0.2, 0, size * 0.7, size * 0.2, size * 0.6);
+      sun.addColorStop(0, "rgba(255,250,232,0.12)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Fine micro-noise so the surface retains tonal life at deep mips.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.005);
+    },
+  });
+
+  // Granite-cliff depth map — raised lichen patches as bright bumps,
+  // bedding cracks and vertical fractures as dark recesses, so the
+  // rock reads with bedded relief at glancing sun.
+  registry["granite-cliff-bump"] = makeCanvasTexture({
+    seed: 0x9ee2a17e + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average granite face height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Blocky face mounds — soft irregular bright patches reading as
+      // the slightly raised faces of the bedding blocks.
+      for (let i = 0; i < 24; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r = size * (0.05 + rng() * 0.07);
+        const blob = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r);
+        blob.addColorStop(0, `rgba(${200 + Math.floor(rng() * 40)},${200 + Math.floor(rng() * 40)},${200 + Math.floor(rng() * 40)},0.55)`);
+        blob.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = blob;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Lichen mounds — slightly raised brighter blobs suggesting
+      // moss-and-lichen rosettes sitting proud of the rock face.
+      for (let i = 0; i < 18; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r = 8 + rng() * 22;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        grad.addColorStop(0, "rgba(245,245,245,0.55)");
+        grad.addColorStop(0.5, "rgba(180,180,180,0.4)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Bedding cracks — dark horizontal lines recessing into the face.
+      for (let i = 0; i < 8; i++) {
+        const y = (i / 8) * size + (rng() - 0.5) * (size * 0.06);
+        ctx.strokeStyle = "rgba(20,20,20,0.85)";
+        ctx.lineWidth = 1.8 + rng() * 2.4;
+        ctx.beginPath();
+        const segs = 6 + Math.floor(rng() * 5);
+        ctx.moveTo(0, y);
+        for (let s = 0; s < segs; s++) {
+          const x = ((s + 1) / segs) * size;
+          const yy = y + (rng() - 0.5) * (size * 0.04);
+          ctx.lineTo(x, yy);
+        }
+        ctx.stroke();
+      }
+      // Vertical fractures — dark slim lines recessed into the face.
+      for (let i = 0; i < 14; i++) {
+        const x = rng() * size;
+        ctx.strokeStyle = "rgba(20,20,20,0.7)";
+        ctx.lineWidth = 0.9 + rng() * 1.4;
+        ctx.beginPath();
+        const segs = 4 + Math.floor(rng() * 3);
+        ctx.moveTo(x, 0);
+        for (let s = 0; s < segs; s++) {
+          const y = ((s + 1) / segs) * size;
+          const xx = x + (rng() - 0.5) * (size * 0.08);
+          ctx.lineTo(xx, y);
+        }
+        ctx.stroke();
+      }
+      // Bright mineral fleck bumps — small bright dots reading as
+      // raised quartz inclusions in the granite.
+      for (let i = 0; i < 400; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const v = 200 + Math.floor(rng() * 50);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(x, y, 1.2 + rng(), 1.2 + rng());
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1200; i++) {
+        const v = 80 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over seventeen enhancement passes.
+// house and its courtyard, layered over eighteen enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -283,6 +283,37 @@
 //   different yaws across the grove floor, a small stacked-stone
 //   cairn marking a clearing at the back of the grove and a scatter
 //   of windblown crimson / amber / gold leaf dabs across the ground.
+//   Pass 18 — courtyard: a bronze knight sentinel statue on a fluted
+//   marble pedestal on the east lawn (slim armoured figure with a
+//   sword at his hip, an upright kite shield held in front of his
+//   chest and a crested helm with a crimson pendant plume — the
+//   bronze body reuses the existing `copper-patina` colour + bump
+//   pair so the verdigris mottling reads as crusted relief on the
+//   pauldrons, the breastplate and the rounded helm), and a raised
+//   wooden cold frame planted with a row of three translucent glass
+//   cloche bell jars sheltering seedling clusters on the back lawn.
+//   House: a pair of carved Victorian bargeboards with pendant drop
+//   finials trimming the front and back gable rakes — each
+//   bargeboard a stepped scroll panel hugging the eave slope with
+//   three pendant finial drops below it and a small carved central
+//   medallion at the gable peak framing a finial drop pendant.
+//   Scene: a northwest waterfall ravine plane tucked into the gap
+//   between the northwest woodland's north edge, the alpine
+//   foothills' west edge and the lakefront's west edge — a granite-
+//   toned ground surfaced with the new `granite-cliff` colour map
+//   paired with a fissure depth map (registered alongside the other
+//   procedural textures) so the bedding cracks and lichen patches
+//   read as raised relief at glancing sun, a woodland-grass apron
+//   along the south join, an alpine-moss apron along the north join
+//   and a lakefront-grass apron along the east join so the ground
+//   layer has no holes at any of the three seams, a tall four-slab
+//   stepped granite cliff face along the north edge with a
+//   waterfall notch carved into its centre, a tumbling three-tier
+//   waterfall cascading off the cliff into a fern-fringed plunge
+//   pool, an outflow stream running south to a wooden plank
+//   footbridge with rope railings on slim corner posts, three
+//   alpine pine trees clinging to the cliff rim and a scatter of
+//   five moss-capped boulders ringing the pool.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
