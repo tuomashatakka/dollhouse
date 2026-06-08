@@ -537,6 +537,52 @@ const WATERFALL_POS: [number, number, number] = [-37, 0, RAVINE_CLIFF_Z + 0.6];
 const PLUNGE_POOL_POS: [number, number, number] = [-37, 0, RAVINE_CLIFF_Z + 3.4];
 const PLANK_BRIDGE_POS: [number, number, number] = [-37, 0, NW_RAVINE_POS[2] + NW_RAVINE_D / 2 - 5];
 
+/**
+ * Nineteenth-pass courtyard prop — a Victorian cast-bronze cupid fountain
+ * on the back-southwest lawn. A slim cupid figure on a swelled column
+ * pedestal holds a flower vase aloft, with a thin water column trickling
+ * from the vase rim into an upper basin and a wider sheet of water falling
+ * over the rim of the upper basin into a lower tiered basin. The cupid body
+ * reuses the existing `copper-patina` colour + bump pair so the verdigris
+ * mottling reads as crusted relief on the wings and the slim limbs, and the
+ * tiered basins reuse the existing `marble` colour + bump pair so the rim
+ * seams read as veined relief on the stone.
+ */
+const CUPID_FOUNTAIN_POS: [number, number, number] = [-9, 0, 13];
+
+/**
+ * Nineteenth-pass house detail — a pair of ornate cast-iron gable peak
+ * finials with copper-patina spires crowning the front and back gable
+ * ridges above the existing bargeboard medallions. Each finial is a slim
+ * tapered spire with a lobed medallion cap, an open quatrefoil ring and a
+ * small pennant directional vane at the tip. Both reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris mottling reads as
+ * crusted relief on the metal spire.
+ */
+const GABLE_FINIAL_FRONT_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H * 1.02, FRONT_Z + 0.04];
+const GABLE_FINIAL_BACK_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H * 1.02, BACK_Z - 0.04];
+
+/**
+ * Nineteenth-pass scene extension — a southwest sunflower field plane
+ * bridging the gap south of the wheat field's south edge (z ≈ 33.5, x ≈
+ * [-43, -21]) and west of the south heath's west edge (x ≈ -25, z ≈
+ * [32, 60]). The plane overlaps the wheat field by ~1.5 units along its
+ * north edge and the south heath by ~1.5 units along its east edge so
+ * the ground layer has no holes at either seam. It carries a cultivated
+ * yellow-and-brown ground surfaced with the new `sunflower-field` colour
+ * map paired with a row depth map (registered alongside the other
+ * procedural textures) so the planting rows and seed clumps read as
+ * raised relief at glancing sun, six rows of tall sunflower plants with
+ * bright yellow ray-petal faces and dark seed-disc centres, a small
+ * board-and-batten tool shed at the northwest corner with a peaked
+ * shingle roof and a sun-bleached door, a scatter of straw bales between
+ * the rows and a slim stake-and-twine fence along the south edge.
+ */
+const SUNFLOWER_FIELD_POS: [number, number, number] = [-34.5, -0.019, 45];
+const SUNFLOWER_FIELD_W = 22;
+const SUNFLOWER_FIELD_D = 26;
+const SUNFLOWER_SHED_POS: [number, number, number] = [-42, 0, 36];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1060,6 +1106,45 @@ const C = {
   bridgePlank: "#7a5238",
   bridgePlankDark: "#4a3220",
   bridgeRope: "#a87f5a",
+  // Nineteenth enhancement pass — a Victorian cast-bronze cupid fountain
+  // on the back-southwest lawn (cupid figure reuses the existing
+  // copper-patina colour + bump pair so the verdigris mottling reads as
+  // crusted relief on the wings and limbs; tiered marble basins reuse the
+  // existing marble pair so the rim seams read as veined relief), a pair
+  // of ornate cast-iron gable peak finials atop the front and back
+  // bargeboards (copper-patina pair on the spire), and a southwest
+  // sunflower field scene extension bridging the gap south of the wheat
+  // field and west of the south heath. The new `sunflower-field` colour
+  // map is paired with a row depth map registered alongside it so the
+  // planting rows and seed clumps read as raised relief at glancing sun.
+  cupidBronze: "#5d8a6a",
+  cupidBronzeShade: "#2f5840",
+  cupidBronzeHi: "#9bc4a8",
+  cupidBasinCream: "#ede2d0",
+  cupidBasinShade: "#a89776",
+  cupidWater: "#7eb6cf",
+  cupidWaterHi: "#dff0f7",
+  cupidVase: "#c3674b",
+  gableFinialSpire: "#5d8a6a",
+  gableFinialBase: "#3a3636",
+  gableFinialPennant: "#c2403a",
+  sunflowerGround: "#9b7a3a",
+  sunflowerGroundDark: "#6c5328",
+  sunflowerLeaf: "#5e8a3a",
+  sunflowerLeafDark: "#3a5e26",
+  sunflowerStem: "#4a6a2c",
+  sunflowerPetal: "#e8b338",
+  sunflowerPetalHi: "#f4d35a",
+  sunflowerCenter: "#5a3a1c",
+  sunflowerCenterHi: "#8a5a2a",
+  sunflowerStrawBale: "#d6b85a",
+  sunflowerStrawBaleDark: "#a87f2c",
+  sunflowerShedWood: "#7c5536",
+  sunflowerShedTrim: "#dbc89b",
+  sunflowerShedRoof: "#5c3f2c",
+  sunflowerShedDoor: "#3a2218",
+  sunflowerFenceStake: "#a8845a",
+  sunflowerTwine: "#dbc89b",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -13750,6 +13835,626 @@ function buildRavineBoulders(f: NodeFactory): SceneNode {
   return f.group("Ravine Boulders", groups);
 }
 
+/* ─────────────── nineteenth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian cast-bronze cupid fountain on the back-southwest lawn — a
+ * tiered marble basin crowned by a slim cupid figure standing on a swelled
+ * column pedestal. The cupid holds a terracotta flower vase aloft from
+ * which a thin water column trickles into an upper bowl; a wider sheet of
+ * water then falls over the rim of the upper bowl into a lower tiered
+ * basin. The cupid body reuses the existing `copper-patina` colour + bump
+ * pair so the verdigris mottling reads as crusted relief on the wings and
+ * the slim limbs, and the tiered basins reuse the existing `marble` colour
+ * + bump pair so the rim seams read as veined relief on the stone.
+ */
+function buildCupidFountain(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.cupidBronze,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const bronzeShade: MaterialDef = {
+    color: C.cupidBronzeShade,
+    roughness: 0.75,
+    metalness: 0.5,
+    flatShading: true,
+  };
+  const bronzeHi = std(C.cupidBronzeHi, 0.4, { metalness: 0.85 });
+  const marble = std(C.cupidBasinCream, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.cupidBasinShade, 0.95, { flatShading: true });
+  const vase = std(C.cupidVase, 0.7, { texture: "wood", textureScale: [1, 1] });
+  const water: MaterialDef = {
+    color: C.cupidWater,
+    roughness: 0.18,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.82,
+    emissive: "#2a5a72",
+  };
+  const waterHi: MaterialDef = {
+    color: C.cupidWaterHi,
+    roughness: 0.15,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const parts: SceneNode[] = [];
+  // ── Lower tiered basin (the broad catch bowl) ──
+  parts.push(
+    // Slate footing slab.
+    f.mesh("Fountain Footing", cylinder(1.05, 1.15, 0.08, 24), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    // Lower basin rim — a wide marble ring.
+    f.mesh("Lower Basin Rim", cylinder(0.95, 0.95, 0.12, 28), marble, {
+      position: [0, 0.16, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Lower basin water surface — a slim disc just below the rim.
+    f.mesh("Lower Basin Water", cylinder(0.88, 0.88, 0.04, 28), water, {
+      position: [0, 0.2, 0],
+    }, { receiveShadow: true }),
+    // Inner darker plinth below the upper basin column.
+    f.mesh("Fountain Inner Plinth", cylinder(0.28, 0.32, 0.18, 18), marbleShade, {
+      position: [0, 0.32, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Central swelled column carrying the upper basin.
+    f.mesh("Fountain Column", cylinder(0.16, 0.22, 0.5, 16), marble, {
+      position: [0, 0.66, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Column collar — slim raised band.
+    f.mesh("Fountain Collar", cylinder(0.24, 0.24, 0.04, 16), marbleShade, {
+      position: [0, 0.92, 0],
+    }, { castShadow: false }),
+  );
+  // Eight slim vertical fluting grooves around the column.
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Column Flute ${i}`, box(0.02, 0.44, 0.03), marbleShade, {
+        position: [Math.cos(a) * 0.2, 0.66, Math.sin(a) * 0.2],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Upper tiered bowl ──
+  parts.push(
+    // Upper basin rim — a smaller marble ring.
+    f.mesh("Upper Basin Rim", cylinder(0.5, 0.5, 0.1, 24), marble, {
+      position: [0, 1.0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Upper basin water surface — a slim disc inside the rim.
+    f.mesh("Upper Basin Water", cylinder(0.44, 0.44, 0.04, 24), water, {
+      position: [0, 1.04, 0],
+    }, { receiveShadow: true }),
+    // Subtle splash highlight ring in the upper bowl centre.
+    f.mesh("Upper Bowl Splash", cylinder(0.14, 0.16, 0.02, 18), waterHi, {
+      position: [0, 1.06, 0],
+    }, { castShadow: false }),
+    // Slim spillway tongue draping over the upper basin's south rim.
+    f.mesh("Upper Spillway", box(0.18, 0.12, 0.08), water, {
+      position: [0, 0.98, 0.5],
+      rotation: [-0.6, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Cupid figure on the upper basin centre ──
+  const cy = 1.1;
+  parts.push(
+    // Pedestal stub on top of the upper basin where cupid stands.
+    f.mesh("Cupid Plinth", cylinder(0.1, 0.12, 0.06, 12), bronzeShade, {
+      position: [0, cy + 0.03, 0],
+    }, { castShadow: true }),
+    // Cupid legs — two slim cylinders.
+    f.mesh("Cupid Leg L", cylinder(0.035, 0.04, 0.22, 8), bronze, {
+      position: [-0.04, cy + 0.18, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cupid Leg R", cylinder(0.035, 0.04, 0.22, 8), bronze, {
+      position: [0.04, cy + 0.18, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Torso — a slim rounded body.
+    f.mesh("Cupid Torso", sphere(0.1, 14, 10), bronze, {
+      position: [0, cy + 0.36, 0],
+      scale: [1, 1.4, 0.85],
+    }, { castShadow: true, receiveShadow: true }),
+    // Head.
+    f.mesh("Cupid Head", sphere(0.09, 14, 10), bronze, {
+      position: [0, cy + 0.55, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim halo of curls — a darker ring atop the head.
+    f.mesh("Cupid Curls", cylinder(0.09, 0.09, 0.04, 14), bronzeShade, {
+      position: [0, cy + 0.62, 0],
+    }, { castShadow: false }),
+    // Two small wings emerging from the back of the torso — slim shells.
+    f.mesh("Wing L", box(0.18, 0.22, 0.03), bronze, {
+      position: [-0.1, cy + 0.42, -0.08],
+      rotation: [0.2, -0.35, 0.25],
+    }, { castShadow: true }),
+    f.mesh("Wing R", box(0.18, 0.22, 0.03), bronze, {
+      position: [0.1, cy + 0.42, -0.08],
+      rotation: [0.2, 0.35, -0.25],
+    }, { castShadow: true }),
+    // Slim feather detailing — bright highlight slats on the wings.
+    f.mesh("Wing Feathers L", box(0.16, 0.2, 0.012), bronzeHi, {
+      position: [-0.1, cy + 0.42, -0.07],
+      rotation: [0.2, -0.35, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Wing Feathers R", box(0.16, 0.2, 0.012), bronzeHi, {
+      position: [0.1, cy + 0.42, -0.07],
+      rotation: [0.2, 0.35, -0.25],
+    }, { castShadow: false }),
+    // Right arm raised — holding the vase aloft.
+    f.mesh("Arm R", cylinder(0.025, 0.03, 0.32, 8), bronze, {
+      position: [0.13, cy + 0.5, 0],
+      rotation: [0, 0, -0.7],
+    }, { castShadow: true }),
+    // Left arm — relaxed at the side.
+    f.mesh("Arm L", cylinder(0.025, 0.03, 0.28, 8), bronze, {
+      position: [-0.11, cy + 0.34, 0],
+      rotation: [0, 0, 0.15],
+    }, { castShadow: true }),
+  );
+  // ── Vase held above the head ──
+  const vaseY = cy + 0.78;
+  parts.push(
+    // Vase body — slim swelled jug.
+    f.mesh("Vase Body", sphere(0.1, 14, 10), vase, {
+      position: [0.18, vaseY, 0],
+      scale: [1, 1.1, 1],
+    }, { castShadow: true, receiveShadow: true }),
+    // Vase rim — slim collar.
+    f.mesh("Vase Rim", cylinder(0.08, 0.08, 0.03, 12), bronzeShade, {
+      position: [0.18, vaseY + 0.1, 0],
+    }, { castShadow: false }),
+    // Thin water column trickling from the vase rim into the upper basin.
+    f.mesh("Water Trickle", box(0.025, 0.32, 0.025), water, {
+      position: [0.18, vaseY - 0.16, 0],
+    }, { castShadow: false }),
+    // Highlight strip down the centre of the trickle.
+    f.mesh("Trickle Highlight", box(0.012, 0.28, 0.018), waterHi, {
+      position: [0.185, vaseY - 0.14, 0.01],
+    }, { castShadow: false }),
+  );
+  // ── Water cascade from upper basin to lower basin ──
+  parts.push(
+    // Falling water sheet on the south side.
+    f.mesh("Cascade Sheet", box(0.4, 0.7, 0.04), water, {
+      position: [0, 0.62, 0.55],
+      rotation: [-0.25, 0, 0],
+    }, { castShadow: false }),
+    // Bright highlight strip along the cascade.
+    f.mesh("Cascade Highlight", box(0.14, 0.6, 0.03), waterHi, {
+      position: [0, 0.6, 0.58],
+      rotation: [-0.25, 0, 0],
+    }, { castShadow: false }),
+    // Subtle splash ring in the lower basin where the cascade lands.
+    f.mesh("Lower Splash", cylinder(0.18, 0.22, 0.025, 16), waterHi, {
+      position: [0, 0.22, 0.55],
+    }, { castShadow: false }),
+  );
+  return f.group("Cupid Fountain", parts, { position: pos, rotation: [0, -Math.PI / 5, 0] });
+}
+
+/* ─────────────── nineteenth-pass house detail ─────────────── */
+
+/**
+ * A single ornate cast-iron gable peak finial — a slim copper-patina
+ * spire crowning the bargeboard medallion at the gable peak. Each finial
+ * combines a tapered spire, a lobed medallion cap, an open quatrefoil
+ * ring and a small pennant directional vane at the tip. The spire and
+ * medallion reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal.
+ */
+function buildGablePeakFinial(
+  f: NodeFactory,
+  pos: [number, number, number],
+  facing: 1 | -1,
+): SceneNode {
+  const spire: MaterialDef = {
+    color: C.gableFinialSpire,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const spireDark = std(C.gableFinialBase, 0.85, { metalness: 0.6, flatShading: true });
+  const pennant = std(C.gableFinialPennant, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Base socket — a slim dark cap where the finial seats on the
+    // bargeboard medallion.
+    f.mesh("Finial Socket", cylinder(0.06, 0.08, 0.06, 10), spireDark, {
+      position: [0, 0.03, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Lobed medallion cap — a wider disc just above the socket.
+    f.mesh("Finial Medallion", cylinder(0.11, 0.11, 0.04, 16), spire, {
+      position: [0, 0.08, 0],
+    }, { castShadow: true }),
+    // Quatrefoil ring — an open ornamental ring around the medallion.
+    f.mesh("Finial Ring", cylinder(0.13, 0.13, 0.02, 20), spire, {
+      position: [0, 0.12, 0],
+    }, { castShadow: false }),
+  ];
+  // Four small lobed protrusions around the medallion ring.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Lobe ${i}`, sphere(0.022, 8, 6), spire, {
+        position: [Math.cos(a) * 0.12, 0.12, Math.sin(a) * 0.12],
+      }, { castShadow: false }),
+    );
+  }
+  parts.push(
+    // Tapered spire shaft — the main finial column.
+    f.mesh("Finial Shaft", cylinder(0.025, 0.05, 0.45, 10), spire, {
+      position: [0, 0.36, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Mid-shaft knob — a slim raised bead halfway up the spire.
+    f.mesh("Finial Bead", sphere(0.04, 12, 8), spire, {
+      position: [0, 0.36, 0],
+    }, { castShadow: false }),
+    // Tip ball — a small ball at the top of the spire.
+    f.mesh("Finial Tip", sphere(0.025, 10, 8), spire, {
+      position: [0, 0.6, 0],
+    }, { castShadow: false }),
+    // Slim arrow vane — a narrow plate at the tip pointing outward, the
+    // facing axis controls which way the arrow points.
+    f.mesh("Finial Arrow", cone(0.025, 0.12, 6), spire, {
+      position: [facing * 0.08, 0.6, 0],
+      rotation: [0, 0, facing * -Math.PI / 2],
+    }, { castShadow: false }),
+    // Pennant flag — a slim strip waving on the back of the arrow.
+    f.mesh("Finial Pennant", box(0.1, 0.04, 0.012), pennant, {
+      position: [facing * 0.14, 0.6, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Gable Peak Finial", parts, { position: pos });
+}
+
+function buildGablePeakFinials(f: NodeFactory): SceneNode {
+  return f.group("Gable Peak Finials", [
+    buildGablePeakFinial(f, GABLE_FINIAL_FRONT_POS, 1),
+    buildGablePeakFinial(f, GABLE_FINIAL_BACK_POS, -1),
+  ]);
+}
+
+/* ─────────────── nineteenth-pass scene extension ─────────────── */
+
+/**
+ * The southwest sunflower field — a cultivated yellow-and-brown ground
+ * plane bridging the gap south of the wheat field's south edge and west
+ * of the south heath's west edge. Aprons along the north (wheat) and
+ * east (heath) joins overlap the neighbouring planes by ~1.5 units so
+ * the ground layer has no holes at the seams. Inside the plane: six rows
+ * of tall sunflower plants with bright yellow ray-petal faces and dark
+ * seed-disc centres, a small board-and-batten tool shed at the northwest
+ * corner with a peaked shingle roof, a scatter of straw bales between
+ * the rows and a slim stake-and-twine fence along the south edge.
+ */
+function buildSouthwestSunflowerField(f: NodeFactory): SceneNode {
+  return f.group("Southwest Sunflower Field", [
+    // Main sunflower-field ground plane — surfaced with the new colour +
+    // depth map pair so the planting rows and seed clumps read as raised
+    // relief at glancing sun.
+    f.mesh(
+      "Sunflower Field Ground",
+      plane(SUNFLOWER_FIELD_W, SUNFLOWER_FIELD_D),
+      std(C.sunflowerGround, 0.95, {
+        texture: "sunflower-field",
+        textureScale: [4, 5],
+        bumpMap: "sunflower-field-bump",
+        bumpScale: 0.05,
+      }),
+      { position: SUNFLOWER_FIELD_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the wheat field's south edge with a paler
+    // stubble strip so the seam reads as a harvested fringe.
+    f.mesh(
+      "Sunflower North Apron",
+      plane(SUNFLOWER_FIELD_W, 3),
+      std(C.wheatStubble, 0.95, { texture: "grass", textureScale: [8, 1] }),
+      {
+        position: [
+          SUNFLOWER_FIELD_POS[0],
+          -0.016,
+          SUNFLOWER_FIELD_POS[2] - SUNFLOWER_FIELD_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // East apron — overlaps the south heath's west edge with a heather-
+    // toned strip so the seam reads as a continuous heath fringe.
+    f.mesh(
+      "Sunflower East Apron",
+      plane(3, SUNFLOWER_FIELD_D),
+      std(C.heathMoss, 0.95, { texture: "grass", textureScale: [1, 8] }),
+      {
+        position: [
+          SUNFLOWER_FIELD_POS[0] + SUNFLOWER_FIELD_W / 2 - 1.5,
+          -0.016,
+          SUNFLOWER_FIELD_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildSunflowerRows(f),
+    buildSunflowerShed(f, SUNFLOWER_SHED_POS),
+    buildSunflowerStrawBales(f),
+    buildSunflowerFieldFence(f),
+  ]);
+}
+
+/**
+ * Six rows of tall sunflower plants growing across the field — each plant
+ * a slim stem with two upper leaves and a wide bright bloom face. Plants
+ * are nudged off-axis so the rows read as hand-planted rather than
+ * machine-perfect. Each bloom is a layered ray-petal disc around a dark
+ * seed centre with a brighter inner core.
+ */
+function buildSunflowerRows(f: NodeFactory): SceneNode {
+  const stem = std(C.sunflowerStem, 0.9, { flatShading: true });
+  const leaf = std(C.sunflowerLeaf, 0.85, { flatShading: true });
+  const leafDark = std(C.sunflowerLeafDark, 0.9, { flatShading: true });
+  const petal = std(C.sunflowerPetal, 0.7, { flatShading: true });
+  const petalHi = std(C.sunflowerPetalHi, 0.55);
+  const center = std(C.sunflowerCenter, 0.95, { flatShading: true });
+  const centerHi = std(C.sunflowerCenterHi, 0.9, { flatShading: true });
+  const rng = mulberry32(0x5f10ed);
+  const rows: SceneNode[] = [];
+  const cx = SUNFLOWER_FIELD_POS[0];
+  const cz = SUNFLOWER_FIELD_POS[2];
+  // Six rows running east-west; each row carries six plants.
+  for (let r = 0; r < 6; r++) {
+    const rowZ = cz - SUNFLOWER_FIELD_D / 2 + 3.5 + r * 3.6;
+    for (let i = 0; i < 6; i++) {
+      const px = cx - SUNFLOWER_FIELD_W / 2 + 3.0 + i * 2.8 + (rng() - 0.5) * 0.7;
+      const pz = rowZ + (rng() - 0.5) * 0.5;
+      const stemH = 1.5 + rng() * 0.4;
+      const headTilt = (rng() - 0.5) * 0.3;
+      const headYaw = (i + r) % 2 === 0 ? 0.4 : -0.4;
+      const parts: SceneNode[] = [
+        // Stem.
+        f.mesh("Stem", cylinder(0.04, 0.06, stemH, 6), stem, {
+          position: [0, stemH / 2, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Lower leaf cluster — two angled blade-shaped leaves.
+        f.mesh("Leaf Lower L", box(0.32, 0.06, 0.16), leaf, {
+          position: [-0.16, stemH * 0.45, 0],
+          rotation: [0, 0, -0.4],
+        }, { castShadow: false }),
+        f.mesh("Leaf Lower R", box(0.32, 0.06, 0.16), leafDark, {
+          position: [0.16, stemH * 0.45, 0],
+          rotation: [0, 0, 0.4],
+        }, { castShadow: false }),
+        // Upper leaf cluster — slightly smaller, higher on the stem.
+        f.mesh("Leaf Upper L", box(0.24, 0.05, 0.12), leaf, {
+          position: [-0.12, stemH * 0.75, 0],
+          rotation: [0, 0.5, -0.3],
+        }, { castShadow: false }),
+        f.mesh("Leaf Upper R", box(0.24, 0.05, 0.12), leafDark, {
+          position: [0.12, stemH * 0.75, 0],
+          rotation: [0, -0.5, 0.3],
+        }, { castShadow: false }),
+      ];
+      // ── Sunflower bloom — layered ray-petal disc + dark seed centre ──
+      const headY = stemH + 0.08;
+      // Eight ray petals arranged around the bloom centre.
+      for (let p = 0; p < 8; p++) {
+        const a = (p / 8) * Math.PI * 2;
+        parts.push(
+          f.mesh(`Ray Petal ${p}`, cone(0.08, 0.25, 6), p % 2 === 0 ? petal : petalHi, {
+            position: [Math.cos(a) * 0.22, headY, Math.sin(a) * 0.22],
+            rotation: [Math.PI / 2 + Math.sin(a) * 0.2, a, headTilt],
+            scale: [1, 1, 0.55],
+          }, { castShadow: false }),
+        );
+      }
+      // Dark seed disc — a flat squat cylinder behind the petals.
+      parts.push(
+        f.mesh("Seed Disc", cylinder(0.18, 0.18, 0.04, 16), center, {
+          position: [0, headY, 0],
+          rotation: [Math.PI / 2, 0, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Brighter inner core — a smaller disc on top of the seeds.
+        f.mesh("Seed Core", cylinder(0.1, 0.1, 0.02, 14), centerHi, {
+          position: [0, headY + 0.02, 0],
+          rotation: [Math.PI / 2, 0, 0],
+        }, { castShadow: false }),
+      );
+      rows.push(
+        f.group(`Sunflower ${r}-${i}`, parts, {
+          position: [px, 0, pz],
+          rotation: [0, headYaw + rng() * 0.3, 0],
+        }),
+      );
+    }
+  }
+  return f.group("Sunflower Rows", rows);
+}
+
+/**
+ * A small board-and-batten tool shed at the northwest corner of the field
+ * — a low rectangular box with a peaked shingle roof, a slatted side
+ * wall, a sun-bleached plank door and a small slat window. Provides a
+ * focal silhouette at the field's far corner so the eye reads the plane
+ * as a working farm rather than an empty plot.
+ */
+function buildSunflowerShed(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.sunflowerShedWood, 0.95, { texture: "wood", textureScale: [1, 1.8] });
+  const trim = std(C.sunflowerShedTrim, 0.85, { flatShading: true });
+  const roof = std(C.sunflowerShedRoof, 0.9, { texture: "shingle", textureScale: [3, 1] });
+  const door = std(C.sunflowerShedDoor, 0.95, { texture: "wood", textureScale: [1, 1.3] });
+  const windowPane: MaterialDef = {
+    color: "#a8c4d8",
+    roughness: 0.2,
+    metalness: 0.3,
+    transparent: true,
+    opacity: 0.65,
+  };
+  const wallW = 1.6;
+  const wallH = 1.5;
+  const wallD = 1.2;
+  const parts: SceneNode[] = [
+    // Stone footing slab.
+    f.mesh("Shed Footing", box(wallW + 0.2, 0.08, wallD + 0.2), trim, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    // Main shed body — a low box with a flat roof on top.
+    f.mesh("Shed Wall", box(wallW, wallH, wallD), wall, {
+      position: [0, wallH / 2 + 0.08, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Eight vertical battens — slim raised trim strips around the wall.
+    f.mesh("Batten Front 1", box(0.05, wallH, 0.025), trim, {
+      position: [-wallW / 4, wallH / 2 + 0.08, wallD / 2 + 0.01],
+    }, { castShadow: false }),
+    f.mesh("Batten Front 2", box(0.05, wallH, 0.025), trim, {
+      position: [wallW / 4, wallH / 2 + 0.08, wallD / 2 + 0.01],
+    }, { castShadow: false }),
+    f.mesh("Batten Back 1", box(0.05, wallH, 0.025), trim, {
+      position: [-wallW / 4, wallH / 2 + 0.08, -wallD / 2 - 0.01],
+    }, { castShadow: false }),
+    f.mesh("Batten Back 2", box(0.05, wallH, 0.025), trim, {
+      position: [wallW / 4, wallH / 2 + 0.08, -wallD / 2 - 0.01],
+    }, { castShadow: false }),
+    f.mesh("Batten Side L", box(0.025, wallH, 0.05), trim, {
+      position: [-wallW / 2 - 0.01, wallH / 2 + 0.08, 0],
+    }, { castShadow: false }),
+    f.mesh("Batten Side R", box(0.025, wallH, 0.05), trim, {
+      position: [wallW / 2 + 0.01, wallH / 2 + 0.08, 0],
+    }, { castShadow: false }),
+    // Peaked roof — two angled box panels meeting at a ridge.
+    f.mesh("Roof L", box(wallW + 0.3, 0.06, wallD * 0.7), roof, {
+      position: [0, wallH + 0.34, -wallD / 4],
+      rotation: [0.45, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof R", box(wallW + 0.3, 0.06, wallD * 0.7), roof, {
+      position: [0, wallH + 0.34, wallD / 4],
+      rotation: [-0.45, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Roof ridge cap — a slim board running along the peak.
+    f.mesh("Roof Ridge", box(wallW + 0.34, 0.04, 0.07), trim, {
+      position: [0, wallH + 0.55, 0],
+    }, { castShadow: false }),
+    // Front door — a slim plank slab on the south face.
+    f.mesh("Shed Door", box(0.42, 1.0, 0.04), door, {
+      position: [0, 0.58, wallD / 2 + 0.02],
+    }, { castShadow: true }),
+    f.mesh("Door Frame", box(0.5, 1.08, 0.05), trim, {
+      position: [0, 0.62, wallD / 2 + 0.01],
+    }, { castShadow: false }),
+    // Door knob.
+    f.mesh("Door Knob", sphere(0.025, 10, 8), std("#c2a35a", 0.4, { metalness: 0.7 }), {
+      position: [0.13, 0.6, wallD / 2 + 0.05],
+    }, { castShadow: false }),
+    // Slim window on the east face — a square pane with a cross muntin.
+    f.mesh("Side Window", box(0.04, 0.36, 0.36), windowPane, {
+      position: [wallW / 2 + 0.02, wallH * 0.65 + 0.08, 0],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin H", box(0.045, 0.04, 0.38), trim, {
+      position: [wallW / 2 + 0.025, wallH * 0.65 + 0.08, 0],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin V", box(0.045, 0.38, 0.04), trim, {
+      position: [wallW / 2 + 0.025, wallH * 0.65 + 0.08, 0],
+    }, { castShadow: false }),
+  ];
+  return f.group("Sunflower Shed", parts, { position: pos, rotation: [0, Math.PI / 5, 0] });
+}
+
+/**
+ * Five rectangular straw bales scattered between the sunflower rows —
+ * each bale a slim box with a slightly raised, banded straw colour so
+ * the silhouettes read as harvested hay rather than empty soil. Adds a
+ * working-farm reading to the field.
+ */
+function buildSunflowerStrawBales(f: NodeFactory): SceneNode {
+  const baleMat = std(C.sunflowerStrawBale, 0.95, { texture: "burlap", textureScale: [2, 1], flatShading: true });
+  const baleDarkMat = std(C.sunflowerStrawBaleDark, 0.95, { flatShading: true });
+  const rng = mulberry32(0xba1eba1e);
+  const bales: SceneNode[] = [];
+  const cx = SUNFLOWER_FIELD_POS[0];
+  const cz = SUNFLOWER_FIELD_POS[2];
+  const placements: { x: number; z: number; yaw: number }[] = [
+    { x: cx - 7.5, z: cz + 8, yaw: 0.1 },
+    { x: cx + 4, z: cz - 6, yaw: 0.6 },
+    { x: cx - 2, z: cz - 9, yaw: -0.3 },
+    { x: cx + 6, z: cz + 3, yaw: 0.2 },
+    { x: cx - 4, z: cz + 4, yaw: -0.5 },
+  ];
+  for (let i = 0; i < placements.length; i++) {
+    const p = placements[i]!;
+    const tilt = (rng() - 0.5) * 0.1;
+    const parts: SceneNode[] = [
+      // Main bale body.
+      f.mesh("Bale Body", box(0.9, 0.6, 0.55), baleMat, {
+        position: [0, 0.3, 0],
+        rotation: [tilt, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Two slim binding bands around the bale.
+      f.mesh("Bale Band 1", box(0.92, 0.05, 0.57), baleDarkMat, {
+        position: [0, 0.18, 0],
+      }, { castShadow: false }),
+      f.mesh("Bale Band 2", box(0.92, 0.05, 0.57), baleDarkMat, {
+        position: [0, 0.42, 0],
+      }, { castShadow: false }),
+    ];
+    bales.push(
+      f.group(`Straw Bale ${i + 1}`, parts, {
+        position: [p.x, 0, p.z],
+        rotation: [0, p.yaw, 0],
+      }),
+    );
+  }
+  return f.group("Sunflower Straw Bales", bales);
+}
+
+/**
+ * A slim stake-and-twine perimeter fence along the southern edge of the
+ * sunflower field — a row of short wooden stakes connected by two pale
+ * twine strands. Marks the field's south boundary without intruding on
+ * the larger silhouettes.
+ */
+function buildSunflowerFieldFence(f: NodeFactory): SceneNode {
+  const stake = std(C.sunflowerFenceStake, 0.9, { texture: "wood", textureScale: [1, 1.4] });
+  const twine = std(C.sunflowerTwine, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  const z = SUNFLOWER_FIELD_POS[2] + SUNFLOWER_FIELD_D / 2 - 0.7;
+  const xStart = SUNFLOWER_FIELD_POS[0] - SUNFLOWER_FIELD_W / 2 + 1.5;
+  const xEnd = SUNFLOWER_FIELD_POS[0] + SUNFLOWER_FIELD_W / 2 - 1.5;
+  const count = 11;
+  const step = (xEnd - xStart) / (count - 1);
+  for (let i = 0; i < count; i++) {
+    const x = xStart + i * step;
+    parts.push(
+      f.mesh(`Stake ${i + 1}`, box(0.05, 0.55, 0.05), stake, {
+        position: [x, 0.275, z],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Two twine strands running between stakes.
+  parts.push(
+    f.mesh("Twine Top", cylinder(0.012, 0.012, xEnd - xStart, 6), twine, {
+      position: [(xStart + xEnd) / 2, 0.46, z],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    f.mesh("Twine Lower", cylinder(0.012, 0.012, xEnd - xStart, 6), twine, {
+      position: [(xStart + xEnd) / 2, 0.28, z],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  return f.group("Sunflower Fence", parts);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -14052,6 +14757,37 @@ function buildRavineBoulders(f: NodeFactory): SceneNode {
  *    south end with rope railings on slim corner posts, three alpine
  *    pine trees clinging to the cliff rim and a scatter of five
  *    moss-capped boulders ringing the pool.
+ *  - Nineteenth pass — yard: a Victorian cast-bronze cupid fountain on
+ *    the back-southwest lawn — a tiered marble basin crowned by a slim
+ *    cupid figure holding a terracotta flower vase aloft, with a thin
+ *    water column trickling from the vase rim into an upper bowl and a
+ *    wider sheet of water falling over the rim of the upper bowl into
+ *    a lower tiered basin; the cupid body reuses the existing
+ *    `copper-patina` colour + bump pair so the verdigris mottling
+ *    reads as crusted relief on the wings and the slim limbs, and the
+ *    tiered basins reuse the existing `marble` colour + bump pair so
+ *    the rim seams read as veined relief on the stone. House: a pair
+ *    of ornate cast-iron gable peak finials with copper-patina spires
+ *    crowning the front and back gable ridges above the existing
+ *    bargeboard medallions — each finial a slim tapered spire with a
+ *    lobed medallion cap, four small ornamental lobes around an open
+ *    ring, a mid-shaft bead, a tip ball and a slim arrow vane with a
+ *    pennant flag at the tip (both reuse the existing `copper-patina`
+ *    pair). Scene: a southwest sunflower field plane bridging the gap
+ *    south of the wheat field's south edge and west of the south
+ *    heath's west edge — a cultivated yellow-and-brown ground
+ *    surfaced with the new `sunflower-field` colour map paired with a
+ *    row depth map (registered alongside the other procedural
+ *    textures) so the planting rows and seed clumps read as raised
+ *    relief at glancing sun, a wheat-stubble apron along the north
+ *    join and a heath-moss apron along the east join so the ground
+ *    layer has no holes at either seam, six rows of tall sunflower
+ *    plants (each a slim stem with two leaf clusters and a layered
+ *    ray-petal bloom face around a dark seed centre with a brighter
+ *    inner core), a small board-and-batten tool shed at the northwest
+ *    corner with a peaked shingle roof and a sun-bleached plank door,
+ *    a scatter of five rectangular straw bales between the rows and a
+ *    slim stake-and-twine fence along the south edge.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -14124,6 +14860,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     // Eighteenth-pass keep-outs — bronze knight statue and glass cloche bed.
     { x: KNIGHT_STATUE_POS[0], z: KNIGHT_STATUE_POS[2], r: 0.8 },
     { x: CLOCHE_BED_POS[0], z: CLOCHE_BED_POS[2], r: 1.2 },
+    // Nineteenth-pass keep-out — cupid fountain on the back-southwest lawn.
+    { x: CUPID_FOUNTAIN_POS[0], z: CUPID_FOUNTAIN_POS[2], r: 1.3 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -14183,6 +14921,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildOwlSentinels(f),
     buildKnightStatue(f, KNIGHT_STATUE_POS),
     buildGlassCloches(f, CLOCHE_BED_POS),
+    buildCupidFountain(f, CUPID_FOUNTAIN_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -14198,6 +14937,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const alpineFoothills = buildAlpineFoothills(f);
   const neMapleGrove = buildNortheastMapleGrove(f);
   const nwRavine = buildNorthwestWaterfallRavine(f);
+  const swSunflowerField = buildSouthwestSunflowerField(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -14236,6 +14976,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildSideTrellises(f),
     buildFanlight(f, FANLIGHT_POS),
     buildGableBargeboards(f),
+    buildGablePeakFinials(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -14258,6 +14999,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       alpineFoothills,
       neMapleGrove,
       nwRavine,
+      swSunflowerField,
       house,
     ],
   };

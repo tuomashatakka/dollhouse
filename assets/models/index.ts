@@ -314,6 +314,36 @@
 //   footbridge with rope railings on slim corner posts, three
 //   alpine pine trees clinging to the cliff rim and a scatter of
 //   five moss-capped boulders ringing the pool.
+//   Pass 19 — courtyard: a Victorian cast-bronze cupid fountain on the
+//   back-southwest lawn — a tiered marble basin crowned by a slim cupid
+//   figure holding a terracotta flower vase aloft, with a thin water
+//   column trickling from the vase rim into an upper bowl and a wider
+//   sheet of water falling over the rim of the upper bowl into a lower
+//   tiered basin (the cupid body reuses the existing `copper-patina`
+//   colour + bump pair so the verdigris mottling reads as crusted
+//   relief on the wings and the slim limbs, and the tiered basins
+//   reuse the existing `marble` colour + bump pair so the rim seams
+//   read as veined relief on the stone); house: a pair of ornate cast-
+//   iron gable peak finials with copper-patina spires crowning the
+//   front and back gable ridges above the existing bargeboard
+//   medallions (each a slim tapered spire with a lobed medallion cap,
+//   four small ornamental lobes around an open ring, a mid-shaft bead,
+//   a tip ball and a slim arrow vane with a pennant flag at the tip,
+//   reusing the existing `copper-patina` pair). Scene: a southwest
+//   sunflower field plane bridging the gap south of the wheat field
+//   and west of the south heath — a cultivated yellow-and-brown ground
+//   surfaced with the new `sunflower-field` colour map paired with a
+//   row depth map (registered alongside the other procedural textures)
+//   so the planting rows and seed clumps read as raised relief at
+//   glancing sun, a wheat-stubble apron along the north join and a
+//   heath-moss apron along the east join so the ground layer has no
+//   holes at either seam, six rows of tall sunflower plants (each a
+//   slim stem with two leaf clusters and a layered ray-petal bloom
+//   face around a dark seed centre with a brighter inner core), a
+//   small board-and-batten tool shed at the northwest corner with a
+//   peaked shingle roof and a sun-bleached plank door, a scatter of
+//   five rectangular straw bales between the rows and a slim stake-
+//   and-twine fence along the south edge.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
