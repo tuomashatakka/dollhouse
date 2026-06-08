@@ -2492,4 +2492,161 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // Sunflower-field — a cultivated yellow-and-brown field surface with
+  // visible planting rows, a scatter of sunflower seed clumps and dark
+  // exposed soil patches between the rows. Used as the ground texture for
+  // the southwest sunflower field scene extension.
+  registry["sunflower-field"] = makeCanvasTexture({
+    seed: 0x5f10ed,
+    draw: (ctx, rng, size) => {
+      // Warm cultivated earth gradient — paler at the top, darker at the
+      // bottom so the field reads as a tilted plot from above.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#b8923c");
+      bg.addColorStop(0.5, "#9a7530");
+      bg.addColorStop(1, "#705320");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Planting rows — six horizontal darker bands running across the
+      // tile, each carrying a slightly different tonal value so the rows
+      // read as hand-tilled rather than machine-perfect.
+      const rows = 6;
+      for (let r = 0; r < rows; r++) {
+        const y = (r / rows) * size + (rng() - 0.5) * 6;
+        // Darker furrow band — the trough between the planted ridges.
+        ctx.fillStyle = `hsla(32, 40%, ${18 + rng() * 8}%, 0.45)`;
+        ctx.fillRect(0, y - 3, size, 6);
+        // Brighter ridge band just above the furrow — the planted
+        // sunflower row catching the sun.
+        ctx.fillStyle = `hsla(48, 55%, ${50 + rng() * 12}%, 0.32)`;
+        ctx.fillRect(0, y - 9, size, 4);
+      }
+      // Sunflower seed clumps — dozens of small dark-amber dots scattered
+      // along the row crests suggesting fallen seeds and the bases of
+      // sunflower stems.
+      for (let i = 0; i < 1800; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const lightness = 22 + rng() * 18;
+        ctx.fillStyle = `hsla(${26 + rng() * 18}, 55%, ${lightness}%, 0.75)`;
+        ctx.fillRect(x, y, 1 + rng() * 0.8, 1 + rng() * 1.2);
+      }
+      // Small grass and stem tufts — slim vertical lime-green slivers
+      // here and there so the field carries a sparse vegetation overlay.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const lightness = 32 + rng() * 18;
+        ctx.fillStyle = `hsla(${80 + rng() * 28}, 55%, ${lightness}%, 0.7)`;
+        ctx.fillRect(x, y, 0.7 + rng() * 0.3, 2.5 + rng() * 2.5);
+      }
+      // Bright sunflower head dabs — small yellow ellipses suggesting
+      // fallen ray-petals or scattered bloom faces at field height.
+      for (let i = 0; i < 80; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.0 + rng() * 2.0;
+        ctx.fillStyle = `hsla(48, 75%, ${68 + rng() * 12}%, 0.7)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, r2, r2 * 0.6, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Exposed soil patches — sparse darker irregular blobs breaking up
+      // the cultivated yellow ground with the underlying earth.
+      for (let i = 0; i < 50; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 3 + rng() * 5;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(22, 35%, ${15 + rng() * 10}%, 0.6)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint warm sun cast across the upper-left — a wide pale wash so
+      // glancing afternoon sun catches the rim of the field.
+      const sun = ctx.createRadialGradient(size * 0.3, size * 0.25, 0, size * 0.3, size * 0.25, size * 0.7);
+      sun.addColorStop(0, "rgba(255,242,196,0.14)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface retains tonal life at deep mips.
+      paintNoise(ctx, rng, size, "transparent", 38, 0.0024);
+    },
+  });
+
+  // Sunflower-field depth map — the planting row ridges sit slightly
+  // above the furrows (light = high) and the exposed soil patches recess
+  // (dark = low) so the field shows subtle relief on glancing sun.
+  registry["sunflower-field-bump"] = makeCanvasTexture({
+    seed: 0x5f10ed + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average field height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Planting row ridges — bright horizontal bands suggesting the
+      // raised tilled earth between the furrows. Bright = high.
+      const rows = 6;
+      for (let r = 0; r < rows; r++) {
+        const y = (r / rows) * size + (rng() - 0.5) * 6;
+        // Bright ridge crest.
+        const grad = ctx.createLinearGradient(0, y - 10, 0, y - 2);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, "rgba(230,230,230,0.75)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 10, size, 9);
+        // Dark furrow trough below the ridge.
+        ctx.strokeStyle = "rgba(28,28,28,0.7)";
+        ctx.lineWidth = 1.8 + rng() * 1.4;
+        ctx.beginPath();
+        ctx.moveTo(0, y + 1);
+        const segs = 8;
+        for (let s = 0; s < segs; s++) {
+          const x = ((s + 1) / segs) * size;
+          const yy = y + 1 + (rng() - 0.5) * 2.5;
+          ctx.lineTo(x, yy);
+        }
+        ctx.stroke();
+      }
+      // Bright sunflower seed bumps — small bright dots reading as
+      // slightly raised seed clumps along the row crests.
+      for (let i = 0; i < 1400; i++) {
+        const v = 195 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.6)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.0, 1.4 + rng() * 0.8);
+      }
+      // Tall vertical stem bumps — slim bright slivers reading as
+      // standing sunflower stems catching the sun.
+      for (let i = 0; i < 280; i++) {
+        const v = 190 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.55)`;
+        ctx.fillRect(rng() * size, rng() * size, 0.8, 2.5 + rng() * 2.0);
+      }
+      // Exposed soil patches — dark recessed blobs reading as bare
+      // earth between the planted rows.
+      for (let i = 0; i < 50; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 4 + rng() * 6;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(22,22,22,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
