@@ -583,6 +583,57 @@ const SUNFLOWER_FIELD_W = 22;
 const SUNFLOWER_FIELD_D = 26;
 const SUNFLOWER_SHED_POS: [number, number, number] = [-42, 0, 36];
 
+/**
+ * Twentieth-pass courtyard prop — a Victorian ornamental iron birdcage
+ * aviary on a fluted marble plinth, parked on the southeast outside-fence
+ * lawn between the bee apiary and the side-orchard gate. A swelled domed
+ * cage built from a ring of vertical iron bars and three horizontal hoop
+ * rings holds a slender central perch with a small bright bird, the dome
+ * is crowned by a slim copper-patina finial spire, and the cage seats on
+ * a fluted marble plinth ringed by a slim copper-patina trim ring. The
+ * iron bars, hoops and finial spire reuse the existing `copper-patina`
+ * colour + bump pair so the verdigris mottling reads as crusted relief on
+ * the cast metal, and the plinth reuses the existing `marble` colour +
+ * bump pair so the stone reads with veined relief.
+ */
+const AVIARY_POS: [number, number, number] = [13.0, 0, 13.0];
+
+/**
+ * Twentieth-pass house detail — a row of ornate Victorian iron ridge
+ * cresting pickets running along the main roof ridge between the front
+ * and back gable peaks. Each picket is a slim copper-patina spear-tip
+ * spire seated on a low scroll bracket, and short ornamental scroll
+ * caps between adjacent pickets read as the lacy filigree typical of
+ * cast-iron ridge cresting. All iron parts reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal.
+ */
+const RIDGE_CRESTING_PICKETS = 9;
+
+/**
+ * Twentieth-pass scene extension — a southeast citrus grove plane tucked
+ * into the gap between the southeast vineyard's south edge (z ≈ 35, x ≈
+ * [19, 41]) and the south heath's east edge (x ≈ 25, z ≈ [32, 60]). The
+ * plane overlaps the vineyard by ~1.5 units along its north edge and the
+ * south heath by ~1.5 units along its west edge so the ground layer has
+ * no holes at either seam. It carries a sun-baked terracotta ground
+ * surfaced with the new `citrus-grove` colour map paired with a pebble
+ * depth map (registered alongside the other procedural textures) so the
+ * fallen-fruit dabs and scattered pebbles read as raised relief at
+ * glancing sun, a small grove of six citrus trees (three lemon and three
+ * orange, alternating across two rows) with bright yellow and orange
+ * fruit dabs in their crowns, a small stone-walled juice press shed at
+ * the southeast corner with a peaked terracotta-tile roof, a focal
+ * weathered wooden produce crate brimming with ripe citrus near the
+ * north-west gate apron and a low dry-stone retaining wall running along
+ * the south and east edges of the grove.
+ */
+const CITRUS_GROVE_POS: [number, number, number] = [33, -0.020, 47];
+const CITRUS_GROVE_W = 18;
+const CITRUS_GROVE_D = 24;
+const CITRUS_PRESS_POS: [number, number, number] = [39, 0, 55];
+const CITRUS_CRATE_POS: [number, number, number] = [27, 0, 38];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1145,6 +1196,50 @@ const C = {
   sunflowerShedDoor: "#3a2218",
   sunflowerFenceStake: "#a8845a",
   sunflowerTwine: "#dbc89b",
+  // Twentieth enhancement pass — a Victorian iron birdcage aviary on a
+  // fluted marble plinth (the iron cage bars, hoops and finial reuse the
+  // existing `copper-patina` colour + bump pair so the verdigris mottling
+  // reads as crusted relief; the plinth reuses the existing `marble`
+  // colour + bump pair so the stone reads with veined relief), a row of
+  // ornate Victorian iron ridge cresting pickets along the main roof
+  // ridge (copper-patina pair on the cast metal pickets and scrolls),
+  // and a southeast citrus grove scene extension bridging the gap south
+  // of the vineyard and east of the south heath. The new `citrus-grove`
+  // colour map is paired with a pebble depth map registered alongside it
+  // so the fallen-fruit dabs and pale pebbles read as raised relief at
+  // glancing sun.
+  aviaryIron: "#5d8a6a",
+  aviaryIronShade: "#2f5840",
+  aviaryIronHi: "#9bc4a8",
+  aviaryPlinth: "#ede2d0",
+  aviaryPlinthShade: "#a89776",
+  aviaryPerch: "#7a5238",
+  aviaryBird: "#e8b338",
+  aviaryBirdWing: "#c4863a",
+  aviaryBirdBeak: "#3a2218",
+  ridgeCresting: "#5d8a6a",
+  ridgeCrestingShade: "#2f5840",
+  ridgeCrestingHi: "#9bc4a8",
+  citrusGround: "#c08a52",
+  citrusGroundDark: "#7a5328",
+  citrusGroundPale: "#dbb37a",
+  citrusLeaf: "#3e6a32",
+  citrusLeafDark: "#244a1c",
+  citrusLeafHi: "#6e9c4a",
+  citrusTrunk: "#5a3a26",
+  citrusLemon: "#f2d44a",
+  citrusLemonHi: "#fce888",
+  citrusOrange: "#e87b32",
+  citrusOrangeHi: "#f6a356",
+  citrusPressStone: "#cdb78c",
+  citrusPressStoneDark: "#8a7250",
+  citrusPressRoof: "#a8553a",
+  citrusPressDoor: "#5a3a26",
+  citrusCrateWood: "#a07346",
+  citrusCrateBand: "#5a3a22",
+  citrusGroveWall: "#a99275",
+  citrusGroveWallShade: "#6c5a45",
+  vineyardSoilApron: "#8a623a",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -14455,6 +14550,771 @@ function buildSunflowerFieldFence(f: NodeFactory): SceneNode {
   return f.group("Sunflower Fence", parts);
 }
 
+/* ─────────────── twentieth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian ornamental iron birdcage aviary on a fluted marble plinth —
+ * a swelled domed cage built from a ring of vertical iron bars and three
+ * horizontal hoop rings, containing a slender central perch with a small
+ * bright bird on top. The cage is crowned by a slim copper-patina finial
+ * spire and seats on a fluted marble plinth ringed by a slim copper-
+ * patina trim ring. The iron bars, hoops and finial spire reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris mottling
+ * reads as crusted relief on the cast metal, and the plinth reuses the
+ * existing `marble` colour + bump pair so the stone reads with veined
+ * relief on the column.
+ */
+function buildBirdcageAviary(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const iron: MaterialDef = {
+    color: C.aviaryIron,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const ironShade = std(C.aviaryIronShade, 0.75, { metalness: 0.5, flatShading: true });
+  const ironHi = std(C.aviaryIronHi, 0.4, { metalness: 0.85 });
+  const marble = std(C.aviaryPlinth, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.aviaryPlinthShade, 0.95, { flatShading: true });
+  const perch = std(C.aviaryPerch, 0.95, { texture: "wood", textureScale: [1, 1] });
+  const bird = std(C.aviaryBird, 0.85, { flatShading: true });
+  const birdWing = std(C.aviaryBirdWing, 0.9, { flatShading: true });
+  const birdBeak = std(C.aviaryBirdBeak, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Fluted marble plinth ──
+  parts.push(
+    // Square slate footing.
+    f.mesh("Aviary Footing", box(1.0, 0.08, 1.0), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    // Plinth base — a wider stepped cap.
+    f.mesh("Plinth Base", cylinder(0.42, 0.45, 0.1, 18), marble, {
+      position: [0, 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Plinth column — the swelled fluted shaft.
+    f.mesh("Plinth Column", cylinder(0.3, 0.34, 0.6, 16), marble, {
+      position: [0, 0.48, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Plinth cap — slim ring at the top.
+    f.mesh("Plinth Cap", cylinder(0.42, 0.42, 0.06, 18), marble, {
+      position: [0, 0.81, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Copper-patina trim ring sitting on the plinth cap where the cage
+    // base seats on the stone.
+    f.mesh("Plinth Trim Ring", cylinder(0.39, 0.39, 0.03, 20), iron, {
+      position: [0, 0.85, 0],
+    }, { castShadow: false }),
+  );
+  // Eight slim vertical fluting grooves around the plinth column.
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Plinth Flute ${i}`, box(0.025, 0.54, 0.03), marbleShade, {
+        position: [Math.cos(a) * 0.32, 0.48, Math.sin(a) * 0.32],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Iron cage base + dome ──
+  const cageY = 0.88;
+  const cageRadius = 0.36;
+  const cageHeight = 0.7;
+  const domeY = cageY + cageHeight;
+  parts.push(
+    // Cage floor disc — a slim dark plate at the bottom of the cage.
+    f.mesh("Cage Floor", cylinder(cageRadius, cageRadius, 0.03, 20), ironShade, {
+      position: [0, cageY + 0.015, 0],
+    }, { receiveShadow: true }),
+    // Cage base ring — slim hoop just above the floor.
+    f.mesh("Cage Base Ring", cylinder(cageRadius + 0.01, cageRadius + 0.01, 0.025, 22), iron, {
+      position: [0, cageY + 0.04, 0],
+    }, { castShadow: false }),
+  );
+  // Twelve vertical cage bars running around the perimeter.
+  const bars = 12;
+  for (let i = 0; i < bars; i++) {
+    const a = (i / bars) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Cage Bar ${i}`, cylinder(0.012, 0.012, cageHeight, 6), iron, {
+        position: [Math.cos(a) * cageRadius, cageY + cageHeight / 2, Math.sin(a) * cageRadius],
+      }, { castShadow: true }),
+    );
+  }
+  // Three horizontal hoop rings tying the bars together.
+  for (let h = 0; h < 3; h++) {
+    const y = cageY + 0.15 + h * 0.22;
+    parts.push(
+      f.mesh(`Cage Hoop ${h}`, cylinder(cageRadius + 0.005, cageRadius + 0.005, 0.018, 22), iron, {
+        position: [0, y, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Domed cage roof ──
+  // Eight curved iron strips arching from the cage rim up to a central
+  // apex — built as slim angled boxes giving a stylised dome silhouette.
+  const ribs = 8;
+  for (let i = 0; i < ribs; i++) {
+    const a = (i / ribs) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Dome Rib ${i}`, box(0.015, 0.42, 0.015), iron, {
+        position: [Math.cos(a) * cageRadius * 0.6, domeY + 0.12, Math.sin(a) * cageRadius * 0.6],
+        rotation: [Math.sin(a) * 0.6, a, -Math.cos(a) * 0.6],
+      }, { castShadow: true }),
+    );
+  }
+  // Dome rim — slim hoop at the dome's base where it meets the cage top.
+  parts.push(
+    f.mesh("Dome Rim", cylinder(cageRadius + 0.005, cageRadius + 0.005, 0.025, 22), iron, {
+      position: [0, domeY, 0],
+    }, { castShadow: false }),
+    // Dome apex cap — small disc at the top where the ribs meet.
+    f.mesh("Dome Cap", cylinder(0.05, 0.06, 0.04, 14), ironShade, {
+      position: [0, domeY + 0.32, 0],
+    }, { castShadow: true }),
+    // Finial socket — slim tapered base above the cap.
+    f.mesh("Finial Socket", cylinder(0.025, 0.04, 0.04, 10), iron, {
+      position: [0, domeY + 0.36, 0],
+    }, { castShadow: false }),
+    // Finial spire — a tapered copper-patina spike.
+    f.mesh("Finial Spire", cylinder(0.01, 0.025, 0.22, 8), iron, {
+      position: [0, domeY + 0.49, 0],
+    }, { castShadow: true }),
+    // Finial bead — small bead halfway up the spire.
+    f.mesh("Finial Bead", sphere(0.025, 10, 8), iron, {
+      position: [0, domeY + 0.42, 0],
+    }, { castShadow: false }),
+    // Finial tip ball — small bright ball at the top of the spire.
+    f.mesh("Finial Tip", sphere(0.02, 10, 8), ironHi, {
+      position: [0, domeY + 0.62, 0],
+    }, { castShadow: false }),
+  );
+  // ── Cage door — a slim arched frame on the south face of the cage ──
+  parts.push(
+    // Door arch outline — two slim vertical bars set just outside the
+    // main cage bars on the south face.
+    f.mesh("Door Bar L", cylinder(0.014, 0.014, cageHeight * 0.65, 6), ironHi, {
+      position: [-0.085, cageY + cageHeight * 0.33, cageRadius + 0.01],
+    }, { castShadow: false }),
+    f.mesh("Door Bar R", cylinder(0.014, 0.014, cageHeight * 0.65, 6), ironHi, {
+      position: [0.085, cageY + cageHeight * 0.33, cageRadius + 0.01],
+    }, { castShadow: false }),
+    // Door arch top — slim curved bar across the top of the door.
+    f.mesh("Door Arch", box(0.19, 0.018, 0.02), ironHi, {
+      position: [0, cageY + cageHeight * 0.66, cageRadius + 0.01],
+    }, { castShadow: false }),
+    // Door latch — tiny knob on the right door bar.
+    f.mesh("Door Latch", sphere(0.018, 8, 6), ironShade, {
+      position: [0.085, cageY + cageHeight * 0.34, cageRadius + 0.03],
+    }, { castShadow: false }),
+  );
+  // ── Central perch with a small bright bird on top ──
+  const perchY = cageY + 0.32;
+  parts.push(
+    // Perch post — slim wooden cylinder.
+    f.mesh("Perch Post", cylinder(0.018, 0.022, 0.36, 8), perch, {
+      position: [0, perchY, 0],
+    }, { castShadow: true }),
+    // Perch cross bar — a slim horizontal stick for the bird to sit on.
+    f.mesh("Perch Bar", cylinder(0.014, 0.014, 0.22, 7), perch, {
+      position: [0, perchY + 0.16, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    // Bird body — a small ovoid sitting on the perch bar.
+    f.mesh("Bird Body", sphere(0.055, 12, 10), bird, {
+      position: [0.04, perchY + 0.22, 0],
+      scale: [1.0, 0.85, 1.25],
+    }, { castShadow: true, receiveShadow: true }),
+    // Bird head — a smaller sphere just ahead of the body.
+    f.mesh("Bird Head", sphere(0.038, 12, 10), bird, {
+      position: [0.09, perchY + 0.25, 0.02],
+    }, { castShadow: true }),
+    // Bird beak — small cone pointing outward.
+    f.mesh("Bird Beak", cone(0.012, 0.04, 6), birdBeak, {
+      position: [0.12, perchY + 0.25, 0.02],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: false }),
+    // Bird wing — a small angled patch on the body's side.
+    f.mesh("Bird Wing", box(0.05, 0.025, 0.04), birdWing, {
+      position: [0.04, perchY + 0.24, -0.03],
+      rotation: [0.2, 0, 0.1],
+    }, { castShadow: false }),
+    // Bird tail — a slim wedge angled back from the body.
+    f.mesh("Bird Tail", cone(0.022, 0.07, 6), birdWing, {
+      position: [-0.025, perchY + 0.23, 0],
+      rotation: [0, 0, Math.PI / 2.4],
+    }, { castShadow: false }),
+    // Tiny dark eye dot on the head.
+    f.mesh("Bird Eye", sphere(0.006, 6, 6), birdBeak, {
+      position: [0.105, perchY + 0.262, 0.025],
+    }, { castShadow: false }),
+  );
+  // Scatter of tiny seed dots on the cage floor.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Seed ${i}`, sphere(0.008, 6, 6), birdBeak, {
+        position: [Math.cos(a) * 0.22, cageY + 0.04, Math.sin(a) * 0.22],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Birdcage Aviary", parts, { position: pos, rotation: [0, Math.PI / 5, 0] });
+}
+
+/* ─────────────── twentieth-pass house detail ─────────────── */
+
+/**
+ * A row of ornate Victorian iron ridge cresting pickets running along
+ * the main roof ridge between the front and back gable peaks. Each
+ * picket is a slim copper-patina spire seated on a low scroll bracket
+ * with a small mid-shaft bead and a spear-tip cap, and short ornamental
+ * scroll caps between adjacent pickets read as the lacy filigree
+ * typical of cast-iron ridge cresting. The cresting reuses the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal. The line of pickets stops short of the
+ * gable peaks so the existing roof finial and gable-peak finials remain
+ * the dominant accents at the ridge ends.
+ */
+function buildIronRidgeCresting(f: NodeFactory): SceneNode {
+  const iron: MaterialDef = {
+    color: C.ridgeCresting,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const ironShade = std(C.ridgeCrestingShade, 0.75, { metalness: 0.5, flatShading: true });
+  const ironHi = std(C.ridgeCrestingHi, 0.4, { metalness: 0.85 });
+  const ridgeY = ROOF_TOP + ROOF_H + 0.16;
+  // Span the cresting between the front and back gables, leaving small
+  // margins so the existing finials at the gable peaks read as separate
+  // accents.
+  const zStart = FRONT_Z - 0.4;
+  const zEnd = BACK_Z + 0.4;
+  const span = zStart - zEnd;
+  const pickets = RIDGE_CRESTING_PICKETS;
+  const step = span / (pickets - 1);
+  const parts: SceneNode[] = [];
+  // ── Mounting rail — a slim flat strip running along the ridge top so
+  // the picket bases read as seated on a continuous casting. ──
+  parts.push(
+    f.mesh("Cresting Rail", box(0.05, 0.025, span + 0.16), iron, {
+      position: [0, ridgeY - 0.06, (zStart + zEnd) / 2],
+    }, { castShadow: false }),
+    // Slim raised lip running along the rail's top edge.
+    f.mesh("Cresting Rail Lip", box(0.06, 0.015, span + 0.16), ironShade, {
+      position: [0, ridgeY - 0.04, (zStart + zEnd) / 2],
+    }, { castShadow: false }),
+  );
+  // ── Each picket — a slim spire on a scroll base. ──
+  for (let i = 0; i < pickets; i++) {
+    const z = zStart - i * step;
+    parts.push(
+      // Scroll base — small fat bead at the rail-level.
+      f.mesh(`Picket Base ${i}`, sphere(0.04, 10, 8), ironShade, {
+        position: [0, ridgeY - 0.02, z],
+      }, { castShadow: true }),
+      // Picket shaft — slim tapered cylinder rising from the base.
+      f.mesh(`Picket Shaft ${i}`, cylinder(0.012, 0.022, 0.36, 8), iron, {
+        position: [0, ridgeY + 0.18, z],
+      }, { castShadow: true, receiveShadow: true }),
+      // Mid-shaft bead — slim raised band halfway up the picket.
+      f.mesh(`Picket Bead ${i}`, sphere(0.026, 10, 8), iron, {
+        position: [0, ridgeY + 0.2, z],
+      }, { castShadow: false }),
+      // Spear-tip cap — a slim cone at the top of the picket.
+      f.mesh(`Picket Spear ${i}`, cone(0.022, 0.12, 8), iron, {
+        position: [0, ridgeY + 0.42, z],
+      }, { castShadow: true }),
+      // Bright tip highlight ball.
+      f.mesh(`Picket Tip ${i}`, sphere(0.012, 8, 6), ironHi, {
+        position: [0, ridgeY + 0.52, z],
+      }, { castShadow: false }),
+    );
+    // Two ornamental lobes pointing east and west at the base of each
+    // picket so the silhouette reads as cast lacework rather than plain
+    // pickets.
+    parts.push(
+      f.mesh(`Picket Lobe E ${i}`, sphere(0.022, 8, 6), iron, {
+        position: [0.05, ridgeY + 0.04, z],
+      }, { castShadow: false }),
+      f.mesh(`Picket Lobe W ${i}`, sphere(0.022, 8, 6), iron, {
+        position: [-0.05, ridgeY + 0.04, z],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Scroll caps between adjacent pickets — small C-curl beads that
+  // suggest the lacy filigree typical of Victorian ridge cresting. ──
+  for (let i = 0; i < pickets - 1; i++) {
+    const z = zStart - (i + 0.5) * step;
+    parts.push(
+      // Central scroll bead.
+      f.mesh(`Scroll Bead ${i}`, sphere(0.022, 8, 6), iron, {
+        position: [0, ridgeY + 0.06, z],
+      }, { castShadow: false }),
+      // Two small flanking lobes.
+      f.mesh(`Scroll Lobe N ${i}`, sphere(0.014, 8, 6), iron, {
+        position: [0, ridgeY + 0.04, z - step * 0.18],
+      }, { castShadow: false }),
+      f.mesh(`Scroll Lobe S ${i}`, sphere(0.014, 8, 6), iron, {
+        position: [0, ridgeY + 0.04, z + step * 0.18],
+      }, { castShadow: false }),
+      // Slim raised C-curl strip — a thin angled box reading as the
+      // bottom curl of the scroll.
+      f.mesh(`Scroll Curl ${i}`, box(0.025, 0.018, 0.08), ironShade, {
+        position: [0, ridgeY + 0.02, z],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Iron Ridge Cresting", parts);
+}
+
+/* ─────────────── twentieth-pass scene extension ─────────────── */
+
+/**
+ * The southeast citrus grove — a sun-baked terracotta-toned ground plane
+ * tucked into the gap between the southeast vineyard's south edge and
+ * the south heath's east edge. Aprons along the north (vineyard) and
+ * west (heath) joins overlap the neighbouring planes by ~1.5 units so
+ * the ground layer has no holes at the seams. Inside the plane: a small
+ * grove of six citrus trees (three lemon and three orange in alternating
+ * rows) with bright yellow and orange fruit dabs in their crowns, a
+ * small stone-walled juice press shed at the southeast corner, a focal
+ * weathered wooden produce crate brimming with ripe citrus near the
+ * north-west apron and a low dry-stone retaining wall running along the
+ * south and east edges of the grove.
+ */
+function buildSoutheastCitrusGrove(f: NodeFactory): SceneNode {
+  return f.group("Southeast Citrus Grove", [
+    // Main citrus-grove ground plane — surfaced with the new colour +
+    // depth map pair so the fallen-fruit dabs and pebbles read as raised
+    // relief at glancing sun.
+    f.mesh(
+      "Citrus Grove Ground",
+      plane(CITRUS_GROVE_W, CITRUS_GROVE_D),
+      std(C.citrusGround, 0.95, {
+        texture: "citrus-grove",
+        textureScale: [4, 5],
+        bumpMap: "citrus-grove-bump",
+        bumpScale: 0.05,
+      }),
+      { position: CITRUS_GROVE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the vineyard's south edge with a tilled
+    // cinnamon-earth strip so the seam reads as a continuous worked-soil
+    // join between the vineyard rows and the citrus grove.
+    f.mesh(
+      "Citrus North Apron",
+      plane(CITRUS_GROVE_W, 3),
+      std(C.vineyardSoilApron, 0.95, { texture: "grass", textureScale: [8, 1] }),
+      {
+        position: [
+          CITRUS_GROVE_POS[0],
+          -0.017,
+          CITRUS_GROVE_POS[2] - CITRUS_GROVE_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the south heath's east edge with a heather-
+    // toned strip so the seam reads as a continuous moor fringe along
+    // the citrus grove's west side.
+    f.mesh(
+      "Citrus West Apron",
+      plane(3, CITRUS_GROVE_D),
+      std(C.heathMoss, 0.95, { texture: "grass", textureScale: [1, 8] }),
+      {
+        position: [
+          CITRUS_GROVE_POS[0] - CITRUS_GROVE_W / 2 + 1.5,
+          -0.017,
+          CITRUS_GROVE_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildCitrusTrees(f),
+    buildCitrusPressShed(f, CITRUS_PRESS_POS),
+    buildCitrusCrate(f, CITRUS_CRATE_POS),
+    buildCitrusGroveWall(f),
+  ]);
+}
+
+/**
+ * Six citrus trees laid out in two rows of three (a lemon row and an
+ * orange row), each tree with a gnarled trunk, two layered foliage
+ * crowns and a scatter of bright lemon or orange fruit dabs across the
+ * crowns. Plants are nudged off-axis so the grove reads as hand-planted
+ * rather than machine-perfect.
+ */
+function buildCitrusTrees(f: NodeFactory): SceneNode {
+  const trunk = std(C.citrusTrunk, 0.95, { texture: "wood", textureScale: [1, 2], flatShading: true });
+  const leaf = std(C.citrusLeaf, 0.9, { flatShading: true });
+  const leafDark = std(C.citrusLeafDark, 0.95, { flatShading: true });
+  const leafHi = std(C.citrusLeafHi, 0.85, { flatShading: true });
+  const lemon = std(C.citrusLemon, 0.65, { flatShading: true });
+  const lemonHi = std(C.citrusLemonHi, 0.55);
+  const orange = std(C.citrusOrange, 0.7, { flatShading: true });
+  const orangeHi = std(C.citrusOrangeHi, 0.6);
+  const rng = mulberry32(0xc17a0a);
+  const trees: SceneNode[] = [];
+  const cx = CITRUS_GROVE_POS[0];
+  const cz = CITRUS_GROVE_POS[2];
+  // Two rows running east-west: lemons (r=0) closer to the north apron,
+  // oranges (r=1) closer to the south wall.
+  for (let r = 0; r < 2; r++) {
+    const rowZ = cz - CITRUS_GROVE_D / 2 + 6.5 + r * 8.5;
+    const isLemon = r === 0;
+    for (let i = 0; i < 3; i++) {
+      const px = cx - CITRUS_GROVE_W / 2 + 4.5 + i * 4.5 + (rng() - 0.5) * 0.8;
+      const pz = rowZ + (rng() - 0.5) * 1.2;
+      const trunkH = 1.0 + rng() * 0.2;
+      const crownR = 0.85 + rng() * 0.15;
+      const parts: SceneNode[] = [
+        // Trunk — slim cylinder with a slight outward swell at the base.
+        f.mesh("Trunk", cylinder(0.09, 0.13, trunkH, 8), trunk, {
+          position: [0, trunkH / 2, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Trunk knot — a small bulge at mid-height suggesting a graft
+        // scar on the citrus stock.
+        f.mesh("Trunk Knot", sphere(0.1, 8, 6), trunk, {
+          position: [0, trunkH * 0.45, 0.04],
+          scale: [0.9, 0.6, 0.7],
+        }, { castShadow: false }),
+        // Lower foliage crown — wide dark base layer.
+        f.mesh("Crown Lower", sphere(crownR, 14, 10), leafDark, {
+          position: [0, trunkH + crownR * 0.85, 0],
+          scale: [1.1, 0.9, 1.1],
+        }, { castShadow: true, receiveShadow: true }),
+        // Upper foliage crown — smaller, brighter top layer.
+        f.mesh("Crown Upper", sphere(crownR * 0.78, 14, 10), leaf, {
+          position: [0, trunkH + crownR * 1.55, 0],
+          scale: [1.0, 0.95, 1.0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Highlight crown — small bright lime patch at the sunlit top.
+        f.mesh("Crown Hi", sphere(crownR * 0.35, 10, 8), leafHi, {
+          position: [crownR * 0.25, trunkH + crownR * 1.9, crownR * 0.2],
+        }, { castShadow: false }),
+      ];
+      // ── Citrus fruit scatter across the crown ──
+      const fruits = 12;
+      for (let p = 0; p < fruits; p++) {
+        const a = (p / fruits) * Math.PI * 2 + rng() * 0.5;
+        const rr = crownR * (0.65 + rng() * 0.35);
+        const fy = trunkH + crownR * (0.85 + rng() * 0.9);
+        const fruitMat = isLemon ? (p % 3 === 0 ? lemonHi : lemon) : (p % 3 === 0 ? orangeHi : orange);
+        parts.push(
+          f.mesh(`Fruit ${p}`, sphere(0.07 + rng() * 0.02, 8, 6), fruitMat, {
+            position: [Math.cos(a) * rr, fy, Math.sin(a) * rr],
+            scale: isLemon ? [1.0, 0.9, 1.15] : [1.0, 1.0, 1.0],
+          }, { castShadow: false }),
+        );
+      }
+      // ── Three windfall fruits on the ground at the tree base ──
+      for (let p = 0; p < 3; p++) {
+        const a = (p / 3) * Math.PI * 2 + rng() * 0.6;
+        const rr = crownR * 0.7 + rng() * 0.2;
+        const fruitMat = isLemon ? lemon : orange;
+        parts.push(
+          f.mesh(`Windfall ${p}`, sphere(0.07, 8, 6), fruitMat, {
+            position: [Math.cos(a) * rr, 0.07, Math.sin(a) * rr],
+            scale: isLemon ? [1.0, 0.7, 1.15] : [1.0, 0.85, 1.0],
+          }, { castShadow: false }),
+        );
+      }
+      trees.push(
+        f.group(`${isLemon ? "Lemon" : "Orange"} Tree ${i + 1}`, parts, {
+          position: [px, 0, pz],
+          rotation: [0, rng() * Math.PI * 2, 0],
+        }),
+      );
+    }
+  }
+  return f.group("Citrus Trees", trees);
+}
+
+/**
+ * A small stone-walled juice press shed at the southeast corner of the
+ * grove — a low rectangular box with rough sandstone walls, a peaked
+ * terracotta-tile roof, a dark plank door on the north face and a tiny
+ * round window on the east face. Provides a focal silhouette at the
+ * grove's far corner so the eye reads the plane as a working farm
+ * rather than an empty plot.
+ */
+function buildCitrusPressShed(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.citrusPressStone, 0.95, { texture: "cobblestone", textureScale: [1.5, 1.5], flatShading: true });
+  const stoneShade = std(C.citrusPressStoneDark, 0.95, { flatShading: true });
+  const roof = std(C.citrusPressRoof, 0.85, { texture: "shingle", textureScale: [3, 1], flatShading: true });
+  const door = std(C.citrusPressDoor, 0.95, { texture: "wood", textureScale: [1, 1.3] });
+  const windowPane: MaterialDef = {
+    color: "#a8c4d8",
+    roughness: 0.2,
+    metalness: 0.3,
+    transparent: true,
+    opacity: 0.65,
+  };
+  const wallW = 1.8;
+  const wallH = 1.7;
+  const wallD = 1.4;
+  const parts: SceneNode[] = [
+    // Sandstone footing slab.
+    f.mesh("Shed Footing", box(wallW + 0.3, 0.1, wallD + 0.3), stoneShade, {
+      position: [0, 0.05, 0],
+    }, { receiveShadow: true }),
+    // Main shed body — a low box.
+    f.mesh("Shed Wall", box(wallW, wallH, wallD), stone, {
+      position: [0, wallH / 2 + 0.1, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Quoin corners — small darker blocks at the four corners.
+    f.mesh("Quoin NE", box(0.12, wallH * 0.95, 0.12), stoneShade, {
+      position: [wallW / 2 - 0.06, wallH / 2 + 0.1, wallD / 2 - 0.06],
+    }, { castShadow: false }),
+    f.mesh("Quoin NW", box(0.12, wallH * 0.95, 0.12), stoneShade, {
+      position: [-wallW / 2 + 0.06, wallH / 2 + 0.1, wallD / 2 - 0.06],
+    }, { castShadow: false }),
+    f.mesh("Quoin SE", box(0.12, wallH * 0.95, 0.12), stoneShade, {
+      position: [wallW / 2 - 0.06, wallH / 2 + 0.1, -wallD / 2 + 0.06],
+    }, { castShadow: false }),
+    f.mesh("Quoin SW", box(0.12, wallH * 0.95, 0.12), stoneShade, {
+      position: [-wallW / 2 + 0.06, wallH / 2 + 0.1, -wallD / 2 + 0.06],
+    }, { castShadow: false }),
+    // Peaked terracotta-tile roof — two angled panels meeting at a ridge.
+    f.mesh("Roof L", box(wallW + 0.4, 0.07, wallD * 0.72), roof, {
+      position: [0, wallH + 0.42, -wallD / 4],
+      rotation: [0.45, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof R", box(wallW + 0.4, 0.07, wallD * 0.72), roof, {
+      position: [0, wallH + 0.42, wallD / 4],
+      rotation: [-0.45, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Roof ridge cap — slim cylinder along the peak.
+    f.mesh("Roof Ridge", cylinder(0.08, 0.08, wallW + 0.4, 8), roof, {
+      position: [0, wallH + 0.62, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    // Front (north) plank door.
+    f.mesh("Shed Door", box(0.46, 1.1, 0.04), door, {
+      position: [0, 0.65, wallD / 2 + 0.02],
+    }, { castShadow: true }),
+    f.mesh("Door Frame", box(0.54, 1.18, 0.05), stoneShade, {
+      position: [0, 0.69, wallD / 2 + 0.01],
+    }, { castShadow: false }),
+    // Door knob — small iron knob.
+    f.mesh("Door Knob", sphere(0.025, 10, 8), std("#3a2218", 0.4, { metalness: 0.7 }), {
+      position: [0.14, 0.65, wallD / 2 + 0.05],
+    }, { castShadow: false }),
+    // Tiny round window on the east face.
+    f.mesh("Round Window", cylinder(0.18, 0.18, 0.04, 18), windowPane, {
+      position: [wallW / 2 + 0.02, wallH * 0.65 + 0.1, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    f.mesh("Window Frame", cylinder(0.21, 0.21, 0.03, 18), stoneShade, {
+      position: [wallW / 2 + 0.015, wallH * 0.65 + 0.1, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    // Window muntin cross.
+    f.mesh("Muntin H", box(0.04, 0.04, 0.36), stoneShade, {
+      position: [wallW / 2 + 0.025, wallH * 0.65 + 0.1, 0],
+    }, { castShadow: false }),
+    f.mesh("Muntin V", box(0.04, 0.36, 0.04), stoneShade, {
+      position: [wallW / 2 + 0.025, wallH * 0.65 + 0.1, 0],
+    }, { castShadow: false }),
+  ];
+  return f.group("Citrus Press Shed", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
+}
+
+/**
+ * A weathered wooden produce crate near the grove's north-west apron —
+ * a slat-sided box brimming with ripe citrus fruits. Built as a low
+ * open-top box with vertical slats, two iron banding rings and a dome
+ * of citrus fruit dabs heaped above the rim. Reads as a freshly picked
+ * harvest crate left at the grove entrance for the doll to pass.
+ */
+function buildCitrusCrate(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.citrusCrateWood, 0.95, { texture: "wood", textureScale: [1, 1.5] });
+  const band = std(C.citrusCrateBand, 0.9, { flatShading: true });
+  const lemon = std(C.citrusLemon, 0.65, { flatShading: true });
+  const lemonHi = std(C.citrusLemonHi, 0.55);
+  const orange = std(C.citrusOrange, 0.7, { flatShading: true });
+  const orangeHi = std(C.citrusOrangeHi, 0.6);
+  const cw = 0.7;
+  const ch = 0.36;
+  const cd = 0.5;
+  const parts: SceneNode[] = [
+    // Crate floor — a wide low base slab.
+    f.mesh("Crate Floor", box(cw, 0.04, cd), wood, {
+      position: [0, 0.02, 0],
+    }, { receiveShadow: true }),
+    // Crate corner posts — four short vertical legs at the corners.
+    f.mesh("Post NE", box(0.05, ch, 0.05), wood, {
+      position: [cw / 2 - 0.025, ch / 2 + 0.02, cd / 2 - 0.025],
+    }, { castShadow: true }),
+    f.mesh("Post NW", box(0.05, ch, 0.05), wood, {
+      position: [-cw / 2 + 0.025, ch / 2 + 0.02, cd / 2 - 0.025],
+    }, { castShadow: true }),
+    f.mesh("Post SE", box(0.05, ch, 0.05), wood, {
+      position: [cw / 2 - 0.025, ch / 2 + 0.02, -cd / 2 + 0.025],
+    }, { castShadow: true }),
+    f.mesh("Post SW", box(0.05, ch, 0.05), wood, {
+      position: [-cw / 2 + 0.025, ch / 2 + 0.02, -cd / 2 + 0.025],
+    }, { castShadow: true }),
+  ];
+  // Front + back walls — three vertical slats per side.
+  const slatsPerSide = 5;
+  for (let i = 0; i < slatsPerSide; i++) {
+    const x = -cw / 2 + (cw / (slatsPerSide - 1)) * i;
+    parts.push(
+      f.mesh(`Slat F ${i}`, box(0.04, ch, 0.03), wood, {
+        position: [x, ch / 2 + 0.02, cd / 2 - 0.015],
+      }, { castShadow: false }),
+      f.mesh(`Slat B ${i}`, box(0.04, ch, 0.03), wood, {
+        position: [x, ch / 2 + 0.02, -cd / 2 + 0.015],
+      }, { castShadow: false }),
+    );
+  }
+  // Side walls — three vertical slats per side.
+  for (let i = 0; i < 3; i++) {
+    const z = -cd / 2 + (cd / 2) * i;
+    parts.push(
+      f.mesh(`Slat L ${i}`, box(0.03, ch, 0.04), wood, {
+        position: [-cw / 2 + 0.015, ch / 2 + 0.02, z],
+      }, { castShadow: false }),
+      f.mesh(`Slat R ${i}`, box(0.03, ch, 0.04), wood, {
+        position: [cw / 2 - 0.015, ch / 2 + 0.02, z],
+      }, { castShadow: false }),
+    );
+  }
+  // Two iron banding rings around the crate.
+  parts.push(
+    f.mesh("Band Lower", box(cw + 0.02, 0.025, cd + 0.02), band, {
+      position: [0, 0.12, 0],
+    }, { castShadow: false }),
+    f.mesh("Band Upper", box(cw + 0.02, 0.025, cd + 0.02), band, {
+      position: [0, ch - 0.04, 0],
+    }, { castShadow: false }),
+  );
+  // ── Dome of citrus fruits heaped above the crate rim ──
+  const rng = mulberry32(0xc4a7e);
+  const fruits = 18;
+  for (let i = 0; i < fruits; i++) {
+    const a = (i / fruits) * Math.PI * 2;
+    const ring = i < 12 ? 0 : 1;
+    const radius = ring === 0 ? 0.22 : 0.12;
+    const fy = ch + 0.05 + (ring === 0 ? 0.02 : 0.1);
+    const isLemon = (i % 2) === 0;
+    const isBright = (i % 5) === 0;
+    const fruitMat = isLemon ? (isBright ? lemonHi : lemon) : (isBright ? orangeHi : orange);
+    parts.push(
+      f.mesh(`Crate Fruit ${i}`, sphere(0.07 + rng() * 0.015, 8, 6), fruitMat, {
+        position: [Math.cos(a) * radius, fy, Math.sin(a) * radius],
+        scale: isLemon ? [1.0, 0.9, 1.15] : [1.0, 1.0, 1.0],
+      }, { castShadow: false }),
+    );
+  }
+  // Two crowning fruits at the very top of the heap.
+  parts.push(
+    f.mesh("Crate Fruit Top L", sphere(0.075, 8, 6), lemonHi, {
+      position: [0.04, ch + 0.22, 0.0],
+      scale: [1.0, 0.9, 1.15],
+    }, { castShadow: false }),
+    f.mesh("Crate Fruit Top O", sphere(0.075, 8, 6), orangeHi, {
+      position: [-0.05, ch + 0.22, 0.03],
+    }, { castShadow: false }),
+  );
+  return f.group("Citrus Crate", parts, { position: pos, rotation: [0, Math.PI / 7, 0] });
+}
+
+/**
+ * A low dry-stone retaining wall running along the south and east edges
+ * of the citrus grove — a row of stacked irregular stone caps suggesting
+ * a hand-laid Mediterranean stone wall framing the orchard. Each cap is
+ * a slim flatter box rotated slightly off-axis so the wall reads as
+ * hand-stacked rather than machine-cut.
+ */
+function buildCitrusGroveWall(f: NodeFactory): SceneNode {
+  const stone = std(C.citrusGroveWall, 0.95, { texture: "cobblestone", textureScale: [1, 1], flatShading: true });
+  const stoneShade = std(C.citrusGroveWallShade, 0.95, { flatShading: true });
+  const rng = mulberry32(0xc417a577);
+  const parts: SceneNode[] = [];
+  const cx = CITRUS_GROVE_POS[0];
+  const cz = CITRUS_GROVE_POS[2];
+  const wMin = cx - CITRUS_GROVE_W / 2 + 1.0;
+  const wMax = cx + CITRUS_GROVE_W / 2 - 0.6;
+  const dMin = cz - CITRUS_GROVE_D / 2 + 1.5;
+  const dMax = cz + CITRUS_GROVE_D / 2 - 0.6;
+  // ── South wall — runs east-west along the south edge ──
+  const southSegs = 14;
+  const southStep = (wMax - wMin) / southSegs;
+  for (let i = 0; i < southSegs; i++) {
+    const x = wMin + (i + 0.5) * southStep;
+    const w = southStep * (0.85 + rng() * 0.2);
+    const h = 0.28 + rng() * 0.08;
+    const d = 0.32 + rng() * 0.08;
+    const yaw = (rng() - 0.5) * 0.18;
+    parts.push(
+      f.mesh(`South Cap ${i}`, box(w, h, d), i % 3 === 0 ? stoneShade : stone, {
+        position: [x, h / 2, dMax],
+        rotation: [0, yaw, (rng() - 0.5) * 0.04],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Optional smaller cap stone on top for visual variety.
+    if (rng() > 0.55) {
+      parts.push(
+        f.mesh(`South Topper ${i}`, box(w * 0.6, 0.12, d * 0.7), stoneShade, {
+          position: [x + (rng() - 0.5) * 0.05, h + 0.06, dMax + (rng() - 0.5) * 0.05],
+          rotation: [0, yaw * 1.3, 0],
+        }, { castShadow: true }),
+      );
+    }
+  }
+  // ── East wall — runs north-south along the east edge ──
+  const eastSegs = 18;
+  const eastStep = (dMax - dMin) / eastSegs;
+  for (let i = 0; i < eastSegs; i++) {
+    const z = dMin + (i + 0.5) * eastStep;
+    const d = eastStep * (0.85 + rng() * 0.2);
+    const h = 0.28 + rng() * 0.08;
+    const w = 0.32 + rng() * 0.08;
+    const yaw = (rng() - 0.5) * 0.18;
+    parts.push(
+      f.mesh(`East Cap ${i}`, box(w, h, d), i % 3 === 0 ? stoneShade : stone, {
+        position: [wMax, h / 2, z],
+        rotation: [0, yaw, (rng() - 0.5) * 0.04],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    if (rng() > 0.55) {
+      parts.push(
+        f.mesh(`East Topper ${i}`, box(w * 0.7, 0.12, d * 0.6), stoneShade, {
+          position: [wMax + (rng() - 0.5) * 0.05, h + 0.06, z + (rng() - 0.5) * 0.05],
+          rotation: [0, yaw * 1.3, 0],
+        }, { castShadow: true }),
+      );
+    }
+  }
+  // ── Doll-width gap in the south wall near the south-west corner so a
+  // doll can step from the heath join into the grove. Mark the gap with
+  // two flanking taller marker stones. ──
+  const gapX = wMin + 0.5;
+  parts.push(
+    f.mesh("Gap Marker L", box(0.28, 0.45, 0.32), stoneShade, {
+      position: [gapX - 0.6, 0.22, dMax],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Gap Marker R", box(0.28, 0.45, 0.32), stoneShade, {
+      position: [gapX + 0.6, 0.22, dMax],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  return f.group("Citrus Grove Wall", parts);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -14788,6 +15648,42 @@ function buildSunflowerFieldFence(f: NodeFactory): SceneNode {
  *    corner with a peaked shingle roof and a sun-bleached plank door,
  *    a scatter of five rectangular straw bales between the rows and a
  *    slim stake-and-twine fence along the south edge.
+ *  - Twentieth pass — yard: a Victorian ornamental iron birdcage aviary
+ *    on a fluted marble plinth, parked on the southeast outside-fence
+ *    lawn — a swelled domed cage built from a ring of vertical iron
+ *    bars and three horizontal hoop rings holds a slender central
+ *    perch with a small bright bird, the dome is crowned by a slim
+ *    copper-patina finial spire, and the plinth carries a slim
+ *    copper-patina trim ring at its cap. The iron cage and finial
+ *    reuse the existing `copper-patina` colour + bump pair so the
+ *    verdigris reads as crusted relief on the cast metal, and the
+ *    plinth reuses the existing `marble` colour + bump pair so the
+ *    stone reads with veined relief. House: a row of ornate Victorian
+ *    iron ridge cresting pickets running along the main roof ridge
+ *    between the front and back gable peaks — each picket a slim
+ *    copper-patina spire on a scroll bracket with a mid-shaft bead
+ *    and a spear-tip cap, with small ornamental scroll caps between
+ *    adjacent pickets reading as the lacy filigree typical of cast-
+ *    iron ridge cresting (the cresting reuses the existing
+ *    `copper-patina` pair so the verdigris reads as crusted relief on
+ *    the cast metal). Scene: a southeast citrus grove plane tucked
+ *    into the gap south of the southeast vineyard and east of the
+ *    south heath — a sun-baked terracotta-toned ground surfaced with
+ *    the new `citrus-grove` colour map paired with a pebble depth map
+ *    (registered alongside the other procedural textures) so the
+ *    fallen-fruit dabs and pale pebbles read as raised relief at
+ *    glancing sun, a vineyard-soil apron along the north join and a
+ *    heath-moss apron along the west join so the ground layer has no
+ *    holes at either seam, a small grove of six citrus trees (three
+ *    lemon and three orange in alternating rows) with bright yellow
+ *    and orange fruit dabs in their crowns and windfalls scattered at
+ *    their bases, a small stone-walled juice press shed at the
+ *    southeast corner with a peaked terracotta-tile roof and a tiny
+ *    round east window, a focal weathered wooden produce crate
+ *    brimming with ripe citrus near the north-west gate apron and a
+ *    low dry-stone retaining wall running along the south and east
+ *    edges of the grove with a doll-width gap near the south-west
+ *    corner for the doll to step through.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -14862,6 +15758,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: CLOCHE_BED_POS[0], z: CLOCHE_BED_POS[2], r: 1.2 },
     // Nineteenth-pass keep-out — cupid fountain on the back-southwest lawn.
     { x: CUPID_FOUNTAIN_POS[0], z: CUPID_FOUNTAIN_POS[2], r: 1.3 },
+    // Twentieth-pass keep-out — Victorian iron birdcage aviary on the east lawn.
+    { x: AVIARY_POS[0], z: AVIARY_POS[2], r: 1.0 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -14922,6 +15820,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildKnightStatue(f, KNIGHT_STATUE_POS),
     buildGlassCloches(f, CLOCHE_BED_POS),
     buildCupidFountain(f, CUPID_FOUNTAIN_POS),
+    buildBirdcageAviary(f, AVIARY_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -14938,6 +15837,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const neMapleGrove = buildNortheastMapleGrove(f);
   const nwRavine = buildNorthwestWaterfallRavine(f);
   const swSunflowerField = buildSouthwestSunflowerField(f);
+  const seCitrusGrove = buildSoutheastCitrusGrove(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -14977,6 +15877,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildFanlight(f, FANLIGHT_POS),
     buildGableBargeboards(f),
     buildGablePeakFinials(f),
+    buildIronRidgeCresting(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -15000,6 +15901,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       neMapleGrove,
       nwRavine,
       swSunflowerField,
+      seCitrusGrove,
       house,
     ],
   };

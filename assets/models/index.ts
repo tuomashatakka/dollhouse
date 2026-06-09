@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over eighteen enhancement passes.
+// house and its courtyard, layered over twenty enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -344,6 +344,38 @@
 //   peaked shingle roof and a sun-bleached plank door, a scatter of
 //   five rectangular straw bales between the rows and a slim stake-
 //   and-twine fence along the south edge.
+//   Pass 20 — courtyard: a Victorian ornamental iron birdcage aviary on
+//   a fluted marble plinth, parked on the southeast outside-fence lawn
+//   — a swelled domed cage of vertical iron bars and three horizontal
+//   hoop rings holds a slender central perch with a small bright bird,
+//   the dome is crowned by a slim copper-patina finial spire and the
+//   plinth carries a slim copper-patina trim ring at its cap (the iron
+//   cage and finial reuse the existing `copper-patina` colour + bump
+//   pair so the verdigris reads as crusted relief, and the plinth
+//   reuses the existing `marble` colour + bump pair so the stone reads
+//   with veined relief). House: a row of ornate Victorian iron ridge
+//   cresting pickets running along the main roof ridge between the
+//   front and back gable peaks — each picket a slim copper-patina
+//   spire on a scroll bracket with a mid-shaft bead and a spear-tip
+//   cap, with small ornamental scroll caps between adjacent pickets
+//   reading as the lacy filigree typical of cast-iron ridge cresting.
+//   Scene: a southeast citrus grove plane tucked into the gap south of
+//   the southeast vineyard and east of the south heath — a sun-baked
+//   terracotta-toned ground surfaced with the new `citrus-grove`
+//   colour map paired with a pebble depth map (registered alongside
+//   the other procedural textures) so the fallen-fruit dabs and pale
+//   pebbles read as raised relief at glancing sun, a vineyard-soil
+//   apron along the north join and a heath-moss apron along the west
+//   join so the ground layer has no holes at either seam, a small
+//   grove of six citrus trees (three lemon and three orange in
+//   alternating rows) with bright yellow and orange fruit dabs in
+//   their crowns and windfalls scattered at their bases, a small
+//   stone-walled juice press shed at the southeast corner with a
+//   peaked terracotta-tile roof and a tiny round east window, a focal
+//   weathered wooden produce crate brimming with ripe citrus near the
+//   north-west gate apron and a low dry-stone retaining wall running
+//   along the south and east edges of the grove with a doll-width gap
+//   near the south-west corner for the doll to step through.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
