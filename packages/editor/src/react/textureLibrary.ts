@@ -2649,4 +2649,179 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // Citrus-grove — a sun-baked terracotta earth surface with scattered
+  // bright lemon and orange fallen-fruit dabs, pale dust pebbles, sparse
+  // leaf-litter slivers and small exposed clay patches. Used as the
+  // ground texture for the southeast citrus grove scene extension.
+  registry["citrus-grove"] = makeCanvasTexture({
+    seed: 0xc17a05,
+    draw: (ctx, rng, size) => {
+      // Warm terracotta earth gradient — paler at the top, deeper red
+      // at the bottom so the ground reads as a sun-baked Mediterranean
+      // grove floor from above.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#d6a374");
+      bg.addColorStop(0.5, "#b8855a");
+      bg.addColorStop(1, "#8a5a32");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Pale dust pebble streaks — bright cream dust drifts running
+      // diagonally so the surface reads as dry powdered earth blown
+      // between the trees.
+      for (let i = 0; i < 18; i++) {
+        const y = (i / 18) * size + (rng() - 0.5) * 18;
+        const grad = ctx.createLinearGradient(0, y - 4, 0, y + 4);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, `hsla(36, 35%, ${68 + rng() * 14}%, 0.22)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 4, size, 8);
+      }
+      // Scattered pale pebble dots — dozens of small bright spots
+      // suggesting dust, sand and tiny stones across the grove floor.
+      for (let i = 0; i < 1600; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const lightness = 60 + rng() * 22;
+        ctx.fillStyle = `hsla(${30 + rng() * 16}, 28%, ${lightness}%, 0.55)`;
+        ctx.fillRect(x, y, 1 + rng() * 0.8, 1 + rng() * 0.8);
+      }
+      // Sparse green leaf-litter slivers — small dark olive slats
+      // suggesting fallen citrus leaves between the trees.
+      for (let i = 0; i < 260; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const lightness = 26 + rng() * 16;
+        ctx.fillStyle = `hsla(${88 + rng() * 24}, 45%, ${lightness}%, 0.7)`;
+        ctx.fillRect(x, y, 0.8 + rng() * 0.3, 2.5 + rng() * 2.2);
+      }
+      // Bright lemon fruit dabs — small yellow ellipses suggesting
+      // windfall lemons across the ground.
+      for (let i = 0; i < 60; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.0 + rng() * 1.6;
+        ctx.fillStyle = `hsla(50, 80%, ${68 + rng() * 12}%, 0.78)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, r2, r2 * 0.7, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+        // Slim bright highlight on each lemon dab.
+        ctx.fillStyle = `hsla(54, 92%, 88%, 0.55)`;
+        ctx.beginPath();
+        ctx.ellipse(x - r2 * 0.2, y - r2 * 0.18, r2 * 0.42, r2 * 0.28, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Bright orange fruit dabs — small warm-orange ellipses
+      // suggesting windfall oranges.
+      for (let i = 0; i < 55; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.4 + rng() * 1.4;
+        ctx.fillStyle = `hsla(24, 75%, ${56 + rng() * 12}%, 0.78)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+        // Slim bright highlight on each orange dab.
+        ctx.fillStyle = `hsla(30, 90%, 78%, 0.5)`;
+        ctx.beginPath();
+        ctx.arc(x - r2 * 0.22, y - r2 * 0.22, r2 * 0.38, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Exposed clay patches — sparse darker irregular blobs breaking
+      // up the terracotta ground with the underlying baked-clay subsoil.
+      for (let i = 0; i < 36; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 4 + rng() * 6;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(18, 45%, ${22 + rng() * 10}%, 0.55)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint warm sun cast across the upper-left — a wide pale wash so
+      // glancing Mediterranean afternoon sun catches the rim of the grove.
+      const sun = ctx.createRadialGradient(size * 0.3, size * 0.25, 0, size * 0.3, size * 0.25, size * 0.7);
+      sun.addColorStop(0, "rgba(255,232,180,0.16)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface retains tonal life at deep mips.
+      paintNoise(ctx, rng, size, "transparent", 38, 0.0024);
+    },
+  });
+
+  // Citrus-grove depth map — the fallen-fruit dabs and pale pebbles sit
+  // slightly above the baseline (light = high) and the exposed clay
+  // patches recess (dark = low) so the grove floor shows subtle relief
+  // at glancing sun.
+  registry["citrus-grove-bump"] = makeCanvasTexture({
+    seed: 0xc17a05 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average grove floor height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Pale pebble bumps — bright dots reading as slightly raised
+      // pebbles and dust across the floor.
+      for (let i = 0; i < 1400; i++) {
+        const v = 195 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.6)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.0, 1.0 + rng() * 0.6);
+      }
+      // Bright fruit bumps — small ellipses reading as raised
+      // windfall fruits sitting on the ground.
+      for (let i = 0; i < 100; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.0 + rng() * 1.6;
+        const v = 220 + Math.floor(rng() * 30);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.75)`;
+        ctx.beginPath();
+        ctx.ellipse(x, y, r2, r2 * 0.75, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Sparse vertical leaf-litter slivers — slim bright slats
+      // reading as raised leaves catching the sun.
+      for (let i = 0; i < 220; i++) {
+        const v = 185 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.5)`;
+        ctx.fillRect(rng() * size, rng() * size, 0.8, 2.2 + rng() * 1.8);
+      }
+      // Exposed clay patches — dark recessed blobs reading as
+      // sunken earth between the trees.
+      for (let i = 0; i < 40; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 4 + rng() * 6;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(20,20,20,0.5)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint diagonal dust streaks — slim bright bands suggesting
+      // raised drifts of sand between the trees.
+      for (let i = 0; i < 16; i++) {
+        const y = (i / 16) * size + (rng() - 0.5) * 18;
+        const grad = ctx.createLinearGradient(0, y - 4, 0, y + 4);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, `rgba(220,220,220,${0.25 + rng() * 0.18})`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 4, size, 8);
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
