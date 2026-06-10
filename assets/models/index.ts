@@ -344,6 +344,36 @@
 //   peaked shingle roof and a sun-bleached plank door, a scatter of
 //   five rectangular straw bales between the rows and a slim stake-
 //   and-twine fence along the south edge.
+//   Pass 21 — courtyard: a whimsical Victorian carousel horse
+//   ornament on a fluted marble pedestal, parked on the back-west
+//   outside-fence lawn between the glider and the back meadow — a
+//   stylised prancing horse pose with a swirling copper-patina pole
+//   running through its back (the pole, bridle studs and tassel rings
+//   reuse the existing `copper-patina` colour + bump pair so the
+//   verdigris reads as crusted relief on the brass), a cream body
+//   with a flowing rose-pink mane and tail, a gilt-trimmed rose
+//   saddle blanket and the marble plinth reuses the existing `marble`
+//   colour + bump pair so the stone reads with veined relief. House:
+//   a pair of decorative bay windows projecting from the east and
+//   west side walls of the lower storey — each bay a small three-
+//   sided box bump (front + two angled sides) with a slim peaked
+//   shingle hood, a white painted trim sash framing tinted glass
+//   panes, a slim white sill below the panes and a terracotta flower
+//   box on the sill carrying a row of pink bloom dabs. Scene: a
+//   far-east desert oasis plane tucked beyond the southeast olive
+//   grove's east edge — a sun-baked sand ground surfaced with the
+//   new `desert-sand` colour map paired with a dune-and-pebble
+//   depth map (registered alongside the other procedural textures)
+//   so the dune crests and scattered pebbles read as raised relief
+//   at glancing sun, an olive-grove apron along the west join so
+//   the ground layer has no holes, three date palm trees with broad
+//   frond crowns and pendant date clusters, a small mud-brick
+//   caravanserai (adobe inn) at the southeast corner with a flat
+//   sun-baked roof, round wooden beam ends and an arched entrance,
+//   a focal sandstone obelisk pillar with a pyramidal cap and a
+//   hieroglyphic relief band on its shaft, a resting camel statue
+//   with a red saddle blanket and gold tassels and a scatter of low
+//   dune mounds rolling across the sand.
 //   Pass 20 — courtyard: a Victorian ornamental iron birdcage aviary on
 //   a fluted marble plinth, parked on the southeast outside-fence lawn
 //   — a swelled domed cage of vertical iron bars and three horizontal

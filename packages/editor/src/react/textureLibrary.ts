@@ -2824,4 +2824,172 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // Desert-sand — a sun-baked Sahara sand surface with rolling dune ridges,
+  // scattered pale pebbles, exposed bedrock patches and wind-blown surface
+  // ripples. Used as the ground texture for the far-east desert oasis scene
+  // extension.
+  registry["desert-sand"] = makeCanvasTexture({
+    seed: 0xde5e275a,
+    draw: (ctx, rng, size) => {
+      // Warm sand gradient — paler at the top, deeper amber at the bottom
+      // so the ground reads as a sun-baked dune sweep from above.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#f0d6a6");
+      bg.addColorStop(0.5, "#d6a974");
+      bg.addColorStop(1, "#a07a45");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wind-blown dune ripples — slim diagonal bands suggesting the
+      // periodic crest lines of a wind-driven sand surface.
+      for (let i = 0; i < 28; i++) {
+        const y = (i / 28) * size + (rng() - 0.5) * 14;
+        // Bright dune crest catching the sun.
+        ctx.fillStyle = `hsla(36, 55%, ${68 + rng() * 14}%, 0.36)`;
+        ctx.fillRect(0, y - 3, size, 3);
+        // Slim dark shadow just below the crest.
+        ctx.fillStyle = `hsla(28, 45%, ${22 + rng() * 8}%, 0.32)`;
+        ctx.fillRect(0, y, size, 2);
+      }
+      // Wide rolling dune drifts — soft diagonal radial highlights
+      // suggesting the rolling lobes of large dunes underneath.
+      for (let i = 0; i < 8; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 70 + rng() * 60;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(36, 45%, ${70 + rng() * 10}%, 0.18)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Scattered pale pebble dots — many small bright spots suggesting
+      // dust, shells and tiny stones across the desert floor.
+      for (let i = 0; i < 1800; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const lightness = 55 + rng() * 30;
+        ctx.fillStyle = `hsla(${32 + rng() * 18}, 28%, ${lightness}%, 0.6)`;
+        ctx.fillRect(x, y, 1 + rng() * 0.8, 1 + rng() * 0.8);
+      }
+      // Tiny dark pebble flecks — sparse dark specks suggesting basalt
+      // pebbles or wind-deposited grit.
+      for (let i = 0; i < 240; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const lightness = 22 + rng() * 12;
+        ctx.fillStyle = `hsla(${24 + rng() * 16}, 38%, ${lightness}%, 0.72)`;
+        ctx.fillRect(x, y, 1.2 + rng() * 0.6, 1.2 + rng() * 0.6);
+      }
+      // Exposed bedrock patches — sparse irregular blobs of darker baked
+      // earth poking through the sand.
+      for (let i = 0; i < 38; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 5 + rng() * 7;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(28, 35%, ${22 + rng() * 12}%, 0.55)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash so
+      // glancing afternoon sun catches the rim of the desert.
+      const sun = ctx.createRadialGradient(size * 0.75, size * 0.2, 0, size * 0.75, size * 0.2, size * 0.85);
+      sun.addColorStop(0, "rgba(255,236,184,0.16)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0026);
+    },
+  });
+
+  // Desert-sand depth map — the dune crests sit slightly above the troughs
+  // (light = high) and the bedrock patches recess (dark = low) so the
+  // desert shows subtle relief on glancing sun.
+  registry["desert-sand-bump"] = makeCanvasTexture({
+    seed: 0xde5e275a + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average desert height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Wind-blown dune crests — bright diagonal bands suggesting raised
+      // crest lines along the wind direction.
+      for (let i = 0; i < 28; i++) {
+        const y = (i / 28) * size + (rng() - 0.5) * 14;
+        // Bright crest peak.
+        const grad = ctx.createLinearGradient(0, y - 8, 0, y - 1);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, "rgba(230,230,230,0.72)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 8, size, 7);
+        // Dark trough below the crest.
+        ctx.strokeStyle = "rgba(28,28,28,0.65)";
+        ctx.lineWidth = 1.6 + rng() * 1.2;
+        ctx.beginPath();
+        ctx.moveTo(0, y + 1);
+        const segs = 8;
+        for (let s = 0; s < segs; s++) {
+          const x = ((s + 1) / segs) * size;
+          const yy = y + 1 + (rng() - 0.5) * 2.0;
+          ctx.lineTo(x, yy);
+        }
+        ctx.stroke();
+      }
+      // Rolling dune lobes — wide bright radial highlights suggesting the
+      // tops of large dune mounds underneath the surface ripples.
+      for (let i = 0; i < 8; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 70 + rng() * 60;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `rgba(220,220,220,0.22)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Bright pebble bumps — small bright dots reading as raised pebbles.
+      for (let i = 0; i < 1400; i++) {
+        const v = 195 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.6)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.0, 1.2 + rng() * 0.7);
+      }
+      // Slim ripple slivers — many small bright slats reading as wind
+      // ripples across the surface.
+      for (let i = 0; i < 380; i++) {
+        const v = 190 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.45)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.8 + rng() * 1.5, 0.7);
+      }
+      // Exposed bedrock patches — dark recessed blobs reading as sunken
+      // earth between the dunes.
+      for (let i = 0; i < 38; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 4 + rng() * 7;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(22,22,22,0.58)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
