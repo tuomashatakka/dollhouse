@@ -634,6 +634,52 @@ const CITRUS_GROVE_D = 24;
 const CITRUS_PRESS_POS: [number, number, number] = [39, 0, 55];
 const CITRUS_CRATE_POS: [number, number, number] = [27, 0, 38];
 
+/**
+ * Twenty-first-pass courtyard prop — a whimsical Victorian carousel horse
+ * ornament on a fluted marble pedestal, parked on the back-west outside-fence
+ * lawn between the glider and the back fence. The horse is a stylised prancing
+ * piece with a swirling pole running through its back (reusing the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted relief
+ * on the brass pole, harness studs and tassel rings), a cream body with a
+ * flowing rose-pink mane and tail, a gilt saddle with rose bib and the marble
+ * plinth reuses the existing `marble` colour + bump pair so the stone reads
+ * with veined relief.
+ */
+const CAROUSEL_HORSE_POS: [number, number, number] = [-12.5, 0, -5.5];
+
+/**
+ * Twenty-first-pass house detail — a pair of decorative bay windows projecting
+ * from the east and west side walls of the lower storey. Each bay is a small
+ * three-sided box bump with a slim peaked shingle cap, a white painted trim
+ * sash and three tinted glass panes (front + two angled sides). The bay
+ * windows add 3D dimensionality to the side façades without modifying the
+ * underlying side-wall construction.
+ */
+const BAY_WINDOW_E_POS: [number, number, number] = [W / 2 + 0.04, 0, -0.6];
+const BAY_WINDOW_W_POS: [number, number, number] = [-W / 2 - 0.04, 0, -0.6];
+
+/**
+ * Twenty-first-pass scene extension — a far-east desert oasis plane tucked
+ * beyond the southeast olive grove's east edge. The plane overlaps the olive
+ * grove by ~1 unit along its west join so the ground layer has no holes. It
+ * carries a sun-baked sand ground surfaced with the new `desert-sand` colour
+ * map paired with a dune-and-pebble depth map (registered alongside the other
+ * procedural textures) so the dune crests and scattered pebbles read as raised
+ * relief at glancing sun, an olive-grove apron along the west join, three
+ * date palm trees with broad frond crowns and pendant date clusters, a small
+ * mud-brick caravanserai (adobe inn) at the southeast corner with a flat
+ * sun-baked roof and round wooden beam ends, a focal sandstone obelisk pillar
+ * with a pyramidal cap and a hieroglyphic relief band on its shaft, a small
+ * resting camel statue with a red saddle blanket and a scatter of low dune
+ * mounds rolling across the sand.
+ */
+const DESERT_OASIS_POS: [number, number, number] = [68, -0.021, 5];
+const DESERT_OASIS_W = 18;
+const DESERT_OASIS_D = 28;
+const CARAVANSERAI_POS: [number, number, number] = [74, 0, 15];
+const DESERT_OBELISK_POS: [number, number, number] = [68, 0, -4];
+const CAMEL_STATUE_POS: [number, number, number] = [70, 0, 8];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1240,6 +1286,60 @@ const C = {
   citrusGroveWall: "#a99275",
   citrusGroveWallShade: "#6c5a45",
   vineyardSoilApron: "#8a623a",
+  // Twenty-first enhancement pass — a whimsical Victorian carousel horse on a
+  // fluted marble pedestal (the pole, harness studs and tassel rings reuse the
+  // existing `copper-patina` colour + bump pair and the plinth reuses the
+  // existing `marble` colour + bump pair), a pair of decorative bay windows
+  // projecting from the east and west side walls (white-painted trim sashes
+  // around tinted glass panes capped by slim peaked shingle hoods), and a
+  // far-east desert oasis scene extension beyond the olive grove. The new
+  // `desert-sand` colour map is paired with a dune-and-pebble depth map so
+  // the dune crests and scattered pebbles read as raised relief at glancing
+  // sun.
+  carouselBody: "#fff3e0",
+  carouselBodyShade: "#d9c3a4",
+  carouselMane: "#e89bb5",
+  carouselManeDark: "#a8577a",
+  carouselSaddle: "#c84d6e",
+  carouselSaddleTrim: "#e6b34a",
+  carouselHoof: "#3a2a22",
+  carouselEye: "#1a1410",
+  carouselPole: "#5d8a6a",
+  carouselPoleHi: "#9bc4a8",
+  carouselPlinth: "#ede2d0",
+  carouselPlinthShade: "#a89776",
+  bayWindowFrame: "#fdfbf4",
+  bayWindowTrim: "#e89bb5",
+  bayWindowSill: "#fff5ec",
+  bayWindowGlass: "#bcd9e8",
+  bayWindowRoof: "#c95f88",
+  bayWindowFlowerBox: "#7a4a2e",
+  bayWindowBloom: "#ef89a8",
+  desertSand: "#dcb673",
+  desertSandShade: "#a07a45",
+  desertSandHi: "#f3d6a4",
+  duneShadow: "#7a5a35",
+  palmTrunk: "#8a623a",
+  palmTrunkShade: "#5a3a26",
+  palmFrond: "#5d8a48",
+  palmFrondShade: "#3a5a30",
+  palmFrondHi: "#8ab95a",
+  dateClusters: "#3a2218",
+  dateClustersHi: "#6e4422",
+  adobeWall: "#b6864a",
+  adobeWallShade: "#7a522a",
+  adobeWallHi: "#d4a26a",
+  adobeRoofBeam: "#5a3a22",
+  adobeDoor: "#3a2218",
+  adobeArchTrim: "#fff5e8",
+  obeliskStone: "#c4b078",
+  obeliskStoneShade: "#7a6a48",
+  obeliskGlyph: "#3a2a18",
+  camelBody: "#c69862",
+  camelBodyShade: "#8a6840",
+  camelSaddle: "#c84d3a",
+  camelTassel: "#e6b34a",
+  oliveGroveApron: "#a89668",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -15315,6 +15415,982 @@ function buildCitrusGroveWall(f: NodeFactory): SceneNode {
   return f.group("Citrus Grove Wall", parts);
 }
 
+/* ─────────────── twenty-first-pass courtyard prop ─────────────── */
+
+/**
+ * A whimsical Victorian carousel horse ornament on a fluted marble pedestal.
+ * The piece pairs a swelled marble plinth (carrying the existing `marble`
+ * colour + bump pair so the stone reads with veined relief), a vertical
+ * copper-patina pole running through the horse's back (reusing the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted relief
+ * on the brass) and a stylised prancing horse with a flowing rose mane and
+ * tail, a gilt-trimmed rose saddle and an upright leg pose suggesting motion.
+ * Parked in the back-west outside-fence lawn between the glider and the back
+ * meadow — a small focal piece punctuating the lawn corner.
+ */
+function buildCarouselHorse(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const pole: MaterialDef = {
+    color: C.carouselPole,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 3],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const poleHi = std(C.carouselPoleHi, 0.4, { metalness: 0.85 });
+  const marble = std(C.carouselPlinth, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.carouselPlinthShade, 0.95, { flatShading: true });
+  const body = std(C.carouselBody, 0.7, { flatShading: true });
+  const bodyShade = std(C.carouselBodyShade, 0.85, { flatShading: true });
+  const mane = std(C.carouselMane, 0.65, { flatShading: true });
+  const maneDark = std(C.carouselManeDark, 0.75, { flatShading: true });
+  const saddle = std(C.carouselSaddle, 0.6, { flatShading: true });
+  const saddleTrim = std(C.carouselSaddleTrim, 0.45, { metalness: 0.6 });
+  const hoof = std(C.carouselHoof, 0.7, { flatShading: true });
+  const eye = std(C.carouselEye, 0.7);
+  const parts: SceneNode[] = [];
+  // ── Fluted marble plinth ──
+  parts.push(
+    f.mesh("Carousel Footing", box(1.1, 0.08, 1.1), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Base", cylinder(0.46, 0.5, 0.12, 18), marble, {
+      position: [0, 0.14, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Column", cylinder(0.34, 0.38, 0.62, 18), marble, {
+      position: [0, 0.51, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", cylinder(0.46, 0.46, 0.06, 18), marble, {
+      position: [0, 0.85, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Copper-patina trim band at the cap.
+    f.mesh("Plinth Cap Trim", cylinder(0.44, 0.44, 0.025, 20), pole, {
+      position: [0, 0.89, 0],
+    }, { castShadow: false }),
+  );
+  // Eight slim fluting grooves around the plinth column.
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Plinth Flute ${i}`, box(0.025, 0.56, 0.03), marbleShade, {
+        position: [Math.cos(a) * 0.36, 0.51, Math.sin(a) * 0.36],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Vertical copper-patina carousel pole rising through the horse ──
+  const poleY = 0.9;
+  const poleH = 1.8;
+  parts.push(
+    f.mesh("Carousel Pole", cylinder(0.03, 0.03, poleH, 12), pole, {
+      position: [0, poleY + poleH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim spiral twist beads running up the pole — small fat rings at
+    // four heights suggesting a barley-twist column.
+    f.mesh("Pole Bead 0", sphere(0.05, 12, 8), poleHi, {
+      position: [0, poleY + 0.2, 0],
+    }, { castShadow: false }),
+    f.mesh("Pole Bead 1", sphere(0.05, 12, 8), poleHi, {
+      position: [0, poleY + 0.7, 0],
+    }, { castShadow: false }),
+    f.mesh("Pole Bead 2", sphere(0.05, 12, 8), poleHi, {
+      position: [0, poleY + 1.2, 0],
+    }, { castShadow: false }),
+    f.mesh("Pole Cap", cone(0.06, 0.18, 10), pole, {
+      position: [0, poleY + poleH + 0.05, 0],
+    }, { castShadow: true }),
+    f.mesh("Pole Tip Ball", sphere(0.04, 10, 8), poleHi, {
+      position: [0, poleY + poleH + 0.18, 0],
+    }, { castShadow: false }),
+  );
+  // ── Horse body ── (centred at y ≈ poleY + 0.95)
+  const horseY = poleY + 0.95;
+  parts.push(
+    // Main barrel — a swelled cylinder running along the X axis.
+    f.mesh("Horse Body", cylinder(0.22, 0.22, 0.85, 14), body, {
+      position: [0, horseY, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Body underside shading — slim flattened sphere below the barrel.
+    f.mesh("Body Shade", sphere(0.2, 12, 8), bodyShade, {
+      position: [0, horseY - 0.1, 0],
+      scale: [2.0, 0.5, 1.0],
+    }, { castShadow: false }),
+    // Hindquarters — a fat sphere at the back end of the barrel.
+    f.mesh("Hindquarter", sphere(0.27, 14, 10), body, {
+      position: [-0.36, horseY + 0.05, 0],
+      scale: [1.0, 1.05, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Chest — a fat sphere at the front end of the barrel.
+    f.mesh("Chest", sphere(0.25, 14, 10), body, {
+      position: [0.4, horseY + 0.05, 0],
+      scale: [1.0, 1.1, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Neck — a tilted cylinder rising up and forward from the chest.
+    f.mesh("Neck", cylinder(0.13, 0.16, 0.42, 12), body, {
+      position: [0.55, horseY + 0.32, 0],
+      rotation: [0, 0, -Math.PI / 5],
+    }, { castShadow: true, receiveShadow: true }),
+    // Head — an elongated sphere capping the neck.
+    f.mesh("Head", sphere(0.16, 14, 10), body, {
+      position: [0.72, horseY + 0.5, 0],
+      scale: [1.5, 1.0, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Muzzle — a smaller darker sphere at the front of the head.
+    f.mesh("Muzzle", sphere(0.09, 12, 8), bodyShade, {
+      position: [0.86, horseY + 0.46, 0],
+      scale: [1.3, 0.9, 1.0],
+    }, { castShadow: false }),
+    // Two ears — slim cones angled upward and outward.
+    f.mesh("Ear L", cone(0.04, 0.1, 6), body, {
+      position: [0.68, horseY + 0.65, 0.07],
+      rotation: [0.3, 0, -0.1],
+    }, { castShadow: false }),
+    f.mesh("Ear R", cone(0.04, 0.1, 6), body, {
+      position: [0.68, horseY + 0.65, -0.07],
+      rotation: [-0.3, 0, -0.1],
+    }, { castShadow: false }),
+    // Eye — small dark dot on the head side.
+    f.mesh("Eye L", sphere(0.018, 8, 6), eye, {
+      position: [0.78, horseY + 0.53, 0.13],
+    }, { castShadow: false }),
+    f.mesh("Eye R", sphere(0.018, 8, 6), eye, {
+      position: [0.78, horseY + 0.53, -0.13],
+    }, { castShadow: false }),
+    // Nostril dots.
+    f.mesh("Nostril L", sphere(0.012, 6, 6), eye, {
+      position: [0.9, horseY + 0.44, 0.04],
+    }, { castShadow: false }),
+    f.mesh("Nostril R", sphere(0.012, 6, 6), eye, {
+      position: [0.9, horseY + 0.44, -0.04],
+    }, { castShadow: false }),
+  );
+  // ── Mane — a row of flowing pink dabs along the neck ──
+  for (let i = 0; i < 8; i++) {
+    const t = i / 7;
+    const x = 0.45 + t * 0.3;
+    const y = horseY + 0.12 + t * 0.5;
+    const m = i % 2 === 0 ? mane : maneDark;
+    parts.push(
+      f.mesh(`Mane ${i}`, sphere(0.08 - t * 0.02, 10, 8), m, {
+        position: [x, y, 0],
+        scale: [1.0, 1.3, 0.45],
+      }, { castShadow: false }),
+    );
+  }
+  // Forelock — a tuft of mane hanging over the forehead.
+  parts.push(
+    f.mesh("Forelock", sphere(0.07, 10, 8), mane, {
+      position: [0.72, horseY + 0.62, 0],
+      scale: [1.0, 0.9, 0.7],
+    }, { castShadow: false }),
+  );
+  // ── Tail — a flowing rope of pink dabs trailing from the hindquarters ──
+  for (let i = 0; i < 7; i++) {
+    const t = i / 6;
+    const x = -0.55 - t * 0.18;
+    const y = horseY + 0.08 - t * 0.35;
+    const m = i % 2 === 0 ? mane : maneDark;
+    parts.push(
+      f.mesh(`Tail ${i}`, sphere(0.08 - t * 0.02, 10, 8), m, {
+        position: [x, y, 0],
+        scale: [1.0, 1.2, 0.5],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Four legs — front pair forward (prancing pose), back pair planted ──
+  // Front-right (raised, bent at knee).
+  parts.push(
+    f.mesh("Leg FR Upper", cylinder(0.05, 0.06, 0.32, 8), body, {
+      position: [0.32, horseY - 0.22, -0.12],
+      rotation: [0, 0, 0.5],
+    }, { castShadow: true }),
+    f.mesh("Leg FR Lower", cylinder(0.04, 0.05, 0.28, 8), body, {
+      position: [0.48, horseY - 0.36, -0.12],
+      rotation: [0, 0, 0.1],
+    }, { castShadow: true }),
+    f.mesh("Hoof FR", cylinder(0.06, 0.05, 0.06, 10), hoof, {
+      position: [0.5, horseY - 0.52, -0.12],
+    }, { castShadow: true }),
+    // Front-left (raised, slightly bent).
+    f.mesh("Leg FL Upper", cylinder(0.05, 0.06, 0.3, 8), body, {
+      position: [0.32, horseY - 0.22, 0.12],
+      rotation: [0, 0, 0.35],
+    }, { castShadow: true }),
+    f.mesh("Leg FL Lower", cylinder(0.04, 0.05, 0.3, 8), body, {
+      position: [0.44, horseY - 0.4, 0.12],
+      rotation: [0, 0, -0.05],
+    }, { castShadow: true }),
+    f.mesh("Hoof FL", cylinder(0.06, 0.05, 0.06, 10), hoof, {
+      position: [0.46, horseY - 0.58, 0.12],
+    }, { castShadow: true }),
+    // Back-right (planted on hindquarter).
+    f.mesh("Leg BR Upper", cylinder(0.06, 0.07, 0.42, 8), body, {
+      position: [-0.38, horseY - 0.27, -0.12],
+    }, { castShadow: true }),
+    f.mesh("Leg BR Lower", cylinder(0.045, 0.055, 0.34, 8), body, {
+      position: [-0.36, horseY - 0.62, -0.12],
+    }, { castShadow: true }),
+    f.mesh("Hoof BR", cylinder(0.065, 0.055, 0.06, 10), hoof, {
+      position: [-0.36, horseY - 0.81, -0.12],
+    }, { castShadow: true }),
+    // Back-left.
+    f.mesh("Leg BL Upper", cylinder(0.06, 0.07, 0.42, 8), body, {
+      position: [-0.38, horseY - 0.27, 0.12],
+    }, { castShadow: true }),
+    f.mesh("Leg BL Lower", cylinder(0.045, 0.055, 0.34, 8), body, {
+      position: [-0.36, horseY - 0.62, 0.12],
+    }, { castShadow: true }),
+    f.mesh("Hoof BL", cylinder(0.065, 0.055, 0.06, 10), hoof, {
+      position: [-0.36, horseY - 0.81, 0.12],
+    }, { castShadow: true }),
+  );
+  // ── Saddle — a fat block on the horse's back with gold trim ──
+  parts.push(
+    f.mesh("Saddle Cushion", sphere(0.18, 14, 10), saddle, {
+      position: [-0.05, horseY + 0.2, 0],
+      scale: [1.4, 0.6, 1.1],
+    }, { castShadow: true, receiveShadow: true }),
+    // Saddle pommel (front cantle).
+    f.mesh("Saddle Pommel", sphere(0.06, 10, 8), saddleTrim, {
+      position: [0.1, horseY + 0.28, 0],
+    }, { castShadow: false }),
+    // Saddle cantle (back rise).
+    f.mesh("Saddle Cantle", sphere(0.06, 10, 8), saddleTrim, {
+      position: [-0.2, horseY + 0.28, 0],
+    }, { castShadow: false }),
+    // Saddle blanket — a slightly wider blanket under the saddle.
+    f.mesh("Saddle Blanket", box(0.55, 0.04, 0.42), saddle, {
+      position: [-0.05, horseY + 0.16, 0],
+    }, { castShadow: false }),
+    // Slim gold trim edges along the blanket.
+    f.mesh("Blanket Trim N", box(0.55, 0.025, 0.04), saddleTrim, {
+      position: [-0.05, horseY + 0.165, 0.21],
+    }, { castShadow: false }),
+    f.mesh("Blanket Trim S", box(0.55, 0.025, 0.04), saddleTrim, {
+      position: [-0.05, horseY + 0.165, -0.21],
+    }, { castShadow: false }),
+    // Two saddle tassels hanging from the sides.
+    f.mesh("Tassel L", cone(0.025, 0.09, 6), saddleTrim, {
+      position: [-0.05, horseY + 0.08, 0.24],
+      rotation: [0, 0, Math.PI],
+    }, { castShadow: false }),
+    f.mesh("Tassel R", cone(0.025, 0.09, 6), saddleTrim, {
+      position: [-0.05, horseY + 0.08, -0.24],
+      rotation: [0, 0, Math.PI],
+    }, { castShadow: false }),
+  );
+  // ── Bridle — slim straps around the muzzle with brass studs ──
+  parts.push(
+    f.mesh("Bridle Strap", cylinder(0.02, 0.02, 0.22, 6), saddleTrim, {
+      position: [0.78, horseY + 0.48, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Bridle Stud L", sphere(0.025, 8, 6), poleHi, {
+      position: [0.78, horseY + 0.48, 0.13],
+    }, { castShadow: false }),
+    f.mesh("Bridle Stud R", sphere(0.025, 8, 6), poleHi, {
+      position: [0.78, horseY + 0.48, -0.13],
+    }, { castShadow: false }),
+    // Reins draping back from the bridle to the saddle pommel.
+    f.mesh("Rein L", cylinder(0.012, 0.012, 0.5, 6), saddleTrim, {
+      position: [0.4, horseY + 0.38, 0.13],
+      rotation: [0, 0, Math.PI / 6],
+    }, { castShadow: false }),
+    f.mesh("Rein R", cylinder(0.012, 0.012, 0.5, 6), saddleTrim, {
+      position: [0.4, horseY + 0.38, -0.13],
+      rotation: [0, 0, Math.PI / 6],
+    }, { castShadow: false }),
+  );
+  return f.group("Carousel Horse", parts, { position: pos, rotation: [0, Math.PI / 7, 0] });
+}
+
+/* ─────────────── twenty-first-pass house detail ─────────────── */
+
+/**
+ * A pair of decorative bay windows projecting from the east and west side
+ * walls of the lower storey. Each bay is a small three-sided box bump (front
+ * + two angled sides) with a slim peaked shingle hood, a white painted trim
+ * sash framing tinted glass panes, a slim white sill below the panes and a
+ * tiny terracotta flower box on the sill carrying a row of pink bloom dabs.
+ * The bay windows add 3D dimensionality to the side façades without altering
+ * the underlying side-wall construction.
+ */
+function buildSideBayWindows(f: NodeFactory): SceneNode {
+  return f.group("Side Bay Windows", [
+    buildSideBayWindow(f, BAY_WINDOW_E_POS, 1),
+    buildSideBayWindow(f, BAY_WINDOW_W_POS, -1),
+  ]);
+}
+
+function buildSideBayWindow(
+  f: NodeFactory,
+  pos: [number, number, number],
+  side: 1 | -1,
+): SceneNode {
+  // `side` is +1 for east (bumps in +X), -1 for west (bumps in -X).
+  const frame = std(C.bayWindowFrame, 0.85, { flatShading: true });
+  const trim = std(C.bayWindowTrim, 0.85, { flatShading: true });
+  const sill = std(C.bayWindowSill, 0.85, { flatShading: true });
+  const glass: MaterialDef = {
+    color: C.bayWindowGlass,
+    roughness: 0.2,
+    metalness: 0.4,
+    transparent: true,
+    opacity: 0.6,
+    emissive: "#fff2c8",
+  };
+  const roof = std(C.bayWindowRoof, 0.85, {
+    texture: "shingle",
+    textureScale: [2, 1],
+    flatShading: true,
+  });
+  const flowerBox = std(C.bayWindowFlowerBox, 0.95, { texture: "wood", textureScale: [1, 0.5] });
+  const bloom = std(C.bayWindowBloom, 0.6, { flatShading: true });
+  const proj = 0.32; // bump depth out from the side wall
+  const winY = 1.0;  // window centre height
+  const winW = 1.1;  // front-pane width
+  const winH = 1.0;  // window height
+  const parts: SceneNode[] = [];
+  // ── Front pane (the wider face parallel to the side wall) ──
+  parts.push(
+    // Front trim frame.
+    f.mesh("Front Frame", box(winW, winH + 0.08, 0.04), frame, {
+      position: [side * proj, winY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Front glass pane — set into the frame, slightly emissive so the
+    // bay reads as lit from the interior at dusk.
+    f.mesh("Front Glass", box(winW - 0.18, winH - 0.12, 0.02), glass, {
+      position: [side * (proj + 0.01), winY, 0],
+    }, { castShadow: false }),
+    // Slim cross muntin dividing the front pane.
+    f.mesh("Front Mullion V", box(0.04, winH - 0.12, 0.03), trim, {
+      position: [side * (proj + 0.02), winY, 0],
+    }, { castShadow: false }),
+    f.mesh("Front Mullion H", box(winW - 0.18, 0.04, 0.03), trim, {
+      position: [side * (proj + 0.02), winY, 0],
+    }, { castShadow: false }),
+  );
+  // ── Two angled side panes (45° wings of the bay) ──
+  // Wing dimensions.
+  const wingW = 0.5;
+  const wingY = winY;
+  // North wing (toward +Z).
+  parts.push(
+    f.mesh("Wing N Frame", box(wingW, winH + 0.08, 0.04), frame, {
+      position: [side * (proj * 0.5), wingY, winW / 2 + wingW / 2 * 0.5 - 0.02],
+      rotation: [0, side * -Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wing N Glass", box(wingW - 0.16, winH - 0.12, 0.02), glass, {
+      position: [side * (proj * 0.5 + 0.005), wingY, winW / 2 + wingW / 2 * 0.5 - 0.01],
+      rotation: [0, side * -Math.PI / 4, 0],
+    }, { castShadow: false }),
+    f.mesh("Wing N Mullion", box(0.04, winH - 0.12, 0.03), trim, {
+      position: [side * (proj * 0.5 + 0.012), wingY, winW / 2 + wingW / 2 * 0.5 - 0.005],
+      rotation: [0, side * -Math.PI / 4, 0],
+    }, { castShadow: false }),
+  );
+  // South wing (toward -Z).
+  parts.push(
+    f.mesh("Wing S Frame", box(wingW, winH + 0.08, 0.04), frame, {
+      position: [side * (proj * 0.5), wingY, -(winW / 2 + wingW / 2 * 0.5 - 0.02)],
+      rotation: [0, side * Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wing S Glass", box(wingW - 0.16, winH - 0.12, 0.02), glass, {
+      position: [side * (proj * 0.5 + 0.005), wingY, -(winW / 2 + wingW / 2 * 0.5 - 0.01)],
+      rotation: [0, side * Math.PI / 4, 0],
+    }, { castShadow: false }),
+    f.mesh("Wing S Mullion", box(0.04, winH - 0.12, 0.03), trim, {
+      position: [side * (proj * 0.5 + 0.012), wingY, -(winW / 2 + wingW / 2 * 0.5 - 0.005)],
+      rotation: [0, side * Math.PI / 4, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim white sill running below the panes, with rounded corners ──
+  parts.push(
+    f.mesh("Sill Front", box(winW + 0.12, 0.06, 0.08), sill, {
+      position: [side * (proj + 0.02), winY - winH / 2 - 0.04, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    f.mesh("Sill Wing N", box(wingW + 0.1, 0.06, 0.08), sill, {
+      position: [side * (proj * 0.5), winY - winH / 2 - 0.04, winW / 2 + wingW / 2 * 0.5 - 0.02],
+      rotation: [0, side * -Math.PI / 4, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    f.mesh("Sill Wing S", box(wingW + 0.1, 0.06, 0.08), sill, {
+      position: [side * (proj * 0.5), winY - winH / 2 - 0.04, -(winW / 2 + wingW / 2 * 0.5 - 0.02)],
+      rotation: [0, side * Math.PI / 4, 0],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  // ── Terracotta flower box clipped to the front sill ──
+  parts.push(
+    f.mesh("Flower Box", box(winW - 0.2, 0.12, 0.18), flowerBox, {
+      position: [side * (proj + 0.07), winY - winH / 2 - 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Flower Soil", box(winW - 0.26, 0.04, 0.14), std(C.soil, 0.95), {
+      position: [side * (proj + 0.07), winY - winH / 2 - 0.07, 0],
+    }, { castShadow: false }),
+  );
+  // Three pink bloom dabs across the flower box.
+  for (let i = 0; i < 5; i++) {
+    const t = (i + 0.5) / 5;
+    const z = (t - 0.5) * (winW - 0.28);
+    parts.push(
+      f.mesh(`Bloom ${i}`, sphere(0.06, 10, 8), bloom, {
+        position: [side * (proj + 0.07), winY - winH / 2 - 0.02, z],
+        scale: [0.8, 0.7, 0.8],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Slim peaked shingle hood capping the bay ──
+  parts.push(
+    // Front pitch — angled box covering the front pane.
+    f.mesh("Hood Front", box(winW + 0.2, 0.06, 0.42), roof, {
+      position: [side * (proj + 0.12), winY + winH / 2 + 0.18, 0],
+      rotation: [0, 0, side * -0.5],
+    }, { castShadow: true, receiveShadow: true }),
+    // Ridge — slim cylinder along the peak.
+    f.mesh("Hood Ridge", cylinder(0.04, 0.04, winW + 0.22, 8), roof, {
+      position: [side * 0.02, winY + winH / 2 + 0.36, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // North + south hood end caps — slim angled triangle gable boards.
+  parts.push(
+    f.mesh("Hood Cap N", box(0.42, 0.06, 0.2), trim, {
+      position: [side * proj * 0.6, winY + winH / 2 + 0.25, winW / 2 + 0.05],
+      rotation: [0, side * -Math.PI / 4, side * 0.3],
+    }, { castShadow: false }),
+    f.mesh("Hood Cap S", box(0.42, 0.06, 0.2), trim, {
+      position: [side * proj * 0.6, winY + winH / 2 + 0.25, -(winW / 2 + 0.05)],
+      rotation: [0, side * Math.PI / 4, side * 0.3],
+    }, { castShadow: false }),
+  );
+  return f.group("Bay Window", parts, { position: pos });
+}
+
+/* ─────────────── twenty-first-pass scene extension ─────────────── */
+
+/**
+ * Far-east desert oasis ground plane and props — tucked beyond the southeast
+ * olive grove's east edge with a sun-baked Mediterranean desert character.
+ * Carries the new `desert-sand` colour map paired with a dune-and-pebble
+ * depth map so the dune crests and scattered pebbles read as raised relief at
+ * glancing sun, a west olive-grove apron along the join so the ground layer
+ * has no holes, three date palm trees, a small mud-brick caravanserai (adobe
+ * inn) at the southeast corner, a focal sandstone obelisk pillar with a
+ * hieroglyphic band and a resting camel statue with a red saddle blanket.
+ */
+function buildFarEastDesertOasis(f: NodeFactory): SceneNode {
+  return f.group("Far East Desert Oasis", [
+    // Desert ground plane — sand surfaced with the new colour + depth map
+    // pair so the dune crests and pebbles read as raised relief.
+    f.mesh(
+      "Desert Ground",
+      plane(DESERT_OASIS_W, DESERT_OASIS_D),
+      std(C.desertSand, 0.95, {
+        texture: "desert-sand",
+        textureScale: [4, 6],
+        bumpMap: "desert-sand-bump",
+        bumpScale: 0.06,
+      }),
+      { position: DESERT_OASIS_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the olive grove's east edge with a sun-bleached
+    // olive-tone strip so the seam reads as a continuous Mediterranean join.
+    f.mesh(
+      "Desert West Apron",
+      plane(3, DESERT_OASIS_D),
+      std(C.oliveGroveApron, 0.95, { texture: "grass", textureScale: [1, 10] }),
+      {
+        position: [
+          DESERT_OASIS_POS[0] - DESERT_OASIS_W / 2 + 1.5,
+          -0.019,
+          DESERT_OASIS_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildDuneMounds(f),
+    buildDatePalms(f),
+    buildCaravanserai(f, CARAVANSERAI_POS),
+    buildDesertObelisk(f, DESERT_OBELISK_POS),
+    buildCamelStatue(f, CAMEL_STATUE_POS),
+  ]);
+}
+
+/**
+ * Three low rolling dune mounds scattered across the desert sand — slim
+ * sphere-derived hummocks suggesting wind-driven sand piles. The mounds are
+ * placed off-axis so the grove reads as a hand-scattered landscape rather
+ * than machine-perfect.
+ */
+function buildDuneMounds(f: NodeFactory): SceneNode {
+  const sand = std(C.desertSandShade, 0.95, { flatShading: true });
+  const sandHi = std(C.desertSandHi, 0.95, { flatShading: true });
+  const rng = mulberry32(0xdc7e57);
+  const cx = DESERT_OASIS_POS[0];
+  const cz = DESERT_OASIS_POS[2];
+  const mounds: SceneNode[] = [];
+  const layouts: { x: number; z: number; s: number }[] = [
+    { x: cx - 4, z: cz - 6, s: 1.0 },
+    { x: cx + 4.5, z: cz - 3, s: 1.4 },
+    { x: cx - 3, z: cz + 6, s: 1.2 },
+    { x: cx + 2.5, z: cz + 9, s: 1.0 },
+  ];
+  for (let i = 0; i < layouts.length; i++) {
+    const l = layouts[i]!;
+    const px = l.x + (rng() - 0.5) * 0.5;
+    const pz = l.z + (rng() - 0.5) * 0.5;
+    mounds.push(
+      f.group(`Dune ${i + 1}`, [
+        // Main mound — wide low sphere with sandy color.
+        f.mesh("Mound Body", sphere(0.9 * l.s, 16, 10), sand, {
+          position: [0, 0.15 * l.s, 0],
+          scale: [1.6, 0.35, 1.1],
+        }, { castShadow: true, receiveShadow: true }),
+        // Highlight crest — slim sphere along the sun-side of the mound.
+        f.mesh("Mound Crest", sphere(0.6 * l.s, 14, 10), sandHi, {
+          position: [0.15 * l.s, 0.25 * l.s, 0.05 * l.s],
+          scale: [1.4, 0.18, 0.9],
+        }, { castShadow: false }),
+      ], { position: [px, 0, pz], rotation: [0, rng() * Math.PI, 0] }),
+    );
+  }
+  return f.group("Dune Mounds", mounds);
+}
+
+/**
+ * Three date palm trees scattered across the desert plane — each tree is a
+ * slim columnar trunk with a wide frond crown and a pendant cluster of dark
+ * date fruit hanging below the fronds. The trees route around the obelisk,
+ * the caravanserai and the camel so the silhouettes read at a glance.
+ */
+function buildDatePalms(f: NodeFactory): SceneNode {
+  const trunk = std(C.palmTrunk, 0.95, { texture: "bark", textureScale: [1, 3], flatShading: true });
+  const trunkShade = std(C.palmTrunkShade, 0.95, { flatShading: true });
+  const frond = std(C.palmFrond, 0.85, { flatShading: true });
+  const frondShade = std(C.palmFrondShade, 0.9, { flatShading: true });
+  const frondHi = std(C.palmFrondHi, 0.8, { flatShading: true });
+  const dates = std(C.dateClusters, 0.65, { flatShading: true });
+  const datesHi = std(C.dateClustersHi, 0.6, { flatShading: true });
+  const rng = mulberry32(0xda7e9a17);
+  const palms: SceneNode[] = [];
+  const layouts: { x: number; z: number; s: number }[] = [
+    { x: DESERT_OASIS_POS[0] - 4, z: DESERT_OASIS_POS[2] + 3, s: 1.0 },
+    { x: DESERT_OASIS_POS[0] + 2, z: DESERT_OASIS_POS[2] - 6, s: 1.15 },
+    { x: DESERT_OASIS_POS[0] - 5, z: DESERT_OASIS_POS[2] - 9, s: 0.9 },
+  ];
+  for (let p = 0; p < layouts.length; p++) {
+    const l = layouts[p]!;
+    const trunkH = 3.0 * l.s;
+    const parts: SceneNode[] = [];
+    // Trunk — slim slightly tapered cylinder with ringed banding suggesting
+    // palm bark plates.
+    parts.push(
+      f.mesh("Trunk", cylinder(0.16, 0.22, trunkH, 10), trunk, {
+        position: [0, trunkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Five horizontal banding rings on the trunk.
+    for (let r = 0; r < 5; r++) {
+      const y = (r + 0.5) / 5 * trunkH;
+      parts.push(
+        f.mesh(`Trunk Ring ${r}`, cylinder(0.2, 0.2, 0.06, 10), trunkShade, {
+          position: [0, y, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // Crown base — a fat darker sphere at the top of the trunk.
+    parts.push(
+      f.mesh("Crown Base", sphere(0.22, 12, 8), trunkShade, {
+        position: [0, trunkH + 0.05, 0],
+      }, { castShadow: false }),
+    );
+    // ── Eight fronds fanning outward and down from the crown ──
+    const fronds = 9;
+    for (let i = 0; i < fronds; i++) {
+      const a = (i / fronds) * Math.PI * 2;
+      const tilt = -0.65 + (i % 2) * 0.15; // alternate tilts so fronds layer
+      const frondL = 1.2 + (i % 3) * 0.18;
+      const m = i % 3 === 0 ? frondHi : (i % 3 === 1 ? frond : frondShade);
+      // Frond spine — slim elongated box angled out + down.
+      parts.push(
+        f.mesh(`Frond ${i} Spine`, box(0.06, 0.05, frondL), m, {
+          position: [
+            Math.cos(a) * frondL * 0.5,
+            trunkH + 0.05 + Math.sin(tilt) * frondL * 0.5,
+            Math.sin(a) * frondL * 0.5,
+          ],
+          rotation: [tilt * Math.sin(a), a, -tilt * Math.cos(a)],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+      // Frond leaflet cluster — wider angled box at the spine end.
+      parts.push(
+        f.mesh(`Frond ${i} Leaflets`, box(0.34, 0.05, frondL * 0.7), m, {
+          position: [
+            Math.cos(a) * frondL * 0.75,
+            trunkH + 0.05 + Math.sin(tilt) * frondL * 0.75 - 0.08,
+            Math.sin(a) * frondL * 0.75,
+          ],
+          rotation: [tilt * Math.sin(a), a, -tilt * Math.cos(a)],
+        }, { castShadow: false }),
+      );
+    }
+    // ── Pendant date cluster — dark fruit hanging below the crown ──
+    const cluster = 5;
+    for (let i = 0; i < cluster; i++) {
+      const a = (i / cluster) * Math.PI * 2;
+      const m = i % 2 === 0 ? dates : datesHi;
+      parts.push(
+        f.mesh(`Date ${i}`, sphere(0.07, 8, 6), m, {
+          position: [Math.cos(a) * 0.18, trunkH - 0.18, Math.sin(a) * 0.18],
+          scale: [1.0, 1.4, 1.0],
+        }, { castShadow: false }),
+      );
+    }
+    palms.push(
+      f.group(`Date Palm ${p + 1}`, parts, {
+        position: [l.x, 0, l.z],
+        rotation: [0, rng() * Math.PI * 2, 0],
+      }),
+    );
+  }
+  return f.group("Date Palms", palms);
+}
+
+/**
+ * A small mud-brick caravanserai (adobe travellers' inn) at the southeast
+ * corner of the oasis — a low square box with sand-coloured adobe walls,
+ * arched front entrance, round wooden roof-beam ends protruding through the
+ * upper walls (a characteristic adobe detail) and a flat sun-baked clay roof
+ * with a slim parapet around its edges. A short shaded archway over the
+ * entrance and a small round window on the south wall round out the silhouette.
+ */
+function buildCaravanserai(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.adobeWall, 0.95, { texture: "cobblestone", textureScale: [2, 1.5], flatShading: true });
+  const wallShade = std(C.adobeWallShade, 0.95, { flatShading: true });
+  const wallHi = std(C.adobeWallHi, 0.9, { flatShading: true });
+  const beam = std(C.adobeRoofBeam, 0.95, { texture: "wood", textureScale: [1, 1], flatShading: true });
+  const door = std(C.adobeDoor, 0.95, { texture: "wood", textureScale: [1, 2] });
+  const archTrim = std(C.adobeArchTrim, 0.9, { flatShading: true });
+  const windowPane: MaterialDef = {
+    color: "#3a2a18",
+    roughness: 0.4,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.75,
+  };
+  const wallW = 2.6;
+  const wallH = 2.0;
+  const wallD = 2.2;
+  const parts: SceneNode[] = [
+    // Footing slab — slightly wider than the walls.
+    f.mesh("Caravanserai Footing", box(wallW + 0.4, 0.08, wallD + 0.4), wallShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    // Main adobe box — sloped slightly so the walls read as hand-built.
+    f.mesh("Caravanserai Body", box(wallW, wallH, wallD), wall, {
+      position: [0, wallH / 2 + 0.08, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim parapet ring around the top of the walls — a slightly raised
+    // brim suggesting the flat-roof drainage edge.
+    f.mesh("Parapet F", box(wallW + 0.12, 0.18, 0.1), wallHi, {
+      position: [0, wallH + 0.17, wallD / 2 + 0.05],
+    }, { castShadow: false }),
+    f.mesh("Parapet B", box(wallW + 0.12, 0.18, 0.1), wallHi, {
+      position: [0, wallH + 0.17, -(wallD / 2 + 0.05)],
+    }, { castShadow: false }),
+    f.mesh("Parapet L", box(0.1, 0.18, wallD + 0.12), wallHi, {
+      position: [-(wallW / 2 + 0.05), wallH + 0.17, 0],
+    }, { castShadow: false }),
+    f.mesh("Parapet R", box(0.1, 0.18, wallD + 0.12), wallHi, {
+      position: [wallW / 2 + 0.05, wallH + 0.17, 0],
+    }, { castShadow: false }),
+    // Flat roof slab — slightly inset within the parapet, sun-baked clay tone.
+    f.mesh("Flat Roof", box(wallW - 0.05, 0.06, wallD - 0.05), wallShade, {
+      position: [0, wallH + 0.14, 0],
+    }, { receiveShadow: true }),
+  ];
+  // ── Round wooden roof-beam ends protruding through the front wall ──
+  for (let i = 0; i < 5; i++) {
+    const x = -wallW / 2 + 0.2 + i * (wallW - 0.4) / 4;
+    parts.push(
+      f.mesh(`Beam End ${i}`, cylinder(0.08, 0.08, 0.18, 8), beam, {
+        position: [x, wallH - 0.16, wallD / 2 + 0.09],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true }),
+      f.mesh(`Beam Cap ${i}`, sphere(0.08, 10, 6), beam, {
+        position: [x, wallH - 0.16, wallD / 2 + 0.18],
+        scale: [1.0, 1.0, 0.5],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Arched front entrance ──
+  // Doorway box (recessed into the wall).
+  parts.push(
+    // Arched white trim around the doorway.
+    f.mesh("Arch Outer", box(0.78, 1.3, 0.04), archTrim, {
+      position: [0, 0.72, wallD / 2 + 0.025],
+    }, { castShadow: false }),
+    // Doorway inset — darker recess so the arch reads as a deep entry.
+    f.mesh("Door Recess", box(0.62, 1.18, 0.06), wallShade, {
+      position: [0, 0.66, wallD / 2 + 0.04],
+    }, { castShadow: false }),
+    // Plank door.
+    f.mesh("Door", box(0.5, 1.05, 0.04), door, {
+      position: [0, 0.6, wallD / 2 + 0.07],
+    }, { castShadow: true }),
+    // Door bands — two iron strips across the planks.
+    f.mesh("Door Band U", box(0.5, 0.04, 0.05), beam, {
+      position: [0, 0.95, wallD / 2 + 0.09],
+    }, { castShadow: false }),
+    f.mesh("Door Band L", box(0.5, 0.04, 0.05), beam, {
+      position: [0, 0.3, wallD / 2 + 0.09],
+    }, { castShadow: false }),
+    // Slim arched top trim above the door — a half-disc reading as the
+    // top of the arch.
+    f.mesh("Arch Top", cylinder(0.4, 0.4, 0.06, 16), archTrim, {
+      position: [0, 1.32, wallD / 2 + 0.04],
+      rotation: [Math.PI / 2, 0, 0],
+      scale: [1.0, 1.0, 0.5],
+    }, { castShadow: false }),
+  );
+  // ── Two small round windows on the side walls ──
+  parts.push(
+    // East side window.
+    f.mesh("Window E Frame", cylinder(0.18, 0.18, 0.04, 16), archTrim, {
+      position: [wallW / 2 + 0.025, 1.35, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    f.mesh("Window E Glass", cylinder(0.14, 0.14, 0.05, 16), windowPane, {
+      position: [wallW / 2 + 0.04, 1.35, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    // West side window.
+    f.mesh("Window W Frame", cylinder(0.18, 0.18, 0.04, 16), archTrim, {
+      position: [-(wallW / 2 + 0.025), 1.35, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    f.mesh("Window W Glass", cylinder(0.14, 0.14, 0.05, 16), windowPane, {
+      position: [-(wallW / 2 + 0.04), 1.35, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  // ── A small clay water jar leaning against the east wall corner ──
+  parts.push(
+    f.mesh("Water Jar", sphere(0.18, 12, 10), std(C.terracotta, 0.95), {
+      position: [wallW / 2 + 0.2, 0.22, -wallD / 2 + 0.3],
+      scale: [1.0, 1.4, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Jar Neck", cylinder(0.07, 0.1, 0.12, 10), std(C.terracotta, 0.95), {
+      position: [wallW / 2 + 0.2, 0.48, -wallD / 2 + 0.3],
+    }, { castShadow: false }),
+    f.mesh("Jar Lip", cylinder(0.1, 0.1, 0.03, 10), std("#7a4a2e", 0.95), {
+      position: [wallW / 2 + 0.2, 0.54, -wallD / 2 + 0.3],
+    }, { castShadow: false }),
+  );
+  return f.group("Caravanserai", parts, { position: pos, rotation: [0, -Math.PI / 8, 0] });
+}
+
+/**
+ * A focal sandstone obelisk pillar in the centre of the oasis — a tall square
+ * pylon with a pyramidal cap, a slim hieroglyphic relief band carved into the
+ * shaft and a wider stepped pedestal at the base. The obelisk's stone reads
+ * with subtle veined relief thanks to the `marble` bumpMap being reused on
+ * the cap accent ring, and the rough cobblestone texture on the shaft
+ * suggests weathered sandstone bedding.
+ */
+function buildDesertObelisk(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.obeliskStone, 0.95, { texture: "cobblestone", textureScale: [1.5, 4], flatShading: true });
+  const stoneShade = std(C.obeliskStoneShade, 0.95, { flatShading: true });
+  const glyph = std(C.obeliskGlyph, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Stepped pedestal — three slabs stacked, each smaller than the one below.
+    f.mesh("Pedestal L", box(1.4, 0.18, 1.4), stoneShade, {
+      position: [0, 0.09, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Pedestal M", box(1.1, 0.16, 1.1), stone, {
+      position: [0, 0.26, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Pedestal U", box(0.85, 0.12, 0.85), stone, {
+      position: [0, 0.4, 0],
+    }, { receiveShadow: true }),
+    // Obelisk shaft — a tall slim square pylon tapering very slightly.
+    f.mesh("Obelisk Shaft", box(0.55, 3.6, 0.55), stone, {
+      position: [0, 0.48 + 3.6 / 2, 0],
+      scale: [1.0, 1.0, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Pyramidal cap — small pyramid (cone with 4 sides) capping the shaft.
+    f.mesh("Obelisk Cap", cone(0.4, 0.7, 4), stone, {
+      position: [0, 0.48 + 3.6 + 0.35, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true }),
+  ];
+  // ── Hieroglyphic relief band — slim dark glyphs on each shaft face ──
+  // Stack of small dark dabs at 4 heights × 4 columns per face × 4 faces.
+  for (let face = 0; face < 4; face++) {
+    const angle = (face / 4) * Math.PI * 2;
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 3; col++) {
+        const y = 0.9 + row * 0.7;
+        const x = (col - 1) * 0.16;
+        parts.push(
+          f.mesh(`Glyph ${face}-${row}-${col}`, box(0.08, 0.12, 0.02), glyph, {
+            position: [
+              Math.cos(angle) * 0.29 + Math.sin(angle) * x,
+              y,
+              Math.sin(angle) * 0.29 + Math.cos(angle) * x,
+            ],
+            rotation: [0, angle, 0],
+          }, { castShadow: false }),
+        );
+      }
+    }
+  }
+  // ── Four corner markers around the pedestal ──
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
+    parts.push(
+      f.mesh(`Corner Stone ${i}`, sphere(0.12, 8, 6), stoneShade, {
+        position: [Math.cos(a) * 0.85, 0.06, Math.sin(a) * 0.85],
+        scale: [1.0, 0.6, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  return f.group("Desert Obelisk", parts, { position: pos });
+}
+
+/**
+ * A small resting camel statue with a red saddle blanket and gold tassels —
+ * a sandstone-tan body lying on the desert sand, with the typical camel
+ * silhouette of a long arched neck, two humps on the back and folded legs
+ * tucked beneath the body. Slim copper-patina bridle ring and brass tassel
+ * dots on the saddle add metallic accents.
+ */
+function buildCamelStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const body = std(C.camelBody, 0.85, { flatShading: true });
+  const bodyShade = std(C.camelBodyShade, 0.9, { flatShading: true });
+  const saddle = std(C.camelSaddle, 0.65, { flatShading: true });
+  const tassel = std(C.camelTassel, 0.45, { metalness: 0.6 });
+  const eye = std(C.carouselEye, 0.7);
+  const parts: SceneNode[] = [
+    // Belly — wide flattened sphere on the sand.
+    f.mesh("Belly", sphere(0.45, 14, 10), bodyShade, {
+      position: [0, 0.22, 0],
+      scale: [2.0, 0.7, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Body — main barrel of the camel, swelled.
+    f.mesh("Body", sphere(0.4, 14, 10), body, {
+      position: [0, 0.4, 0],
+      scale: [2.2, 1.0, 1.1],
+    }, { castShadow: true, receiveShadow: true }),
+    // Front hump.
+    f.mesh("Hump F", sphere(0.22, 12, 8), body, {
+      position: [0.18, 0.62, 0],
+      scale: [1.0, 1.1, 0.9],
+    }, { castShadow: true, receiveShadow: true }),
+    // Back hump.
+    f.mesh("Hump B", sphere(0.22, 12, 8), body, {
+      position: [-0.18, 0.62, 0],
+      scale: [1.0, 1.1, 0.9],
+    }, { castShadow: true, receiveShadow: true }),
+    // Saddle — red blanket draped over the humps.
+    f.mesh("Saddle", box(0.7, 0.06, 0.5), saddle, {
+      position: [0, 0.78, 0],
+    }, { castShadow: false }),
+    // Saddle trim — gold edging along the blanket's perimeter.
+    f.mesh("Saddle Trim F", box(0.7, 0.04, 0.04), tassel, {
+      position: [0, 0.79, 0.27],
+    }, { castShadow: false }),
+    f.mesh("Saddle Trim B", box(0.7, 0.04, 0.04), tassel, {
+      position: [0, 0.79, -0.27],
+    }, { castShadow: false }),
+    // Saddle tassel dots — four small gold balls at the saddle corners.
+    f.mesh("Tassel NE", sphere(0.04, 8, 6), tassel, {
+      position: [0.34, 0.77, 0.27],
+    }, { castShadow: false }),
+    f.mesh("Tassel NW", sphere(0.04, 8, 6), tassel, {
+      position: [-0.34, 0.77, 0.27],
+    }, { castShadow: false }),
+    f.mesh("Tassel SE", sphere(0.04, 8, 6), tassel, {
+      position: [0.34, 0.77, -0.27],
+    }, { castShadow: false }),
+    f.mesh("Tassel SW", sphere(0.04, 8, 6), tassel, {
+      position: [-0.34, 0.77, -0.27],
+    }, { castShadow: false }),
+  ];
+  // ── Neck arching forward + up from the body ──
+  parts.push(
+    f.mesh("Neck", cylinder(0.13, 0.18, 0.7, 12), body, {
+      position: [0.72, 0.65, 0],
+      rotation: [0, 0, -Math.PI / 3],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Head ──
+  parts.push(
+    f.mesh("Head", sphere(0.16, 14, 10), body, {
+      position: [1.0, 0.88, 0],
+      scale: [1.5, 1.0, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Muzzle — elongated darker patch.
+    f.mesh("Muzzle", sphere(0.09, 12, 8), bodyShade, {
+      position: [1.15, 0.84, 0],
+      scale: [1.5, 0.9, 1.0],
+    }, { castShadow: false }),
+    // Two small floppy ears.
+    f.mesh("Ear L", cone(0.04, 0.08, 6), body, {
+      position: [0.98, 1.0, 0.07],
+      rotation: [0.3, 0, -0.2],
+    }, { castShadow: false }),
+    f.mesh("Ear R", cone(0.04, 0.08, 6), body, {
+      position: [0.98, 1.0, -0.07],
+      rotation: [-0.3, 0, -0.2],
+    }, { castShadow: false }),
+    // Eyes.
+    f.mesh("Eye L", sphere(0.018, 8, 6), eye, {
+      position: [1.05, 0.92, 0.1],
+    }, { castShadow: false }),
+    f.mesh("Eye R", sphere(0.018, 8, 6), eye, {
+      position: [1.05, 0.92, -0.1],
+    }, { castShadow: false }),
+    // Bridle ring — slim copper-patina ring around the muzzle.
+    f.mesh("Bridle Ring", cylinder(0.1, 0.1, 0.02, 16), tassel, {
+      position: [1.12, 0.84, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Folded front legs tucked beneath the chest ──
+  parts.push(
+    f.mesh("Leg F Tuck L", cylinder(0.08, 0.09, 0.32, 8), body, {
+      position: [0.5, 0.18, 0.18],
+      rotation: [0, 0, Math.PI / 2.2],
+    }, { castShadow: true }),
+    f.mesh("Leg F Tuck R", cylinder(0.08, 0.09, 0.32, 8), body, {
+      position: [0.5, 0.18, -0.18],
+      rotation: [0, 0, Math.PI / 2.2],
+    }, { castShadow: true }),
+    f.mesh("Leg B Tuck L", cylinder(0.08, 0.09, 0.34, 8), body, {
+      position: [-0.55, 0.18, 0.18],
+      rotation: [0, 0, Math.PI / 2.2],
+    }, { castShadow: true }),
+    f.mesh("Leg B Tuck R", cylinder(0.08, 0.09, 0.34, 8), body, {
+      position: [-0.55, 0.18, -0.18],
+      rotation: [0, 0, Math.PI / 2.2],
+    }, { castShadow: true }),
+    // Slim tail flicked to one side.
+    f.mesh("Tail", cylinder(0.025, 0.04, 0.32, 6), bodyShade, {
+      position: [-0.85, 0.36, 0.1],
+      rotation: [0, 0, Math.PI / 3],
+    }, { castShadow: false }),
+  );
+  return f.group("Camel Statue", parts, { position: pos, rotation: [0, Math.PI / 5, 0] });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -15684,6 +16760,37 @@ function buildCitrusGroveWall(f: NodeFactory): SceneNode {
  *    low dry-stone retaining wall running along the south and east
  *    edges of the grove with a doll-width gap near the south-west
  *    corner for the doll to step through.
+ *  - Twenty-first pass — courtyard: a whimsical Victorian carousel
+ *    horse ornament on a fluted marble pedestal, parked on the
+ *    back-west outside-fence lawn between the glider and the back
+ *    meadow. The horse is a stylised prancing piece with a swirling
+ *    copper-patina pole running through its back (reusing the existing
+ *    `copper-patina` colour + bump pair so the verdigris reads as
+ *    crusted relief on the brass pole, bridle studs and tassel rings),
+ *    a cream body with a flowing rose-pink mane and tail, a gilt-trimmed
+ *    rose saddle blanket, four legs in a prancing pose and the marble
+ *    plinth reuses the existing `marble` colour + bump pair so the
+ *    stone reads with veined relief. House: a pair of decorative bay
+ *    windows projecting from the east and west side walls of the lower
+ *    storey — each bay a small three-sided box bump (front + two
+ *    angled sides) with a slim peaked shingle hood, a white painted
+ *    trim sash framing tinted glass panes, a slim white sill below
+ *    the panes and a terracotta flower box on the sill carrying a
+ *    row of pink bloom dabs. Scene: a far-east desert oasis plane
+ *    tucked beyond the southeast olive grove's east edge — a sun-baked
+ *    sand ground surfaced with the new `desert-sand` colour map paired
+ *    with a dune-and-pebble depth map (registered alongside the other
+ *    procedural textures) so the dune crests and scattered pebbles
+ *    read as raised relief at glancing sun, an olive-grove apron
+ *    along the west join so the ground layer has no holes, three
+ *    date palm trees with broad frond crowns and pendant date
+ *    clusters, a small mud-brick caravanserai (adobe inn) at the
+ *    southeast corner with a flat sun-baked roof, round wooden
+ *    beam ends protruding from the upper walls and an arched front
+ *    entrance, a focal sandstone obelisk pillar with a pyramidal
+ *    cap and a hieroglyphic relief band on its shaft, a resting
+ *    camel statue with a red saddle blanket and gold tassels and a
+ *    scatter of low dune mounds rolling across the sand.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -15760,6 +16867,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: CUPID_FOUNTAIN_POS[0], z: CUPID_FOUNTAIN_POS[2], r: 1.3 },
     // Twentieth-pass keep-out — Victorian iron birdcage aviary on the east lawn.
     { x: AVIARY_POS[0], z: AVIARY_POS[2], r: 1.0 },
+    // Twenty-first-pass keep-out — carousel horse on the back-west outside-fence lawn.
+    { x: CAROUSEL_HORSE_POS[0], z: CAROUSEL_HORSE_POS[2], r: 1.1 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -15821,6 +16930,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildGlassCloches(f, CLOCHE_BED_POS),
     buildCupidFountain(f, CUPID_FOUNTAIN_POS),
     buildBirdcageAviary(f, AVIARY_POS),
+    buildCarouselHorse(f, CAROUSEL_HORSE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -15838,6 +16948,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const nwRavine = buildNorthwestWaterfallRavine(f);
   const swSunflowerField = buildSouthwestSunflowerField(f);
   const seCitrusGrove = buildSoutheastCitrusGrove(f);
+  const feDesertOasis = buildFarEastDesertOasis(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -15878,6 +16989,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildGableBargeboards(f),
     buildGablePeakFinials(f),
     buildIronRidgeCresting(f),
+    buildSideBayWindows(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -15902,6 +17014,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       nwRavine,
       swSunflowerField,
       seCitrusGrove,
+      feDesertOasis,
       house,
     ],
   };
