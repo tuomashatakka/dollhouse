@@ -2992,4 +2992,214 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Twenty-second-pass additions ──────────────────────────────────
+  // The twenty-second enhancement pass introduces a peat-bog moor ground
+  // surface for the far-southwest scene-extension plane south of the
+  // lavender field — a moss-toned ground with dark peat-cut blocks and
+  // scattered bog pools paired with a turf-cut depth map so the cut faces
+  // and pool recessions read as raised relief at glancing sun.
+
+  // Peat-moor colour — a deep moss-green base with darker peat patches,
+  // rectangular peat-cut blocks, scattered bog pools and slim heather
+  // dabs across the ground. On a power-of-two canvas so the mipmap chain
+  // stays clean.
+  registry["peat-moor"] = makeCanvasTexture({
+    seed: 0xbea7e217,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly brighter at the top so the moor reads
+      // as a low rolling moss sweep from above.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#6c7438");
+      bg.addColorStop(0.5, "#525a2c");
+      bg.addColorStop(1, "#3a4220");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling moss lobes — soft radial highlights suggesting low
+      // moor swells underneath the surface mottle.
+      for (let i = 0; i < 10; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${70 + rng() * 14}, 32%, ${40 + rng() * 10}%, 0.22)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Scattered dark peat patches — sparse irregular blobs of exposed
+      // peat poking through the moss.
+      for (let i = 0; i < 32; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 6 + rng() * 8;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${34 + rng() * 14}, 36%, ${16 + rng() * 8}%, 0.62)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Rectangular peat-cut blocks — slim dark slats arranged in two
+      // shallow cutting rows suggesting the crofter's worked turf banks.
+      const blockW = 14;
+      const blockH = 9;
+      for (let r = 0; r < 2; r++) {
+        const rowY = size * (0.32 + r * 0.36) + (rng() - 0.5) * 18;
+        const rowX = size * 0.18 + (rng() - 0.5) * 20;
+        const blocks = 8;
+        for (let c = 0; c < blocks; c++) {
+          const bx = rowX + c * (blockW + 4) + (rng() - 0.5) * 3;
+          const by = rowY + (rng() - 0.5) * 3;
+          // Dark cut face.
+          ctx.fillStyle = `hsla(${34 + rng() * 8}, 36%, ${14 + rng() * 6}%, 0.7)`;
+          ctx.fillRect(bx, by, blockW, blockH);
+          // Slim warm-ochre highlight along the upper cut edge.
+          ctx.fillStyle = `hsla(${38 + rng() * 6}, 42%, ${36 + rng() * 8}%, 0.55)`;
+          ctx.fillRect(bx, by, blockW, 2);
+        }
+      }
+      // Scattered bog pools — small dark blue-black water patches.
+      for (let i = 0; i < 16; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 3 + rng() * 5;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${200 + rng() * 16}, 28%, ${14 + rng() * 8}%, 0.78)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Pale heather bloom dabs — many slim warm-pink flecks across the
+      // moss suggesting scattered heather blooms.
+      for (let i = 0; i < 900; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        let colour: string;
+        if (which < 0.5) {
+          colour = `hsla(${298 + rng() * 18}, 40%, ${48 + rng() * 14}%, 0.55)`;
+        } else if (which < 0.85) {
+          colour = `hsla(${320 + rng() * 14}, 36%, ${56 + rng() * 16}%, 0.45)`;
+        } else {
+          colour = `hsla(${36 + rng() * 18}, 26%, ${68 + rng() * 14}%, 0.38)`;
+        }
+        ctx.fillStyle = colour;
+        ctx.fillRect(x, y, 1.2 + rng() * 0.8, 1.2 + rng() * 0.8);
+      }
+      // Tiny grass-blade flecks — many slim warm green specks across the
+      // moss suggesting tufted moor grass.
+      for (let i = 0; i < 2200; i++) {
+        ctx.fillStyle = `hsla(${78 + rng() * 14}, 36%, ${36 + rng() * 16}%, 0.55)`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1 + rng() * 1.4);
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash so
+      // glancing afternoon sun catches the rim of the moor.
+      const sun = ctx.createRadialGradient(size * 0.7, size * 0.25, 0, size * 0.7, size * 0.25, size * 0.8);
+      sun.addColorStop(0, "rgba(255,236,184,0.1)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0024);
+    },
+  });
+
+  // Peat-moor depth map — the peat-cut blocks sit slightly above the moss
+  // (light = high) and the bog pools recess (dark = low) so the moor
+  // shows subtle relief on glancing sun.
+  registry["peat-moor-bump"] = makeCanvasTexture({
+    seed: 0xbea7e217 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average moor height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Rolling moss lobes — wide bright radial highlights suggesting the
+      // tops of low moor mounds underneath the surface mottle.
+      for (let i = 0; i < 10; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(210,210,210,0.2)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Scattered dark peat patches — recessed blobs reading as sunken
+      // moor between the moss mounds.
+      for (let i = 0; i < 32; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 6 + rng() * 8;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(40,40,40,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Rectangular peat-cut blocks — bright slats reading as raised
+      // cuttings stacked in shallow rows.
+      const blockW = 14;
+      const blockH = 9;
+      for (let r = 0; r < 2; r++) {
+        const rowY = size * (0.32 + r * 0.36) + (rng() - 0.5) * 18;
+        const rowX = size * 0.18 + (rng() - 0.5) * 20;
+        const blocks = 8;
+        for (let c = 0; c < blocks; c++) {
+          const bx = rowX + c * (blockW + 4) + (rng() - 0.5) * 3;
+          const by = rowY + (rng() - 0.5) * 3;
+          // Bright cut top — block crown.
+          ctx.fillStyle = `rgba(${210 + Math.floor(rng() * 30)},${210 + Math.floor(rng() * 30)},${210 + Math.floor(rng() * 30)},0.72)`;
+          ctx.fillRect(bx, by, blockW, blockH);
+          // Slim dark recessed gap along the lower cut edge.
+          ctx.fillStyle = "rgba(28,28,28,0.55)";
+          ctx.fillRect(bx, by + blockH - 1, blockW, 1);
+        }
+      }
+      // Bog pools — deep dark wells reading as sunken water.
+      for (let i = 0; i < 16; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 3 + rng() * 5;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(14,14,14,0.85)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Heather bloom bumps — many small bright dots reading as raised
+      // bloom heads across the moss.
+      for (let i = 0; i < 900; i++) {
+        const v = 190 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.55)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.0, 1.0 + rng() * 0.7);
+      }
+      // Slim grass-blade highlights — many small bright slats reading as
+      // standing moor grass.
+      for (let i = 0; i < 480; i++) {
+        const v = 188 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.45)`;
+        ctx.fillRect(rng() * size, rng() * size, 0.7, 1.8 + rng() * 1.5);
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
