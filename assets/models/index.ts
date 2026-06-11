@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twenty enhancement passes.
+// house and its courtyard, layered over twenty-two enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -406,6 +406,39 @@
 //   north-west gate apron and a low dry-stone retaining wall running
 //   along the south and east edges of the grove with a doll-width gap
 //   near the south-west corner for the doll to step through.
+//   Pass 22 — courtyard: a Victorian wrought-iron flagpole stand with a
+//   striped triangular pennant flag on a fluted marble base, parked on
+//   the front-west outside-gate apron just outside the picket fence —
+//   the pole, halyard ring and finial ball reuse the existing
+//   `copper-patina` colour + bump pair so the verdigris reads as crusted
+//   relief on the cast metal, the plinth reuses the existing `marble`
+//   colour + bump pair so the stone reads with veined relief, and the
+//   pennant flag carries a slim cream-and-rose stripe pattern fluttering
+//   off to the east. House: a pair of small Victorian copper sunburst
+//   rosettes mounted on the front and back gable faces above the
+//   existing oculus windows — each rosette a slim central marble disc
+//   surrounded by twelve copper-patina rays radiating outward in an
+//   alternating long/short pattern, with a small central boss covering
+//   the ray junction (the rays and boss reuse the existing
+//   `copper-patina` pair so the verdigris reads as crusted relief on
+//   the cast metal, and the central disc reuses the existing `marble`
+//   pair so the stone reads with veined relief). Scene: a far-southwest
+//   peat-bog moor plane south of the lavender field, bridging the gap
+//   between the lavender field's south edge and the wheat field's west
+//   edge — a moss-toned ground surfaced with the new `peat-moor` colour
+//   map paired with a turf-cut depth map (registered alongside the
+//   other procedural textures) so the peat-cut blocks and dark pools
+//   read as raised relief at glancing sun, a lavender-grass apron along
+//   the north join and a wheat-stubble apron along the east join so the
+//   ground layer has no holes at either seam, a small stone crofter's
+//   cottage at the south corner with a low fieldstone wall, a thatched
+//   pitched roof, a slim chimney trailing pale smoke and a glowing
+//   square front window, a stack of three rectangular peat-cuttings on
+//   a slate platform near the cottage, a winding burn (small stream)
+//   meandering through the moor crossed by a slim wooden plank
+//   footbridge with rope rails, a scatter of seven heather tufts in
+//   three bloom tints across the moss and a small tor of three mossy
+//   granite boulders at the west edge framing the burn's source.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

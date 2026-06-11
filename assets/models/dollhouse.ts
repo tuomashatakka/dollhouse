@@ -680,6 +680,53 @@ const CARAVANSERAI_POS: [number, number, number] = [74, 0, 15];
 const DESERT_OBELISK_POS: [number, number, number] = [68, 0, -4];
 const CAMEL_STATUE_POS: [number, number, number] = [70, 0, 8];
 
+/**
+ * Twenty-second-pass courtyard prop — a Victorian wrought-iron flagpole stand
+ * with a striped triangular pennant flag on a fluted marble base, parked on
+ * the front-west outside-gate apron just outside the picket fence. The pole,
+ * halyard ring and finial ball reuse the existing `copper-patina` colour +
+ * bump pair so the verdigris reads as crusted relief on the cast metal, the
+ * plinth reuses the existing `marble` colour + bump pair so the stone reads
+ * with veined relief, and the pennant flag carries a slim cream-and-rose
+ * stripe pattern fluttering off to the east.
+ */
+const FLAGPOLE_POS: [number, number, number] = [-3.6, 0, 14.6];
+
+/**
+ * Twenty-second-pass house detail — a pair of small Victorian copper sunburst
+ * rosettes mounted on the front and back gable faces above the existing
+ * oculus windows. Each rosette is a slim central marble disc surrounded by
+ * twelve copper-patina rays radiating outward in an alternating long/short
+ * pattern, with a small central boss covering the ray junction.
+ */
+const FRONT_SUNBURST_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H * 0.78, FRONT_Z + 0.06];
+const BACK_SUNBURST_POS: [number, number, number] = [0, ROOF_TOP + ROOF_H * 0.78, BACK_Z - 0.06];
+
+/**
+ * Twenty-second-pass scene extension — a far-southwest peat-bog moor plane
+ * south of the lavender field bridging the gap between the lavender field's
+ * south edge and the wheat field's west edge. The plane overlaps the lavender
+ * field by ~1 unit along its north join and the wheat field by ~1 unit along
+ * its east join so the ground layer has no holes at either seam. It carries
+ * a moss-toned ground surfaced with the new `peat-moor` colour map paired
+ * with a turf-cut depth map (registered alongside the other procedural
+ * textures) so the peat-cut blocks and dark pools read as raised relief at
+ * glancing sun, a small stone crofter's cottage at the south corner with a
+ * thatched pitched roof and a slim chimney, a stack of three rectangular
+ * peat-cuttings on a slate platform, a winding burn (small stream) crossed
+ * by a slim wooden plank footbridge with rope rails, a scatter of seven
+ * heather tufts in three bloom tints and a small tor of three mossy granite
+ * boulders at the west edge.
+ */
+const PEAT_MOOR_POS: [number, number, number] = [-50, -0.022, 28];
+const PEAT_MOOR_W = 18;
+const PEAT_MOOR_D = 18;
+const CROFTERS_COTTAGE_POS: [number, number, number] = [-52, 0, 33];
+const PEAT_STACK_POS: [number, number, number] = [-47, 0, 32];
+const PEAT_BURN_Z = 26.5;
+const PEAT_BRIDGE_POS: [number, number, number] = [-48, 0, PEAT_BURN_Z];
+const PEAT_BOULDER_TOR_POS: [number, number, number] = [-57, 0, 28];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1340,6 +1387,48 @@ const C = {
   camelSaddle: "#c84d3a",
   camelTassel: "#e6b34a",
   oliveGroveApron: "#a89668",
+  // Twenty-second enhancement pass — a Victorian wrought-iron flagpole with a
+  // striped pennant flag on a fluted marble base (the pole, halyard ring and
+  // finial ball reuse the existing `copper-patina` colour + bump pair and the
+  // plinth reuses the existing `marble` colour + bump pair), a pair of
+  // copper-sunburst rosettes on the front and back gable faces above the
+  // existing oculus windows (the rays and central boss reuse the existing
+  // `copper-patina` pair and the central disc reuses the existing `marble`
+  // pair), and a far-southwest peat-bog moor scene extension south of the
+  // lavender field. The new `peat-moor` colour map is paired with a turf-cut
+  // depth map so the peat-cut blocks and dark pools read as raised relief at
+  // glancing sun.
+  flagpolePlinth: "#ede2d0",
+  flagpolePlinthShade: "#a89776",
+  flagpoleRope: "#cbb487",
+  flagFieldCream: "#fdf4e2",
+  flagFieldRose: "#ef89a8",
+  flagFieldShade: "#a8577a",
+  sunburstDisc: "#ede2d0",
+  sunburstDiscShade: "#a89776",
+  peatGround: "#5a6234",
+  peatGroundShade: "#3a4220",
+  peatBog: "#2a2418",
+  peatStack: "#4a3a22",
+  peatStackHi: "#7a5a32",
+  peatStackSlate: "#6a655a",
+  burnWater: "#5a8aa8",
+  burnWaterShade: "#345a78",
+  thatchStraw: "#b89860",
+  thatchStrawShade: "#7a5a2c",
+  crofterStone: "#9d9286",
+  crofterStoneDark: "#6a635a",
+  crofterDoor: "#3a2218",
+  crofterChimney: "#8a8076",
+  crofterGlow: "#ffd58a",
+  heatherTuftRose: "#a35aa6",
+  heatherTuftPink: "#d68ac8",
+  heatherTuftWhite: "#f4eada",
+  mossyBoulder: "#7a7a6a",
+  mossyBoulderShade: "#4a4838",
+  mossPatch: "#5a7a3a",
+  lavenderApron: "#5a6a35",
+  wheatStubbleApron: "#a08a4a",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -16391,6 +16480,745 @@ function buildCamelStatue(f: NodeFactory, pos: [number, number, number]): SceneN
   return f.group("Camel Statue", parts, { position: pos, rotation: [0, Math.PI / 5, 0] });
 }
 
+/* ─────────────── twenty-second-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian wrought-iron flagpole stand with a striped triangular pennant
+ * flag on a fluted marble base. The piece pairs a swelled marble plinth
+ * (carrying the existing `marble` colour + bump pair so the stone reads with
+ * veined relief), a slim copper-patina vertical pole capped by a finial ball
+ * (reusing the existing `copper-patina` colour + bump pair so the verdigris
+ * mottling reads as crusted relief on the cast metal), a slim halyard ring
+ * carrying a triangular pennant flag with cream-and-rose horizontal stripes
+ * fluttering off to the east and a small tip tassel on the pennant's outer
+ * point. Parked on the front-west outside-gate apron just beyond the picket
+ * fence — a focal piece punctuating the gate approach.
+ */
+function buildFlagpoleStand(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const pole: MaterialDef = {
+    color: C.carouselPole,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const poleHi = std(C.carouselPoleHi, 0.4, { metalness: 0.85 });
+  const marble = std(C.flagpolePlinth, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.flagpolePlinthShade, 0.95, { flatShading: true });
+  const rope = std(C.flagpoleRope, 0.95, { flatShading: true });
+  const flagCream = std(C.flagFieldCream, 0.65, { flatShading: true });
+  const flagRose = std(C.flagFieldRose, 0.7, { flatShading: true });
+  const flagShade = std(C.flagFieldShade, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Fluted marble plinth — small square footing and round column ──
+  parts.push(
+    f.mesh("Plinth Footing", box(0.62, 0.08, 0.62), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Base", cylinder(0.28, 0.3, 0.1, 18), marble, {
+      position: [0, 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Column", cylinder(0.22, 0.24, 0.5, 18), marble, {
+      position: [0, 0.43, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", cylinder(0.28, 0.28, 0.05, 18), marble, {
+      position: [0, 0.71, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Copper-patina trim band at the cap.
+    f.mesh("Plinth Cap Trim", cylinder(0.27, 0.27, 0.022, 20), pole, {
+      position: [0, 0.745, 0],
+    }, { castShadow: false }),
+  );
+  // Six slim fluting grooves around the column.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Plinth Flute ${i}`, box(0.022, 0.45, 0.025), marbleShade, {
+        position: [Math.cos(a) * 0.23, 0.43, Math.sin(a) * 0.23],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Vertical copper-patina flagpole rising from the plinth cap ──
+  const poleY = 0.75;
+  const poleH = 2.6;
+  parts.push(
+    f.mesh("Flagpole", cylinder(0.035, 0.045, poleH, 12), pole, {
+      position: [0, poleY + poleH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim swelled bead at the pole midshaft.
+    f.mesh("Pole Bead", sphere(0.06, 12, 8), poleHi, {
+      position: [0, poleY + poleH * 0.55, 0],
+    }, { castShadow: false }),
+    // Finial ball capping the pole tip.
+    f.mesh("Pole Cap", sphere(0.08, 14, 10), pole, {
+      position: [0, poleY + poleH + 0.02, 0],
+    }, { castShadow: true }),
+    // Bright highlight crown on the finial ball.
+    f.mesh("Pole Cap Hi", sphere(0.06, 12, 8), poleHi, {
+      position: [0, poleY + poleH + 0.05, 0],
+      scale: [0.9, 0.7, 0.9],
+    }, { castShadow: false }),
+    // Halyard ring near the top of the pole.
+    f.mesh("Halyard Ring", cylinder(0.07, 0.07, 0.018, 16), pole, {
+      position: [0, poleY + poleH * 0.92, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Halyard ring near the base of the pole.
+    f.mesh("Halyard Ring Lower", cylinder(0.05, 0.05, 0.015, 14), pole, {
+      position: [0, poleY + poleH * 0.3, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Slim halyard rope running down the east side of the pole.
+    f.mesh("Halyard Rope", cylinder(0.01, 0.01, poleH * 0.62, 6), rope, {
+      position: [0.05, poleY + poleH * 0.61, 0],
+    }, { castShadow: false }),
+    // Tied-off rope cleat — small cylindrical knot near the lower ring.
+    f.mesh("Rope Knot", sphere(0.025, 8, 6), rope, {
+      position: [0.05, poleY + poleH * 0.3, 0],
+    }, { castShadow: false }),
+  );
+  // ── Triangular striped pennant flag fluttering off to the east ──
+  // Flag attaches at the upper halyard ring (y ≈ poleY + poleH * 0.92) and
+  // tapers eastward to a small tip. Built from three horizontal stripe slats
+  // so cream/rose/cream reads as a tricolour bunting in glancing sun.
+  const flagY0 = poleY + poleH * 0.92;
+  const flagY1 = poleY + poleH * 0.7;
+  const flagCentreY = (flagY0 + flagY1) / 2;
+  const flagH = flagY0 - flagY1;
+  // Hoist edge — slim vertical strip clamped against the halyard ring.
+  parts.push(
+    f.mesh("Flag Hoist", box(0.02, flagH, 0.04), flagShade, {
+      position: [0.06, flagCentreY, 0],
+    }, { castShadow: false }),
+  );
+  // Three horizontal flag stripes tapering to a point at the eastern tip.
+  // Use slim slanted box panels so each stripe reads as a tapered triangle.
+  for (let s = 0; s < 5; s++) {
+    const t = (s + 0.5) / 5;
+    const stripeY = flagY0 - t * flagH;
+    const stripeMat = s % 2 === 0 ? flagCream : flagRose;
+    // Each stripe is a thin tapered slat; we approximate the triangular
+    // tip by shrinking the slat width at outer x. Use a sequence of
+    // shrinking slats so the silhouette reads as a triangle.
+    for (let k = 0; k < 4; k++) {
+      const u0 = k / 4;
+      const u1 = (k + 1) / 4;
+      const segX = 0.08 + ((u0 + u1) / 2) * 1.05;
+      const segLen = 0.28;
+      const segH = (flagH / 5) * (1 - u0 * 0.85);
+      const lift = Math.sin(u0 * Math.PI * 0.7) * 0.04;
+      parts.push(
+        f.mesh(`Flag Stripe ${s} ${k}`, box(segLen, segH, 0.015), stripeMat, {
+          position: [segX, stripeY + lift, 0],
+          rotation: [0, 0, lift * -0.2],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Slim cream-and-rose tip tassel hanging from the pennant's outer point.
+  parts.push(
+    f.mesh("Flag Tip Tassel", cone(0.02, 0.07, 6), flagRose, {
+      position: [1.15, flagCentreY - flagH * 0.42, 0],
+      rotation: [0, 0, Math.PI],
+    }, { castShadow: false }),
+    f.mesh("Flag Tip Bead", sphere(0.022, 8, 6), poleHi, {
+      position: [1.15, flagCentreY - flagH * 0.3, 0],
+    }, { castShadow: false }),
+  );
+  // Slim dark shade strip just behind the flag so the cloth reads as a
+  // soft drop shadow on the marble plinth even when the sun is high.
+  parts.push(
+    f.mesh("Flag Shade Strip", box(1.0, flagH * 0.95, 0.008), flagShade, {
+      position: [0.55, flagCentreY - 0.005, -0.012],
+      scale: [1.0, 0.95, 1.0],
+    }, { castShadow: false }),
+  );
+  return f.group("Flagpole Stand", parts, { position: pos, rotation: [0, -0.2, 0] });
+}
+
+/* ─────────────── twenty-second-pass house detail ─────────────── */
+
+/**
+ * A pair of small Victorian copper sunburst rosettes mounted on the front and
+ * back gable faces above the existing oculus windows. Each rosette pairs a
+ * slim central marble disc (carrying the existing `marble` colour + bump pair
+ * so the stone reads with veined relief), twelve copper-patina rays radiating
+ * outward in an alternating long/short pattern (reusing the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted relief
+ * on the cast metal) and a small central boss covering the ray junction. The
+ * rosettes add a tidy ornamental focus to the gable faces in the space
+ * between the existing oculus window trim and the gable peak finial.
+ */
+function buildGableSunbursts(f: NodeFactory): SceneNode {
+  return f.group("Gable Sunbursts", [
+    buildGableSunburst(f, FRONT_SUNBURST_POS, 0),
+    buildGableSunburst(f, BACK_SUNBURST_POS, Math.PI),
+  ]);
+}
+
+function buildGableSunburst(
+  f: NodeFactory,
+  pos: [number, number, number],
+  yaw: number,
+): SceneNode {
+  const copper: MaterialDef = {
+    color: C.copperPatina,
+    roughness: 0.55,
+    metalness: 0.6,
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.04,
+  };
+  const marble = std(C.sunburstDisc, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.sunburstDiscShade, 0.95, { flatShading: true });
+  const discR = 0.16;
+  const longRay = 0.22;
+  const shortRay = 0.14;
+  const parts: SceneNode[] = [];
+  // Twelve rays radiating outward — alternating long/short for a classic
+  // sunburst silhouette. Each ray is a slim slat tilted along its bearing
+  // and tapering outward.
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2;
+    const isLong = i % 2 === 0;
+    const len = isLong ? longRay : shortRay;
+    const inner = discR * 0.85;
+    const cx = Math.cos(a) * (inner + len / 2);
+    const cy = Math.sin(a) * (inner + len / 2);
+    const segH = isLong ? 0.05 : 0.04;
+    parts.push(
+      f.mesh(`Ray ${i}`, box(len, segH, 0.03), copper, {
+        position: [cx, cy, 0.012],
+        rotation: [0, 0, a],
+      }, { castShadow: false }),
+    );
+    // Slim ray tip bead on the long rays, suggesting a cast-metal terminal.
+    if (isLong) {
+      const tipX = Math.cos(a) * (inner + len);
+      const tipY = Math.sin(a) * (inner + len);
+      parts.push(
+        f.mesh(`Ray Tip ${i}`, sphere(0.022, 8, 6), copper, {
+          position: [tipX, tipY, 0.018],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Central marble disc carrying the rays — slim cylinder backing the boss.
+  parts.push(
+    // Outer copper rim ring just inside the rays.
+    f.mesh("Disc Ring", cylinder(discR, discR, 0.04, 26), copper, {
+      position: [0, 0, 0.008],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Marble disc face — slightly proud of the rim so the stone face reads.
+    f.mesh("Disc Face", cylinder(discR * 0.88, discR * 0.88, 0.03, 24), marble, {
+      position: [0, 0, 0.025],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Slim marble inset face shading suggesting the chiselled flat.
+    f.mesh("Disc Inset", cylinder(discR * 0.66, discR * 0.66, 0.02, 22), marbleShade, {
+      position: [0, 0, 0.04],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Central boss covering the ray junction — small swelled copper dome.
+    f.mesh("Disc Boss", sphere(0.07, 14, 10), copper, {
+      position: [0, 0, 0.05],
+      scale: [1.0, 1.0, 0.85],
+    }, { castShadow: false }),
+    // Slim boss highlight bead at the boss tip.
+    f.mesh("Boss Tip", sphere(0.025, 8, 6), std(C.carouselPoleHi, 0.4, { metalness: 0.85 }), {
+      position: [0, 0, 0.085],
+    }, { castShadow: false }),
+  );
+  return f.group("Gable Sunburst", parts, { position: pos, rotation: [0, yaw, 0] });
+}
+
+/* ─────────────── twenty-second-pass scene extension ─────────────── */
+
+/**
+ * Far-southwest peat-bog moor ground plane and props — tucked south of the
+ * lavender field and west of the wheat field, bridging the gap between the
+ * lavender field's south edge and the wheat field's west edge. The plane
+ * overlaps the lavender field by ~1 unit along its north join and the wheat
+ * field by ~1 unit along its east join so the ground layer has no holes at
+ * either seam. Carries the new `peat-moor` colour map paired with a turf-cut
+ * depth map so the peat-cut blocks and dark pools read as raised relief at
+ * glancing sun, a lavender-grass apron along the north join and a
+ * wheat-stubble apron along the east join, a small stone crofter's cottage
+ * at the south corner with a thatched pitched roof and a slim chimney
+ * trailing pale smoke, a stack of three rectangular peat-cuttings on a slate
+ * platform, a winding burn (small stream) meandering through the moor
+ * crossed by a slim wooden plank footbridge with rope rails, a scatter of
+ * seven heather tufts in three bloom tints across the moss and a small tor
+ * of three mossy granite boulders at the west edge framing the burn's
+ * source.
+ */
+function buildFarSouthwestPeatMoor(f: NodeFactory): SceneNode {
+  return f.group("Far Southwest Peat Moor", [
+    // Peat moor ground plane — moss-toned ground with the new colour +
+    // depth map pair so the peat-cut blocks and dark pools read as raised
+    // relief at glancing sun.
+    f.mesh(
+      "Peat Moor Ground",
+      plane(PEAT_MOOR_W, PEAT_MOOR_D),
+      std(C.peatGround, 0.95, {
+        texture: "peat-moor",
+        textureScale: [4, 4],
+        bumpMap: "peat-moor-bump",
+        bumpScale: 0.06,
+      }),
+      { position: PEAT_MOOR_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the lavender field's south edge with a
+    // dark moss-and-stem strip so the seam reads as a continuous moor
+    // join between the cultivated rows and the wild peat ground.
+    f.mesh(
+      "Peat Moor North Apron",
+      plane(PEAT_MOOR_W, 3),
+      std(C.lavenderApron, 0.95, { texture: "grass", textureScale: [6, 1] }),
+      {
+        position: [
+          PEAT_MOOR_POS[0],
+          -0.02,
+          PEAT_MOOR_POS[2] - PEAT_MOOR_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // East apron — overlaps the wheat field's west edge with a slim
+    // stubble-toned strip so the seam reads as a continuous moor fringe.
+    f.mesh(
+      "Peat Moor East Apron",
+      plane(3, PEAT_MOOR_D),
+      std(C.wheatStubbleApron, 0.95, { texture: "grass", textureScale: [1, 6] }),
+      {
+        position: [
+          PEAT_MOOR_POS[0] + PEAT_MOOR_W / 2 - 1.5,
+          -0.02,
+          PEAT_MOOR_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildCroftersCottage(f, CROFTERS_COTTAGE_POS),
+    buildPeatStack(f, PEAT_STACK_POS),
+    buildPeatBurn(f),
+    buildPeatPlankBridge(f, PEAT_BRIDGE_POS),
+    buildPeatHeatherTufts(f),
+    buildPeatBoulderTor(f, PEAT_BOULDER_TOR_POS),
+  ]);
+}
+
+/**
+ * A small stone crofter's cottage — low fieldstone wall courses, a thatched
+ * pitched roof, a slim stone chimney trailing pale smoke wisps, a plank
+ * front door with a tiny brass knob and a glowing square front window with
+ * a cross muntin. A classic island-Scottish moor dwelling.
+ */
+function buildCroftersCottage(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.crofterStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.crofterStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const thatch = std(C.thatchStraw, 0.95, { texture: "grass", textureScale: [3, 2], flatShading: true });
+  const thatchShade = std(C.thatchStrawShade, 0.95, { flatShading: true });
+  const door = std(C.crofterDoor, 0.95, { texture: "wood", textureScale: [1, 2], flatShading: true });
+  const chimney = std(C.crofterChimney, 0.95, { texture: "cobblestone", flatShading: true });
+  const glass: MaterialDef = {
+    color: C.crofterGlow,
+    roughness: 0.25,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.85,
+    emissive: C.crofterGlow,
+  };
+  const brass = std(C.brass, 0.4, { metalness: 0.7 });
+  const smoke: MaterialDef = {
+    color: "#e0d8c8",
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.42,
+  };
+  const w = 3.4;
+  const d = 2.6;
+  const wallH = 1.6;
+  const parts: SceneNode[] = [];
+  // ── Four fieldstone walls ──
+  parts.push(
+    // South wall (front).
+    f.mesh("Wall S", box(w, wallH, 0.22), stone, {
+      position: [0, wallH / 2, d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // North wall.
+    f.mesh("Wall N", box(w, wallH, 0.22), stone, {
+      position: [0, wallH / 2, -d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // West gable wall — taller to meet the roof ridge.
+    f.mesh("Wall W", box(0.22, wallH + 0.5, d), stoneDark, {
+      position: [-w / 2, (wallH + 0.5) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // East gable wall.
+    f.mesh("Wall E", box(0.22, wallH + 0.5, d), stoneDark, {
+      position: [w / 2, (wallH + 0.5) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Slim stone wall courses (irregular highlights) across the south wall.
+  for (let i = 0; i < 4; i++) {
+    const cy = 0.2 + i * 0.32;
+    parts.push(
+      f.mesh(`Course ${i}`, box(w - 0.1, 0.04, 0.04), stoneDark, {
+        position: [0, cy, d / 2 + 0.13],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Pitched thatched roof — two angled slabs meeting at a ridge ──
+  const ridgeY = wallH + 0.85;
+  const halfD = d / 2 + 0.3;
+  const hyp = Math.hypot(0.85, halfD);
+  const slope = Math.atan2(0.85, halfD);
+  parts.push(
+    // South slope.
+    f.mesh("Thatch S", box(w + 0.4, 0.16, hyp), thatch, {
+      position: [0, ridgeY - 0.42, halfD / 2],
+      rotation: [-slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // North slope.
+    f.mesh("Thatch N", box(w + 0.4, 0.16, hyp), thatch, {
+      position: [0, ridgeY - 0.42, -halfD / 2],
+      rotation: [slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Ridge cap — a slim rope-bound thatch ridge running along the peak.
+    f.mesh("Thatch Ridge", cylinder(0.1, 0.1, w + 0.45, 8), thatchShade, {
+      position: [0, ridgeY, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    // Two diagonal rope ties across the ridge.
+    f.mesh("Ridge Tie A", cylinder(0.015, 0.015, 0.7, 6), std(C.flagpoleRope, 0.95), {
+      position: [-w * 0.3, ridgeY - 0.06, 0],
+      rotation: [0, 0, Math.PI / 3],
+    }, { castShadow: false }),
+    f.mesh("Ridge Tie B", cylinder(0.015, 0.015, 0.7, 6), std(C.flagpoleRope, 0.95), {
+      position: [w * 0.3, ridgeY - 0.06, 0],
+      rotation: [0, 0, -Math.PI / 3],
+    }, { castShadow: false }),
+  );
+  // ── Slim stone chimney on the east gable peak trailing pale smoke ──
+  parts.push(
+    f.mesh("Chimney Stack", box(0.34, 0.9, 0.34), chimney, {
+      position: [w / 2 + 0.05, ridgeY + 0.2, 0.3],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Crown", box(0.42, 0.07, 0.42), stoneDark, {
+      position: [w / 2 + 0.05, ridgeY + 0.69, 0.3],
+    }, { castShadow: true }),
+    // Three smoke wisps trailing east of the chimney.
+    f.mesh("Smoke A", sphere(0.16, 12, 8), smoke, {
+      position: [w / 2 + 0.2, ridgeY + 0.95, 0.3],
+      scale: [1.2, 0.9, 1.1],
+    }, { castShadow: false }),
+    f.mesh("Smoke B", sphere(0.18, 12, 8), smoke, {
+      position: [w / 2 + 0.55, ridgeY + 1.18, 0.45],
+      scale: [1.3, 0.8, 1.2],
+    }, { castShadow: false }),
+    f.mesh("Smoke C", sphere(0.2, 12, 8), smoke, {
+      position: [w / 2 + 0.95, ridgeY + 1.4, 0.6],
+      scale: [1.4, 0.85, 1.2],
+    }, { castShadow: false }),
+  );
+  // ── Plank front door on the south wall ──
+  parts.push(
+    f.mesh("Door Frame", box(0.55, 1.1, 0.04), stoneDark, {
+      position: [-0.6, 0.55, d / 2 + 0.12],
+    }, { castShadow: false }),
+    f.mesh("Door", box(0.45, 1.0, 0.04), door, {
+      position: [-0.6, 0.5, d / 2 + 0.14],
+    }, { castShadow: false }),
+    // Brass knob.
+    f.mesh("Door Knob", sphere(0.03, 8, 6), brass, {
+      position: [-0.45, 0.55, d / 2 + 0.18],
+    }, { castShadow: false }),
+  );
+  // ── Glowing square front window on the south wall ──
+  parts.push(
+    f.mesh("Window Frame", box(0.55, 0.5, 0.04), stoneDark, {
+      position: [0.6, 0.95, d / 2 + 0.12],
+    }, { castShadow: false }),
+    f.mesh("Window Glass", box(0.42, 0.4, 0.02), glass, {
+      position: [0.6, 0.95, d / 2 + 0.14],
+    }, { castShadow: false }),
+    // Cross muntin.
+    f.mesh("Window Muntin V", box(0.03, 0.4, 0.025), stoneDark, {
+      position: [0.6, 0.95, d / 2 + 0.16],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin H", box(0.42, 0.03, 0.025), stoneDark, {
+      position: [0.6, 0.95, d / 2 + 0.16],
+    }, { castShadow: false }),
+  );
+  // Slim stone front step.
+  parts.push(
+    f.mesh("Front Step", box(0.7, 0.08, 0.3), stoneDark, {
+      position: [-0.6, 0.04, d / 2 + 0.28],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  return f.group("Crofter's Cottage", parts, { position: pos, rotation: [0, 0.2, 0] });
+}
+
+/**
+ * A stack of three rectangular peat-cuttings on a slate platform — slim
+ * dark earth bricks arranged in a small pyramid as a cottage industry
+ * detail, the slate base reads as a flat workbench in the moor.
+ */
+function buildPeatStack(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const peat = std(C.peatStack, 0.95, { flatShading: true });
+  const peatHi = std(C.peatStackHi, 0.95, { flatShading: true });
+  const slate = std(C.peatStackSlate, 0.95, { texture: "cobblestone", flatShading: true });
+  const parts: SceneNode[] = [];
+  // Slate platform.
+  parts.push(
+    f.mesh("Slate Platform", box(1.2, 0.06, 0.9), slate, {
+      position: [0, 0.03, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Bottom row — three peat bricks side by side.
+  for (let i = 0; i < 3; i++) {
+    const px = (i - 1) * 0.32;
+    parts.push(
+      f.mesh(`Peat L1 ${i}`, box(0.3, 0.14, 0.5), peat, {
+        position: [px, 0.13, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim ochre highlight along the brick top so the cut face reads.
+      f.mesh(`Peat L1 ${i} Hi`, box(0.28, 0.02, 0.46), peatHi, {
+        position: [px, 0.205, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Second row — two peat bricks staggered.
+  for (let i = 0; i < 2; i++) {
+    const px = (i - 0.5) * 0.32;
+    parts.push(
+      f.mesh(`Peat L2 ${i}`, box(0.3, 0.14, 0.46), peat, {
+        position: [px, 0.27, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Peat L2 ${i} Hi`, box(0.28, 0.02, 0.42), peatHi, {
+        position: [px, 0.345, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Top — single peat brick crowning the pyramid.
+  parts.push(
+    f.mesh("Peat L3", box(0.3, 0.14, 0.42), peat, {
+      position: [0, 0.41, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Peat L3 Hi", box(0.28, 0.02, 0.38), peatHi, {
+      position: [0, 0.485, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Peat Stack", parts, { position: pos, rotation: [0, 0.4, 0] });
+}
+
+/**
+ * A winding burn (small stream) meandering through the moor — a slim
+ * dark water ribbon set into the peat ground. Carries two layered strips
+ * (deep core + glint) so the burn reads as a slow-moving channel.
+ */
+function buildPeatBurn(f: NodeFactory): SceneNode {
+  const water = std(C.burnWater, 0.3, { metalness: 0.4 });
+  const waterDeep = std(C.burnWaterShade, 0.35, { metalness: 0.3 });
+  const bed = std(C.peatBog, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Three burn segments at slight angles so the channel reads as winding.
+  const segs: Array<{ x: number; z: number; len: number; yaw: number }> = [
+    { x: -55, z: PEAT_BURN_Z + 0.5, len: 5.0, yaw: 0.18 },
+    { x: -50.5, z: PEAT_BURN_Z, len: 4.4, yaw: -0.15 },
+    { x: -46, z: PEAT_BURN_Z - 0.3, len: 4.0, yaw: 0.25 },
+  ];
+  let i = 0;
+  for (const s of segs) {
+    // Bed strip (dark) — slightly wider than water so the bank reads.
+    parts.push(
+      f.mesh(`Burn Bed ${i}`, plane(s.len, 0.7), bed, {
+        position: [s.x, 0.005, s.z],
+        rotation: [-Math.PI / 2, 0, s.yaw],
+      }, { receiveShadow: true }),
+      // Deep core water strip.
+      f.mesh(`Burn Water ${i}`, plane(s.len * 0.94, 0.45), waterDeep, {
+        position: [s.x, 0.012, s.z],
+        rotation: [-Math.PI / 2, 0, s.yaw],
+      }, { receiveShadow: true }),
+      // Bright glint strip — narrow centre highlight.
+      f.mesh(`Burn Glint ${i}`, plane(s.len * 0.88, 0.18), water, {
+        position: [s.x, 0.018, s.z],
+        rotation: [-Math.PI / 2, 0, s.yaw],
+      }, { receiveShadow: false }),
+    );
+    i += 1;
+  }
+  return f.group("Peat Burn", parts);
+}
+
+/**
+ * A slim wooden plank footbridge with rope rails crossing the burn — two
+ * planks side by side carried on short slim posts, with a slim rope rail
+ * threaded through low corner posts on each side. A traveller's crossing.
+ */
+function buildPeatPlankBridge(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.shedWall, 0.95, { texture: "wood", textureScale: [3, 1], flatShading: true });
+  const post = std(C.logBark, 0.95, { flatShading: true });
+  const rope = std(C.flagpoleRope, 0.95);
+  const parts: SceneNode[] = [];
+  const len = 1.6;
+  const planks = 2;
+  for (let i = 0; i < planks; i++) {
+    const z = (i - 0.5) * 0.22;
+    parts.push(
+      f.mesh(`Plank ${i}`, box(len, 0.06, 0.18), wood, {
+        position: [0, 0.18, z],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Four corner posts carrying the rope rails.
+  for (const sx of [-1, 1] as const) {
+    for (const sz of [-1, 1] as const) {
+      parts.push(
+        f.mesh(`Post ${sx}${sz}`, cylinder(0.04, 0.05, 0.5, 8), post, {
+          position: [sx * (len / 2 - 0.05), 0.25, sz * 0.28],
+        }, { castShadow: true }),
+        // Slim ball cap on each post.
+        f.mesh(`Post Cap ${sx}${sz}`, sphere(0.05, 10, 8), post, {
+          position: [sx * (len / 2 - 0.05), 0.5, sz * 0.28],
+        }, { castShadow: false }),
+      );
+    }
+    // Slim rope rail running between the two posts on each side.
+    parts.push(
+      f.mesh(`Rope Rail ${sx}`, cylinder(0.012, 0.012, len - 0.1, 6), rope, {
+        position: [0, 0.42, sx * 0.28],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Plank Bridge", parts, { position: pos, rotation: [0, 0.15, 0] });
+}
+
+/**
+ * Seven heather tufts scattered across the moor in three bloom tints
+ * (rose, pink, white) — each tuft a low dark moss cushion crowned by a
+ * ring of small bloom dabs. Placed off the burn and away from the cottage.
+ */
+function buildPeatHeatherTufts(f: NodeFactory): SceneNode {
+  const moss = std(C.mossPatch, 0.95, { flatShading: true });
+  const bloomRose = std(C.heatherTuftRose, 0.85, { flatShading: true });
+  const bloomPink = std(C.heatherTuftPink, 0.85, { flatShading: true });
+  const bloomWhite = std(C.heatherTuftWhite, 0.85, { flatShading: true });
+  const rng = mulberry32(0x9ea7e2);
+  const tufts: SceneNode[] = [];
+  const cx = PEAT_MOOR_POS[0];
+  const cz = PEAT_MOOR_POS[2];
+  const placements: Array<{ px: number; pz: number }> = [
+    { px: cx - 4, pz: cz - 5 },
+    { px: cx + 2, pz: cz - 4 },
+    { px: cx + 5, pz: cz + 4 },
+    { px: cx - 2, pz: cz + 5.5 },
+    { px: cx + 3.5, pz: cz + 1 },
+    { px: cx - 6, pz: cz + 4.5 },
+    { px: cx - 0.5, pz: cz - 6.5 },
+  ];
+  let i = 0;
+  for (const { px, pz } of placements) {
+    const r = 0.32 + rng() * 0.1;
+    const bloom: MaterialDef =
+      i % 3 === 0 ? bloomRose : i % 3 === 1 ? bloomPink : bloomWhite;
+    const tuftParts: SceneNode[] = [
+      // Low dark moss cushion.
+      f.mesh("Moss Cushion", sphere(r, 12, 8), moss, {
+        position: [0, r * 0.45, 0],
+        scale: [1.2, 0.55, 1.2],
+      }, { castShadow: false, receiveShadow: true }),
+    ];
+    // Ring of seven small bloom dabs around the cushion crown.
+    for (let k = 0; k < 7; k++) {
+      const a = (k / 7) * Math.PI * 2 + rng() * 0.5;
+      const ringR = r * 0.85;
+      tuftParts.push(
+        f.mesh(`Bloom ${k}`, sphere(0.07 + rng() * 0.02, 10, 8), bloom, {
+          position: [Math.cos(a) * ringR, r * 0.7, Math.sin(a) * ringR],
+          scale: [1.0, 1.0, 1.0],
+        }, { castShadow: false }),
+      );
+    }
+    // Slim crowning bloom dab at the centre top.
+    tuftParts.push(
+      f.mesh("Bloom Top", sphere(0.08, 10, 8), bloom, {
+        position: [0, r * 0.85, 0],
+      }, { castShadow: false }),
+    );
+    tufts.push(
+      f.group(`Heather Tuft ${i}`, tuftParts, {
+        position: [px, 0, pz],
+        rotation: [0, rng() * Math.PI * 2, 0],
+      }),
+    );
+    i += 1;
+  }
+  return f.group("Peat Heather Tufts", tufts);
+}
+
+/**
+ * A small tor of three mossy granite boulders at the west edge of the
+ * moor framing the burn's source — irregular flattened spheres with moss
+ * caps suggesting weathered standing stones.
+ */
+function buildPeatBoulderTor(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const granite = std(C.mossyBoulder, 0.95, { flatShading: true });
+  const graniteShade = std(C.mossyBoulderShade, 0.95, { flatShading: true });
+  const moss = std(C.mossPatch, 0.9, { flatShading: true });
+  const parts: SceneNode[] = [];
+  const boulders: Array<{
+    pos: [number, number, number];
+    scale: [number, number, number];
+    yaw: number;
+  }> = [
+    { pos: [-0.5, 0.4, 0.1], scale: [1.4, 1.0, 1.2], yaw: 0.3 },
+    { pos: [0.6, 0.5, -0.3], scale: [1.6, 1.3, 1.4], yaw: -0.4 },
+    { pos: [0.2, 0.32, 0.7], scale: [1.2, 0.85, 1.0], yaw: 0.15 },
+  ];
+  let i = 0;
+  for (const b of boulders) {
+    parts.push(
+      // Main boulder body.
+      f.mesh(`Boulder ${i}`, sphere(0.55, 12, 8), granite, {
+        position: b.pos,
+        scale: b.scale,
+        rotation: [0, b.yaw, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded base flange suggesting the boulder seated in turf.
+      f.mesh(`Boulder Base ${i}`, sphere(0.5, 10, 8), graniteShade, {
+        position: [b.pos[0], 0.18, b.pos[2]],
+        scale: [b.scale[0] * 0.95, 0.35, b.scale[2] * 0.95],
+      }, { castShadow: false, receiveShadow: true }),
+      // Moss cap on the boulder crown.
+      f.mesh(`Moss Cap ${i}`, sphere(0.32, 12, 8), moss, {
+        position: [b.pos[0], b.pos[1] + b.scale[1] * 0.45, b.pos[2]],
+        scale: [b.scale[0] * 0.6, 0.4, b.scale[2] * 0.6],
+      }, { castShadow: false }),
+    );
+    i += 1;
+  }
+  return f.group("Peat Boulder Tor", parts, { position: pos });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -16791,6 +17619,37 @@ function buildCamelStatue(f: NodeFactory, pos: [number, number, number]): SceneN
  *    cap and a hieroglyphic relief band on its shaft, a resting
  *    camel statue with a red saddle blanket and gold tassels and a
  *    scatter of low dune mounds rolling across the sand.
+ *  - Twenty-second pass — courtyard: a Victorian wrought-iron flagpole
+ *    stand with a striped triangular pennant flag on a fluted marble
+ *    base, parked on the front-west outside-gate apron just beyond the
+ *    picket fence. The pole, halyard ring and finial ball reuse the
+ *    existing `copper-patina` colour + bump pair so the verdigris reads
+ *    as crusted relief on the cast metal, the plinth reuses the existing
+ *    `marble` colour + bump pair so the stone reads with veined relief,
+ *    and the pennant flag carries a slim cream-and-rose stripe pattern
+ *    fluttering off to the east. House: a pair of small Victorian copper
+ *    sunburst rosettes mounted on the front and back gable faces above
+ *    the existing oculus windows — each rosette a slim central marble
+ *    disc surrounded by twelve copper-patina rays radiating outward in
+ *    an alternating long/short pattern, with a small central boss
+ *    covering the ray junction (the rays and boss reuse the existing
+ *    `copper-patina` pair and the central disc reuses the existing
+ *    `marble` pair). Scene: a far-southwest peat-bog moor plane south
+ *    of the lavender field bridging the gap between the lavender field's
+ *    south edge and the wheat field's west edge — a moss-toned ground
+ *    surfaced with the new `peat-moor` colour map paired with a turf-cut
+ *    depth map (registered alongside the other procedural textures) so
+ *    the peat-cut blocks and dark pools read as raised relief at
+ *    glancing sun, a lavender-grass apron along the north join and a
+ *    wheat-stubble apron along the east join so the ground layer has
+ *    no holes at either seam, a small stone crofter's cottage at the
+ *    south corner with a fieldstone wall, a thatched pitched roof, a
+ *    slim chimney trailing pale smoke and a glowing square front window,
+ *    a stack of three rectangular peat-cuttings on a slate platform, a
+ *    winding burn (small stream) crossed by a slim wooden plank
+ *    footbridge with rope rails, a scatter of seven heather tufts in
+ *    three bloom tints and a small tor of three mossy granite boulders
+ *    at the west edge framing the burn's source.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -16869,6 +17728,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: AVIARY_POS[0], z: AVIARY_POS[2], r: 1.0 },
     // Twenty-first-pass keep-out — carousel horse on the back-west outside-fence lawn.
     { x: CAROUSEL_HORSE_POS[0], z: CAROUSEL_HORSE_POS[2], r: 1.1 },
+    // Twenty-second-pass keep-out — flagpole stand on the front-west outside-gate apron.
+    { x: FLAGPOLE_POS[0], z: FLAGPOLE_POS[2], r: 1.0 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -16931,6 +17792,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildCupidFountain(f, CUPID_FOUNTAIN_POS),
     buildBirdcageAviary(f, AVIARY_POS),
     buildCarouselHorse(f, CAROUSEL_HORSE_POS),
+    buildFlagpoleStand(f, FLAGPOLE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -16949,6 +17811,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const swSunflowerField = buildSouthwestSunflowerField(f);
   const seCitrusGrove = buildSoutheastCitrusGrove(f);
   const feDesertOasis = buildFarEastDesertOasis(f);
+  const fswPeatMoor = buildFarSouthwestPeatMoor(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -16990,6 +17853,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildGablePeakFinials(f),
     buildIronRidgeCresting(f),
     buildSideBayWindows(f),
+    buildGableSunbursts(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -17015,6 +17879,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       swSunflowerField,
       seCitrusGrove,
       feDesertOasis,
+      fswPeatMoor,
       house,
     ],
   };
