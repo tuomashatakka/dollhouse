@@ -727,6 +727,58 @@ const PEAT_BURN_Z = 26.5;
 const PEAT_BRIDGE_POS: [number, number, number] = [-48, 0, PEAT_BURN_Z];
 const PEAT_BOULDER_TOR_POS: [number, number, number] = [-57, 0, 28];
 
+/**
+ * Twenty-third-pass courtyard prop — a Victorian wrought-iron weather station
+ * tripod with a copper-patina anemometer (three cupped vanes), a directional
+ * wind vane, a slim thermometer tube and a small rain-gauge cylinder, all
+ * carried on a fluted marble plinth. The tripod legs, instrument fittings,
+ * vane and anemometer cups reuse the existing `copper-patina` colour + bump
+ * pair so the verdigris reads as crusted relief on the cast metal, and the
+ * plinth reuses the existing `marble` colour + bump pair so the stone reads
+ * with veined relief. The station is parked on the back-east outside-fence
+ * lawn opposite the carousel horse (front-west outside fence) so the pair of
+ * marble-pedestal ornaments frame the back perimeter of the courtyard.
+ */
+const WEATHER_STATION_POS: [number, number, number] = [12.5, 0, -5.5];
+
+/**
+ * Twenty-third-pass house detail — a pair of low arched eyebrow dormer
+ * windows undulating the front and back roof slopes between the eaves and
+ * the ridge. Each dormer pairs a slim copper-patina half-arch trim band
+ * (reusing the existing `copper-patina` colour + bump pair so the verdigris
+ * reads as crusted relief on the metal hood) with a tinted glass pane lit
+ * by a warm interior glow plate so the dormer reads as lit from the attic
+ * even at low light, and a white painted timber sash framing the glass.
+ */
+const EAST_DORMER_POS: [number, number, number] = [W / 4 + 0.1, ROOF_TOP + ROOF_H * 0.5, 0];
+const WEST_DORMER_POS: [number, number, number] = [-(W / 4 + 0.1), ROOF_TOP + ROOF_H * 0.5, 0];
+
+/**
+ * Twenty-third-pass scene extension — a far-southeast tropical lagoon coast
+ * plane bridging the gap south of the olive grove and east of the citrus
+ * grove. The plane overlaps the olive grove by ~1 unit along its north join
+ * and the citrus grove by ~1 unit along its west join so the ground layer
+ * has no holes at either seam. It carries a warm bone-white sand ground
+ * surfaced with the new `tropical-coast` colour map paired with a tide-
+ * ripple-and-pebble depth map (registered alongside the other procedural
+ * textures) so the wet-sand wave ripples and scattered shells and pebbles
+ * read as raised relief at glancing sun, a shallow turquoise lagoon water
+ * pool fringed by crashing wave foam strips, a tall red-and-white striped
+ * lighthouse on a rocky promontory at the south corner with a hexagonal
+ * glass lantern room and a slim copper-patina cap, a slim wooden plank
+ * jetty extending into the lagoon on stout posts with a small mooring
+ * cleat at its end, three coconut palm trees with broad frond crowns and
+ * pendant coconut clusters scattered along the beach, a scatter of three
+ * conch / starfish beach finds at the tide line and a slim driftwood log
+ * pulled up onto the sand.
+ */
+const TROPICAL_LAGOON_POS: [number, number, number] = [51, -0.023, 32];
+const TROPICAL_LAGOON_W = 22;
+const TROPICAL_LAGOON_D = 24;
+const TROPICAL_LAGOON_WATER_POS: [number, number, number] = [54, 0.014, 28];
+const LIGHTHOUSE_POS: [number, number, number] = [59, 0, 40];
+const TROPICAL_JETTY_POS: [number, number, number] = [47, 0, 30];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1429,6 +1481,68 @@ const C = {
   mossPatch: "#5a7a3a",
   lavenderApron: "#5a6a35",
   wheatStubbleApron: "#a08a4a",
+  // Twenty-third enhancement pass — a Victorian wrought-iron weather station
+  // tripod on a fluted marble plinth (the tripod legs, anemometer cups and
+  // wind vane reuse the existing `copper-patina` colour + bump pair and the
+  // plinth reuses the existing `marble` colour + bump pair), a pair of low
+  // arched eyebrow dormer windows undulating the front and back roof slopes
+  // (slim copper-patina trim hoods reusing the existing `copper-patina` pair
+  // and a tinted glass pane lit by a warm interior glow plate), and a far-
+  // southeast tropical lagoon coast scene extension south of the olive grove
+  // and east of the citrus grove. The new `tropical-coast` colour map is
+  // paired with a tide-ripple-and-pebble depth map registered alongside it
+  // so the wet-sand ripples and scattered shells and pebbles read as raised
+  // relief at glancing sun.
+  weatherStationPlinth: "#ede2d0",
+  weatherStationPlinthShade: "#a89776",
+  weatherStationCup: "#5d8a6a",
+  weatherStationCupHi: "#9bc4a8",
+  weatherStationVane: "#5d8a6a",
+  weatherStationGauge: "#bcd9e8",
+  weatherStationGaugeWater: "#5b91a4",
+  weatherStationThermBulb: "#c84a3f",
+  weatherStationThermStem: "#a8c8d6",
+  dormerSash: "#fdfbf4",
+  dormerSashShade: "#b6986a",
+  dormerGlass: "#bcd9e8",
+  dormerGlow: "#fff1c4",
+  dormerHood: "#5d8a6a",
+  dormerHoodShade: "#2f5840",
+  // Tropical lagoon coast — bone-white sand, turquoise lagoon water,
+  // wave foam strips and a red-and-white lighthouse.
+  beachSand: "#ecd9a4",
+  beachSandShade: "#b89c66",
+  beachSandHi: "#fbedc4",
+  lagoonShallow: "#88d1d3",
+  lagoonDeep: "#3f8a96",
+  lagoonFoam: "#fdfdfa",
+  lagoonRipple: "#b6e1de",
+  lighthouseWhite: "#fafafa",
+  lighthouseRed: "#c84a3f",
+  lighthouseRedDark: "#7a2620",
+  lighthouseRoofRed: "#9a3a30",
+  lighthouseRock: "#7a7268",
+  lighthouseRockShade: "#3f3a36",
+  lighthouseGlass: "#ffd989",
+  lighthouseLight: "#fff1c4",
+  jettyPlank: "#7a5238",
+  jettyPlankDark: "#4a3220",
+  jettyPost: "#3a2a1c",
+  jettyCleat: "#2a2622",
+  palmTrunkTropical: "#9a724a",
+  palmTrunkTropicalShade: "#5e4530",
+  palmFrondTropical: "#5e8a48",
+  palmFrondTropicalDark: "#3a5a30",
+  palmFrondTropicalHi: "#8ab95a",
+  coconutBrown: "#5e3f24",
+  coconutBrownHi: "#7a5236",
+  conchPink: "#f0c4a8",
+  conchPinkShade: "#a87f5a",
+  starfishOrange: "#dc7322",
+  driftwood: "#a8997e",
+  driftwoodShade: "#6e6353",
+  oliveGroveSouthApron: "#a89668",
+  citrusGroveApron: "#9a6f3e",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -17219,6 +17333,925 @@ function buildPeatBoulderTor(f: NodeFactory, pos: [number, number, number]): Sce
   return f.group("Peat Boulder Tor", parts, { position: pos });
 }
 
+/* ─────────────── twenty-third-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian wrought-iron weather station tripod on a fluted marble plinth.
+ * Three slim splayed iron legs carry an instrument plate at chest height with
+ * a three-cup anemometer rotor on a vertical shaft, a directional wind vane
+ * with N/S/E/W cardinal arms, a slim thermometer tube with a red mercury
+ * bulb, and a small rain-gauge cylinder filled with a thin water column. The
+ * iron parts reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal, and the plinth reuses
+ * the existing `marble` colour + bump pair so the stone reads with veined
+ * relief.
+ */
+function buildWeatherStation(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const iron: MaterialDef = {
+    color: C.weatherStationCup,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const ironHi = std(C.weatherStationCupHi, 0.4, { metalness: 0.85 });
+  const marble = std(C.weatherStationPlinth, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.weatherStationPlinthShade, 0.95, { flatShading: true });
+  const gaugeGlass: MaterialDef = {
+    color: C.weatherStationGauge,
+    roughness: 0.18,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.65,
+  };
+  const gaugeWater = std(C.weatherStationGaugeWater, 0.4, { metalness: 0.25 });
+  const thermStem = std(C.weatherStationThermStem, 0.3, { metalness: 0.4 });
+  const thermBulb = std(C.weatherStationThermBulb, 0.5, { metalness: 0.4 });
+  const parts: SceneNode[] = [];
+  // ── Fluted marble plinth — small square footing and round column ──
+  parts.push(
+    f.mesh("Plinth Footing", box(0.6, 0.08, 0.6), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Base", cylinder(0.27, 0.3, 0.1, 18), marble, {
+      position: [0, 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Column", cylinder(0.22, 0.24, 0.5, 18), marble, {
+      position: [0, 0.43, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", cylinder(0.28, 0.28, 0.05, 18), marble, {
+      position: [0, 0.71, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Trim", cylinder(0.27, 0.27, 0.022, 20), iron, {
+      position: [0, 0.745, 0],
+    }, { castShadow: false }),
+  );
+  // Six slim fluting grooves around the column.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Plinth Flute ${i}`, box(0.022, 0.45, 0.025), marbleShade, {
+        position: [Math.cos(a) * 0.23, 0.43, Math.sin(a) * 0.23],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Three splayed tripod legs rising from the plinth cap to an
+  // instrument platter at chest height. Each leg is a slim cylinder
+  // angled outward at the base and inward at the top so the silhouette
+  // reads as a tripod stand.
+  const plinthCapY = 0.75;
+  const platterY = 1.55;
+  const platterR = 0.13;
+  const baseR = 0.25;
+  for (let i = 0; i < 3; i++) {
+    const a = (i / 3) * Math.PI * 2 + 0.2;
+    const x0 = Math.cos(a) * baseR;
+    const z0 = Math.sin(a) * baseR;
+    const x1 = Math.cos(a) * platterR * 0.4;
+    const z1 = Math.sin(a) * platterR * 0.4;
+    const midX = (x0 + x1) / 2;
+    const midZ = (z0 + z1) / 2;
+    const dy = platterY - plinthCapY;
+    const dx = x1 - x0;
+    const dz = z1 - z0;
+    const len = Math.hypot(dy, Math.hypot(dx, dz));
+    const tilt = Math.atan2(Math.hypot(dx, dz), dy);
+    const yaw = Math.atan2(dz, dx);
+    parts.push(
+      f.mesh(`Tripod Leg ${i}`, cylinder(0.018, 0.022, len, 8), iron, {
+        position: [midX, (plinthCapY + platterY) / 2, midZ],
+        rotation: [0, yaw + Math.PI / 2, tilt],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Instrument platter — a slim disc capping the tripod legs.
+  parts.push(
+    f.mesh("Instrument Platter", cylinder(0.16, 0.16, 0.03, 18), iron, {
+      position: [0, platterY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Platter Trim", cylinder(0.17, 0.17, 0.01, 20), ironHi, {
+      position: [0, platterY + 0.02, 0],
+    }, { castShadow: false }),
+  );
+  // ── Anemometer — vertical shaft topped by three cupped vanes on a
+  // horizontal cross arm. The cups are half-spheres facing the wind.
+  const anemoY = platterY + 0.32;
+  parts.push(
+    f.mesh("Anemo Shaft", cylinder(0.015, 0.015, 0.6, 8), iron, {
+      position: [0, platterY + 0.3, 0],
+    }, { castShadow: true }),
+    f.mesh("Anemo Bearing", sphere(0.025, 10, 8), ironHi, {
+      position: [0, anemoY - 0.15, 0],
+    }, { castShadow: false }),
+    f.mesh("Anemo Hub", sphere(0.03, 12, 8), iron, {
+      position: [0, anemoY, 0],
+    }, { castShadow: false }),
+  );
+  // Three cup arms — slim radial spokes carrying half-sphere cups.
+  for (let i = 0; i < 3; i++) {
+    const a = (i / 3) * Math.PI * 2;
+    const cx = Math.cos(a) * 0.13;
+    const cz = Math.sin(a) * 0.13;
+    parts.push(
+      f.mesh(`Anemo Arm ${i}`, cylinder(0.008, 0.008, 0.13, 6), iron, {
+        position: [cx / 2, anemoY, cz / 2],
+        rotation: [0, a + Math.PI / 2, Math.PI / 2],
+      }, { castShadow: false }),
+      f.mesh(`Anemo Cup ${i}`, sphere(0.05, 12, 8), iron, {
+        position: [cx, anemoY, cz],
+        scale: [1, 0.7, 1],
+        rotation: [0, a + Math.PI / 2, 0],
+      }, { castShadow: true }),
+      f.mesh(`Anemo Cup Hi ${i}`, sphere(0.04, 10, 8), ironHi, {
+        position: [cx * 0.9, anemoY + 0.005, cz * 0.9],
+        scale: [0.9, 0.55, 0.9],
+        rotation: [0, a + Math.PI / 2, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Wind vane — a slim copper-patina arrow on a horizontal cross arm
+  // with N/S/E/W cardinal stubs at the platter level. The arrow swings
+  // around the central anemometer shaft.
+  const vaneY = platterY + 0.08;
+  // Cardinal stubs — short radial spokes at 0°/90°/180°/270°.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Cardinal Stub ${i}`, cylinder(0.01, 0.01, 0.13, 6), iron, {
+        position: [Math.cos(a) * 0.075, vaneY, Math.sin(a) * 0.075],
+        rotation: [0, a + Math.PI / 2, Math.PI / 2],
+      }, { castShadow: false }),
+      // Slim cardinal letter disc at the spoke tip.
+      f.mesh(`Cardinal Tip ${i}`, sphere(0.018, 10, 8), ironHi, {
+        position: [Math.cos(a) * 0.14, vaneY, Math.sin(a) * 0.14],
+      }, { castShadow: false }),
+    );
+  }
+  // Vane arrow — a slim horizontal cylinder with a cone tip and a flat tail.
+  parts.push(
+    f.mesh("Vane Shaft", cylinder(0.012, 0.012, 0.34, 8), iron, {
+      position: [0, platterY + 0.18, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    f.mesh("Vane Tip", cone(0.025, 0.06, 8), iron, {
+      position: [0.2, platterY + 0.18, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: true }),
+    f.mesh("Vane Tail", box(0.04, 0.07, 0.005), iron, {
+      position: [-0.18, platterY + 0.19, 0],
+    }, { castShadow: false }),
+    f.mesh("Vane Tail Hi", box(0.035, 0.05, 0.003), ironHi, {
+      position: [-0.18, platterY + 0.19, 0.003],
+    }, { castShadow: false }),
+  );
+  // ── Thermometer tube — a slim glass cylinder on the platter rim with a
+  // red mercury bulb at the base.
+  parts.push(
+    f.mesh("Therm Mount", box(0.04, 0.18, 0.04), iron, {
+      position: [0.13, platterY + 0.11, 0.04],
+    }, { castShadow: false }),
+    f.mesh("Therm Tube", cylinder(0.016, 0.016, 0.18, 10), thermStem, {
+      position: [0.13, platterY + 0.11, 0.07],
+    }, { castShadow: false }),
+    f.mesh("Therm Bulb", sphere(0.025, 12, 8), thermBulb, {
+      position: [0.13, platterY + 0.025, 0.07],
+    }, { castShadow: false }),
+    // Red mercury column inside the tube.
+    f.mesh("Therm Column", cylinder(0.008, 0.008, 0.1, 8), thermBulb, {
+      position: [0.13, platterY + 0.07, 0.07],
+    }, { castShadow: false }),
+  );
+  // ── Rain-gauge cylinder — a slim glass tube on a small iron base with a
+  // thin water column inside.
+  parts.push(
+    f.mesh("Gauge Mount", box(0.05, 0.04, 0.05), iron, {
+      position: [-0.12, platterY + 0.04, 0.04],
+    }, { castShadow: false }),
+    f.mesh("Gauge Tube", cylinder(0.034, 0.034, 0.2, 12), gaugeGlass, {
+      position: [-0.12, platterY + 0.15, 0.04],
+    }, { castShadow: false }),
+    // Water column inside the tube (rising about 1/3 way up).
+    f.mesh("Gauge Water", cylinder(0.028, 0.028, 0.07, 10), gaugeWater, {
+      position: [-0.12, platterY + 0.085, 0.04],
+    }, { castShadow: false }),
+    // Slim cap on the gauge tube.
+    f.mesh("Gauge Cap", cylinder(0.038, 0.038, 0.012, 12), iron, {
+      position: [-0.12, platterY + 0.256, 0.04],
+    }, { castShadow: false }),
+  );
+  // Pole-tip finial ball capping the central anemometer shaft.
+  parts.push(
+    f.mesh("Vane Cap Ball", sphere(0.022, 12, 8), iron, {
+      position: [0, anemoY + 0.04, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Weather Station", parts, { position: pos, rotation: [0, 0.4, 0] });
+}
+
+/* ─────────────── twenty-third-pass house detail ─────────────── */
+
+/**
+ * A pair of low arched eyebrow dormer windows undulating the east and west
+ * roof slopes between the eaves and the ridge. Each dormer pairs a slim
+ * copper-patina half-arch trim hood (reusing the existing `copper-patina`
+ * colour + bump pair so the verdigris reads as crusted relief on the cast
+ * metal), a white painted timber sash around tinted glass and a warm
+ * interior glow plate behind the glass so the dormer reads as lit from the
+ * attic even at low light. The dormer tilts outward to match the roof
+ * slope's pitch.
+ */
+function buildEyebrowDormers(f: NodeFactory): SceneNode {
+  return f.group("Eyebrow Dormers", [
+    buildEyebrowDormer(f, EAST_DORMER_POS, 1),
+    buildEyebrowDormer(f, WEST_DORMER_POS, -1),
+  ]);
+}
+
+function buildEyebrowDormer(
+  f: NodeFactory,
+  pos: [number, number, number],
+  side: 1 | -1,
+): SceneNode {
+  // Roof slope angle so the dormer face tilts outward to lay against the
+  // pitched roof rather than floating perpendicular to the eave line.
+  const slope = Math.atan2(ROOF_H, W / 2 + 0.4);
+  const yaw = side > 0 ? Math.PI / 2 : -Math.PI / 2;
+  const hood: MaterialDef = {
+    color: C.dormerHood,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [3, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const hoodShade = std(C.dormerHoodShade, 0.95, { flatShading: true });
+  const sash = std(C.dormerSash, 0.7);
+  const sashShade = std(C.dormerSashShade, 0.95, { flatShading: true });
+  const glass: MaterialDef = {
+    color: C.dormerGlass,
+    roughness: 0.2,
+    metalness: 0.25,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const glow: MaterialDef = {
+    color: C.dormerGlow,
+    roughness: 0.4,
+    emissive: C.dormerGlow,
+  };
+  const parts: SceneNode[] = [];
+  // ── Arched hood — a low flattened half-sphere lying along Z so the
+  // dormer profile reads as a low semicircular bump on the slope. The
+  // half-sphere uses thetaLength = PI / 2 to keep the upper dome only,
+  // then is squashed in Y so the silhouette reads as a gentle eyebrow
+  // arch rather than a full hemisphere.
+  const dormerW = 0.95;
+  const dormerH = 0.32;
+  const dormerD = 0.35;
+  parts.push(
+    f.mesh(
+      "Hood Arch",
+      {
+        type: "sphere",
+        radius: dormerW / 2,
+        widthSegments: 18,
+        heightSegments: 10,
+        thetaStart: 0,
+        thetaLength: Math.PI / 2,
+      },
+      hood,
+      {
+        position: [0, dormerH * 0.05, 0],
+        scale: [1, 0.85, dormerD / dormerW],
+      },
+      { castShadow: true, receiveShadow: true },
+    ),
+    // Slim shaded undercut beneath the hood arch — a slightly smaller
+    // half-sphere sitting just under the hood so the arch reads with
+    // depth on glancing sun.
+    f.mesh(
+      "Hood Underline",
+      {
+        type: "sphere",
+        radius: dormerW / 2 - 0.02,
+        widthSegments: 16,
+        heightSegments: 10,
+        thetaStart: 0,
+        thetaLength: Math.PI / 2,
+      },
+      hoodShade,
+      {
+        position: [0, dormerH * 0.02, 0],
+        scale: [1, 0.78, (dormerD + 0.02) / dormerW],
+      },
+      { castShadow: false },
+    ),
+    // Slim copper-patina end-cap discs flanking the hood ends so the
+    // dormer reads as a banded arched canopy from the side.
+    f.mesh("Hood Cap A", cylinder(dormerW / 2 * 0.42, dormerW / 2 * 0.42, 0.02, 16), hood, {
+      position: [0, dormerH * 0.2, dormerD * 0.28],
+      rotation: [Math.PI / 2, 0, 0],
+      scale: [1, 1, 0.65],
+    }, { castShadow: false }),
+    f.mesh("Hood Cap B", cylinder(dormerW / 2 * 0.42, dormerW / 2 * 0.42, 0.02, 16), hood, {
+      position: [0, dormerH * 0.2, -dormerD * 0.28],
+      rotation: [Math.PI / 2, 0, 0],
+      scale: [1, 1, 0.65],
+    }, { castShadow: false }),
+  );
+  // ── Sash — a slim arched rectangular window face behind the hood lip.
+  parts.push(
+    // White painted sash frame.
+    f.mesh("Sash Frame", box(dormerW - 0.06, dormerH * 0.5, 0.04), sash, {
+      position: [0, dormerH * 0.25, dormerD * 0.18],
+    }, { castShadow: false }),
+    f.mesh("Sash Frame Lower", box(dormerW - 0.04, 0.04, 0.06), sashShade, {
+      position: [0, 0.02, dormerD * 0.2],
+    }, { castShadow: false }),
+    // Tinted glass pane.
+    f.mesh("Sash Glass", box(dormerW - 0.16, dormerH * 0.36, 0.022), glass, {
+      position: [0, dormerH * 0.24, dormerD * 0.2],
+    }, { castShadow: false }),
+    // Warm interior glow plate behind the glass so the dormer reads as lit.
+    f.mesh("Sash Glow", box(dormerW - 0.18, dormerH * 0.34, 0.01), glow, {
+      position: [0, dormerH * 0.24, dormerD * 0.15],
+    }, { castShadow: false }),
+    // Slim sash muntin — vertical centre divider.
+    f.mesh("Sash Muntin", box(0.024, dormerH * 0.36, 0.04), sash, {
+      position: [0, dormerH * 0.24, dormerD * 0.22],
+    }, { castShadow: false }),
+  );
+  // Slim sill — a small painted ledge below the sash that catches the
+  // slope from above.
+  parts.push(
+    f.mesh("Dormer Sill", box(dormerW + 0.04, 0.04, 0.08), sash, {
+      position: [0, -0.005, dormerD * 0.22],
+    }, { castShadow: false }),
+  );
+  // Place the entire dormer onto the roof slope and tilt it outward by
+  // the slope angle so the dormer hugs the roof rather than floating
+  // perpendicular to the ridge.
+  return f.group("Eyebrow Dormer", parts, {
+    position: pos,
+    rotation: [0, yaw, side * slope * -0.5],
+  });
+}
+
+/* ─────────────── twenty-third-pass scene extension ─────────────── */
+
+/**
+ * Far-southeast tropical lagoon coast plane bridging the gap south of the
+ * olive grove and east of the citrus grove. The plane carries a warm bone-
+ * white sand ground with the new `tropical-coast` colour + depth map pair
+ * so the wet-sand ripples and scattered shells and pebbles read as raised
+ * relief at glancing sun, a shallow turquoise lagoon water pool fringed by
+ * crashing wave foam strips, a tall red-and-white striped lighthouse on a
+ * rocky promontory at the south corner with a hexagonal glass lantern
+ * room and a slim copper-patina cap, a slim wooden plank jetty extending
+ * into the lagoon on stout posts with a small mooring cleat at its end,
+ * three coconut palm trees with broad frond crowns and pendant coconut
+ * clusters scattered along the beach, a scatter of three conch / starfish
+ * beach finds at the tide line and a slim driftwood log pulled up onto
+ * the sand.
+ */
+function buildFarSoutheastTropicalLagoon(f: NodeFactory): SceneNode {
+  return f.group("Far Southeast Tropical Lagoon", [
+    // Tropical coast ground plane — warm bone-white sand with the new
+    // colour + depth map pair so the wet-sand ripples and scattered
+    // shells and pebbles read as raised relief at glancing sun.
+    f.mesh(
+      "Tropical Coast Ground",
+      plane(TROPICAL_LAGOON_W, TROPICAL_LAGOON_D),
+      std(C.beachSand, 0.95, {
+        texture: "tropical-coast",
+        textureScale: [4, 4],
+        bumpMap: "tropical-coast-bump",
+        bumpScale: 0.06,
+      }),
+      { position: TROPICAL_LAGOON_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the olive grove's south edge with a slim
+    // olive-toned strip so the seam reads as a continuous coastal join
+    // between the silver olive ground and the bone-white sand.
+    f.mesh(
+      "Tropical North Apron",
+      plane(TROPICAL_LAGOON_W, 3),
+      std(C.oliveGroveSouthApron, 0.95, { texture: "grass", textureScale: [8, 1] }),
+      {
+        position: [
+          TROPICAL_LAGOON_POS[0],
+          -0.02,
+          TROPICAL_LAGOON_POS[2] - TROPICAL_LAGOON_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the citrus grove's east edge with a slim
+    // citrus-toned strip so the seam reads as a continuous citrus-to-
+    // sand fringe along the lagoon's west side.
+    f.mesh(
+      "Tropical West Apron",
+      plane(3, TROPICAL_LAGOON_D),
+      std(C.citrusGroveApron, 0.95, { texture: "grass", textureScale: [1, 8] }),
+      {
+        position: [
+          TROPICAL_LAGOON_POS[0] - TROPICAL_LAGOON_W / 2 + 1.5,
+          -0.02,
+          TROPICAL_LAGOON_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildTropicalLagoonWater(f, TROPICAL_LAGOON_WATER_POS),
+    buildLighthouse(f, LIGHTHOUSE_POS),
+    buildTropicalJetty(f, TROPICAL_JETTY_POS),
+    buildCoconutPalms(f),
+    buildBeachFinds(f),
+    buildDriftwoodLog(f),
+  ]);
+}
+
+/**
+ * A shallow turquoise lagoon water pool with a deeper centre, a paler shallow
+ * fringe along the shore and three slim crashing wave foam strips that read
+ * as breakers rolling in across the lagoon.
+ */
+function buildTropicalLagoonWater(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const shallow: MaterialDef = {
+    color: C.lagoonShallow,
+    roughness: 0.3,
+    metalness: 0.4,
+    transparent: true,
+    opacity: 0.85,
+  };
+  const deep: MaterialDef = {
+    color: C.lagoonDeep,
+    roughness: 0.35,
+    metalness: 0.4,
+    transparent: true,
+    opacity: 0.85,
+  };
+  const foam = std(C.lagoonFoam, 0.85, { flatShading: true });
+  const ripple = std(C.lagoonRipple, 0.65, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Shallow lagoon body — a wide warm turquoise pool sitting just above
+  // the beach so the water reads as a thin sheet flooding the sand.
+  parts.push(
+    f.mesh("Lagoon Shallow", plane(11, 7), shallow, {
+      position: [0, 0, 0],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { receiveShadow: true }),
+    // Slim deeper-water core in the lagoon centre.
+    f.mesh("Lagoon Deep", plane(7, 4), deep, {
+      position: [0, 0.001, 0],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { receiveShadow: true }),
+  );
+  // Three crashing wave foam strips rolling in across the lagoon.
+  for (let i = 0; i < 3; i++) {
+    const t = (i - 1) * 1.3;
+    parts.push(
+      f.mesh(`Wave Foam ${i}`, plane(10, 0.22), foam, {
+        position: [t * 0.3, 0.003, t],
+        rotation: [-Math.PI / 2, 0, 0.07 * (i - 1)],
+      }, { castShadow: false }),
+      // Slim trailing ripple just behind the foam strip.
+      f.mesh(`Wave Ripple ${i}`, plane(9, 0.12), ripple, {
+        position: [t * 0.3, 0.002, t + 0.18],
+        rotation: [-Math.PI / 2, 0, 0.07 * (i - 1)],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim slivered foam fringes along the lagoon's shoreline edges.
+  parts.push(
+    f.mesh("Shore Foam N", plane(11, 0.18), foam, {
+      position: [0, 0.004, -3.5],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Shore Foam S", plane(11, 0.18), foam, {
+      position: [0, 0.004, 3.5],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Tropical Lagoon Water", parts, { position: pos });
+}
+
+/**
+ * A tall red-and-white striped lighthouse tower on a rocky stone promontory
+ * with a hexagonal glass lantern room, a slim copper-patina cap dome and a
+ * warm-yellow lamp glow.
+ */
+function buildLighthouse(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const white = std(C.lighthouseWhite, 0.75);
+  const red = std(C.lighthouseRed, 0.75);
+  const redDark = std(C.lighthouseRedDark, 0.85, { flatShading: true });
+  const roofRed = std(C.lighthouseRoofRed, 0.7);
+  const rock = std(C.lighthouseRock, 0.95, { texture: "cobblestone", flatShading: true });
+  const rockShade = std(C.lighthouseRockShade, 0.95, { flatShading: true });
+  const copper: MaterialDef = {
+    color: C.weatherStationCup,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const glass: MaterialDef = {
+    color: C.lighthouseGlass,
+    roughness: 0.18,
+    metalness: 0.3,
+    transparent: true,
+    opacity: 0.7,
+    emissive: C.lighthouseLight,
+  };
+  const lamp: MaterialDef = {
+    color: C.lighthouseLight,
+    roughness: 0.3,
+    emissive: C.lighthouseLight,
+  };
+  const parts: SceneNode[] = [];
+  // ── Rocky promontory base — a small ringed scatter of stones at the
+  // foot of the tower so the lighthouse reads as built on a rocky outcrop.
+  parts.push(
+    f.mesh("Promontory", cylinder(1.6, 1.9, 0.4, 18), rock, {
+      position: [0, 0.2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Promontory Shade", cylinder(1.9, 1.9, 0.08, 20), rockShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+  );
+  // Six small scattered stones around the promontory rim.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + 0.3;
+    const r = 1.85 + (i % 2) * 0.15;
+    parts.push(
+      f.mesh(`Rim Stone ${i}`, sphere(0.22 + (i % 3) * 0.04, 10, 8), rock, {
+        position: [Math.cos(a) * r, 0.18, Math.sin(a) * r],
+        scale: [1.1, 0.7, 1.0],
+        rotation: [0, a, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // ── Tower — tapered cylinder with horizontal red/white painted bands.
+  const baseY = 0.4;
+  const towerH = 3.6;
+  const baseR = 0.55;
+  const tipR = 0.36;
+  // Tower core — a single white cylinder so the silhouette stays tight.
+  parts.push(
+    f.mesh("Tower Core", cylinder(tipR, baseR, towerH, 24), white, {
+      position: [0, baseY + towerH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Six painted bands alternating red/white wrapping the tower.
+  const bands = 6;
+  for (let b = 0; b < bands; b++) {
+    if (b % 2 === 0) continue;
+    const t0 = b / bands;
+    const t1 = (b + 1) / bands;
+    const r0 = baseR + (tipR - baseR) * t0;
+    const r1 = baseR + (tipR - baseR) * t1;
+    const bandY = baseY + ((t0 + t1) / 2) * towerH;
+    const bandH = ((t1 - t0) * towerH) * 0.98;
+    parts.push(
+      f.mesh(`Tower Band ${b}`, cylinder((r0 + r1) / 2 + 0.005, (r0 + r1) / 2 + 0.005, bandH, 24), red, {
+        position: [0, bandY, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Slim shaded line under each band so the stripes read crisp.
+  for (let b = 1; b < bands; b++) {
+    const t = b / bands;
+    const r = baseR + (tipR - baseR) * t;
+    parts.push(
+      f.mesh(`Band Line ${b}`, cylinder(r + 0.012, r + 0.012, 0.025, 24), redDark, {
+        position: [0, baseY + t * towerH, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Gallery deck — a slim disc above the tower top with a slim railing
+  // ring suggesting the keeper's walkway around the lantern room.
+  const galleryY = baseY + towerH + 0.05;
+  parts.push(
+    f.mesh("Gallery Deck", cylinder(0.5, 0.5, 0.06, 18), white, {
+      position: [0, galleryY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Gallery Rail", cylinder(0.48, 0.48, 0.08, 20), copper, {
+      position: [0, galleryY + 0.1, 0],
+    }, { castShadow: false }),
+    // Six gallery rail posts around the deck.
+  );
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Gallery Post ${i}`, cylinder(0.012, 0.012, 0.12, 6), copper, {
+        position: [Math.cos(a) * 0.46, galleryY + 0.1, Math.sin(a) * 0.46],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Hexagonal lantern room — a slim glazed box with a copper-patina
+  // peaked roof and a warm lamp glow at its core.
+  const lanternY = galleryY + 0.25;
+  parts.push(
+    // Lamp core — a glowing sphere at the lantern centre.
+    f.mesh("Lamp", sphere(0.18, 14, 10), lamp, {
+      position: [0, lanternY, 0],
+    }, { castShadow: false }),
+    // Glazed hexagonal lantern walls — a slim cylindrical shell of glass
+    // (approximated as a wide hexagonal prism).
+    f.mesh("Lantern Glass", cylinder(0.34, 0.34, 0.42, 6), glass, {
+      position: [0, lanternY, 0],
+    }, { castShadow: false }),
+    // Slim copper-patina lantern frame ring at the top and bottom of the
+    // glass walls.
+    f.mesh("Lantern Frame Top", cylinder(0.36, 0.36, 0.04, 6), copper, {
+      position: [0, lanternY + 0.21, 0],
+    }, { castShadow: false }),
+    f.mesh("Lantern Frame Bottom", cylinder(0.36, 0.36, 0.04, 6), copper, {
+      position: [0, lanternY - 0.21, 0],
+    }, { castShadow: false }),
+  );
+  // ── Copper-patina peaked roof cap with a slim finial spire.
+  parts.push(
+    f.mesh("Roof Cap", cone(0.38, 0.4, 6), roofRed, {
+      position: [0, lanternY + 0.42, 0],
+    }, { castShadow: true }),
+    f.mesh("Roof Cap Copper", cone(0.34, 0.32, 6), copper, {
+      position: [0, lanternY + 0.46, 0],
+    }, { castShadow: false }),
+    f.mesh("Roof Finial Ball", sphere(0.05, 10, 8), copper, {
+      position: [0, lanternY + 0.66, 0],
+    }, { castShadow: false }),
+    f.mesh("Roof Finial Spike", cylinder(0.008, 0.008, 0.18, 6), copper, {
+      position: [0, lanternY + 0.78, 0],
+    }, { castShadow: false }),
+    f.mesh("Roof Finial Cap", sphere(0.024, 10, 8), copper, {
+      position: [0, lanternY + 0.88, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim entrance door at the base of the tower facing north.
+  parts.push(
+    f.mesh("Tower Door", box(0.32, 0.6, 0.04), redDark, {
+      position: [0, baseY + 0.34, baseR + 0.02],
+    }, { castShadow: false }),
+    f.mesh("Tower Door Knob", sphere(0.025, 8, 6), copper, {
+      position: [0.1, baseY + 0.32, baseR + 0.05],
+    }, { castShadow: false }),
+  );
+  return f.group("Lighthouse", parts, { position: pos, rotation: [0, -0.4, 0] });
+}
+
+/**
+ * A slim wooden plank jetty extending into the lagoon on stout posts, with
+ * a small brass mooring cleat at the jetty's outer end.
+ */
+function buildTropicalJetty(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const plank = std(C.jettyPlank, 0.9, { texture: "wood", textureScale: [3, 1] });
+  const plankDark = std(C.jettyPlankDark, 0.95, { flatShading: true });
+  const post = std(C.jettyPost, 0.95, { texture: "wood", textureScale: [1, 3], flatShading: true });
+  const cleat = std(C.jettyCleat, 0.5, { metalness: 0.6 });
+  const parts: SceneNode[] = [];
+  const length = 3.4;
+  const width = 0.7;
+  // ── Six plank slats forming the jetty deck.
+  for (let i = 0; i < 6; i++) {
+    const dz = (i / 5 - 0.5) * (width - 0.06);
+    parts.push(
+      f.mesh(`Plank ${i}`, box(length, 0.06, width / 6 - 0.01), plank, {
+        position: [0, 0.32, dz],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Slim plank edge trim along each side.
+  parts.push(
+    f.mesh("Deck Edge S", box(length + 0.02, 0.06, 0.02), plankDark, {
+      position: [0, 0.34, width / 2 - 0.01],
+    }, { castShadow: false }),
+    f.mesh("Deck Edge N", box(length + 0.02, 0.06, 0.02), plankDark, {
+      position: [0, 0.34, -(width / 2 - 0.01)],
+    }, { castShadow: false }),
+  );
+  // ── Three pairs of stout posts dropping into the sand beneath the deck.
+  for (let i = 0; i < 3; i++) {
+    const dx = (i - 1) * 1.4;
+    parts.push(
+      f.mesh(`Post N ${i}`, cylinder(0.07, 0.07, 0.7, 8), post, {
+        position: [dx, 0, -width / 2 + 0.06],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Post S ${i}`, cylinder(0.07, 0.07, 0.7, 8), post, {
+        position: [dx, 0, width / 2 - 0.06],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // ── Small brass mooring cleat on the jetty's outer end.
+  parts.push(
+    f.mesh("Cleat Base", box(0.16, 0.04, 0.1), cleat, {
+      position: [length / 2 - 0.1, 0.37, 0],
+    }, { castShadow: true }),
+    f.mesh("Cleat Horn A", cylinder(0.03, 0.03, 0.14, 8), cleat, {
+      position: [length / 2 - 0.18, 0.43, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    f.mesh("Cleat Horn B", cylinder(0.03, 0.03, 0.14, 8), cleat, {
+      position: [length / 2 - 0.02, 0.43, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    f.mesh("Cleat Top", box(0.18, 0.04, 0.12), cleat, {
+      position: [length / 2 - 0.1, 0.46, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Tropical Jetty", parts, { position: pos, rotation: [0, 0.1, 0] });
+}
+
+/**
+ * Three coconut palm trees with broad frond crowns and pendant coconut
+ * clusters, scattered along the lagoon's beach.
+ */
+function buildCoconutPalms(f: NodeFactory): SceneNode {
+  const trunk = std(C.palmTrunkTropical, 0.95, { texture: "bark", textureScale: [1, 6], flatShading: true });
+  const trunkShade = std(C.palmTrunkTropicalShade, 0.95, { flatShading: true });
+  const frond = std(C.palmFrondTropical, 0.9, { flatShading: true });
+  const frondDark = std(C.palmFrondTropicalDark, 0.95, { flatShading: true });
+  const frondHi = std(C.palmFrondTropicalHi, 0.85, { flatShading: true });
+  const coconut = std(C.coconutBrown, 0.9, { flatShading: true });
+  const coconutHi = std(C.coconutBrownHi, 0.85, { flatShading: true });
+  const palms = [
+    { pos: [-7, 0, -8] as [number, number, number], yaw: 0.3, scale: 1.0 },
+    { pos: [-3, 0, -2] as [number, number, number], yaw: -0.5, scale: 0.9 },
+    { pos: [4, 0, -6] as [number, number, number], yaw: 0.8, scale: 1.1 },
+  ];
+  const cx = TROPICAL_LAGOON_POS[0];
+  const cz = TROPICAL_LAGOON_POS[2];
+  const trees: SceneNode[] = [];
+  let idx = 0;
+  for (const p of palms) {
+    const s = p.scale;
+    const trunkH = 2.4 * s;
+    const parts: SceneNode[] = [];
+    // ── Trunk — slim tapered cylinder with a curving lean.
+    parts.push(
+      f.mesh("Palm Trunk", cylinder(0.07 * s, 0.13 * s, trunkH, 8), trunk, {
+        position: [0, trunkH / 2, 0],
+        rotation: [0.06, 0, 0.04],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded base ring suggesting the trunk seated in sand.
+      f.mesh("Palm Trunk Base", cylinder(0.16 * s, 0.16 * s, 0.06, 10), trunkShade, {
+        position: [0, 0.03, 0],
+      }, { receiveShadow: true }),
+    );
+    // ── Trunk ring rings — slim shaded bands wrapping the trunk so the
+    // bark reads as ringed palm rather than smooth bark.
+    for (let r = 0; r < 5; r++) {
+      const ry = 0.35 + r * (trunkH * 0.16);
+      parts.push(
+        f.mesh(`Trunk Ring ${r}`, cylinder(0.105 * s - r * 0.008, 0.115 * s - r * 0.008, 0.03, 8), trunkShade, {
+          position: [0, ry, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // ── Frond crown — six broad palm fronds radiating from the trunk top.
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2;
+      const frondMat = i % 2 === 0 ? frond : frondHi;
+      parts.push(
+        f.mesh(`Frond ${i}`, box(1.1 * s, 0.04, 0.32 * s), frondMat, {
+          position: [Math.cos(a) * 0.5 * s, trunkH + 0.04, Math.sin(a) * 0.5 * s],
+          rotation: [0, a, -0.25],
+          scale: [1, 1, 1],
+        }, { castShadow: true }),
+        // Slim shaded underside slat so the fronds read with depth.
+        f.mesh(`Frond Shade ${i}`, box(1.0 * s, 0.025, 0.28 * s), frondDark, {
+          position: [Math.cos(a) * 0.5 * s, trunkH + 0.018, Math.sin(a) * 0.5 * s],
+          rotation: [0, a, -0.25],
+        }, { castShadow: false }),
+      );
+    }
+    // ── Pendant coconut cluster — three coconut spheres hanging just
+    // beneath the frond crown.
+    for (let c = 0; c < 3; c++) {
+      const a = (c / 3) * Math.PI * 2 + 0.5;
+      parts.push(
+        f.mesh(`Coconut ${c}`, sphere(0.08 * s, 10, 8), coconut, {
+          position: [Math.cos(a) * 0.12 * s, trunkH - 0.05, Math.sin(a) * 0.12 * s],
+        }, { castShadow: true }),
+        f.mesh(`Coconut Hi ${c}`, sphere(0.06 * s, 10, 8), coconutHi, {
+          position: [Math.cos(a) * 0.13 * s, trunkH - 0.04, Math.sin(a) * 0.13 * s],
+          scale: [0.9, 0.6, 0.9],
+        }, { castShadow: false }),
+      );
+    }
+    trees.push(
+      f.group(`Coconut Palm ${idx}`, parts, {
+        position: [cx + p.pos[0], 0, cz + p.pos[2]],
+        rotation: [0, p.yaw, 0],
+      }),
+    );
+    idx += 1;
+  }
+  return f.group("Coconut Palms", trees);
+}
+
+/**
+ * A scatter of three small beach finds along the tide line — two conch
+ * shells and a starfish — adding small focal points to the sand.
+ */
+function buildBeachFinds(f: NodeFactory): SceneNode {
+  const conch = std(C.conchPink, 0.6, { flatShading: true });
+  const conchShade = std(C.conchPinkShade, 0.85, { flatShading: true });
+  const starfish = std(C.starfishOrange, 0.7, { flatShading: true });
+  const cx = TROPICAL_LAGOON_POS[0];
+  const cz = TROPICAL_LAGOON_POS[2];
+  const parts: SceneNode[] = [];
+  // Two conch shells — squashed sphere bodies with a slim cone spire on
+  // top so the silhouette reads as a small spiralled shell.
+  parts.push(
+    f.mesh("Conch A Body", sphere(0.18, 12, 8), conch, {
+      position: [cx + 1.5, 0.06, cz + 2.3],
+      scale: [1.3, 0.5, 1.0],
+      rotation: [0, 0.5, 0.1],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Conch A Spire", cone(0.08, 0.16, 6), conch, {
+      position: [cx + 1.4, 0.14, cz + 2.35],
+      rotation: [0, 0.5, -0.4],
+    }, { castShadow: true }),
+    f.mesh("Conch A Shade", sphere(0.15, 12, 8), conchShade, {
+      position: [cx + 1.5, 0.03, cz + 2.3],
+      scale: [1.2, 0.3, 0.95],
+    }, { castShadow: false }),
+    f.mesh("Conch B Body", sphere(0.15, 12, 8), conch, {
+      position: [cx + 5.0, 0.05, cz + 3.8],
+      scale: [1.2, 0.45, 0.95],
+      rotation: [0, -0.3, 0.05],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Conch B Spire", cone(0.06, 0.13, 6), conch, {
+      position: [cx + 4.95, 0.12, cz + 3.85],
+      rotation: [0, -0.3, -0.3],
+    }, { castShadow: true }),
+  );
+  // Starfish — a small five-armed star shape built from a central disc
+  // and five splayed cone arms.
+  const starCx = cx - 3.5;
+  const starCz = cz + 3.0;
+  parts.push(
+    f.mesh("Starfish Body", cylinder(0.1, 0.1, 0.04, 10), starfish, {
+      position: [starCx, 0.03, starCz],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 5) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Star Arm ${i}`, cone(0.06, 0.22, 6), starfish, {
+        position: [starCx + Math.cos(a) * 0.16, 0.04, starCz + Math.sin(a) * 0.16],
+        rotation: [Math.PI / 2, a + Math.PI / 2, 0],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Beach Finds", parts);
+}
+
+/**
+ * A slim driftwood log pulled up onto the sand at the lagoon's south side —
+ * weathered grey wood with a slim split shard at one end suggesting a
+ * broken branch.
+ */
+function buildDriftwoodLog(f: NodeFactory): SceneNode {
+  const drift = std(C.driftwood, 0.95, { texture: "wood", textureScale: [4, 1], flatShading: true });
+  const driftShade = std(C.driftwoodShade, 0.95, { flatShading: true });
+  const cx = TROPICAL_LAGOON_POS[0];
+  const cz = TROPICAL_LAGOON_POS[2];
+  return f.group("Driftwood Log", [
+    f.mesh("Driftwood", cylinder(0.16, 0.18, 1.8, 10), drift, {
+      position: [cx + 6.5, 0.16, cz + 5.0],
+      rotation: [0, 0.4, Math.PI / 2 + 0.05],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded knot at the log's exposed end.
+    f.mesh("Driftwood Knot", cylinder(0.17, 0.13, 0.16, 10), driftShade, {
+      position: [cx + 5.65, 0.16, cz + 5.05],
+      rotation: [0, 0.4, Math.PI / 2 + 0.05],
+    }, { castShadow: true }),
+    // Slim split shard projecting from the broken end.
+    f.mesh("Driftwood Shard", box(0.3, 0.05, 0.05), driftShade, {
+      position: [cx + 5.5, 0.22, cz + 5.0],
+      rotation: [0, 0.4, 0.1],
+    }, { castShadow: false }),
+    f.mesh("Driftwood Shard B", box(0.22, 0.05, 0.06), driftShade, {
+      position: [cx + 5.45, 0.16, cz + 5.05],
+      rotation: [0, 0.4, -0.15],
+    }, { castShadow: false }),
+  ]);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -17650,6 +18683,46 @@ function buildPeatBoulderTor(f: NodeFactory, pos: [number, number, number]): Sce
  *    footbridge with rope rails, a scatter of seven heather tufts in
  *    three bloom tints and a small tor of three mossy granite boulders
  *    at the west edge framing the burn's source.
+ *  - Twenty-third pass — courtyard: a Victorian wrought-iron weather
+ *    station tripod on a fluted marble plinth, parked on the back-east
+ *    outside-fence lawn opposite the carousel horse (front-west outside
+ *    fence) so the pair of marble-pedestal ornaments frame the back
+ *    perimeter of the courtyard. Three splayed iron legs carry an
+ *    instrument platter at chest height with a copper-patina three-cup
+ *    anemometer rotor on a vertical shaft, a directional wind vane with
+ *    N/S/E/W cardinal stubs, a slim thermometer tube with a red mercury
+ *    bulb and a small rain-gauge cylinder filled with a thin water
+ *    column (the tripod legs, anemometer cups, vane and instrument
+ *    fittings reuse the existing `copper-patina` colour + bump pair so
+ *    the verdigris reads as crusted relief on the cast metal, and the
+ *    plinth reuses the existing `marble` colour + bump pair so the
+ *    stone reads with veined relief). House: a pair of low arched
+ *    eyebrow dormer windows undulating the east and west roof slopes
+ *    between the eaves and the ridge — each dormer pairs a slim
+ *    copper-patina half-arch trim hood (reusing the existing
+ *    `copper-patina` pair so the verdigris reads as crusted relief on
+ *    the metal hood), a white painted timber sash framing a tinted
+ *    glass pane and a warm interior glow plate behind the glass so the
+ *    dormer reads as lit from the attic even at low light, with each
+ *    dormer tilted outward to match the roof slope's pitch. Scene: a
+ *    far-southeast tropical lagoon coast plane bridging the gap south
+ *    of the olive grove and east of the citrus grove — a warm bone-
+ *    white sand ground surfaced with the new `tropical-coast` colour
+ *    map paired with a tide-ripple-and-pebble depth map (registered
+ *    alongside the other procedural textures) so the wet-sand ripples
+ *    and scattered shells and pebbles read as raised relief at
+ *    glancing sun, an olive-grove apron along the north join and a
+ *    citrus-grove apron along the west join so the ground layer has
+ *    no holes at either seam, a shallow turquoise lagoon water pool
+ *    fringed by crashing wave foam strips, a tall red-and-white
+ *    striped lighthouse on a rocky promontory at the south corner
+ *    with a hexagonal glass lantern room, a slim copper-patina cap
+ *    dome and a warm-yellow lamp glow, a slim wooden plank jetty
+ *    extending into the lagoon on stout posts with a small brass
+ *    mooring cleat at its outer end, three coconut palm trees with
+ *    broad frond crowns and pendant coconut clusters scattered along
+ *    the beach, a scatter of three conch / starfish beach finds at
+ *    the tide line and a slim driftwood log pulled up onto the sand.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -17730,6 +18803,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: CAROUSEL_HORSE_POS[0], z: CAROUSEL_HORSE_POS[2], r: 1.1 },
     // Twenty-second-pass keep-out — flagpole stand on the front-west outside-gate apron.
     { x: FLAGPOLE_POS[0], z: FLAGPOLE_POS[2], r: 1.0 },
+    // Twenty-third-pass keep-out — weather station on the back-east outside-fence lawn.
+    { x: WEATHER_STATION_POS[0], z: WEATHER_STATION_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -17793,6 +18868,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildBirdcageAviary(f, AVIARY_POS),
     buildCarouselHorse(f, CAROUSEL_HORSE_POS),
     buildFlagpoleStand(f, FLAGPOLE_POS),
+    buildWeatherStation(f, WEATHER_STATION_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -17812,6 +18888,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const seCitrusGrove = buildSoutheastCitrusGrove(f);
   const feDesertOasis = buildFarEastDesertOasis(f);
   const fswPeatMoor = buildFarSouthwestPeatMoor(f);
+  const fseTropicalLagoon = buildFarSoutheastTropicalLagoon(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -17854,6 +18931,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildIronRidgeCresting(f),
     buildSideBayWindows(f),
     buildGableSunbursts(f),
+    buildEyebrowDormers(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -17880,6 +18958,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       seCitrusGrove,
       feDesertOasis,
       fswPeatMoor,
+      fseTropicalLagoon,
       house,
     ],
   };

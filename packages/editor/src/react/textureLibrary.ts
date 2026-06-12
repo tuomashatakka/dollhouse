@@ -3202,4 +3202,204 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Twenty-third-pass additions ───────────────────────────────────
+  // The twenty-third enhancement pass introduces a tropical lagoon coast
+  // ground surface for the far-southeast scene-extension plane south of
+  // the olive grove and east of the citrus grove — a warm bone-white
+  // sand ground with wet-sand tide ripples, scattered shells and
+  // pebbles paired with a tide-ripple depth map so the wave ridges
+  // and pebble heads read as raised relief at glancing sun.
+
+  // Tropical-coast colour — a warm bone-white sand base with wet-sand
+  // streaks running parallel to the shore, scattered shell flecks,
+  // small dark pebble dots and a faint warm sun cast. On a power-of-two
+  // canvas so the mipmap chain stays clean.
+  registry["tropical-coast"] = makeCanvasTexture({
+    seed: 0x7c0a5e23,
+    draw: (ctx, rng, size) => {
+      // Base gradient — paler at the top so the sand reads as drier
+      // upland fading down toward damper tide-zone sand.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#f5e1ac");
+      bg.addColorStop(0.5, "#e0c98a");
+      bg.addColorStop(1, "#b89c66");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wet-sand tide ripples — slim horizontal bands suggesting wave
+      // wash lines running parallel to the shore.
+      for (let i = 0; i < 22; i++) {
+        const y = (i / 22) * size + (rng() - 0.5) * 12;
+        // Bright crest catching the sun.
+        ctx.fillStyle = `hsla(36, 50%, ${72 + rng() * 12}%, 0.32)`;
+        ctx.fillRect(0, y - 2, size, 2);
+        // Slim damp-sand trough just below the crest.
+        ctx.fillStyle = `hsla(32, 36%, ${36 + rng() * 8}%, 0.28)`;
+        ctx.fillRect(0, y, size, 1.6);
+      }
+      // Wide rolling tide drifts — soft radial highlights suggesting
+      // the dampness gradient along the wave run-up.
+      for (let i = 0; i < 8; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 70 + rng() * 60;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(34, 42%, ${72 + rng() * 10}%, 0.18)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Scattered shell flecks — many small pale dots suggesting tiny
+      // shell fragments swept up onto the sand.
+      for (let i = 0; i < 1400; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        let colour: string;
+        if (which < 0.6) {
+          colour = `hsla(${30 + rng() * 12}, 38%, ${75 + rng() * 18}%, 0.65)`;
+        } else if (which < 0.85) {
+          colour = `hsla(${20 + rng() * 18}, 42%, ${82 + rng() * 12}%, 0.55)`;
+        } else {
+          // Slim pale-pink shells — tiny coral-tinted dots.
+          colour = `hsla(${340 + rng() * 18}, 36%, ${82 + rng() * 10}%, 0.48)`;
+        }
+        ctx.fillStyle = colour;
+        ctx.fillRect(x, y, 1.1 + rng() * 0.9, 1.1 + rng() * 0.9);
+      }
+      // Tiny dark pebble flecks — sparse dark specks suggesting basalt
+      // pebbles and wave-rolled grit.
+      for (let i = 0; i < 240; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const lightness = 22 + rng() * 14;
+        ctx.fillStyle = `hsla(${28 + rng() * 18}, 32%, ${lightness}%, 0.7)`;
+        ctx.fillRect(x, y, 1.2 + rng() * 0.6, 1.2 + rng() * 0.6);
+      }
+      // Wet-sand puddle patches — sparse irregular dark blobs of damp
+      // sand pooling between the crests.
+      for (let i = 0; i < 28; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 5 + rng() * 8;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(34, 36%, ${28 + rng() * 10}%, 0.42)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim wave-foam wisps — pale white flecks suggesting drying foam
+      // along the highest tide line.
+      for (let i = 0; i < 160; i++) {
+        const x = rng() * size;
+        const y = rng() * (size * 0.45);
+        ctx.fillStyle = `rgba(255,253,245,${0.4 + rng() * 0.35})`;
+        ctx.fillRect(x, y, 1.4 + rng() * 1.2, 0.8 + rng() * 0.6);
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash
+      // so glancing afternoon sun catches the rim of the beach.
+      const sun = ctx.createRadialGradient(size * 0.75, size * 0.22, 0, size * 0.75, size * 0.22, size * 0.85);
+      sun.addColorStop(0, "rgba(255,236,184,0.18)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 32, 0.0024);
+    },
+  });
+
+  // Tropical-coast depth map — the dry sand crests sit slightly above
+  // the damp troughs (light = high) and the wet-sand puddles recess
+  // (dark = low) so the beach shows subtle relief on glancing sun.
+  registry["tropical-coast-bump"] = makeCanvasTexture({
+    seed: 0x7c0a5e23 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average beach height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Tide ripple crests — bright horizontal bands suggesting raised
+      // wave wash lines running parallel to the shore.
+      for (let i = 0; i < 22; i++) {
+        const y = (i / 22) * size + (rng() - 0.5) * 12;
+        // Bright crest peak.
+        const grad = ctx.createLinearGradient(0, y - 6, 0, y - 1);
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, "rgba(228,228,228,0.7)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, y - 6, size, 5);
+        // Dark trough just below the crest.
+        ctx.strokeStyle = "rgba(30,30,30,0.62)";
+        ctx.lineWidth = 1.4 + rng() * 1.1;
+        ctx.beginPath();
+        ctx.moveTo(0, y + 1);
+        const segs = 8;
+        for (let s = 0; s < segs; s++) {
+          const x = ((s + 1) / segs) * size;
+          const yy = y + 1 + (rng() - 0.5) * 1.8;
+          ctx.lineTo(x, yy);
+        }
+        ctx.stroke();
+      }
+      // Rolling tide drifts — wide bright radial highlights suggesting
+      // the dampness gradient lobes along the wave run-up.
+      for (let i = 0; i < 8; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 70 + rng() * 60;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(218,218,218,0.2)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Bright shell bumps — small bright dots reading as raised shells.
+      for (let i = 0; i < 1100; i++) {
+        const v = 200 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.6)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.0, 1.2 + rng() * 0.6);
+      }
+      // Slim ripple slivers — many small bright slats reading as wind
+      // ripples across the dry sand.
+      for (let i = 0; i < 320; i++) {
+        const v = 188 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.45)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.6 + rng() * 1.4, 0.7);
+      }
+      // Wet-sand puddle patches — dark recessed blobs reading as sunken
+      // damp sand between the crests.
+      for (let i = 0; i < 28; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 4 + rng() * 7;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(22,22,22,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Pebble bumps — sparse small bright dots reading as raised
+      // pebbles dotted across the sand.
+      for (let i = 0; i < 220; i++) {
+        const v = 200 + Math.floor(rng() * 50);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.7)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.4 + rng() * 0.6, 1.4 + rng() * 0.6);
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
