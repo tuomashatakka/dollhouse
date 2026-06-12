@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twenty-two enhancement passes.
+// house and its courtyard, layered over twenty-three enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -439,6 +439,41 @@
 //   footbridge with rope rails, a scatter of seven heather tufts in
 //   three bloom tints across the moss and a small tor of three mossy
 //   granite boulders at the west edge framing the burn's source.
+//   Pass 23 — courtyard: a Victorian wrought-iron weather station tripod
+//   on a fluted marble plinth (the tripod legs, anemometer cups, wind
+//   vane and instrument fittings reuse the existing `copper-patina`
+//   colour + bump pair so the verdigris reads as crusted relief on the
+//   cast metal, and the plinth reuses the existing `marble` colour +
+//   bump pair so the stone reads with veined relief), parked on the
+//   back-east outside-fence lawn opposite the carousel horse on the
+//   front-west outside fence so the pair of marble-pedestal ornaments
+//   frame the back perimeter of the courtyard. House: a pair of low
+//   arched eyebrow dormer windows undulating the east and west roof
+//   slopes between the eaves and the ridge — each dormer pairs a slim
+//   copper-patina half-arch trim hood (reusing the existing
+//   `copper-patina` pair so the verdigris reads as crusted relief on
+//   the metal hood), a white painted timber sash framing a tinted
+//   glass pane and a warm interior glow plate behind the glass so the
+//   dormer reads as lit from the attic even at low light, with each
+//   dormer tilted outward to match the roof slope's pitch. Scene: a
+//   far-southeast tropical lagoon coast plane bridging the gap south of
+//   the olive grove and east of the citrus grove — a warm bone-white
+//   sand ground surfaced with the new `tropical-coast` colour map paired
+//   with a tide-ripple-and-pebble depth map (registered alongside the
+//   other procedural textures) so the wet-sand ripples and scattered
+//   shells and pebbles read as raised relief at glancing sun, an
+//   olive-grove apron along the north join and a citrus-grove apron
+//   along the west join so the ground layer has no holes at either
+//   seam, a shallow turquoise lagoon water pool fringed by crashing
+//   wave foam strips, a tall red-and-white striped lighthouse on a
+//   rocky promontory at the south corner with a hexagonal glass
+//   lantern room, a slim copper-patina cap dome and a warm-yellow lamp
+//   glow, a slim wooden plank jetty extending into the lagoon on stout
+//   posts with a small brass mooring cleat at its outer end, three
+//   coconut palm trees with broad frond crowns and pendant coconut
+//   clusters scattered along the beach, a scatter of three conch /
+//   starfish beach finds at the tide line and a slim driftwood log
+//   pulled up onto the sand.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
