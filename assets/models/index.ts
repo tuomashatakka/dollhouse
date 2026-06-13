@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twenty-three enhancement passes.
+// house and its courtyard, layered over twenty-four enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -474,6 +474,36 @@
 //   clusters scattered along the beach, a scatter of three conch /
 //   starfish beach finds at the tide line and a slim driftwood log
 //   pulled up onto the sand.
+//   Pass 24 — courtyard: a Victorian bronze stag statue on a fluted
+//   marble pedestal (the bronze body, antlers and hoof caps reuse the
+//   existing `copper-patina` colour + bump pair so the verdigris reads
+//   as crusted relief on the cast metal, and the plinth reuses the
+//   existing `marble` colour + bump pair so the stone reads with veined
+//   relief), parked on the front-east outside-gate apron as a mirror to
+//   the flagpole stand on the front-west outside fence so the pair of
+//   marble-pedestal ornaments frame the front gate apron of the
+//   courtyard. House: a row of four Victorian copper-patina ornamental
+//   porch cornice brackets mounted under the porch canopy where the
+//   canopy meets the front wall and each porch post — each bracket a
+//   small stepped scroll with a slim drop finial below it and an upper
+//   trim flange flush against the canopy (reusing the existing
+//   `copper-patina` pair so the verdigris reads as crusted relief on
+//   the cast metal). Scene: a far-northwest Scottish glen plane tucked
+//   beyond the NW waterfall ravine's west edge — a moss-toned highland
+//   ground surfaced with the new `scottish-glen` colour map paired with
+//   a heather-tussock-and-stone depth map (registered alongside the
+//   other procedural textures) so the heather tufts and exposed bedrock
+//   heads read as raised relief at glancing sun, a dark-moss east apron
+//   along the ravine join so the ground layer has no holes at the seam,
+//   a small stone-walled thatched shieling hut at the southwest corner
+//   with a turfed roof ridge, a plank front door and a glowing square
+//   window and a slim chimney trailing pale smoke, a focal stone tor
+//   cairn of three stacked granite boulders crowning the north end, a
+//   meandering peaty burn (small stream) winding north-to-south across
+//   the glen with two slim plank stepping stones at its narrowest
+//   crossing, a scatter of six Scottish thistles in two bloom shades
+//   dotted around the moss and a small clump of four highland firs
+//   hugging the northern ridge.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
