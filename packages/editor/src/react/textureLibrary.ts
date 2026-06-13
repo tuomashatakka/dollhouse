@@ -3402,4 +3402,214 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Twenty-fourth-pass additions ──────────────────────────────────
+  // The twenty-fourth enhancement pass introduces a Scottish glen ground
+  // surface for the far-northwest scene-extension plane bridging the gap
+  // beyond the NW waterfall ravine's west edge — a moss-toned highland
+  // ground with exposed bedrock heads, heather tussocks, lichen-stained
+  // boulder shoulders and a faint sun cast paired with a tussock depth
+  // map so the bumps read as raised relief at glancing sun.
+
+  // Scottish-glen colour — a deep moss-green base with darker exposed
+  // bedrock heads, scattered heather tussocks in two bloom shades,
+  // pale lichen flecks and a winding burn-channel hint along one
+  // diagonal. On a power-of-two canvas so the mipmap chain stays clean.
+  registry["scottish-glen"] = makeCanvasTexture({
+    seed: 0x91bda23c,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly brighter at the top so the glen reads
+      // as a low rolling moor sweep from above.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#6a7a3c");
+      bg.addColorStop(0.5, "#506236");
+      bg.addColorStop(1, "#3a4628");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling moss lobes — soft radial highlights suggesting low
+      // moor swells underneath the surface mottle.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${74 + rng() * 14}, 30%, ${42 + rng() * 10}%, 0.22)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Scattered dark bedrock heads — sparse irregular blobs of exposed
+      // grey-brown stone poking through the moss.
+      for (let i = 0; i < 26; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 7 + rng() * 9;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${30 + rng() * 16}, 14%, ${28 + rng() * 10}%, 0.62)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim pale lichen flecks on the bedrock heads — small celadon /
+      // ochre dots suggesting lichen colonies on exposed stone.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        const colour = which < 0.55
+          ? `hsla(${70 + rng() * 18}, 24%, ${64 + rng() * 16}%, 0.52)`
+          : `hsla(${36 + rng() * 14}, 28%, ${56 + rng() * 14}%, 0.48)`;
+        ctx.fillStyle = colour;
+        ctx.fillRect(x, y, 1.2 + rng() * 0.8, 1.2 + rng() * 0.8);
+      }
+      // Heather tussock dabs — many slim warm-pink and purple flecks
+      // suggesting scattered heather tufts in bloom.
+      for (let i = 0; i < 1100; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        let colour: string;
+        if (which < 0.5) {
+          colour = `hsla(${294 + rng() * 18}, 38%, ${50 + rng() * 14}%, 0.55)`;
+        } else if (which < 0.8) {
+          colour = `hsla(${322 + rng() * 14}, 36%, ${58 + rng() * 14}%, 0.48)`;
+        } else {
+          colour = `hsla(${28 + rng() * 14}, 28%, ${64 + rng() * 14}%, 0.4)`;
+        }
+        ctx.fillStyle = colour;
+        ctx.fillRect(x, y, 1.2 + rng() * 0.8, 1.2 + rng() * 0.8);
+      }
+      // Slim peaty burn channel — a winding dark-blue ribbon along a soft
+      // diagonal suggesting the meandering glen stream.
+      ctx.strokeStyle = "rgba(40,60,72,0.42)";
+      ctx.lineWidth = 6 + rng() * 2;
+      ctx.beginPath();
+      ctx.moveTo(size * 0.18, 0);
+      let yy = 0;
+      while (yy < size) {
+        yy += 16 + rng() * 12;
+        const xx = size * (0.18 + Math.sin(yy * 0.02) * 0.12 + (rng() - 0.5) * 0.05);
+        ctx.lineTo(xx, yy);
+      }
+      ctx.stroke();
+      // Thin highlight glint along the burn for water reflection.
+      ctx.strokeStyle = "rgba(180,210,200,0.32)";
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.moveTo(size * 0.18, 0);
+      yy = 0;
+      while (yy < size) {
+        yy += 16 + rng() * 12;
+        const xx = size * (0.18 + Math.sin(yy * 0.02) * 0.12 + (rng() - 0.5) * 0.05);
+        ctx.lineTo(xx, yy);
+      }
+      ctx.stroke();
+      // Tiny grass-blade flecks — many slim warm green specks across the
+      // moss suggesting tufted moor grass.
+      for (let i = 0; i < 2400; i++) {
+        ctx.fillStyle = `hsla(${78 + rng() * 14}, 36%, ${38 + rng() * 16}%, 0.55)`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1 + rng() * 1.4);
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash so
+      // glancing afternoon sun catches the rim of the glen.
+      const sun = ctx.createRadialGradient(size * 0.7, size * 0.22, 0, size * 0.7, size * 0.22, size * 0.85);
+      sun.addColorStop(0, "rgba(255,236,184,0.12)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0024);
+    },
+  });
+
+  // Scottish-glen depth map — the heather tussocks and bedrock heads sit
+  // slightly above the moss (light = high) and the burn channel recesses
+  // (dark = low) so the glen shows subtle relief on glancing sun.
+  registry["scottish-glen-bump"] = makeCanvasTexture({
+    seed: 0x91bda23c + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average glen height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Rolling moss lobes — wide bright radial highlights suggesting the
+      // tops of low glen mounds underneath the surface mottle.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(210,210,210,0.2)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Bedrock heads — bright blobs reading as raised exposed stone
+      // shoulders across the moor.
+      for (let i = 0; i < 26; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 7 + rng() * 9;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(218,218,218,0.65)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+        // Slim shaded undercut along the south rim of each rock head.
+        ctx.strokeStyle = "rgba(30,30,30,0.45)";
+        ctx.lineWidth = 1.2 + rng() * 0.6;
+        ctx.beginPath();
+        ctx.arc(x, y + r2 * 0.4, r2 * 0.7, 0, Math.PI);
+        ctx.stroke();
+      }
+      // Heather tussock bumps — many small bright dots reading as raised
+      // tuft heads across the moss.
+      for (let i = 0; i < 1100; i++) {
+        const v = 190 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.55)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.0, 1.0 + rng() * 0.7);
+      }
+      // Slim grass-blade highlights — many small bright slats reading as
+      // standing moor grass.
+      for (let i = 0; i < 520; i++) {
+        const v = 188 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.45)`;
+        ctx.fillRect(rng() * size, rng() * size, 0.7, 1.8 + rng() * 1.5);
+      }
+      // Burn channel — a dark recessed ribbon along a soft diagonal
+      // suggesting the meandering glen stream cutting into the moor.
+      ctx.strokeStyle = "rgba(30,30,30,0.7)";
+      ctx.lineWidth = 7 + rng() * 2;
+      ctx.beginPath();
+      ctx.moveTo(size * 0.18, 0);
+      let yy = 0;
+      while (yy < size) {
+        yy += 16 + rng() * 12;
+        const xx = size * (0.18 + Math.sin(yy * 0.02) * 0.12 + (rng() - 0.5) * 0.05);
+        ctx.lineTo(xx, yy);
+      }
+      ctx.stroke();
+      // Tiny lichen-fleck bumps — sparse bright dots reading as raised
+      // lichen colonies clinging to the bedrock heads.
+      for (let i = 0; i < 320; i++) {
+        const v = 200 + Math.floor(rng() * 50);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.65)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.2 + rng() * 0.6, 1.2 + rng() * 0.6);
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

@@ -779,6 +779,55 @@ const TROPICAL_LAGOON_WATER_POS: [number, number, number] = [54, 0.014, 28];
 const LIGHTHOUSE_POS: [number, number, number] = [59, 0, 40];
 const TROPICAL_JETTY_POS: [number, number, number] = [47, 0, 30];
 
+/**
+ * Twenty-fourth-pass courtyard prop — a Victorian bronze stag statue on a
+ * fluted marble plinth, parked on the front-east outside-gate apron just
+ * outside the picket fence (mirror to the flagpole stand on the front-west
+ * outside-gate apron). The stag stands proudly on the plinth cap with its
+ * head raised, an arched neck, four slim legs and a broad pair of branching
+ * antlers. The bronze body, antlers and hoof caps reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal, and the plinth reuses the existing `marble`
+ * colour + bump pair so the stone reads with veined relief.
+ */
+const STAG_STATUE_POS: [number, number, number] = [4.5, 0, 14.6];
+
+/**
+ * Twenty-fourth-pass house detail — a row of four Victorian copper-patina
+ * ornamental porch cornice brackets mounted under the porch canopy where
+ * the canopy meets the front wall and the canopy meets each porch post.
+ * Each bracket is a small stepped scroll with a slim drop finial below it
+ * and an upper trim flange flush against the canopy. The brackets reuse
+ * the existing `copper-patina` colour + bump pair so the verdigris reads
+ * as crusted relief on the cast metal.
+ */
+
+/**
+ * Twenty-fourth-pass scene extension — a far-northwest Scottish glen plane
+ * tucked beyond the northwest woodland's west edge and the northwest
+ * waterfall ravine's west edge, bridging the gap between the ravine and
+ * the far-far-northwest corner of the map. The plane overlaps the NW
+ * waterfall ravine's west edge by ~3 units along its east join so the
+ * ground layer has no holes at the seam. It carries a moss-toned highland
+ * ground surfaced with the new `scottish-glen` colour map paired with a
+ * heather-tussock-and-stone depth map (registered alongside the other
+ * procedural textures) so the heather tufts and exposed bedrock heads
+ * read as raised relief at glancing sun, a small stone-walled thatched
+ * shieling hut at the southwest corner with a turfed roof and a slim
+ * stone chimney trailing pale smoke, a focal stone tor cairn of three
+ * stacked granite boulders crowning the north end, a meandering peaty
+ * burn (small stream) winding north-to-south across the glen with two
+ * slim plank stepping stones at its narrowest crossing, a scatter of
+ * six Scottish thistles in two bloom shades dotted around the moss and
+ * a small clump of four highland firs hugging the northern ridge.
+ */
+const SCOTTISH_GLEN_POS: [number, number, number] = [-52, -0.024, -75];
+const SCOTTISH_GLEN_W = 20;
+const SCOTTISH_GLEN_D = 24;
+const SHIELING_POS: [number, number, number] = [-58, 0, -80];
+const GLEN_CAIRN_POS: [number, number, number] = [-46, 0, -84];
+const GLEN_BURN_X = -51;
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1543,6 +1592,51 @@ const C = {
   driftwoodShade: "#6e6353",
   oliveGroveSouthApron: "#a89668",
   citrusGroveApron: "#9a6f3e",
+  // Twenty-fourth enhancement pass — a Victorian bronze stag statue on a
+  // fluted marble plinth on the front-east outside-gate apron (the bronze
+  // body, antlers and hoof caps reuse the existing `copper-patina` pair and
+  // the plinth reuses the existing `marble` pair), a row of four Victorian
+  // copper-patina ornamental porch cornice brackets under the porch canopy
+  // (reusing the existing `copper-patina` pair so the verdigris reads as
+  // crusted relief on the cast metal), and a far-northwest Scottish glen
+  // scene extension bridging the gap beyond the NW waterfall ravine's west
+  // edge. The new `scottish-glen` colour map is paired with a heather-
+  // tussock-and-stone depth map registered alongside it so the heather
+  // tufts and exposed bedrock heads read as raised relief at glancing sun.
+  stagBronze: "#5d8a6a",
+  stagBronzeHi: "#9bc4a8",
+  stagBronzeShade: "#2f5840",
+  stagPlinth: "#ede2d0",
+  stagPlinthShade: "#a89776",
+  porchBracket: "#5d8a6a",
+  porchBracketShade: "#2f5840",
+  // Scottish glen — moss-toned highland ground with exposed bedrock heads,
+  // a thatched shieling cottage, a stone tor cairn and a meandering burn.
+  glenGround: "#5c6f3a",
+  glenApron: "#3d5630",
+  shielingStone: "#7e7468",
+  shielingStoneDark: "#4a4438",
+  shielingThatch: "#86702c",
+  shielingThatchShade: "#5a4a1c",
+  shielingTurf: "#4d6a32",
+  shielingDoor: "#5a3a26",
+  shielingGlow: "#fff1c4",
+  shielingChimney: "#8f8478",
+  glenCairnStone: "#8e8678",
+  glenCairnStoneHi: "#b6ad9c",
+  glenCairnStoneShade: "#5a5346",
+  glenBurnWater: "#5e7a78",
+  glenBurnHi: "#9bc4be",
+  glenStepPlank: "#6e5236",
+  glenStepPlankDark: "#3a2a1c",
+  thistlePurple: "#7a4a96",
+  thistlePurpleHi: "#b48ad0",
+  thistleGreen: "#4e6a30",
+  thistleStem: "#5e7838",
+  glenFirTrunk: "#3a2a1c",
+  glenFirFoliage: "#2a4628",
+  glenFirFoliageHi: "#4a6a40",
+  glenSmoke: "#e0d8c8",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -18252,6 +18346,672 @@ function buildDriftwoodLog(f: NodeFactory): SceneNode {
   ]);
 }
 
+/* ─────────────── twenty-fourth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze stag statue on a fluted marble plinth — a slim
+ * antlered stag standing proudly on the plinth cap with its head raised,
+ * an arched neck, four slim legs, a curved tail and a broad pair of
+ * branching antlers. The body, antlers and hoof caps reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal, and the plinth reuses the existing `marble`
+ * colour + bump pair so the stone reads with veined relief. Parked on the
+ * front-east outside-gate apron as a mirror to the flagpole stand on the
+ * front-west outside-gate apron.
+ */
+function buildStagStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.stagBronze,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [2, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.stagBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.stagBronzeShade, 0.95, { flatShading: true });
+  const marble = std(C.stagPlinth, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.stagPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Fluted marble plinth — small square footing and round column ──
+  parts.push(
+    f.mesh("Plinth Footing", box(0.6, 0.08, 0.6), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Base", cylinder(0.27, 0.3, 0.1, 18), marble, {
+      position: [0, 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Column", cylinder(0.22, 0.24, 0.55, 18), marble, {
+      position: [0, 0.455, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", cylinder(0.28, 0.28, 0.06, 18), marble, {
+      position: [0, 0.76, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Trim", cylinder(0.27, 0.27, 0.022, 20), bronze, {
+      position: [0, 0.8, 0],
+    }, { castShadow: false }),
+  );
+  // Six slim fluting grooves around the column.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Plinth Flute ${i}`, box(0.022, 0.5, 0.025), marbleShade, {
+        position: [Math.cos(a) * 0.23, 0.455, Math.sin(a) * 0.23],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Stag body — a slim horizontal capsule reading as the torso ──
+  const bodyY = 1.18;
+  parts.push(
+    f.mesh("Stag Torso", { type: "capsule", radius: 0.13, length: 0.5, capSegments: 6, radialSegments: 12 }, bronze, {
+      position: [0, bodyY, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded undercut beneath the torso for body relief.
+    f.mesh("Stag Belly", { type: "capsule", radius: 0.11, length: 0.42, capSegments: 5, radialSegments: 10 }, bronzeShade, {
+      position: [0, bodyY - 0.03, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  // ── Four slim legs — front and back pairs, slightly splayed ──
+  const legPositions: [number, number, number][] = [
+    [0.28, 0.55, 0.085],
+    [0.28, 0.55, -0.085],
+    [-0.28, 0.55, 0.085],
+    [-0.28, 0.55, -0.085],
+  ];
+  for (let i = 0; i < legPositions.length; i++) {
+    const [lx, ly, lz] = legPositions[i]!;
+    parts.push(
+      f.mesh(`Stag Leg ${i}`, cylinder(0.028, 0.034, 0.4, 8), bronze, {
+        position: [lx, ly, lz],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim hoof cap at the leg tip.
+      f.mesh(`Stag Hoof ${i}`, cylinder(0.04, 0.038, 0.04, 8), bronzeShade, {
+        position: [lx, ly - 0.21, lz],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Neck — a slim angled cylinder lifting up from the front torso ──
+  const neckY = bodyY + 0.22;
+  parts.push(
+    f.mesh("Stag Neck", cylinder(0.06, 0.07, 0.32, 10), bronze, {
+      position: [0.32, neckY, 0],
+      rotation: [0, 0, Math.PI / 5],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Head — a slim elongated sphere atop the neck with a tapered muzzle ──
+  const headX = 0.45;
+  const headY = neckY + 0.16;
+  parts.push(
+    f.mesh("Stag Head", sphere(0.1, 14, 10), bronze, {
+      position: [headX, headY, 0],
+      scale: [1.2, 0.9, 0.85],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim muzzle taper jutting forward.
+    f.mesh("Stag Muzzle", cone(0.06, 0.14, 10), bronzeShade, {
+      position: [headX + 0.12, headY - 0.02, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: false }),
+    // Two slim ears flicking back from the head.
+    f.mesh("Stag Ear L", cone(0.03, 0.08, 6), bronze, {
+      position: [headX - 0.05, headY + 0.08, 0.06],
+      rotation: [0.3, 0, -0.5],
+    }, { castShadow: false }),
+    f.mesh("Stag Ear R", cone(0.03, 0.08, 6), bronze, {
+      position: [headX - 0.05, headY + 0.08, -0.06],
+      rotation: [-0.3, 0, -0.5],
+    }, { castShadow: false }),
+    // Slim eye highlights.
+    f.mesh("Stag Eye L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [headX + 0.06, headY + 0.02, 0.05],
+    }, { castShadow: false }),
+    f.mesh("Stag Eye R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [headX + 0.06, headY + 0.02, -0.05],
+    }, { castShadow: false }),
+  );
+  // ── Antlers — branching tine pairs rising from above the head ──
+  for (const side of [1, -1] as const) {
+    const ax = headX - 0.02;
+    const ay = headY + 0.1;
+    const az = side * 0.045;
+    // Main antler beam rising and branching back.
+    parts.push(
+      f.mesh(`Antler Beam ${side}`, cylinder(0.014, 0.018, 0.22, 6), bronze, {
+        position: [ax, ay + 0.11, az + side * 0.04],
+        rotation: [0, 0, -0.4],
+      }, { castShadow: true }),
+      // Mid tine branching forward.
+      f.mesh(`Antler Tine Mid ${side}`, cylinder(0.01, 0.014, 0.16, 6), bronze, {
+        position: [ax + 0.12, ay + 0.18, az + side * 0.06],
+        rotation: [side * 0.2, 0, -0.9],
+      }, { castShadow: true }),
+      // Upper tine branching backward.
+      f.mesh(`Antler Tine Back ${side}`, cylinder(0.01, 0.013, 0.14, 6), bronze, {
+        position: [ax - 0.06, ay + 0.21, az + side * 0.07],
+        rotation: [side * 0.15, 0, 0.5],
+      }, { castShadow: true }),
+      // Crown tine branching upward at the antler tip.
+      f.mesh(`Antler Tine Crown ${side}`, cylinder(0.008, 0.012, 0.13, 6), bronze, {
+        position: [ax + 0.03, ay + 0.28, az + side * 0.08],
+        rotation: [side * 0.1, 0, -0.15],
+      }, { castShadow: true }),
+      // Slim base burr knob where the antler meets the head.
+      f.mesh(`Antler Burr ${side}`, sphere(0.022, 10, 8), bronzeShade, {
+        position: [ax, ay + 0.02, az + side * 0.03],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Tail — a slim curved cylinder behind the rump ──
+  parts.push(
+    f.mesh("Stag Tail", cylinder(0.018, 0.024, 0.13, 8), bronze, {
+      position: [-0.34, bodyY + 0.06, 0],
+      rotation: [0, 0, 0.7],
+    }, { castShadow: false }),
+    f.mesh("Stag Tail Tip", sphere(0.022, 8, 6), bronzeShade, {
+      position: [-0.41, bodyY + 0.12, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Stag Statue", parts, { position: pos, rotation: [0, -0.4, 0] });
+}
+
+/* ─────────────── twenty-fourth-pass house detail ─────────────── */
+
+/**
+ * A row of four Victorian copper-patina ornamental porch cornice brackets
+ * mounted under the porch canopy where the canopy meets the front wall and
+ * the canopy meets each porch post. Each bracket is a small stepped scroll
+ * with a slim drop finial below it and an upper trim flange flush against
+ * the canopy. Reuses the existing `copper-patina` colour + bump pair so
+ * the verdigris reads as crusted relief on the cast metal.
+ */
+function buildPorchCornerBrackets(f: NodeFactory): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.porchBracket,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1.5, 1.5],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeShade = std(C.porchBracketShade, 0.95, { flatShading: true });
+  // The porch canopy spans the front-door arch — the brackets mount at the
+  // canopy underside at the wall join (x ≈ ±0.85) and at each porch post
+  // (x ≈ ±1.5). Y aligns to the canopy underside.
+  const canopyY = 2.32;
+  const wallZ = FRONT_Z + 0.05;
+  const postZ = FRONT_Z + 0.55;
+  const positions: { x: number; z: number; out: number }[] = [
+    { x: -0.85, z: wallZ, out: -1 },
+    { x: 0.85, z: wallZ, out: 1 },
+    { x: -1.5, z: postZ, out: -1 },
+    { x: 1.5, z: postZ, out: 1 },
+  ];
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < positions.length; i++) {
+    const { x, z, out } = positions[i]!;
+    const parts: SceneNode[] = [];
+    // Upper trim flange flush against the canopy underside.
+    parts.push(
+      f.mesh(`Flange ${i}`, box(0.18, 0.025, 0.12), bronze, {
+        position: [out * 0.04, canopyY - 0.012, 0],
+      }, { castShadow: false }),
+    );
+    // Stepped scroll panel — three slim stacked plates angling inward and
+    // down so the silhouette reads as a scrollwork bracket.
+    for (let s = 0; s < 3; s++) {
+      const sw = 0.16 - s * 0.04;
+      const sh = 0.04;
+      const sy = canopyY - 0.04 - s * 0.06;
+      parts.push(
+        f.mesh(`Scroll ${i}-${s}`, box(sw, sh, 0.1), bronze, {
+          position: [out * (0.02 + s * 0.018), sy, 0],
+        }, { castShadow: true }),
+        // Slim shaded undercut at each step.
+        f.mesh(`Scroll ${i}-${s} Sh`, box(sw - 0.02, 0.012, 0.085), bronzeShade, {
+          position: [out * (0.02 + s * 0.018), sy - sh / 2 - 0.006, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // Slim drop finial below the scroll — a small teardrop pendant.
+    parts.push(
+      f.mesh(`Finial Drop ${i}`, sphere(0.024, 10, 8), bronze, {
+        position: [out * 0.07, canopyY - 0.26, 0],
+        scale: [1, 1.6, 1],
+      }, { castShadow: false }),
+      f.mesh(`Finial Tip ${i}`, cone(0.018, 0.05, 8), bronze, {
+        position: [out * 0.07, canopyY - 0.32, 0],
+        rotation: [Math.PI, 0, 0],
+      }, { castShadow: false }),
+    );
+    groups.push(f.group(`Porch Bracket ${i + 1}`, parts, { position: [x, 0, z] }));
+  }
+  return f.group("Porch Cornice Brackets", groups);
+}
+
+/* ─────────────── twenty-fourth-pass scene extension ─────────────── */
+
+/**
+ * Far-northwest Scottish glen plane tucked beyond the NW waterfall ravine's
+ * west edge. The plane carries a moss-toned highland ground with the new
+ * `scottish-glen` colour + depth map pair so the heather tufts and exposed
+ * bedrock heads read as raised relief at glancing sun, a stone-walled
+ * thatched shieling hut at the southwest corner with a turfed roof and a
+ * slim chimney trailing pale smoke, a focal stone tor cairn of three
+ * stacked granite boulders crowning the north end, a meandering peaty burn
+ * (small stream) crossed by two slim plank stepping stones, a scatter of
+ * six Scottish thistles in two bloom shades dotted around the moss and a
+ * small clump of four highland firs hugging the northern ridge.
+ */
+function buildFarNorthwestScottishGlen(f: NodeFactory): SceneNode {
+  return f.group("Far Northwest Scottish Glen", [
+    // Scottish glen ground plane — moss-toned ground with the new colour +
+    // depth map pair so the heather tufts and exposed bedrock heads read as
+    // raised relief at glancing sun.
+    f.mesh(
+      "Scottish Glen Ground",
+      plane(SCOTTISH_GLEN_W, SCOTTISH_GLEN_D),
+      std(C.glenGround, 0.95, {
+        texture: "scottish-glen",
+        textureScale: [4, 5],
+        bumpMap: "scottish-glen-bump",
+        bumpScale: 0.06,
+      }),
+      { position: SCOTTISH_GLEN_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // East apron — overlaps the NW waterfall ravine's west edge with a slim
+    // dark-moss strip so the seam reads as a continuous highland join
+    // between the rocky ravine ground and the wild glen ground.
+    f.mesh(
+      "Scottish Glen East Apron",
+      plane(3, SCOTTISH_GLEN_D),
+      std(C.glenApron, 0.95, { texture: "grass", textureScale: [1, 6] }),
+      {
+        position: [
+          SCOTTISH_GLEN_POS[0] + SCOTTISH_GLEN_W / 2 - 1.5,
+          -0.02,
+          SCOTTISH_GLEN_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildShieling(f, SHIELING_POS),
+    buildGlenCairn(f, GLEN_CAIRN_POS),
+    buildGlenBurn(f),
+    buildGlenThistles(f),
+    buildGlenFirs(f),
+  ]);
+}
+
+/**
+ * A small stone-walled thatched shieling hut — the highland summer dwelling
+ * of crofters tending sheep on the upland moor. Low fieldstone walls under
+ * a pitched thatched roof with a turfed ridge, a slim stone chimney
+ * trailing pale smoke wisps, a plank front door and a glowing square
+ * window. A compact island-Scottish moor dwelling.
+ */
+function buildShieling(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.shielingStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.shielingStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const thatch = std(C.shielingThatch, 0.95, { texture: "grass", textureScale: [3, 2], flatShading: true });
+  const thatchShade = std(C.shielingThatchShade, 0.95, { flatShading: true });
+  const turf = std(C.shielingTurf, 0.95, { texture: "grass", textureScale: [3, 1], flatShading: true });
+  const door = std(C.shielingDoor, 0.95, { texture: "wood", textureScale: [1, 2], flatShading: true });
+  const chimney = std(C.shielingChimney, 0.95, { texture: "cobblestone", flatShading: true });
+  const glass: MaterialDef = {
+    color: C.shielingGlow,
+    roughness: 0.25,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.85,
+    emissive: C.shielingGlow,
+  };
+  const smoke: MaterialDef = {
+    color: C.glenSmoke,
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.42,
+  };
+  const w = 2.8;
+  const d = 2.2;
+  const wallH = 1.3;
+  const parts: SceneNode[] = [];
+  // ── Four fieldstone walls ──
+  parts.push(
+    // South wall (front).
+    f.mesh("Wall S", box(w, wallH, 0.2), stone, {
+      position: [0, wallH / 2, d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // North wall.
+    f.mesh("Wall N", box(w, wallH, 0.2), stone, {
+      position: [0, wallH / 2, -d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // West gable wall — taller to meet the roof ridge.
+    f.mesh("Wall W", box(0.2, wallH + 0.45, d), stoneDark, {
+      position: [-w / 2, (wallH + 0.45) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // East gable wall.
+    f.mesh("Wall E", box(0.2, wallH + 0.45, d), stoneDark, {
+      position: [w / 2, (wallH + 0.45) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Slim stone wall course highlights across the south wall.
+  for (let i = 0; i < 3; i++) {
+    const cy = 0.22 + i * 0.32;
+    parts.push(
+      f.mesh(`Course ${i}`, box(w - 0.1, 0.04, 0.04), stoneDark, {
+        position: [0, cy, d / 2 + 0.12],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Pitched thatched roof — two angled slabs meeting at a ridge with a
+  // turfed ridge cap (typical of highland shieling huts where strips of
+  // sod were laid along the ridge to weight down the thatch).
+  const ridgeY = wallH + 0.7;
+  const halfD = d / 2 + 0.3;
+  const hyp = Math.hypot(0.7, halfD);
+  const slope = Math.atan2(0.7, halfD);
+  parts.push(
+    // South slope.
+    f.mesh("Thatch S", box(w + 0.4, 0.14, hyp), thatch, {
+      position: [0, ridgeY - 0.35, halfD / 2],
+      rotation: [-slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // North slope.
+    f.mesh("Thatch N", box(w + 0.4, 0.14, hyp), thatch, {
+      position: [0, ridgeY - 0.35, -halfD / 2],
+      rotation: [slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Turfed ridge cap — a low grass-strip cap running along the peak.
+    f.mesh("Turf Ridge", box(w + 0.45, 0.1, 0.22), turf, {
+      position: [0, ridgeY + 0.02, 0],
+    }, { castShadow: true }),
+    // Slim thatch shade strips beneath each slope so the roof reads
+    // with depth.
+    f.mesh("Thatch S Shade", box(w + 0.35, 0.04, hyp - 0.1), thatchShade, {
+      position: [0, ridgeY - 0.42, halfD / 2],
+      rotation: [-slope, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Thatch N Shade", box(w + 0.35, 0.04, hyp - 0.1), thatchShade, {
+      position: [0, ridgeY - 0.42, -halfD / 2],
+      rotation: [slope, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim stone chimney on the east gable peak trailing pale smoke ──
+  parts.push(
+    f.mesh("Chimney Stack", box(0.3, 0.75, 0.3), chimney, {
+      position: [w / 2 + 0.05, ridgeY + 0.18, -0.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Crown", box(0.38, 0.06, 0.38), stoneDark, {
+      position: [w / 2 + 0.05, ridgeY + 0.58, -0.2],
+    }, { castShadow: true }),
+    // Three smoke wisps trailing east of the chimney.
+    f.mesh("Smoke A", sphere(0.14, 12, 8), smoke, {
+      position: [w / 2 + 0.18, ridgeY + 0.82, -0.18],
+      scale: [1.2, 0.9, 1.1],
+    }, { castShadow: false }),
+    f.mesh("Smoke B", sphere(0.16, 12, 8), smoke, {
+      position: [w / 2 + 0.48, ridgeY + 1.04, -0.05],
+      scale: [1.3, 0.8, 1.2],
+    }, { castShadow: false }),
+    f.mesh("Smoke C", sphere(0.18, 12, 8), smoke, {
+      position: [w / 2 + 0.88, ridgeY + 1.25, 0.15],
+      scale: [1.4, 0.85, 1.2],
+    }, { castShadow: false }),
+  );
+  // ── Plank front door on the south wall ──
+  parts.push(
+    f.mesh("Door Frame", box(0.5, 1.0, 0.04), stoneDark, {
+      position: [-0.5, 0.5, d / 2 + 0.11],
+    }, { castShadow: false }),
+    f.mesh("Door", box(0.4, 0.9, 0.04), door, {
+      position: [-0.5, 0.45, d / 2 + 0.13],
+    }, { castShadow: false }),
+  );
+  // ── Glowing square front window on the south wall ──
+  parts.push(
+    f.mesh("Window Frame", box(0.5, 0.42, 0.04), stoneDark, {
+      position: [0.55, 0.85, d / 2 + 0.11],
+    }, { castShadow: false }),
+    f.mesh("Window Glass", box(0.4, 0.34, 0.02), glass, {
+      position: [0.55, 0.85, d / 2 + 0.13],
+    }, { castShadow: false }),
+    // Cross muntin.
+    f.mesh("Window Muntin V", box(0.03, 0.34, 0.025), stoneDark, {
+      position: [0.55, 0.85, d / 2 + 0.15],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin H", box(0.4, 0.03, 0.025), stoneDark, {
+      position: [0.55, 0.85, d / 2 + 0.15],
+    }, { castShadow: false }),
+  );
+  return f.group("Shieling Hut", parts, { position: pos, rotation: [0, 0.3, 0] });
+}
+
+/**
+ * A stone tor cairn — three stacked granite boulders crowning the north
+ * end of the glen, a traditional highland route marker. The boulders reuse
+ * a flat-shaded granite stone material with a slim highlight ring around
+ * each so they read with relief at glancing sun.
+ */
+function buildGlenCairn(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.glenCairnStone, 0.95, { flatShading: true });
+  const stoneHi = std(C.glenCairnStoneHi, 0.95, { flatShading: true });
+  const stoneShade = std(C.glenCairnStoneShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Three boulders stacked in a slim pyramid — biggest at the base,
+  // smallest at the crown.
+  const boulders: { x: number; y: number; z: number; r: number; yaw: number }[] = [
+    { x: 0, y: 0.42, z: 0, r: 0.55, yaw: 0.3 },
+    { x: 0.06, y: 0.95, z: -0.04, r: 0.36, yaw: 1.2 },
+    { x: -0.05, y: 1.32, z: 0.05, r: 0.22, yaw: 2.5 },
+  ];
+  for (let i = 0; i < boulders.length; i++) {
+    const b = boulders[i]!;
+    parts.push(
+      f.mesh(`Boulder ${i}`, sphere(b.r, 14, 10), stone, {
+        position: [b.x, b.y, b.z],
+        rotation: [0, b.yaw, 0],
+        scale: [1.1, 0.9, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut below each boulder.
+      f.mesh(`Boulder ${i} Shade`, sphere(b.r * 0.85, 12, 8), stoneShade, {
+        position: [b.x + 0.04, b.y - b.r * 0.4, b.z + 0.04],
+        rotation: [0, b.yaw, 0],
+        scale: [1.0, 0.55, 0.9],
+      }, { castShadow: false }),
+      // Slim highlight ridge atop each boulder.
+      f.mesh(`Boulder ${i} Hi`, sphere(b.r * 0.55, 10, 6), stoneHi, {
+        position: [b.x - 0.05, b.y + b.r * 0.35, b.z - 0.05],
+        rotation: [0, b.yaw, 0],
+        scale: [1.0, 0.4, 0.9],
+      }, { castShadow: false }),
+    );
+  }
+  // A small offering pebble at the base of the cairn — a traditional
+  // highland custom for passing travellers.
+  parts.push(
+    f.mesh("Pebble", sphere(0.1, 10, 8), stoneHi, {
+      position: [0.5, 0.08, 0.2],
+      scale: [1.2, 0.6, 1.0],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  return f.group("Stone Tor Cairn", parts, { position: pos, rotation: [0, 0.4, 0] });
+}
+
+/**
+ * A meandering peaty burn (small stream) winding north-to-south across the
+ * glen — three layered ribbons of slim dark water curving past the cairn
+ * and the shieling, with two slim plank stepping stones at the narrowest
+ * crossing point.
+ */
+function buildGlenBurn(f: NodeFactory): SceneNode {
+  const water = std(C.glenBurnWater, 0.3, { metalness: 0.4 });
+  const waterHi = std(C.glenBurnHi, 0.25, { metalness: 0.5 });
+  const plank = std(C.glenStepPlank, 0.85, { texture: "wood", textureScale: [2, 1], flatShading: true });
+  const plankDark = std(C.glenStepPlankDark, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Three slim burn segments traversing the glen at slight angles so the
+  // overall shape reads as a meandering stream.
+  const segments: { z: number; rot: number; len: number }[] = [
+    { z: -67, rot: 0.15, len: 8 },
+    { z: -73, rot: -0.2, len: 7 },
+    { z: -80, rot: 0.1, len: 7 },
+  ];
+  for (let i = 0; i < segments.length; i++) {
+    const s = segments[i]!;
+    parts.push(
+      f.mesh(`Burn Core ${i}`, plane(s.len, 0.6), water, {
+        position: [GLEN_BURN_X, 0.005, s.z],
+        rotation: [-Math.PI / 2, 0, s.rot],
+      }, { receiveShadow: false }),
+      f.mesh(`Burn Glint ${i}`, plane(s.len * 0.9, 0.18), waterHi, {
+        position: [GLEN_BURN_X, 0.012, s.z],
+        rotation: [-Math.PI / 2, 0, s.rot],
+      }, { receiveShadow: false }),
+    );
+  }
+  // Two slim plank stepping stones at the narrowest crossing — slim wooden
+  // planks spanning the burn with darker shaded ends so they read as
+  // weathered timber slats.
+  for (let i = 0; i < 2; i++) {
+    const sx = GLEN_BURN_X + (i - 0.5) * 0.4;
+    parts.push(
+      f.mesh(`Plank ${i}`, box(0.22, 0.05, 0.75), plank, {
+        position: [sx, 0.04, -76.5],
+        rotation: [0, 0.1, 0],
+      }, { castShadow: false, receiveShadow: true }),
+      f.mesh(`Plank ${i} Shade`, box(0.18, 0.02, 0.7), plankDark, {
+        position: [sx, 0.015, -76.5],
+        rotation: [0, 0.1, 0],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Glen Burn", parts);
+}
+
+/**
+ * A scatter of six Scottish thistles in two bloom shades dotted around the
+ * moss — each thistle a slim stem with a small green seed-pod ball topped
+ * by a purple bristle bloom. The thistle is Scotland's national flower
+ * so it reads as a quintessential highland touch.
+ */
+function buildGlenThistles(f: NodeFactory): SceneNode {
+  const stem = std(C.thistleStem, 0.85);
+  const pod = std(C.thistleGreen, 0.85, { flatShading: true });
+  const bloom = std(C.thistlePurple, 0.85, { flatShading: true });
+  const bloomHi = std(C.thistlePurpleHi, 0.85, { flatShading: true });
+  const positions: { x: number; z: number; h: number; tint: 0 | 1 }[] = [
+    { x: -56, z: -68, h: 0.55, tint: 0 },
+    { x: -48, z: -73, h: 0.62, tint: 1 },
+    { x: -54, z: -72, h: 0.5, tint: 0 },
+    { x: -50, z: -78, h: 0.58, tint: 1 },
+    { x: -58, z: -77, h: 0.55, tint: 0 },
+    { x: -46, z: -81, h: 0.6, tint: 1 },
+  ];
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < positions.length; i++) {
+    const p = positions[i]!;
+    const parts: SceneNode[] = [
+      // Slim green stem.
+      f.mesh(`Stem ${i}`, cylinder(0.014, 0.018, p.h, 6), stem, {
+        position: [0, p.h / 2, 0],
+      }, { castShadow: false, receiveShadow: true }),
+      // Two slim leaf clusters along the stem.
+      f.mesh(`Leaf A ${i}`, sphere(0.045, 6, 5), pod, {
+        position: [0.04, p.h * 0.3, 0],
+        scale: [1.5, 0.4, 1.0],
+        rotation: [0, 0.4, 0.3],
+      }, { castShadow: false }),
+      f.mesh(`Leaf B ${i}`, sphere(0.04, 6, 5), pod, {
+        position: [-0.04, p.h * 0.55, 0],
+        scale: [1.5, 0.4, 1.0],
+        rotation: [0, -0.4, -0.3],
+      }, { castShadow: false }),
+      // Green seed-pod ball at the top of the stem.
+      f.mesh(`Pod ${i}`, sphere(0.05, 10, 8), pod, {
+        position: [0, p.h + 0.04, 0],
+      }, { castShadow: false }),
+      // Purple bristle bloom crowning the pod — a slim cone of brushy
+      // bristles emerging from the pod.
+      f.mesh(`Bloom ${i}`, cone(0.05, 0.1, 8), p.tint === 0 ? bloom : bloomHi, {
+        position: [0, p.h + 0.13, 0],
+      }, { castShadow: false }),
+      f.mesh(`Bloom Hi ${i}`, cone(0.035, 0.08, 6), bloomHi, {
+        position: [0, p.h + 0.16, 0],
+      }, { castShadow: false }),
+    ];
+    groups.push(
+      f.group(`Thistle ${i + 1}`, parts, { position: [p.x, 0, p.z] }),
+    );
+  }
+  return f.group("Glen Thistles", groups);
+}
+
+/**
+ * A small clump of four highland firs hugging the northern ridge of the
+ * glen — each a slim dark conifer with three layered cone tiers on a
+ * darker bark trunk reading as a hardy upland species clinging to the
+ * rocky moor.
+ */
+function buildGlenFirs(f: NodeFactory): SceneNode {
+  const trunk = std(C.glenFirTrunk, 0.95, { texture: "bark", flatShading: true });
+  const foliage = std(C.glenFirFoliage, 0.9, { flatShading: true });
+  const foliageHi = std(C.glenFirFoliageHi, 0.9, { flatShading: true });
+  const rng = mulberry32(0xa1bb1ed5);
+  const positions: [number, number][] = [
+    [-58, -86],
+    [-54, -85],
+    [-48, -86],
+    [-44, -84],
+  ];
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < positions.length; i++) {
+    const [x, z] = positions[i]!;
+    const scale = 0.85 + rng() * 0.3;
+    const yaw = rng() * Math.PI * 2;
+    const parts: SceneNode[] = [
+      // Slim trunk.
+      f.mesh(`Trunk ${i}`, cylinder(0.12, 0.16, 0.9, 6), trunk, {
+        position: [0, 0.45, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Three tapering cone tiers.
+      f.mesh(`Cone Lo ${i}`, cone(0.75, 1.2, 8), foliage, {
+        position: [0, 1.1, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Cone Mid ${i}`, cone(0.55, 0.95, 8), foliage, {
+        position: [0, 1.7, 0],
+      }, { castShadow: true }),
+      f.mesh(`Cone Hi ${i}`, cone(0.35, 0.7, 8), foliage, {
+        position: [0, 2.2, 0],
+      }, { castShadow: true }),
+      // Slim brighter highlight on the south slope of each tier.
+      f.mesh(`Cone Lo Hi ${i}`, cone(0.45, 0.6, 8), foliageHi, {
+        position: [0.18, 1.15, 0.18],
+      }, { castShadow: false }),
+      f.mesh(`Cone Mid Hi ${i}`, cone(0.32, 0.5, 8), foliageHi, {
+        position: [0.14, 1.75, 0.14],
+      }, { castShadow: false }),
+    ];
+    groups.push(
+      f.group(`Glen Fir ${i + 1}`, parts, {
+        position: [x, 0, z],
+        rotation: [0, yaw, 0],
+        scale: [scale, scale, scale],
+      }),
+    );
+  }
+  return f.group("Glen Firs", groups);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -18723,6 +19483,36 @@ function buildDriftwoodLog(f: NodeFactory): SceneNode {
  *    broad frond crowns and pendant coconut clusters scattered along
  *    the beach, a scatter of three conch / starfish beach finds at
  *    the tide line and a slim driftwood log pulled up onto the sand.
+ * 24. Courtyard: a Victorian bronze stag statue on a fluted marble
+ *    pedestal, parked on the front-east outside-gate apron just outside
+ *    the picket fence as a mirror to the flagpole stand on the
+ *    front-west outside-gate apron — a slim antlered stag standing on
+ *    the plinth cap with an arched neck, four slim legs, a curved tail
+ *    and a broad pair of branching antlers (the bronze body, antlers
+ *    and hoof caps reuse the existing `copper-patina` colour + bump
+ *    pair so the verdigris reads as crusted relief on the cast metal,
+ *    and the marble plinth reuses the existing `marble` colour + bump
+ *    pair so the stone reads with veined relief). House: a row of four
+ *    Victorian copper-patina ornamental porch cornice brackets mounted
+ *    under the porch canopy where the canopy meets the front wall and
+ *    each porch post — each bracket a stepped scroll with a slim drop
+ *    finial below it and an upper trim flange flush against the canopy
+ *    (reusing the existing `copper-patina` pair). Scene: a far-northwest
+ *    Scottish glen plane bridging the gap beyond the NW waterfall
+ *    ravine's west edge — a moss-toned highland ground surfaced with
+ *    the new `scottish-glen` colour map paired with a heather-tussock-
+ *    and-stone depth map (registered alongside the other procedural
+ *    textures) so the heather tufts and exposed bedrock heads read as
+ *    raised relief at glancing sun, a dark-moss east apron along the
+ *    ravine join so the ground layer has no holes at the seam, a small
+ *    stone-walled thatched shieling hut at the southwest corner with a
+ *    turfed roof ridge and a slim chimney trailing pale smoke, a focal
+ *    stone tor cairn of three stacked granite boulders crowning the
+ *    north end, a meandering peaty burn (small stream) winding north-
+ *    to-south across the glen with two slim plank stepping stones at
+ *    its narrowest crossing, a scatter of six Scottish thistles in two
+ *    bloom shades dotted around the moss and a small clump of four
+ *    highland firs hugging the northern ridge.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -18805,6 +19595,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: FLAGPOLE_POS[0], z: FLAGPOLE_POS[2], r: 1.0 },
     // Twenty-third-pass keep-out — weather station on the back-east outside-fence lawn.
     { x: WEATHER_STATION_POS[0], z: WEATHER_STATION_POS[2], r: 0.9 },
+    // Twenty-fourth-pass keep-out — stag statue on the front-east outside-gate apron.
+    { x: STAG_STATUE_POS[0], z: STAG_STATUE_POS[2], r: 1.0 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -18869,6 +19661,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildCarouselHorse(f, CAROUSEL_HORSE_POS),
     buildFlagpoleStand(f, FLAGPOLE_POS),
     buildWeatherStation(f, WEATHER_STATION_POS),
+    buildStagStatue(f, STAG_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -18889,6 +19682,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const feDesertOasis = buildFarEastDesertOasis(f);
   const fswPeatMoor = buildFarSouthwestPeatMoor(f);
   const fseTropicalLagoon = buildFarSoutheastTropicalLagoon(f);
+  const fnwScottishGlen = buildFarNorthwestScottishGlen(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -18932,6 +19726,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildSideBayWindows(f),
     buildGableSunbursts(f),
     buildEyebrowDormers(f),
+    buildPorchCornerBrackets(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -18959,6 +19754,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       feDesertOasis,
       fswPeatMoor,
       fseTropicalLagoon,
+      fnwScottishGlen,
       house,
     ],
   };
