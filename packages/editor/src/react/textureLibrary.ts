@@ -3612,4 +3612,216 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Twenty-fifth-pass additions ───────────────────────────────────
+  // The twenty-fifth enhancement pass introduces a snowy mountain pass
+  // ground surface for the far-northeast scene-extension plane bridging
+  // the gap between the alpine foothills' east edge and the NE maple
+  // grove's north edge — a snow-dusted highland ground with exposed
+  // bedrock heads, drifted snow patches, lichen-stained pebble shoulders
+  // and a faint sun cast paired with a snowdrift-and-scree depth map so
+  // the drifts and rock heads read as raised relief at glancing sun.
+
+  // Mountain-pass colour — a pale snow-dusted highland ground with darker
+  // exposed bedrock heads, scattered drift patches in two snow tints,
+  // pale lichen flecks on the bedrock and a faint sun cast across one
+  // diagonal. On a power-of-two canvas so the mipmap chain stays clean.
+  registry["mountain-pass"] = makeCanvasTexture({
+    seed: 0xa9c2dfee,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly cooler in the lower-right so the pass
+      // reads as a snow-dusted highland sweep from above with a hint of
+      // shaded north slope toward the bottom.
+      const bg = ctx.createLinearGradient(0, 0, size, size);
+      bg.addColorStop(0, "#dde6ec");
+      bg.addColorStop(0.5, "#c8d4dc");
+      bg.addColorStop(1, "#9eaeb8");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling snow mounds — soft radial highlights suggesting low
+      // drift swells underneath the surface mottle.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${200 + rng() * 30}, 12%, ${82 + rng() * 8}%, 0.28)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Scattered dark bedrock heads — sparse irregular blobs of exposed
+      // grey-brown stone poking through the snow blanket.
+      for (let i = 0; i < 32; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 6 + rng() * 9;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${25 + rng() * 18}, 12%, ${28 + rng() * 14}%, 0.65)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim pale lichen flecks on the bedrock heads — small celadon /
+      // ochre dots suggesting lichen colonies on exposed stone.
+      for (let i = 0; i < 280; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        const colour = which < 0.55
+          ? `hsla(${70 + rng() * 18}, 24%, ${64 + rng() * 16}%, 0.5)`
+          : `hsla(${36 + rng() * 14}, 28%, ${56 + rng() * 14}%, 0.46)`;
+        ctx.fillStyle = colour;
+        ctx.fillRect(x, y, 1.2 + rng() * 0.8, 1.2 + rng() * 0.8);
+      }
+      // Bright drift patches — many slim cool-white flecks suggesting
+      // wind-blown snow drifts catching the high sun.
+      for (let i = 0; i < 1100; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        let colour: string;
+        if (which < 0.55) {
+          colour = `hsla(${204 + rng() * 12}, 14%, ${90 + rng() * 8}%, 0.55)`;
+        } else if (which < 0.8) {
+          colour = `hsla(${210 + rng() * 14}, 18%, ${82 + rng() * 8}%, 0.5)`;
+        } else {
+          colour = `hsla(${200 + rng() * 14}, 8%, ${74 + rng() * 10}%, 0.42)`;
+        }
+        ctx.fillStyle = colour;
+        ctx.fillRect(x, y, 1.4 + rng() * 0.8, 1.4 + rng() * 0.8);
+      }
+      // Slim scree trail — a winding light-grey ribbon along a soft
+      // diagonal suggesting a wind-swept rocky path through the snow.
+      ctx.strokeStyle = "rgba(140,148,152,0.42)";
+      ctx.lineWidth = 6 + rng() * 2;
+      ctx.beginPath();
+      ctx.moveTo(size * 0.82, 0);
+      let yy = 0;
+      while (yy < size) {
+        yy += 16 + rng() * 12;
+        const xx = size * (0.82 + Math.sin(yy * 0.02) * 0.12 + (rng() - 0.5) * 0.05);
+        ctx.lineTo(xx, yy);
+      }
+      ctx.stroke();
+      // Thin highlight glint along the scree for rim sun.
+      ctx.strokeStyle = "rgba(240,244,248,0.4)";
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.moveTo(size * 0.82, 0);
+      yy = 0;
+      while (yy < size) {
+        yy += 16 + rng() * 12;
+        const xx = size * (0.82 + Math.sin(yy * 0.02) * 0.12 + (rng() - 0.5) * 0.05);
+        ctx.lineTo(xx, yy);
+      }
+      ctx.stroke();
+      // Tiny pebble flecks — many slim warm-grey specks across the snow
+      // suggesting scattered scree pebbles bouncing across the carpet.
+      for (let i = 0; i < 1800; i++) {
+        ctx.fillStyle = `hsla(${28 + rng() * 14}, 10%, ${55 + rng() * 16}%, 0.4)`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1 + rng() * 1.4);
+      }
+      // Faint warm sun cast across the upper-left — a wide pale wash so
+      // glancing afternoon sun catches the rim of the pass.
+      const sun = ctx.createRadialGradient(size * 0.28, size * 0.22, 0, size * 0.28, size * 0.22, size * 0.85);
+      sun.addColorStop(0, "rgba(255,232,196,0.18)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0024);
+    },
+  });
+
+  // Mountain-pass depth map — the drift patches and bedrock heads sit
+  // slightly above the snow blanket (light = high) and the scree trail
+  // recesses (dark = low) so the pass shows subtle relief on glancing sun.
+  registry["mountain-pass-bump"] = makeCanvasTexture({
+    seed: 0xa9c2dfee + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average snow blanket height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Rolling drift mounds — wide bright radial highlights suggesting
+      // the tops of low snow mounds underneath the surface mottle.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(220,220,220,0.24)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Bedrock heads — bright blobs reading as raised exposed stone
+      // shoulders across the snow.
+      for (let i = 0; i < 32; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 6 + rng() * 9;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(225,225,225,0.7)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+        // Slim shaded undercut along the south rim of each rock head.
+        ctx.strokeStyle = "rgba(30,30,30,0.45)";
+        ctx.lineWidth = 1.2 + rng() * 0.6;
+        ctx.beginPath();
+        ctx.arc(x, y + r2 * 0.4, r2 * 0.7, 0, Math.PI);
+        ctx.stroke();
+      }
+      // Drift patch bumps — many small bright dots reading as raised
+      // wind-blown snow drifts across the blanket.
+      for (let i = 0; i < 1100; i++) {
+        const v = 195 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.6)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.0, 1.0 + rng() * 0.7);
+      }
+      // Slim wind-rake highlights — many small bright slats reading as
+      // wind-raked drift ridges.
+      for (let i = 0; i < 480; i++) {
+        const v = 200 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.45)`;
+        ctx.fillRect(rng() * size, rng() * size, 0.7, 1.8 + rng() * 1.5);
+      }
+      // Scree trail — a dark recessed ribbon along a soft diagonal
+      // suggesting a wind-swept rocky path cutting into the snow.
+      ctx.strokeStyle = "rgba(30,30,30,0.65)";
+      ctx.lineWidth = 7 + rng() * 2;
+      ctx.beginPath();
+      ctx.moveTo(size * 0.82, 0);
+      let yy = 0;
+      while (yy < size) {
+        yy += 16 + rng() * 12;
+        const xx = size * (0.82 + Math.sin(yy * 0.02) * 0.12 + (rng() - 0.5) * 0.05);
+        ctx.lineTo(xx, yy);
+      }
+      ctx.stroke();
+      // Tiny lichen-fleck bumps — sparse bright dots reading as raised
+      // lichen colonies clinging to the bedrock heads.
+      for (let i = 0; i < 280; i++) {
+        const v = 200 + Math.floor(rng() * 50);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.6)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.2 + rng() * 0.6, 1.2 + rng() * 0.6);
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
