@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twenty-four enhancement passes.
+// house and its courtyard, layered over twenty-five enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -504,6 +504,44 @@
 //   crossing, a scatter of six Scottish thistles in two bloom shades
 //   dotted around the moss and a small clump of four highland firs
 //   hugging the northern ridge.
+//   Pass 25 — courtyard: a Victorian bronze peacock statue on a fluted
+//   marble pedestal (the bronze body, crown crest, stilt legs and tail
+//   feather frames reuse the existing `copper-patina` colour + bump
+//   pair so the verdigris reads as crusted relief on the cast metal,
+//   the iridescent tail-eye discs use a blue-on-bronze inset, and the
+//   plinth reuses the existing `marble` colour + bump pair so the stone
+//   reads with veined relief), parked on the east outside-fence lawn
+//   between the armillary sphere (north-east of) and the weather station
+//   (south-east of) so the trio of marble pedestals reads as a sequenced
+//   display along the east side of the courtyard — the peacock displays
+//   an upswept spreading fan tail with five splayed feather frames each
+//   crowned by a small iridescent eye spot. House: a pair of Victorian
+//   copper-patina ornamental rain chains hanging from the front-corner
+//   gutter outlets down to the rain barrel lids below — each chain a
+//   vertical column of small inverted copper cups linked by slim chain
+//   segments with a pale water droplet column glinting between each cup
+//   as the rainwater cascades to the barrel (the cups, chain links and
+//   droplets reuse the existing `copper-patina` pair so the verdigris
+//   reads as crusted relief on the cast metal). Scene: a far-northeast
+//   snowy mountain pass plane bridging the gap between the alpine
+//   foothills' east edge and the NE maple grove's north edge — a snow-
+//   dusted highland ground surfaced with the new `mountain-pass` colour
+//   map paired with a snowdrift-and-scree depth map (registered
+//   alongside the other procedural textures) so the drifts and exposed
+//   bedrock heads read as raised relief at glancing sun, an alpine-moss
+//   apron along the west join and an autumn-litter apron along the south
+//   join so the ground layer has no holes at either seam, a small stone-
+//   walled mountain refuge cottage at the southeast corner with a peaked
+//   shingle roof, a plank front door, a glowing square window and a slim
+//   chimney trailing pale smoke, a focal stone trail cairn of four
+//   stacked granite boulders marking the saddle of the pass, a slim
+//   wooden prayer-flag line strung between two slender poles carrying
+//   five rectangular cloth pennants in five different tints (blue, white,
+//   red, green, yellow — the traditional Tibetan five-element palette),
+//   a scatter of four snow-dusted alpine firs clinging to the ridges
+//   and a small frozen alpine tarn pond with a pale-blue ice surface,
+//   slim crack highlights and a ring of exposed alpine pebbles around
+//   the shore.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

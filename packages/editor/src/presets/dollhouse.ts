@@ -828,6 +828,59 @@ const SHIELING_POS: [number, number, number] = [-58, 0, -80];
 const GLEN_CAIRN_POS: [number, number, number] = [-46, 0, -84];
 const GLEN_BURN_X = -51;
 
+/**
+ * Twenty-fifth-pass courtyard prop — a Victorian bronze peacock statue on a
+ * fluted marble plinth on the east outside-fence lawn between the armillary
+ * sphere (north-east of) and the weather station (south-east of) so the trio
+ * of marble pedestals reads as a sequenced display. The peacock body, fan tail
+ * and stilt legs reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal, and the plinth reuses
+ * the existing `marble` colour + bump pair so the stone reads with veined
+ * relief.
+ */
+const PEACOCK_STATUE_POS: [number, number, number] = [13.6, 0, -1.5];
+
+/**
+ * Twenty-fifth-pass house detail — a pair of Victorian copper-patina
+ * ornamental rain chains hanging from the front-corner gutter outlets
+ * down to the rain barrel lids below. Each chain is a vertical column
+ * of small inverted copper cups linked by slim chain segments, with a
+ * pale water droplet column glinting between each cup as the rainwater
+ * cascades to the barrel. The cups, chain links and droplets reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal.
+ */
+
+/**
+ * Twenty-fifth-pass scene extension — a far-northeast snowy mountain pass
+ * plane bridging the gap between the alpine foothills' east edge and the
+ * northeast maple grove's north edge. The plane overlaps the alpine
+ * foothills' east edge by ~3 units along its west join and the NE maple
+ * grove's north edge by ~2 units along its south join so the ground layer
+ * has no holes at either seam. It carries a snow-dusted highland ground
+ * surfaced with the new `mountain-pass` colour map paired with a
+ * snowdrift-and-scree depth map (registered alongside the other
+ * procedural textures) so the drifts and exposed bedrock heads read as
+ * raised relief at glancing sun, an alpine-moss apron along the west
+ * join and an autumn-litter apron along the south join, a small stone-
+ * walled mountain refuge cottage at the southeast corner with a peaked
+ * shingle roof, a glowing square window and a slim chimney trailing
+ * pale smoke, a focal stone trail cairn of four stacked granite boulders
+ * marking the saddle of the pass, a slim wooden prayer-flag line strung
+ * between two slender poles carrying five rectangular cloth pennants in
+ * five different tints, a scatter of four snow-dusted alpine firs
+ * clinging to the ridges and a small frozen alpine tarn pond with a
+ * pale-blue ice surface and slim crack highlights fringed by a ring of
+ * exposed alpine pebbles around the shore.
+ */
+const MOUNTAIN_PASS_POS: [number, number, number] = [38, -0.025, -86];
+const MOUNTAIN_PASS_W = 20;
+const MOUNTAIN_PASS_D = 24;
+const REFUGE_HUT_POS: [number, number, number] = [44, 0, -78];
+const PASS_CAIRN_POS: [number, number, number] = [36, 0, -84];
+const PASS_TARN_POS: [number, number, number] = [33, 0, -92];
+const PRAYER_FLAGS_POS: [number, number, number] = [40, 0, -92];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1637,6 +1690,60 @@ const C = {
   glenFirFoliage: "#2a4628",
   glenFirFoliageHi: "#4a6a40",
   glenSmoke: "#e0d8c8",
+  // Twenty-fifth enhancement pass — a Victorian bronze peacock statue on a
+  // fluted marble plinth on the east outside-fence lawn (the bronze body
+  // and fan tail reuse the existing `copper-patina` pair and the plinth
+  // reuses the existing `marble` pair), a pair of Victorian copper-patina
+  // ornamental rain chains hanging from the front-corner gutter outlets
+  // down to the rain barrel lids (reusing the existing `copper-patina`
+  // pair so the verdigris reads as crusted relief on the cast metal),
+  // and a far-northeast snowy mountain pass scene extension bridging the
+  // gap between the alpine foothills' east edge and the NE maple grove's
+  // north edge. The new `mountain-pass` colour map is paired with a
+  // snowdrift-and-scree depth map registered alongside it so the drifts
+  // and exposed bedrock heads read as raised relief at glancing sun.
+  peacockBronze: "#5d8a6a",
+  peacockBronzeHi: "#9bc4a8",
+  peacockBronzeShade: "#2f5840",
+  peacockTailEye: "#3a8aa8",
+  peacockTailEyeHi: "#7ec0d8",
+  peacockPlinth: "#ede2d0",
+  peacockPlinthShade: "#a89776",
+  rainChainCup: "#5d8a6a",
+  rainChainLink: "#9bc4a8",
+  rainChainWater: "#b8e2f0",
+  rainChainBasin: "#7e7468",
+  // Mountain pass — snow-dusted highland ground with exposed bedrock,
+  // a stone refuge hut, a stone trail cairn, prayer flags, alpine firs
+  // and a small frozen tarn pond at the saddle of the pass.
+  passGround: "#cad4dc",
+  passApronAlpine: "#7a8a64",
+  passApronAutumn: "#6b4a30",
+  refugeStone: "#7e7468",
+  refugeStoneDark: "#4a4438",
+  refugeRoof: "#3a3028",
+  refugeRoofHi: "#5a4a3c",
+  refugeDoor: "#4a3424",
+  refugeChimney: "#8f8478",
+  refugeGlow: "#fff1c4",
+  refugeSmoke: "#e0d8c8",
+  passCairnStone: "#8e8678",
+  passCairnStoneHi: "#b6ad9c",
+  passCairnStoneShade: "#5a5346",
+  prayerFlagPole: "#6e5236",
+  prayerFlagBlue: "#3a6aa8",
+  prayerFlagWhite: "#f5f4ee",
+  prayerFlagRed: "#c2403a",
+  prayerFlagGreen: "#5b8543",
+  prayerFlagYellow: "#e2b54a",
+  passFirTrunk: "#3a2a1c",
+  passFirFoliage: "#2a3e2a",
+  passFirFoliageHi: "#4a6a44",
+  passFirSnowCap: "#f5f7fa",
+  passTarnIce: "#b8d4dc",
+  passTarnIceHi: "#daeaf0",
+  passTarnIceCrack: "#6e8a98",
+  passTarnPebble: "#7e7468",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -19012,6 +19119,791 @@ function buildGlenFirs(f: NodeFactory): SceneNode {
   return f.group("Glen Firs", groups);
 }
 
+/* ─────────────── twenty-fifth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze peacock statue on a fluted marble plinth — a slim
+ * peacock standing on the plinth cap with an arched neck, a crested head,
+ * two slender stilt legs, an upswept spreading fan tail with five splayed
+ * feather frames and a row of iridescent eye spots stamped across the tail
+ * face. The bronze body, crown crest and tail feather frames reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal, and the plinth reuses the existing
+ * `marble` colour + bump pair so the stone reads with veined relief.
+ * Parked on the east outside-fence lawn between the armillary sphere
+ * (north-east of) and the weather station (south-east of) so the trio of
+ * marble pedestals reads as a sequenced display along the east side.
+ */
+function buildPeacockStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.peacockBronze,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [2, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.peacockBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.peacockBronzeShade, 0.95, { flatShading: true });
+  const eyeBlue = std(C.peacockTailEye, 0.45, { metalness: 0.55 });
+  const eyeBlueHi = std(C.peacockTailEyeHi, 0.4, { metalness: 0.6 });
+  const marble = std(C.peacockPlinth, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.peacockPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Fluted marble plinth — small square footing and round column ──
+  parts.push(
+    f.mesh("Plinth Footing", box(0.6, 0.08, 0.6), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Base", cylinder(0.27, 0.3, 0.1, 18), marble, {
+      position: [0, 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Column", cylinder(0.22, 0.24, 0.55, 18), marble, {
+      position: [0, 0.455, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", cylinder(0.28, 0.28, 0.06, 18), marble, {
+      position: [0, 0.76, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Trim", cylinder(0.27, 0.27, 0.022, 20), bronze, {
+      position: [0, 0.8, 0],
+    }, { castShadow: false }),
+  );
+  // Six slim fluting grooves around the column.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Plinth Flute ${i}`, box(0.022, 0.5, 0.025), marbleShade, {
+        position: [Math.cos(a) * 0.23, 0.455, Math.sin(a) * 0.23],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Peacock body — a slim ovoid torso atop two slender stilt legs ──
+  const bodyY = 1.16;
+  parts.push(
+    f.mesh("Peacock Body", sphere(0.14, 14, 10), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.2, 1.0, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded undercut beneath the body for relief.
+    f.mesh("Peacock Belly", sphere(0.12, 12, 8), bronzeShade, {
+      position: [0, bodyY - 0.04, 0],
+      scale: [1.1, 0.7, 0.85],
+    }, { castShadow: false }),
+  );
+  // ── Two slender stilt legs running from the body to the plinth cap ──
+  const legPositions: [number, number, number][] = [
+    [0.05, 0.95, 0.06],
+    [0.05, 0.95, -0.06],
+  ];
+  for (let i = 0; i < legPositions.length; i++) {
+    const [lx, ly, lz] = legPositions[i]!;
+    parts.push(
+      f.mesh(`Peacock Leg ${i}`, cylinder(0.018, 0.022, 0.36, 8), bronze, {
+        position: [lx, ly, lz],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim claw foot at the leg tip — three small toes splayed forward.
+      f.mesh(`Peacock Foot ${i}`, cylinder(0.03, 0.024, 0.025, 8), bronzeShade, {
+        position: [lx, ly - 0.19, lz],
+      }, { castShadow: false }),
+      f.mesh(`Peacock Toe A ${i}`, cylinder(0.008, 0.006, 0.05, 6), bronze, {
+        position: [lx + 0.025, ly - 0.2, lz],
+        rotation: [0, 0, -Math.PI / 2],
+      }, { castShadow: false }),
+      f.mesh(`Peacock Toe B ${i}`, cylinder(0.008, 0.006, 0.05, 6), bronze, {
+        position: [lx + 0.02, ly - 0.2, lz + 0.018],
+        rotation: [0.4, 0, -Math.PI / 2],
+      }, { castShadow: false }),
+      f.mesh(`Peacock Toe C ${i}`, cylinder(0.008, 0.006, 0.05, 6), bronze, {
+        position: [lx + 0.02, ly - 0.2, lz - 0.018],
+        rotation: [-0.4, 0, -Math.PI / 2],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Arched neck rising from the front torso ──
+  const neckY = bodyY + 0.22;
+  parts.push(
+    f.mesh("Peacock Neck", cylinder(0.04, 0.052, 0.34, 10), bronze, {
+      position: [0.12, neckY, 0],
+      rotation: [0, 0, -Math.PI / 6],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Head atop the neck with a small crest and a tapered beak ──
+  const headX = 0.22;
+  const headY = neckY + 0.18;
+  parts.push(
+    f.mesh("Peacock Head", sphere(0.07, 12, 10), bronze, {
+      position: [headX, headY, 0],
+      scale: [1.0, 0.9, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim beak jutting forward.
+    f.mesh("Peacock Beak", cone(0.025, 0.07, 8), bronzeShade, {
+      position: [headX + 0.08, headY - 0.005, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: false }),
+    // Two eye highlights.
+    f.mesh("Peacock Eye L", sphere(0.01, 8, 6), bronzeHi, {
+      position: [headX + 0.04, headY + 0.018, 0.045],
+    }, { castShadow: false }),
+    f.mesh("Peacock Eye R", sphere(0.01, 8, 6), bronzeHi, {
+      position: [headX + 0.04, headY + 0.018, -0.045],
+    }, { castShadow: false }),
+  );
+  // ── Crown crest — three slim fanned-out feather pegs at the crown top ──
+  for (let i = 0; i < 3; i++) {
+    const a = (i - 1) * 0.4;
+    parts.push(
+      f.mesh(`Crown Peg ${i}`, cylinder(0.006, 0.008, 0.09, 6), bronze, {
+        position: [headX - Math.sin(a) * 0.01, headY + 0.1, 0],
+        rotation: [0, 0, a],
+      }, { castShadow: false }),
+      // Slim bead at the tip of each crest peg.
+      f.mesh(`Crown Bead ${i}`, sphere(0.014, 8, 6), bronzeHi, {
+        position: [headX - Math.sin(a) * 0.05, headY + 0.16, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Spreading fan tail — five splayed feather frames arcing up and back
+  // from the rump. Each frame is a slim curved cylinder fanning outward
+  // with an eye spot stamped at its tip so the silhouette reads as a
+  // displaying peacock tail. The tail rake is steep so the fan rises
+  // above the body rather than dragging on the plinth.
+  const tailRoot: [number, number, number] = [-0.16, bodyY + 0.04, 0];
+  const fanCount = 5;
+  for (let i = 0; i < fanCount; i++) {
+    const a = ((i / (fanCount - 1)) - 0.5) * 1.4; // ±0.7 rad fan spread
+    const tilt = 0.4 + Math.abs(a) * 0.2; // outer frames tilt slightly more
+    const frameLen = 0.7;
+    const frameTipX = tailRoot[0] - Math.sin(a) * 0.04 - Math.cos(tilt) * 0.12;
+    const frameTipY = tailRoot[1] + frameLen * Math.cos(a) * 0.85;
+    const frameTipZ = tailRoot[2] + Math.sin(a) * frameLen * 0.95;
+    parts.push(
+      // Frame stalk — slim curved cylinder from rump to fan tip.
+      f.mesh(`Tail Frame ${i}`, cylinder(0.012, 0.018, frameLen, 8), bronze, {
+        position: [
+          (tailRoot[0] + frameTipX) / 2,
+          (tailRoot[1] + frameTipY) / 2,
+          (tailRoot[2] + frameTipZ) / 2,
+        ],
+        rotation: [a, 0, -tilt],
+      }, { castShadow: true, receiveShadow: true }),
+      // Eye spot at the fan tip — a slim concentric disc with a centre boss.
+      f.mesh(`Tail Eye ${i}`, cylinder(0.06, 0.06, 0.018, 16), eyeBlue, {
+        position: [frameTipX, frameTipY, frameTipZ],
+        rotation: [Math.PI / 2 + a * 0.4, 0, 0],
+      }, { castShadow: false }),
+      f.mesh(`Tail Eye Hi ${i}`, cylinder(0.038, 0.038, 0.022, 14), eyeBlueHi, {
+        position: [frameTipX - 0.005, frameTipY + 0.005, frameTipZ],
+        rotation: [Math.PI / 2 + a * 0.4, 0, 0],
+      }, { castShadow: false }),
+      f.mesh(`Tail Eye Boss ${i}`, cylinder(0.018, 0.018, 0.024, 12), bronze, {
+        position: [frameTipX - 0.008, frameTipY + 0.008, frameTipZ],
+        rotation: [Math.PI / 2 + a * 0.4, 0, 0],
+      }, { castShadow: false }),
+      // A slim shaded undercut along the lower side of each frame.
+      f.mesh(`Tail Frame Sh ${i}`, cylinder(0.009, 0.014, frameLen - 0.05, 6), bronzeShade, {
+        position: [
+          (tailRoot[0] + frameTipX) / 2 - 0.012,
+          (tailRoot[1] + frameTipY) / 2 - 0.012,
+          (tailRoot[2] + frameTipZ) / 2,
+        ],
+        rotation: [a, 0, -tilt],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Tail base flange — a small fan-shaped plate at the rump where the
+  // fan frames converge, so the tail reads as anchored rather than floating.
+  parts.push(
+    f.mesh("Tail Flange", sphere(0.1, 12, 8), bronzeShade, {
+      position: tailRoot,
+      scale: [0.7, 0.5, 1.4],
+    }, { castShadow: true }),
+  );
+  return f.group("Peacock Statue", parts, { position: pos, rotation: [0, -Math.PI / 2, 0] });
+}
+
+/* ─────────────── twenty-fifth-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental rain chains hanging from the
+ * front-corner gutter outlets down to the rain barrel lids below. Each chain
+ * is a vertical column of small inverted copper cups linked by slim chain
+ * segments with a pale water droplet column glinting between each cup as
+ * the rainwater cascades to the barrel. The cups, chain links and droplets
+ * reuse the existing `copper-patina` colour + bump pair so the verdigris
+ * reads as crusted relief on the cast metal.
+ */
+function buildRainChains(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.rainChainCup,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const link = std(C.rainChainLink, 0.4, { metalness: 0.8 });
+  const water: MaterialDef = {
+    color: C.rainChainWater,
+    roughness: 0.25,
+    metalness: 0.15,
+    transparent: true,
+    opacity: 0.65,
+    emissive: C.rainChainWater,
+  };
+  const basin = std(C.rainChainBasin, 0.95, { texture: "cobblestone", flatShading: true });
+  // Each rain chain hangs from the gutter elbow above the downspout shoe.
+  // The downspouts are at x = ±(W/2 + 0.09) on FRONT_Z - 0.12 going up to
+  // wallTop. We mount the rain chain a touch outward (x ±0.18 more) and
+  // slightly forward (z + 0.18) of the downspout so the cups don't clip
+  // the pipe. The chain runs from y ≈ 6.0 down to a small splash basin on
+  // the ground at y ≈ 0.04.
+  const sideX = W / 2 + 0.27;
+  const chainZ = FRONT_Z + 0.06;
+  const topY = 6.0;
+  const bottomY = 0.18;
+  const cupCount = 8;
+  function chain(dir: number): SceneNode {
+    const parts: SceneNode[] = [];
+    // Slim bracket pin where the chain meets the gutter — a small cylinder
+    // jutting outward from the eave wall to anchor the upper link.
+    parts.push(
+      f.mesh("Bracket Pin", cylinder(0.018, 0.018, 0.12, 8), copper, {
+        position: [dir * (W / 2 + 0.09), topY + 0.06, chainZ],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: true }),
+      f.mesh("Bracket Boss", sphere(0.03, 10, 8), copper, {
+        position: [dir * (W / 2 + 0.16), topY + 0.06, chainZ],
+      }, { castShadow: false }),
+    );
+    // Pour the chain: alternating cup + connecting link + water droplet
+    // column running between cups so the cascade reads as falling water.
+    for (let i = 0; i < cupCount; i++) {
+      const t = i / (cupCount - 1);
+      const y = topY - t * (topY - bottomY);
+      const next = ((i + 1) / (cupCount - 1));
+      const yNext = topY - next * (topY - bottomY);
+      // Slim inverted copper cup — a small upturned tapered bowl.
+      parts.push(
+        f.mesh(`Cup ${i}`, cylinder(0.07, 0.05, 0.075, 12), copper, {
+          position: [dir * sideX, y, chainZ],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim rim band at the cup mouth.
+        f.mesh(`Cup Rim ${i}`, cylinder(0.072, 0.072, 0.012, 14), link, {
+          position: [dir * sideX, y - 0.04, chainZ],
+        }, { castShadow: false }),
+        // Small loop ring at the cup crown where the upper link anchors.
+        f.mesh(`Cup Loop ${i}`, cylinder(0.018, 0.018, 0.022, 8), link, {
+          position: [dir * sideX, y + 0.045, chainZ],
+        }, { castShadow: false }),
+      );
+      if (i < cupCount - 1) {
+        // Three slim link segments between this cup and the next, chained
+        // in a slim vertical zig-zag so the cascade reads as a hanging
+        // chain rather than a stiff rod.
+        const segCount = 3;
+        for (let s = 0; s < segCount; s++) {
+          const sy = y - 0.04 - ((y - 0.04 - (yNext + 0.045)) / segCount) * (s + 0.5);
+          const sw = s % 2 === 0 ? 0.006 : -0.006;
+          parts.push(
+            f.mesh(`Link ${i}-${s}`, cylinder(0.01, 0.01, 0.05, 6), link, {
+              position: [dir * sideX + sw, sy, chainZ],
+              rotation: [0, 0, sw * 4],
+            }, { castShadow: false }),
+          );
+        }
+        // Slim water droplet column glinting through the chain — a thin
+        // translucent cylinder that suggests rain cascading down the
+        // chain even on a dry day.
+        const dropY = (y - 0.04 + yNext + 0.045) / 2;
+        const dropLen = Math.abs(y - 0.04 - (yNext + 0.045));
+        parts.push(
+          f.mesh(`Drop ${i}`, cylinder(0.012, 0.012, dropLen, 8), water, {
+            position: [dir * sideX, dropY, chainZ],
+          }, { castShadow: false }),
+        );
+      }
+    }
+    // Splash basin pebble at the foot of the chain — a slim flat stone
+    // disc catching the chain's terminus over the rain barrel area.
+    parts.push(
+      f.mesh("Splash Pebble A", sphere(0.09, 10, 8), basin, {
+        position: [dir * sideX, 0.04, chainZ],
+        scale: [1.2, 0.35, 1.2],
+      }, { castShadow: false, receiveShadow: true }),
+      f.mesh("Splash Pebble B", sphere(0.06, 10, 8), basin, {
+        position: [dir * sideX - 0.08 * dir, 0.04, chainZ + 0.05],
+        scale: [1.2, 0.35, 1.2],
+      }, { castShadow: false, receiveShadow: true }),
+      f.mesh("Splash Pebble C", sphere(0.05, 10, 8), basin, {
+        position: [dir * sideX + 0.07 * dir, 0.04, chainZ - 0.06],
+        scale: [1.2, 0.35, 1.2],
+      }, { castShadow: false, receiveShadow: true }),
+    );
+    return f.group(`Rain Chain ${dir < 0 ? "L" : "R"}`, parts);
+  }
+  return f.group("Rain Chains", [chain(-1), chain(1)]);
+}
+
+/* ─────────────── twenty-fifth-pass scene extension ─────────────── */
+
+/**
+ * Far-northeast snowy mountain pass plane bridging the gap between the
+ * alpine foothills' east edge and the NE maple grove's north edge. The
+ * plane carries a snow-dusted highland ground with the new `mountain-pass`
+ * colour + depth map pair so the drifts and exposed bedrock heads read as
+ * raised relief at glancing sun, a small stone-walled mountain refuge
+ * cottage at the southeast corner with a peaked shingle roof and a slim
+ * chimney trailing pale smoke, a focal stone trail cairn of four stacked
+ * granite boulders marking the saddle of the pass, a slim wooden
+ * prayer-flag line strung between two slender poles, a scatter of four
+ * snow-dusted alpine firs clinging to the ridges and a small frozen
+ * alpine tarn pond with a pale-blue ice surface and a fringe of exposed
+ * alpine pebbles around the shore.
+ */
+function buildFarNortheastMountainPass(f: NodeFactory): SceneNode {
+  return f.group("Far Northeast Mountain Pass", [
+    // Mountain pass ground plane — snow-dusted highland ground with the new
+    // colour + depth map pair so the drifts and exposed bedrock heads read
+    // as raised relief at glancing sun.
+    f.mesh(
+      "Mountain Pass Ground",
+      plane(MOUNTAIN_PASS_W, MOUNTAIN_PASS_D),
+      std(C.passGround, 0.95, {
+        texture: "mountain-pass",
+        textureScale: [4, 5],
+        bumpMap: "mountain-pass-bump",
+        bumpScale: 0.06,
+      }),
+      { position: MOUNTAIN_PASS_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the alpine foothills' east edge with a slim
+    // alpine-moss strip so the seam reads as a continuous highland join
+    // between the foothills and the pass.
+    f.mesh(
+      "Mountain Pass West Apron",
+      plane(3, MOUNTAIN_PASS_D),
+      std(C.passApronAlpine, 0.95, { texture: "grass", textureScale: [1, 6] }),
+      {
+        position: [
+          MOUNTAIN_PASS_POS[0] - MOUNTAIN_PASS_W / 2 + 1.5,
+          -0.02,
+          MOUNTAIN_PASS_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // South apron — overlaps the NE maple grove's north edge with a slim
+    // autumn-litter strip so the seam reads as a continuous join between
+    // the auburn grove and the snow-dusted pass.
+    f.mesh(
+      "Mountain Pass South Apron",
+      plane(MOUNTAIN_PASS_W, 3),
+      std(C.passApronAutumn, 0.95, { texture: "grass", textureScale: [6, 1] }),
+      {
+        position: [
+          MOUNTAIN_PASS_POS[0],
+          -0.02,
+          MOUNTAIN_PASS_POS[2] + MOUNTAIN_PASS_D / 2 - 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildMountainRefuge(f, REFUGE_HUT_POS),
+    buildPassCairn(f, PASS_CAIRN_POS),
+    buildPrayerFlags(f, PRAYER_FLAGS_POS),
+    buildPassTarn(f, PASS_TARN_POS),
+    buildPassFirs(f),
+  ]);
+}
+
+/**
+ * A small stone-walled mountain refuge cottage — the alpine traveller's
+ * shelter at the saddle of the pass. Low fieldstone walls under a pitched
+ * shingle roof, a slim stone chimney trailing pale smoke wisps, a plank
+ * front door and a glowing square window. A compact island-mountain
+ * shelter sized for one weary climber and a small fire.
+ */
+function buildMountainRefuge(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.refugeStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneDark = std(C.refugeStoneDark, 0.95, { texture: "cobblestone", flatShading: true });
+  const roof = std(C.refugeRoof, 0.95, { texture: "shingle", textureScale: [2, 2], flatShading: true });
+  const roofHi = std(C.refugeRoofHi, 0.95, { flatShading: true });
+  const door = std(C.refugeDoor, 0.95, { texture: "wood", textureScale: [1, 2], flatShading: true });
+  const chimney = std(C.refugeChimney, 0.95, { texture: "cobblestone", flatShading: true });
+  const glass: MaterialDef = {
+    color: C.refugeGlow,
+    roughness: 0.25,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.85,
+    emissive: C.refugeGlow,
+  };
+  const smoke: MaterialDef = {
+    color: C.refugeSmoke,
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.42,
+  };
+  const w = 2.5;
+  const d = 2.0;
+  const wallH = 1.25;
+  const parts: SceneNode[] = [];
+  // ── Four fieldstone walls ──
+  parts.push(
+    // South wall (front).
+    f.mesh("Wall S", box(w, wallH, 0.2), stone, {
+      position: [0, wallH / 2, d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // North wall.
+    f.mesh("Wall N", box(w, wallH, 0.2), stone, {
+      position: [0, wallH / 2, -d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // West gable wall — taller to meet the roof ridge.
+    f.mesh("Wall W", box(0.2, wallH + 0.42, d), stoneDark, {
+      position: [-w / 2, (wallH + 0.42) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // East gable wall.
+    f.mesh("Wall E", box(0.2, wallH + 0.42, d), stoneDark, {
+      position: [w / 2, (wallH + 0.42) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Slim stone wall course highlights across the south wall — three
+  // horizontal accent bands so the masonry reads as coursed.
+  for (let i = 0; i < 3; i++) {
+    const cy = 0.22 + i * 0.32;
+    parts.push(
+      f.mesh(`Course ${i}`, box(w - 0.1, 0.04, 0.04), stoneDark, {
+        position: [0, cy, d / 2 + 0.12],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Pitched shingle roof — two angled slabs meeting at a ridge with a
+  // slim shingle ridge cap. Shingles are textured so the slope reads
+  // with overlapping course detail.
+  const ridgeY = wallH + 0.68;
+  const halfD = d / 2 + 0.3;
+  const hyp = Math.hypot(0.68, halfD);
+  const slope = Math.atan2(0.68, halfD);
+  parts.push(
+    // South slope.
+    f.mesh("Roof S", box(w + 0.4, 0.1, hyp), roof, {
+      position: [0, ridgeY - 0.34, halfD / 2],
+      rotation: [-slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // North slope.
+    f.mesh("Roof N", box(w + 0.4, 0.1, hyp), roof, {
+      position: [0, ridgeY - 0.34, -halfD / 2],
+      rotation: [slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shingle ridge cap.
+    f.mesh("Roof Ridge", box(w + 0.42, 0.08, 0.16), roofHi, {
+      position: [0, ridgeY + 0.02, 0],
+    }, { castShadow: true }),
+  );
+  // ── Slim stone chimney on the east gable peak trailing pale smoke ──
+  parts.push(
+    f.mesh("Chimney Stack", box(0.28, 0.7, 0.28), chimney, {
+      position: [w / 2 + 0.05, ridgeY + 0.16, -0.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Crown", box(0.36, 0.06, 0.36), stoneDark, {
+      position: [w / 2 + 0.05, ridgeY + 0.54, -0.2],
+    }, { castShadow: true }),
+    // Three smoke wisps trailing east of the chimney.
+    f.mesh("Smoke A", sphere(0.14, 12, 8), smoke, {
+      position: [w / 2 + 0.18, ridgeY + 0.78, -0.18],
+      scale: [1.2, 0.9, 1.1],
+    }, { castShadow: false }),
+    f.mesh("Smoke B", sphere(0.16, 12, 8), smoke, {
+      position: [w / 2 + 0.48, ridgeY + 1.0, -0.05],
+      scale: [1.3, 0.8, 1.2],
+    }, { castShadow: false }),
+    f.mesh("Smoke C", sphere(0.18, 12, 8), smoke, {
+      position: [w / 2 + 0.88, ridgeY + 1.2, 0.15],
+      scale: [1.4, 0.85, 1.2],
+    }, { castShadow: false }),
+  );
+  // ── Plank front door on the south wall ──
+  parts.push(
+    f.mesh("Door Frame", box(0.5, 1.0, 0.04), stoneDark, {
+      position: [-0.5, 0.5, d / 2 + 0.11],
+    }, { castShadow: false }),
+    f.mesh("Door", box(0.4, 0.9, 0.04), door, {
+      position: [-0.5, 0.45, d / 2 + 0.13],
+    }, { castShadow: false }),
+  );
+  // ── Glowing square front window on the south wall ──
+  parts.push(
+    f.mesh("Window Frame", box(0.48, 0.4, 0.04), stoneDark, {
+      position: [0.55, 0.82, d / 2 + 0.11],
+    }, { castShadow: false }),
+    f.mesh("Window Glass", box(0.38, 0.32, 0.02), glass, {
+      position: [0.55, 0.82, d / 2 + 0.13],
+    }, { castShadow: false }),
+    // Cross muntin.
+    f.mesh("Window Muntin V", box(0.03, 0.32, 0.025), stoneDark, {
+      position: [0.55, 0.82, d / 2 + 0.15],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin H", box(0.38, 0.03, 0.025), stoneDark, {
+      position: [0.55, 0.82, d / 2 + 0.15],
+    }, { castShadow: false }),
+  );
+  return f.group("Mountain Refuge", parts, { position: pos, rotation: [0, -0.5, 0] });
+}
+
+/**
+ * A stone trail cairn — four stacked granite boulders marking the saddle
+ * of the mountain pass, a traditional highland route marker. The boulders
+ * reuse a flat-shaded granite stone material with a slim highlight ring
+ * around each so they read with relief at glancing sun.
+ */
+function buildPassCairn(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.passCairnStone, 0.95, { flatShading: true });
+  const stoneHi = std(C.passCairnStoneHi, 0.95, { flatShading: true });
+  const stoneShade = std(C.passCairnStoneShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Four boulders stacked in a slim pyramid — biggest at the base,
+  // smallest at the crown.
+  const boulders: { x: number; y: number; z: number; r: number; yaw: number }[] = [
+    { x: 0, y: 0.4, z: 0, r: 0.55, yaw: 0.3 },
+    { x: 0.07, y: 0.92, z: -0.04, r: 0.38, yaw: 1.2 },
+    { x: -0.05, y: 1.28, z: 0.05, r: 0.26, yaw: 2.5 },
+    { x: 0.02, y: 1.55, z: 0, r: 0.16, yaw: 0.9 },
+  ];
+  for (let i = 0; i < boulders.length; i++) {
+    const b = boulders[i]!;
+    parts.push(
+      f.mesh(`Cairn Stone ${i}`, sphere(b.r, 14, 10), stone, {
+        position: [b.x, b.y, b.z],
+        rotation: [0, b.yaw, 0],
+        scale: [1.1, 0.9, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut below each boulder.
+      f.mesh(`Cairn Stone ${i} Shade`, sphere(b.r * 0.85, 12, 8), stoneShade, {
+        position: [b.x + 0.04, b.y - b.r * 0.4, b.z + 0.04],
+        rotation: [0, b.yaw, 0],
+        scale: [1.0, 0.55, 0.9],
+      }, { castShadow: false }),
+      // Slim highlight ridge atop each boulder.
+      f.mesh(`Cairn Stone ${i} Hi`, sphere(b.r * 0.55, 10, 6), stoneHi, {
+        position: [b.x - 0.05, b.y + b.r * 0.35, b.z - 0.05],
+        rotation: [0, b.yaw, 0],
+        scale: [1.0, 0.4, 0.9],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Pass Trail Cairn", parts, { position: pos });
+}
+
+/**
+ * A slim wooden prayer-flag line strung between two slender poles carrying
+ * five rectangular cloth pennants in five different tints (blue, white,
+ * red, green, yellow — the traditional Tibetan five-element palette). The
+ * line drapes in a soft catenary curve and each pennant is slightly tilted
+ * so the silhouette reads as wind-fluttered cloth rather than stiff cards.
+ */
+function buildPrayerFlags(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const pole = std(C.prayerFlagPole, 0.85, { texture: "wood", flatShading: true });
+  const line = std(C.prayerFlagPole, 0.8, { flatShading: true });
+  const flagBlue = std(C.prayerFlagBlue, 0.9, { flatShading: true });
+  const flagWhite = std(C.prayerFlagWhite, 0.9, { flatShading: true });
+  const flagRed = std(C.prayerFlagRed, 0.9, { flatShading: true });
+  const flagGreen = std(C.prayerFlagGreen, 0.9, { flatShading: true });
+  const flagYellow = std(C.prayerFlagYellow, 0.9, { flatShading: true });
+  const flagMats = [flagBlue, flagWhite, flagRed, flagGreen, flagYellow];
+  const parts: SceneNode[] = [];
+  const span = 3.2;
+  const poleH = 1.8;
+  // Two slender wooden poles flanking the line.
+  parts.push(
+    f.mesh("Pole L", cylinder(0.04, 0.05, poleH, 8), pole, {
+      position: [-span / 2, poleH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pole R", cylinder(0.04, 0.05, poleH, 8), pole, {
+      position: [span / 2, poleH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim pole caps so the tops read as finished posts.
+    f.mesh("Pole Cap L", sphere(0.05, 10, 8), pole, {
+      position: [-span / 2, poleH + 0.02, 0],
+    }, { castShadow: false }),
+    f.mesh("Pole Cap R", sphere(0.05, 10, 8), pole, {
+      position: [span / 2, poleH + 0.02, 0],
+    }, { castShadow: false }),
+  );
+  // Slim catenary line — five small linked cylinders spanning the poles.
+  const lineSegs = 5;
+  for (let s = 0; s < lineSegs; s++) {
+    const t0 = s / lineSegs;
+    const t1 = (s + 1) / lineSegs;
+    const x0 = -span / 2 + t0 * span;
+    const x1 = -span / 2 + t1 * span;
+    // Soft catenary sag — minimum at the middle, peak at the ends.
+    const sag = (t: number) => poleH - 0.05 - 0.18 * Math.sin(t * Math.PI);
+    const y0 = sag(t0);
+    const y1 = sag(t1);
+    const midX = (x0 + x1) / 2;
+    const midY = (y0 + y1) / 2;
+    const len = Math.hypot(x1 - x0, y1 - y0);
+    const tilt = Math.atan2(y1 - y0, x1 - x0);
+    parts.push(
+      f.mesh(`Line Seg ${s}`, cylinder(0.01, 0.01, len, 6), line, {
+        position: [midX, midY, 0],
+        rotation: [0, 0, tilt + Math.PI / 2],
+      }, { castShadow: false }),
+    );
+  }
+  // Five pennants pinned along the line — each a slim coloured panel
+  // hanging just below the line and tilted slightly to mime wind drag.
+  for (let i = 0; i < flagMats.length; i++) {
+    const t = (i + 0.5) / flagMats.length;
+    const x = -span / 2 + t * span;
+    const y = poleH - 0.05 - 0.18 * Math.sin(t * Math.PI);
+    const tilt = ((i % 2 === 0) ? -1 : 1) * 0.18;
+    parts.push(
+      f.mesh(`Pennant ${i}`, box(0.42, 0.32, 0.01), flagMats[i]!, {
+        position: [x, y - 0.18, 0],
+        rotation: [0, tilt, tilt * 0.5],
+      }, { castShadow: false, receiveShadow: false }),
+      // Slim pin tab joining the pennant to the line.
+      f.mesh(`Pennant Pin ${i}`, cylinder(0.008, 0.008, 0.05, 6), pole, {
+        position: [x, y - 0.03, 0],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Prayer Flag Line", parts, { position: pos, rotation: [0, 0.3, 0] });
+}
+
+/**
+ * A small frozen alpine tarn pond — a slim flat disc of pale-blue ice with
+ * slim crack highlights and a fringe of exposed alpine pebbles around the
+ * shore. Sits in a shallow depression at the saddle of the pass.
+ */
+function buildPassTarn(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const ice = std(C.passTarnIce, 0.35, { metalness: 0.15 });
+  const iceHi = std(C.passTarnIceHi, 0.3, { metalness: 0.2 });
+  const iceCrack = std(C.passTarnIceCrack, 0.5, { flatShading: true });
+  const pebble = std(C.passTarnPebble, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  const r = 1.4;
+  // Slim shaded shore basin — a darker disc set slightly below the ice
+  // surface so the ice reads as resting in a shallow depression.
+  parts.push(
+    f.mesh("Tarn Basin", cylinder(r + 0.1, r + 0.1, 0.02, 28), iceCrack, {
+      position: [0, 0.005, 0],
+    }, { receiveShadow: true }),
+    // Pale-blue ice surface — the main frozen disc.
+    f.mesh("Tarn Ice", cylinder(r, r, 0.012, 28), ice, {
+      position: [0, 0.018, 0],
+    }, { receiveShadow: true }),
+    // Slim sun-glint highlight crescent on the ice surface.
+    f.mesh("Tarn Ice Glint", cylinder(r * 0.55, r * 0.55, 0.015, 24), iceHi, {
+      position: [-r * 0.25, 0.026, -r * 0.2],
+      scale: [1.2, 1, 0.7],
+    }, { castShadow: false }),
+  );
+  // Three slim crack highlights running across the ice — slim raised
+  // sliver lines suggesting fissures in the frozen surface.
+  const cracks: { a: number; len: number }[] = [
+    { a: 0.4, len: r * 1.6 },
+    { a: 1.5, len: r * 1.3 },
+    { a: 2.6, len: r * 1.4 },
+  ];
+  for (let i = 0; i < cracks.length; i++) {
+    const c = cracks[i]!;
+    parts.push(
+      f.mesh(`Tarn Crack ${i}`, box(c.len, 0.005, 0.018), iceCrack, {
+        position: [Math.cos(c.a) * 0.05, 0.025, Math.sin(c.a) * 0.05],
+        rotation: [0, c.a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Ring of exposed alpine pebbles around the shore — eight small flat
+  // stones at varied yaw so the silhouette reads as a natural pebble
+  // fringe rather than a regular collar.
+  const pebbleCount = 10;
+  for (let i = 0; i < pebbleCount; i++) {
+    const a = (i / pebbleCount) * Math.PI * 2 + 0.2;
+    const rx = (r + 0.18) + (i % 2 === 0 ? 0.04 : -0.02);
+    parts.push(
+      f.mesh(`Pebble ${i}`, sphere(0.08 + (i % 3) * 0.02, 10, 8), pebble, {
+        position: [Math.cos(a) * rx, 0.05, Math.sin(a) * rx],
+        rotation: [0, a, 0],
+        scale: [1.2, 0.45, 1.1],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  return f.group("Alpine Tarn", parts, { position: pos });
+}
+
+/**
+ * A scatter of four snow-dusted alpine firs clinging to the ridges of the
+ * mountain pass. Each fir is a slim conical trunk crowned by three layered
+ * conical foliage tiers each topped with a pale snow cap so the silhouette
+ * reads as a winter-clad alpine evergreen.
+ */
+function buildPassFirs(f: NodeFactory): SceneNode {
+  const trunk = std(C.passFirTrunk, 0.95, { texture: "bark", flatShading: true });
+  const foliage = std(C.passFirFoliage, 0.95, { flatShading: true });
+  const foliageHi = std(C.passFirFoliageHi, 0.95, { flatShading: true });
+  const snowCap = std(C.passFirSnowCap, 0.9, { flatShading: true });
+  const firs: { x: number; z: number; scale: number; yaw: number }[] = [
+    { x: 32, z: -82, scale: 1.0, yaw: 0.3 },
+    { x: 45, z: -88, scale: 0.85, yaw: 1.2 },
+    { x: 35, z: -94, scale: 0.95, yaw: 2.0 },
+    { x: 42, z: -82, scale: 0.78, yaw: 0.8 },
+  ];
+  const groups: SceneNode[] = [];
+  for (let i = 0; i < firs.length; i++) {
+    const fir = firs[i]!;
+    const parts: SceneNode[] = [];
+    // Trunk.
+    parts.push(
+      f.mesh("Trunk", cylinder(0.08, 0.12, 0.9, 8), trunk, {
+        position: [0, 0.45, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Three layered foliage tiers with snow caps.
+    const tiers = [
+      { y: 0.95, r: 0.55, h: 0.6 },
+      { y: 1.35, r: 0.42, h: 0.5 },
+      { y: 1.7, r: 0.28, h: 0.42 },
+    ];
+    for (let t = 0; t < tiers.length; t++) {
+      const tier = tiers[t]!;
+      parts.push(
+        f.mesh(`Foliage ${t}`, cone(tier.r, tier.h, 10), foliage, {
+          position: [0, tier.y, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim highlight rim along the lower edge of each tier.
+        f.mesh(`Foliage Hi ${t}`, cone(tier.r * 0.78, tier.h * 0.6, 10), foliageHi, {
+          position: [-0.03, tier.y - tier.h * 0.18, -0.03],
+        }, { castShadow: false }),
+        // Slim snow cap on each tier's tip.
+        f.mesh(`Snow Cap ${t}`, cone(tier.r * 0.42, tier.h * 0.3, 10), snowCap, {
+          position: [0, tier.y + tier.h * 0.32, 0],
+        }, { castShadow: false }),
+      );
+    }
+    groups.push(
+      f.group(`Pass Fir ${i + 1}`, parts, {
+        position: [fir.x, 0, fir.z],
+        rotation: [0, fir.yaw, 0],
+        scale: [fir.scale, fir.scale, fir.scale],
+      }),
+    );
+  }
+  return f.group("Pass Firs", groups);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -19513,6 +20405,42 @@ function buildGlenFirs(f: NodeFactory): SceneNode {
  *    its narrowest crossing, a scatter of six Scottish thistles in two
  *    bloom shades dotted around the moss and a small clump of four
  *    highland firs hugging the northern ridge.
+ * 25. Courtyard: a Victorian bronze peacock statue on a fluted marble
+ *    pedestal, parked on the east outside-fence lawn between the
+ *    armillary sphere and the weather station so the three marble
+ *    pedestals read as a sequenced display along the east side of the
+ *    courtyard — a slim peacock standing on the plinth cap with an
+ *    arched neck, a crested head, two slender stilt legs, an upswept
+ *    spreading fan tail with five splayed feather frames and a row of
+ *    iridescent eye spots stamped across the tail face (the bronze body,
+ *    crown crest and tail feather frames reuse the existing
+ *    `copper-patina` colour + bump pair so the verdigris reads as
+ *    crusted relief on the cast metal, and the marble plinth reuses the
+ *    existing `marble` colour + bump pair so the stone reads with
+ *    veined relief). House: a pair of Victorian copper-patina ornamental
+ *    rain chains hanging from the front-corner gutter outlets down to
+ *    the rain barrel lids below — each chain a vertical column of small
+ *    inverted copper cups linked by slim chain segments with a pale
+ *    water droplet column glinting between each cup as the rainwater
+ *    cascades to the barrel (the cups, chain links and droplets reuse
+ *    the existing `copper-patina` pair). Scene: a far-northeast snowy
+ *    mountain pass plane bridging the gap between the alpine foothills'
+ *    east edge and the NE maple grove's north edge — a snow-dusted
+ *    highland ground surfaced with the new `mountain-pass` colour map
+ *    paired with a snowdrift-and-scree depth map (registered alongside
+ *    the other procedural textures) so the drifts and exposed bedrock
+ *    heads read as raised relief at glancing sun, an alpine-moss apron
+ *    along the west join and an autumn-litter apron along the south
+ *    join so the ground layer has no holes at either seam, a small
+ *    stone-walled mountain refuge cottage at the southeast corner with
+ *    a peaked shingle roof, a glowing square window and a slim chimney
+ *    trailing pale smoke, a focal stone trail cairn of four stacked
+ *    granite boulders marking the saddle of the pass, a slim wooden
+ *    prayer-flag line strung between two slender poles carrying five
+ *    rectangular cloth pennants in five different tints, a scatter of
+ *    four snow-dusted alpine firs clinging to the ridges and a small
+ *    frozen alpine tarn pond with a pale-blue ice surface, slim crack
+ *    highlights and a ring of exposed alpine pebbles around the shore.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -19597,6 +20525,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: WEATHER_STATION_POS[0], z: WEATHER_STATION_POS[2], r: 0.9 },
     // Twenty-fourth-pass keep-out — stag statue on the front-east outside-gate apron.
     { x: STAG_STATUE_POS[0], z: STAG_STATUE_POS[2], r: 1.0 },
+    // Twenty-fifth-pass keep-out — peacock statue on the east outside-fence lawn.
+    { x: PEACOCK_STATUE_POS[0], z: PEACOCK_STATUE_POS[2], r: 1.0 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -19662,6 +20592,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildFlagpoleStand(f, FLAGPOLE_POS),
     buildWeatherStation(f, WEATHER_STATION_POS),
     buildStagStatue(f, STAG_STATUE_POS),
+    buildPeacockStatue(f, PEACOCK_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -19683,6 +20614,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fswPeatMoor = buildFarSouthwestPeatMoor(f);
   const fseTropicalLagoon = buildFarSoutheastTropicalLagoon(f);
   const fnwScottishGlen = buildFarNorthwestScottishGlen(f);
+  const fneMountainPass = buildFarNortheastMountainPass(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -19727,6 +20659,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildGableSunbursts(f),
     buildEyebrowDormers(f),
     buildPorchCornerBrackets(f),
+    buildRainChains(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -19755,6 +20688,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fswPeatMoor,
       fseTropicalLagoon,
       fnwScottishGlen,
+      fneMountainPass,
       house,
     ],
   };
