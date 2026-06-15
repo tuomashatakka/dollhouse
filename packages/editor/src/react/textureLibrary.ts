@@ -3824,4 +3824,273 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Twenty-sixth-pass additions ───────────────────────────────────
+  // The twenty-sixth enhancement pass introduces a sun-baked salt-crust
+  // ground surface for the far-east scene-extension plane tucked beyond
+  // the desert oasis's east edge — a pale crusty playa with raised
+  // hexagonal crust polygon edges, scattered shallow brine pools and
+  // a slim scatter of glint specks, paired with a hexagonal crust-and-
+  // pool depth map so the polygon edges and pools read as raised relief
+  // at glancing sun.
+
+  // Salt-flats colour — a pale crust-toned playa with darker polygon
+  // boundary lines suggesting the hexagonal salt-crust desiccation
+  // tiles, scattered shallow brine pool patches in turquoise and rust
+  // tints, and a faint sun cast across one diagonal so the surface
+  // reads as raised relief at glancing sun. Drawn on a power-of-two
+  // canvas so the mipmap chain stays clean.
+  registry["salt-flats"] = makeCanvasTexture({
+    seed: 0x5a17f1a7,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly warmer toward the south so the playa
+      // reads as a sun-baked salt-crust sweep from above with a hint of
+      // mineral tint along the lower edge.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#f0ece2");
+      bg.addColorStop(0.5, "#e6e0d2");
+      bg.addColorStop(1, "#d2c8b4");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide pale crust lobes — soft radial highlights suggesting raised
+      // crust mounds underneath the surface mottle.
+      for (let i = 0; i < 8; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${36 + rng() * 14}, 18%, ${88 + rng() * 8}%, 0.32)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Hexagonal salt-crust polygon edges — a grid of irregular hex
+      // tiles drawn as slim dark outlines so the crust reads as a
+      // desiccation-cracked playa. The hexes jitter slightly so they
+      // read as natural rather than machine-perfect.
+      ctx.strokeStyle = "rgba(120,112,88,0.55)";
+      ctx.lineWidth = 1.2;
+      const hexR = 24;
+      const hexH = hexR * Math.sqrt(3);
+      for (let row = -1; row < size / hexH + 2; row++) {
+        for (let col = -1; col < size / (hexR * 1.5) + 2; col++) {
+          const cx = col * hexR * 1.5 + (rng() - 0.5) * 3;
+          const cy = row * hexH + (col % 2 === 0 ? 0 : hexH / 2) + (rng() - 0.5) * 3;
+          ctx.beginPath();
+          for (let p = 0; p < 6; p++) {
+            const a = (p / 6) * Math.PI * 2;
+            const px = cx + Math.cos(a) * hexR + (rng() - 0.5) * 2;
+            const py = cy + Math.sin(a) * hexR + (rng() - 0.5) * 2;
+            if (p === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
+      }
+      // Slim warm highlight along the polygon ridges — a paler stroke
+      // tracing the upper-left of each tile suggesting raised crust
+      // edges catching the sun.
+      ctx.strokeStyle = "rgba(248,242,228,0.4)";
+      ctx.lineWidth = 0.8;
+      for (let row = -1; row < size / hexH + 2; row++) {
+        for (let col = -1; col < size / (hexR * 1.5) + 2; col++) {
+          const cx = col * hexR * 1.5 + (rng() - 0.5) * 3;
+          const cy = row * hexH + (col % 2 === 0 ? 0 : hexH / 2) + (rng() - 0.5) * 3;
+          ctx.beginPath();
+          ctx.moveTo(cx - hexR * 0.8, cy - hexR * 0.4);
+          ctx.lineTo(cx + hexR * 0.3, cy - hexR * 0.85);
+          ctx.stroke();
+        }
+      }
+      // Scattered shallow brine pool patches — small turquoise pools
+      // suggesting evaporating mineral water sitting in the crust
+      // depressions.
+      for (let i = 0; i < 14; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 4 + rng() * 8;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${178 + rng() * 18}, 38%, ${48 + rng() * 14}%, 0.62)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim rust-orange iron pool dabs — sparser warm-orange patches
+      // suggesting oxidised mineral runoff staining the crust.
+      for (let i = 0; i < 6; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 3 + rng() * 6;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${18 + rng() * 14}, 42%, ${42 + rng() * 14}%, 0.65)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Pale salt glint specks — many slim near-white flecks across the
+      // crust suggesting reflective salt-crystal grains.
+      for (let i = 0; i < 1400; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const which = rng();
+        let colour: string;
+        if (which < 0.55) {
+          colour = `hsla(${42 + rng() * 14}, 12%, ${92 + rng() * 6}%, 0.55)`;
+        } else if (which < 0.85) {
+          colour = `hsla(${48 + rng() * 14}, 18%, ${82 + rng() * 8}%, 0.45)`;
+        } else {
+          colour = `hsla(${36 + rng() * 16}, 14%, ${74 + rng() * 10}%, 0.4)`;
+        }
+        ctx.fillStyle = colour;
+        ctx.fillRect(x, y, 1.4 + rng() * 0.8, 1.4 + rng() * 0.8);
+      }
+      // Tiny mineral-grain flecks — many slim warm-grey specks scattered
+      // across the playa suggesting trace mineral debris embedded in the
+      // crust.
+      for (let i = 0; i < 1600; i++) {
+        ctx.fillStyle = `hsla(${30 + rng() * 16}, 10%, ${60 + rng() * 18}%, 0.4)`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1 + rng() * 1.4);
+      }
+      // Slim wind-scour streaks — a few horizontal pale slats along the
+      // upper third of the canvas suggesting wind-carved surface marks.
+      for (let i = 0; i < 12; i++) {
+        const y = size * 0.18 + rng() * size * 0.18;
+        const x = rng() * size;
+        const len = 36 + rng() * 28;
+        ctx.fillStyle = `rgba(238,232,212,0.4)`;
+        ctx.fillRect(x, y, len, 0.8 + rng() * 0.5);
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash so
+      // glancing afternoon sun catches the rim of the playa.
+      const sun = ctx.createRadialGradient(size * 0.72, size * 0.2, 0, size * 0.72, size * 0.2, size * 0.85);
+      sun.addColorStop(0, "rgba(255,236,196,0.16)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0024);
+    },
+  });
+
+  // Salt-flats depth map — the polygon ridges sit slightly above the
+  // crust surface (light = high) and the brine pools recess into the
+  // crust (dark = low) so the playa shows subtle relief on glancing sun.
+  registry["salt-flats-bump"] = makeCanvasTexture({
+    seed: 0x5a17f1a7 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average crust height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling crust mounds — pale radial highlights suggesting low
+      // crust swells underneath the surface mottle.
+      for (let i = 0; i < 8; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(210,210,210,0.24)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Hexagonal crust polygon ridges — slim bright outlines tracing
+      // the tile boundaries so the polygon edges read as raised crust
+      // ridges in the bump map.
+      ctx.strokeStyle = "rgba(220,220,220,0.7)";
+      ctx.lineWidth = 2.0;
+      const hexR = 24;
+      const hexH = hexR * Math.sqrt(3);
+      for (let row = -1; row < size / hexH + 2; row++) {
+        for (let col = -1; col < size / (hexR * 1.5) + 2; col++) {
+          const cx = col * hexR * 1.5 + (rng() - 0.5) * 3;
+          const cy = row * hexH + (col % 2 === 0 ? 0 : hexH / 2) + (rng() - 0.5) * 3;
+          ctx.beginPath();
+          for (let p = 0; p < 6; p++) {
+            const a = (p / 6) * Math.PI * 2;
+            const px = cx + Math.cos(a) * hexR + (rng() - 0.5) * 2;
+            const py = cy + Math.sin(a) * hexR + (rng() - 0.5) * 2;
+            if (p === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
+      }
+      // Slim darker shaded undercut along the lower side of each polygon
+      // edge — suggests the polygon ridges cast a shadow on the crust
+      // below them at glancing sun.
+      ctx.strokeStyle = "rgba(40,40,40,0.55)";
+      ctx.lineWidth = 1.4;
+      for (let row = -1; row < size / hexH + 2; row++) {
+        for (let col = -1; col < size / (hexR * 1.5) + 2; col++) {
+          const cx = col * hexR * 1.5 + (rng() - 0.5) * 3;
+          const cy = row * hexH + (col % 2 === 0 ? 0 : hexH / 2) + (rng() - 0.5) * 3;
+          ctx.beginPath();
+          ctx.moveTo(cx - hexR * 0.7, cy + hexR * 0.4);
+          ctx.lineTo(cx + hexR * 0.3, cy + hexR * 0.85);
+          ctx.stroke();
+        }
+      }
+      // Brine pool recesses — dark radial blobs reading as the crust
+      // depressions where pools have eaten into the surface.
+      for (let i = 0; i < 14; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 4 + rng() * 8;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(30,30,30,0.7)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Iron-pool recesses — smaller darker blobs reading as the deepest
+      // crust depressions where the rust-orange pools sit.
+      for (let i = 0; i < 6; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 3 + rng() * 6;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(20,20,20,0.75)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Salt crystal bumps — many small bright dots reading as raised
+      // salt-crystal grains across the crust.
+      for (let i = 0; i < 1400; i++) {
+        const v = 200 + Math.floor(rng() * 55);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.55)`;
+        ctx.fillRect(rng() * size, rng() * size, 1.0, 1.0 + rng() * 0.6);
+      }
+      // Slim wind-scour furrows — a few horizontal recessed slats along
+      // the upper third reading as the wind-carved surface marks.
+      for (let i = 0; i < 12; i++) {
+        const y = size * 0.18 + rng() * size * 0.18;
+        const x = rng() * size;
+        const len = 36 + rng() * 28;
+        ctx.fillStyle = "rgba(40,40,40,0.55)";
+        ctx.fillRect(x, y, len, 0.8 + rng() * 0.5);
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

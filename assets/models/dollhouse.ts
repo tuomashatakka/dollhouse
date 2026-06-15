@@ -881,6 +881,64 @@ const PASS_CAIRN_POS: [number, number, number] = [36, 0, -84];
 const PASS_TARN_POS: [number, number, number] = [33, 0, -92];
 const PRAYER_FLAGS_POS: [number, number, number] = [40, 0, -92];
 
+/**
+ * Twenty-sixth-pass courtyard prop — a Victorian bronze elephant statue on a
+ * fluted marble plinth, parked on the west outside-fence lawn between the
+ * carousel horse (back-west) and the Victorian glider (south-west) as a
+ * mirror to the peacock statue on the east outside-fence lawn — completing
+ * the symmetric trio of marble pedestals along each side of the courtyard.
+ * The elephant stands four-square on the plinth cap with a raised curved
+ * trunk, two pendant ears, two ivory tusks and a tasseled tail. The bronze
+ * body, trunk, ears and tail reuse the existing `copper-patina` colour +
+ * bump pair so the verdigris reads as crusted relief on the cast metal, the
+ * tusks carry a slim warm ivory tone and the plinth reuses the existing
+ * `marble` colour + bump pair so the stone reads with veined relief.
+ */
+const ELEPHANT_STATUE_POS: [number, number, number] = [-13.6, 0, -1.5];
+
+/**
+ * Twenty-sixth-pass house detail — a pair of Victorian copper-patina
+ * ornamental gargoyle waterspouts mounted at the back-corner gutter outlets
+ * (companion to the rain chains at the front-corner gutter outlets from
+ * pass 25). Each gargoyle is a stylised gothic beast head with two slim
+ * horn tips, two glinting eyes and an open mouth carrying a slim
+ * translucent water trickle that pours from the lip into a small splash
+ * pebble on the ground below. The gargoyle bodies reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal.
+ */
+
+/**
+ * Twenty-sixth-pass scene extension — a far-east salt flats plane tucked
+ * beyond the desert oasis's east edge. The plane overlaps the desert oasis
+ * by ~3 units along its west join with a sand-coloured apron so the ground
+ * layer has no holes at the seam. It carries a sun-baked salt-crust ground
+ * surfaced with the new `salt-flats` colour map paired with a hexagonal
+ * crust-and-pool depth map (registered alongside the other procedural
+ * textures) so the salt-crust polygon edges and shallow brine pools read as
+ * raised relief at glancing sun, four mineral pools (three turquoise brine
+ * pools and one rust-orange iron-rich pool), a small board-and-batten
+ * salt-harvester's stilted hut at the south corner with a sun-bleached
+ * shingle roof and a glowing square window, a stacked pile of burlap
+ * salt-bags on a slate platform near the hut, three sun-bleached
+ * halophyte shrubs scattered across the flats, a focal slim wind-scoured
+ * dust-devil column rising near the centre of the flats and a scatter of
+ * five glinting salt-crystal cairns dotted along the western edge to
+ * read the eye into the scene.
+ */
+const SALT_FLATS_POS: [number, number, number] = [85, -0.026, 5];
+const SALT_FLATS_W = 18;
+const SALT_FLATS_D = 24;
+const SALT_HUT_POS: [number, number, number] = [88, 0, 14];
+const SALT_BAGS_POS: [number, number, number] = [85, 0, 12];
+const SALT_DUST_DEVIL_POS: [number, number, number] = [85, 0, 4];
+const SALT_BRINE_POOLS: { x: number; z: number; r: number; iron: boolean }[] = [
+  { x: 82, z: -1, r: 1.1, iron: false },
+  { x: 89, z: 2, r: 0.9, iron: false },
+  { x: 83, z: 7, r: 1.0, iron: false },
+  { x: 88, z: -3, r: 0.7, iron: true },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1744,6 +1802,50 @@ const C = {
   passTarnIceHi: "#daeaf0",
   passTarnIceCrack: "#6e8a98",
   passTarnPebble: "#7e7468",
+  // Twenty-sixth enhancement pass — a Victorian bronze elephant statue on a
+  // fluted marble plinth (mirroring the peacock on the east outside fence),
+  // a pair of Victorian copper-patina ornamental gargoyle waterspouts at
+  // the back-corner gutter outlets and a far-east salt flats scene
+  // extension beyond the desert oasis's east edge. The new `salt-flats`
+  // colour map is paired with a hexagonal crust-and-pool depth map
+  // registered alongside it so the salt-crust polygon edges and shallow
+  // brine pools read as raised relief at glancing sun.
+  elephantBronze: "#5d8a6a",
+  elephantBronzeHi: "#9bc4a8",
+  elephantBronzeShade: "#2f5840",
+  elephantIvory: "#f3e6c0",
+  elephantIvoryShade: "#b8a47e",
+  elephantPlinth: "#ede2d0",
+  elephantPlinthShade: "#a89776",
+  gargoyleBronze: "#5d8a6a",
+  gargoyleBronzeHi: "#9bc4a8",
+  gargoyleBronzeShade: "#2f5840",
+  gargoyleEye: "#f0c95a",
+  gargoyleWater: "#b8e2f0",
+  gargoyleSplash: "#7e7468",
+  // Salt flats — sun-baked salt-crust ground with hexagonal crust polygons
+  // and scattered brine pools, a stilted salt harvester's hut, burlap salt
+  // bag stacks, halophyte shrubs and a slim dust devil column.
+  saltCrust: "#e8e4dc",
+  saltCrustShade: "#beb6a4",
+  saltCrustHi: "#f7f3eb",
+  saltApronSand: "#c8a87c",
+  saltBrine: "#7ec0c4",
+  saltBrineDeep: "#3d8a8e",
+  saltIronPool: "#c2643a",
+  saltIronPoolDeep: "#7c3a18",
+  saltHutWall: "#7c6a4e",
+  saltHutWallShade: "#4a3e2a",
+  saltHutRoof: "#5a5040",
+  saltHutDoor: "#3a2a18",
+  saltHutGlow: "#fff1c4",
+  saltBag: "#d4b48a",
+  saltBagShade: "#9e7d54",
+  saltBagSlate: "#5e5a52",
+  saltHalophyte: "#7d8a4a",
+  saltHalophyteHi: "#b4c068",
+  saltDustDevil: "#d6c9aa",
+  saltCairnStone: "#cfc6b2",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -19904,6 +20006,908 @@ function buildPassFirs(f: NodeFactory): SceneNode {
   return f.group("Pass Firs", groups);
 }
 
+/* ─────────────── twenty-sixth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze elephant statue on a fluted marble plinth — a stocky
+ * four-legged elephant standing on the plinth cap with a raised curved
+ * trunk, two pendant ears, two small ivory tusks and a tasseled tail. The
+ * bronze body, trunk, ears and tail reuse the existing `copper-patina`
+ * colour + bump pair so the verdigris reads as crusted relief on the cast
+ * metal, the tusks carry a slim warm ivory tone and the plinth reuses the
+ * existing `marble` colour + bump pair so the stone reads with veined
+ * relief. Parked on the west outside-fence lawn between the carousel horse
+ * (back-west) and the Victorian glider (south-west) as a mirror to the
+ * peacock statue on the east outside-fence lawn so the pair of marble
+ * pedestals reads as a symmetric display along each side of the courtyard.
+ */
+function buildElephantStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.elephantBronze,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [2, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.elephantBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.elephantBronzeShade, 0.95, { flatShading: true });
+  const ivory = std(C.elephantIvory, 0.5, { metalness: 0.15 });
+  const ivoryShade = std(C.elephantIvoryShade, 0.7, { flatShading: true });
+  const marble = std(C.elephantPlinth, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.elephantPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Fluted marble plinth — square footing and round column ──
+  parts.push(
+    f.mesh("Plinth Footing", box(0.6, 0.08, 0.6), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Base", cylinder(0.27, 0.3, 0.1, 18), marble, {
+      position: [0, 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Column", cylinder(0.22, 0.24, 0.55, 18), marble, {
+      position: [0, 0.455, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", cylinder(0.28, 0.28, 0.06, 18), marble, {
+      position: [0, 0.76, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Trim", cylinder(0.27, 0.27, 0.022, 20), bronze, {
+      position: [0, 0.8, 0],
+    }, { castShadow: false }),
+  );
+  // Six slim fluting grooves around the column.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Plinth Flute ${i}`, box(0.022, 0.5, 0.025), marbleShade, {
+        position: [Math.cos(a) * 0.23, 0.455, Math.sin(a) * 0.23],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Elephant body — a stocky barrel torso atop four stout columnar legs.
+  // The body is built from a flattened ovoid with a slim shaded undercut so
+  // the silhouette reads as a heavy four-square pachyderm rather than a
+  // generic round animal.
+  const bodyY = 1.18;
+  parts.push(
+    f.mesh("Elephant Body", sphere(0.22, 16, 12), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.6, 1.0, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded belly undercut.
+    f.mesh("Elephant Belly", sphere(0.2, 14, 10), bronzeShade, {
+      position: [0, bodyY - 0.05, 0],
+      scale: [1.5, 0.55, 0.95],
+    }, { castShadow: false }),
+    // Slim highlight ridge along the spine for sun catch.
+    f.mesh("Elephant Spine Hi", cylinder(0.05, 0.07, 0.32, 10), bronzeHi, {
+      position: [0, bodyY + 0.12, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  // ── Four stout columnar legs ──
+  const legY = 0.92;
+  const legPositions: [number, number, number][] = [
+    [0.18, legY, 0.08],   // front-right
+    [0.18, legY, -0.08],  // front-left
+    [-0.18, legY, 0.08],  // back-right
+    [-0.18, legY, -0.08], // back-left
+  ];
+  for (let i = 0; i < legPositions.length; i++) {
+    const [lx, ly, lz] = legPositions[i]!;
+    parts.push(
+      f.mesh(`Elephant Leg ${i}`, cylinder(0.05, 0.06, 0.34, 10), bronze, {
+        position: [lx, ly, lz],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim toenail crown band at the leg base.
+      f.mesh(`Elephant Hoof ${i}`, cylinder(0.07, 0.065, 0.04, 10), bronzeShade, {
+        position: [lx, ly - 0.17, lz],
+      }, { castShadow: false }),
+      // Three tiny toenail dots on the front of each foot.
+      f.mesh(`Elephant Toenail A ${i}`, sphere(0.012, 8, 6), bronzeHi, {
+        position: [lx + 0.04, ly - 0.19, lz + 0.02],
+      }, { castShadow: false }),
+      f.mesh(`Elephant Toenail B ${i}`, sphere(0.012, 8, 6), bronzeHi, {
+        position: [lx + 0.04, ly - 0.19, lz - 0.02],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Head — a slightly smaller ovoid at the front of the torso ──
+  const headX = 0.34;
+  const headY = bodyY + 0.04;
+  parts.push(
+    f.mesh("Elephant Head", sphere(0.16, 14, 12), bronze, {
+      position: [headX, headY, 0],
+      scale: [1.0, 1.05, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded jowl undercut beneath the head.
+    f.mesh("Elephant Jowl", sphere(0.13, 12, 8), bronzeShade, {
+      position: [headX, headY - 0.06, 0],
+      scale: [1.0, 0.6, 0.9],
+    }, { castShadow: false }),
+    // Two small eye dots flanking the head crown.
+    f.mesh("Elephant Eye L", sphere(0.018, 8, 6), bronzeHi, {
+      position: [headX + 0.08, headY + 0.06, 0.1],
+    }, { castShadow: false }),
+    f.mesh("Elephant Eye R", sphere(0.018, 8, 6), bronzeHi, {
+      position: [headX + 0.08, headY + 0.06, -0.1],
+    }, { castShadow: false }),
+  );
+  // ── Curved trunk rising in a soft S-curve from the head crown ──
+  // Built from five linked tapered cylinders so the curl reads as a
+  // continuous trunk arc rather than a stiff cone. The tip lifts upward
+  // and forward as if greeting a visitor.
+  const trunkSegs = 5;
+  const trunkBase: [number, number, number] = [headX + 0.13, headY, 0];
+  const trunkPath: { x: number; y: number; r: number }[] = [
+    { x: 0.0, y: 0.0, r: 0.08 },
+    { x: 0.08, y: -0.06, r: 0.07 },
+    { x: 0.16, y: -0.04, r: 0.06 },
+    { x: 0.22, y: 0.06, r: 0.05 },
+    { x: 0.24, y: 0.18, r: 0.04 },
+    { x: 0.22, y: 0.28, r: 0.035 },
+  ];
+  for (let s = 0; s < trunkSegs; s++) {
+    const p0 = trunkPath[s]!;
+    const p1 = trunkPath[s + 1]!;
+    const cx = trunkBase[0] + (p0.x + p1.x) / 2;
+    const cy = trunkBase[1] + (p0.y + p1.y) / 2;
+    const len = Math.hypot(p1.x - p0.x, p1.y - p0.y);
+    const tilt = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+    parts.push(
+      f.mesh(`Trunk Seg ${s}`, cylinder(p1.r, p0.r, len, 10), bronze, {
+        position: [cx, cy, 0],
+        rotation: [0, 0, tilt - Math.PI / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim wrinkle ring around each segment for relief.
+      f.mesh(`Trunk Ring ${s}`, cylinder(p0.r + 0.005, p0.r + 0.005, 0.012, 10), bronzeShade, {
+        position: [trunkBase[0] + p0.x, trunkBase[1] + p0.y, 0],
+        rotation: [0, 0, tilt - Math.PI / 2],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim trunk-tip nostril dot — a tiny dark disc at the trunk end.
+  parts.push(
+    f.mesh("Trunk Tip", sphere(0.04, 10, 8), bronzeShade, {
+      position: [trunkBase[0] + 0.22, trunkBase[1] + 0.28, 0],
+    }, { castShadow: false }),
+    f.mesh("Trunk Nostril", cylinder(0.014, 0.014, 0.018, 8), bronzeShade, {
+      position: [trunkBase[0] + 0.23, trunkBase[1] + 0.32, 0],
+    }, { castShadow: false }),
+  );
+  // ── Two pendant ears flanking the head, splayed slightly outward ──
+  // Each ear is a slim flattened ovoid plate set behind the eye on each side.
+  const earY = headY + 0.06;
+  parts.push(
+    // Right ear.
+    f.mesh("Elephant Ear R", sphere(0.16, 14, 10), bronze, {
+      position: [headX - 0.06, earY, 0.18],
+      rotation: [0, -0.45, 0.1],
+      scale: [0.4, 1.1, 1.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Elephant Ear R Inner", sphere(0.14, 12, 8), bronzeShade, {
+      position: [headX - 0.04, earY, 0.2],
+      rotation: [0, -0.45, 0.1],
+      scale: [0.3, 0.9, 1.0],
+    }, { castShadow: false }),
+    // Left ear.
+    f.mesh("Elephant Ear L", sphere(0.16, 14, 10), bronze, {
+      position: [headX - 0.06, earY, -0.18],
+      rotation: [0, 0.45, -0.1],
+      scale: [0.4, 1.1, 1.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Elephant Ear L Inner", sphere(0.14, 12, 8), bronzeShade, {
+      position: [headX - 0.04, earY, -0.2],
+      rotation: [0, 0.45, -0.1],
+      scale: [0.3, 0.9, 1.0],
+    }, { castShadow: false }),
+  );
+  // ── Two small ivory tusks flanking the trunk root ──
+  parts.push(
+    f.mesh("Tusk R", cone(0.025, 0.18, 8), ivory, {
+      position: [headX + 0.13, headY - 0.08, 0.07],
+      rotation: [0, 0, -Math.PI / 2 + 0.2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim ivory shade undercut so the tusk reads with relief.
+    f.mesh("Tusk R Shade", cone(0.018, 0.14, 6), ivoryShade, {
+      position: [headX + 0.12, headY - 0.1, 0.066],
+      rotation: [0, 0, -Math.PI / 2 + 0.2],
+    }, { castShadow: false }),
+    f.mesh("Tusk L", cone(0.025, 0.18, 8), ivory, {
+      position: [headX + 0.13, headY - 0.08, -0.07],
+      rotation: [0, 0, -Math.PI / 2 + 0.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Tusk L Shade", cone(0.018, 0.14, 6), ivoryShade, {
+      position: [headX + 0.12, headY - 0.1, -0.066],
+      rotation: [0, 0, -Math.PI / 2 + 0.2],
+    }, { castShadow: false }),
+  );
+  // ── Tail — a slim tapered cylinder drooping behind the body with a slim
+  // tasseled tuft at the tip. The tail curves slightly so it reads as a
+  // hanging tassel rather than a stiff peg.
+  const tailRoot: [number, number, number] = [-0.34, bodyY - 0.04, 0];
+  parts.push(
+    f.mesh("Elephant Tail", cylinder(0.018, 0.022, 0.32, 8), bronze, {
+      position: [tailRoot[0] - 0.04, tailRoot[1] - 0.12, 0],
+      rotation: [0, 0, -Math.PI / 8],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim tuft tassel — a small sphere at the tail tip.
+    f.mesh("Elephant Tail Tuft", sphere(0.04, 10, 8), bronzeShade, {
+      position: [tailRoot[0] - 0.09, tailRoot[1] - 0.27, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim saddle blanket draped across the back — a small decorative
+  // touch suggesting a Victorian ornamental beast-of-burden tribute. The
+  // blanket sits flush along the spine and drapes slightly past the
+  // sides so the silhouette reads as a Victorian parade elephant.
+  parts.push(
+    f.mesh("Saddle Blanket", box(0.42, 0.04, 0.36), bronzeShade, {
+      position: [0, bodyY + 0.18, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim fringe tassels along the blanket edges.
+    f.mesh("Blanket Fringe R", box(0.4, 0.04, 0.02), bronzeHi, {
+      position: [0, bodyY + 0.16, 0.18],
+    }, { castShadow: false }),
+    f.mesh("Blanket Fringe L", box(0.4, 0.04, 0.02), bronzeHi, {
+      position: [0, bodyY + 0.16, -0.18],
+    }, { castShadow: false }),
+    // Slim copper boss medallion centred on the saddle blanket.
+    f.mesh("Saddle Medallion", cylinder(0.05, 0.05, 0.012, 14), bronzeHi, {
+      position: [0, bodyY + 0.21, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Elephant Statue", parts, { position: pos, rotation: [0, Math.PI / 2, 0] });
+}
+
+/* ─────────────── twenty-sixth-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental gargoyle waterspouts mounted
+ * at the back-corner gutter outlets, companion to the rain chains at the
+ * front-corner gutter outlets from pass 25. Each gargoyle is a stylised
+ * gothic beast head with two slim horn tips, two glinting eyes and an open
+ * mouth carrying a slim translucent water trickle that pours from the lip
+ * into a small splash pebble cluster on the ground below. The gargoyle
+ * bodies reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal.
+ */
+function buildBackGargoyleSpouts(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.gargoyleBronze,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const copperHi = std(C.gargoyleBronzeHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.gargoyleBronzeShade, 0.95, { flatShading: true });
+  const eye = std(C.gargoyleEye, 0.4, { metalness: 0.6, emissive: C.gargoyleEye });
+  const water: MaterialDef = {
+    color: C.gargoyleWater,
+    roughness: 0.25,
+    metalness: 0.15,
+    transparent: true,
+    opacity: 0.6,
+    emissive: C.gargoyleWater,
+  };
+  const splash = std(C.gargoyleSplash, 0.95, { texture: "cobblestone", flatShading: true });
+  // The back-corner gutter outlets sit at:
+  //   (sideX * (W/2 + 0.4), ROOF_TOP + 0.04, -(D + 0.6)/2)
+  // Mount each gargoyle so its body extends outward (away from the wall) and
+  // its open mouth points downward-and-outward toward the ground.
+  const eaveOut = W / 2 + 0.4;
+  const eaveY = ROOF_TOP + 0.04;
+  const backZ = -(D + 0.6) / 2;
+  function gargoyle(dir: 1 | -1): SceneNode {
+    const parts: SceneNode[] = [];
+    // ── Beast head — a slim chiseled ovoid jutting outward from the gutter
+    // elbow. The head tilts downward so the open mouth aims at the ground.
+    const headPos: [number, number, number] = [dir * (eaveOut + 0.18), eaveY - 0.06, backZ - 0.16];
+    parts.push(
+      f.mesh("Gargoyle Head", sphere(0.16, 14, 10), copper, {
+        position: headPos,
+        scale: [1.4, 0.95, 1.05],
+        rotation: [0, dir * 0.3, -0.35],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded jowl undercut beneath the head.
+      f.mesh("Gargoyle Jowl", sphere(0.14, 12, 8), copperShade, {
+        position: [headPos[0], headPos[1] - 0.08, headPos[2]],
+        scale: [1.35, 0.55, 0.95],
+        rotation: [0, dir * 0.3, -0.35],
+      }, { castShadow: false }),
+      // Slim highlight crest along the brow ridge.
+      f.mesh("Gargoyle Brow Hi", cylinder(0.03, 0.04, 0.28, 8), copperHi, {
+        position: [headPos[0] - 0.03, headPos[1] + 0.12, headPos[2]],
+        rotation: [Math.PI / 2, 0, -0.35],
+      }, { castShadow: false }),
+    );
+    // ── Two slim horn tips on the crown — small tapered cones angled back.
+    for (let i = 0; i < 2; i++) {
+      const sign = i === 0 ? 1 : -1;
+      parts.push(
+        f.mesh(`Gargoyle Horn ${i}`, cone(0.03, 0.12, 8), copper, {
+          position: [headPos[0] - 0.06, headPos[1] + 0.18, headPos[2] + sign * 0.08],
+          rotation: [sign * 0.2, 0, -0.7],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim shaded horn undercut.
+        f.mesh(`Gargoyle Horn Shade ${i}`, cone(0.022, 0.1, 6), copperShade, {
+          position: [headPos[0] - 0.07, headPos[1] + 0.14, headPos[2] + sign * 0.07],
+          rotation: [sign * 0.2, 0, -0.7],
+        }, { castShadow: false }),
+      );
+    }
+    // ── Two glinting amber eye dots on the forehead, set deep in the brow.
+    for (let i = 0; i < 2; i++) {
+      const sign = i === 0 ? 1 : -1;
+      parts.push(
+        f.mesh(`Gargoyle Eye ${i}`, sphere(0.022, 10, 8), eye, {
+          position: [headPos[0] + 0.06, headPos[1] + 0.04, headPos[2] + sign * 0.08],
+        }, { castShadow: false }),
+      );
+    }
+    // ── Open mouth — a small dark cavity carved into the lower head. The
+    // mouth points outward-and-downward so the water trickle can pour from
+    // the lip into the ground.
+    const mouthPos: [number, number, number] = [headPos[0] + 0.14, headPos[1] - 0.06, headPos[2]];
+    parts.push(
+      f.mesh("Gargoyle Mouth", box(0.12, 0.06, 0.18), copperShade, {
+        position: mouthPos,
+        rotation: [0, dir * 0.3, -0.35],
+      }, { castShadow: false }),
+      // Slim upper-lip ridge for relief.
+      f.mesh("Gargoyle Upper Lip", box(0.13, 0.025, 0.2), copperHi, {
+        position: [mouthPos[0] + 0.012, mouthPos[1] + 0.04, mouthPos[2]],
+        rotation: [0, dir * 0.3, -0.35],
+      }, { castShadow: false }),
+      // Slim lower-lip ridge for relief.
+      f.mesh("Gargoyle Lower Lip", box(0.13, 0.025, 0.2), copperShade, {
+        position: [mouthPos[0] + 0.012, mouthPos[1] - 0.04, mouthPos[2]],
+        rotation: [0, dir * 0.3, -0.35],
+      }, { castShadow: false }),
+    );
+    // ── Fangs — two slim ivory-toned cones jutting from the upper lip.
+    for (let i = 0; i < 2; i++) {
+      const sign = i === 0 ? 1 : -1;
+      parts.push(
+        f.mesh(`Gargoyle Fang ${i}`, cone(0.012, 0.04, 6), copperHi, {
+          position: [mouthPos[0] + 0.04, mouthPos[1] + 0.005, mouthPos[2] + sign * 0.05],
+          rotation: [0, 0, Math.PI],
+        }, { castShadow: false }),
+      );
+    }
+    // ── Slim copper neck bracket — anchors the head to the gutter elbow ──
+    parts.push(
+      f.mesh("Gargoyle Neck Bracket", cylinder(0.05, 0.06, 0.18, 10), copper, {
+        position: [dir * (eaveOut + 0.04), eaveY, backZ - 0.16],
+        rotation: [0, 0, dir * Math.PI / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Gargoyle Bracket Boss", sphere(0.04, 10, 8), copperHi, {
+        position: [dir * (eaveOut + 0.13), eaveY, backZ - 0.16],
+      }, { castShadow: false }),
+    );
+    // ── Water trickle — a slim translucent column pouring from the open
+    // mouth lip down to a splash pebble cluster on the ground. The column
+    // is split into two segments so the inflection where the stream
+    // disperses into mist reads as a soft taper.
+    const trickleStartY = mouthPos[1] - 0.06;
+    const trickleStartX = mouthPos[0] + 0.04;
+    const trickleStartZ = mouthPos[2];
+    const trickleEndY = 0.06;
+    // Upper segment — a thin clean stream just below the lip.
+    parts.push(
+      f.mesh("Gargoyle Trickle Upper", cylinder(0.018, 0.012, 0.6, 10), water, {
+        position: [trickleStartX, trickleStartY - 0.3, trickleStartZ],
+      }, { castShadow: false }),
+      // Lower segment — a wider, more diffuse stream as it nears the ground.
+      f.mesh("Gargoyle Trickle Lower", cylinder(0.025, 0.018, trickleStartY - 0.6 - trickleEndY, 10), water, {
+        position: [
+          trickleStartX,
+          (trickleStartY - 0.6 + trickleEndY) / 2,
+          trickleStartZ,
+        ],
+      }, { castShadow: false }),
+      // Slim glinting beads scattered along the stream for sparkle.
+      f.mesh("Gargoyle Glint A", sphere(0.022, 8, 6), copperHi, {
+        position: [trickleStartX, trickleStartY - 0.9, trickleStartZ],
+      }, { castShadow: false }),
+      f.mesh("Gargoyle Glint B", sphere(0.018, 8, 6), copperHi, {
+        position: [trickleStartX, trickleStartY - 2.0, trickleStartZ],
+      }, { castShadow: false }),
+    );
+    // ── Splash pebble cluster — three slim flat discs catching the trickle
+    // at the ground below. Reuses the cobblestone texture for stone relief.
+    parts.push(
+      f.mesh("Splash Pebble A", sphere(0.11, 10, 8), splash, {
+        position: [trickleStartX, 0.04, trickleStartZ],
+        scale: [1.2, 0.35, 1.2],
+      }, { castShadow: false, receiveShadow: true }),
+      f.mesh("Splash Pebble B", sphere(0.07, 10, 8), splash, {
+        position: [trickleStartX - dir * 0.1, 0.04, trickleStartZ + 0.06],
+        scale: [1.2, 0.35, 1.2],
+      }, { castShadow: false, receiveShadow: true }),
+      f.mesh("Splash Pebble C", sphere(0.06, 10, 8), splash, {
+        position: [trickleStartX + dir * 0.08, 0.04, trickleStartZ - 0.07],
+        scale: [1.2, 0.35, 1.2],
+      }, { castShadow: false, receiveShadow: true }),
+    );
+    return f.group(`Back Gargoyle ${dir < 0 ? "L" : "R"}`, parts);
+  }
+  return f.group("Back Gargoyle Spouts", [gargoyle(-1), gargoyle(1)]);
+}
+
+/* ─────────────── twenty-sixth-pass scene extension ─────────────── */
+
+/**
+ * Far-east salt flats plane tucked beyond the desert oasis's east edge. The
+ * plane carries a sun-baked salt-crust ground with the new `salt-flats`
+ * colour + depth map pair so the hexagonal crust polygon edges and shallow
+ * brine pools read as raised relief at glancing sun. Features four mineral
+ * pools (three turquoise brine pools and one rust-orange iron-rich pool), a
+ * stilted salt-harvester's hut at the south corner, a stack of burlap salt
+ * bags on a slate platform near the hut, three halophyte shrubs scattered
+ * across the flats, a focal slim dust-devil column rising near the centre
+ * and a scatter of glinting salt-crystal cairns along the western edge.
+ */
+function buildFarEastSaltFlats(f: NodeFactory): SceneNode {
+  return f.group("Far East Salt Flats", [
+    // Salt flats ground plane — sun-baked salt crust with the new colour +
+    // depth map pair so the hexagonal crust polygon edges and shallow brine
+    // pools read as raised relief at glancing sun.
+    f.mesh(
+      "Salt Flats Ground",
+      plane(SALT_FLATS_W, SALT_FLATS_D),
+      std(C.saltCrust, 0.95, {
+        texture: "salt-flats",
+        textureScale: [4, 5],
+        bumpMap: "salt-flats-bump",
+        bumpScale: 0.05,
+      }),
+      { position: SALT_FLATS_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the desert oasis's east edge with a slim sand
+    // strip so the seam reads as a continuous Mediterranean-into-salt-pan
+    // join between the oasis and the flats.
+    f.mesh(
+      "Salt Flats West Apron",
+      plane(3, SALT_FLATS_D),
+      std(C.saltApronSand, 0.95, { texture: "desert-sand", textureScale: [1, 6] }),
+      {
+        position: [
+          SALT_FLATS_POS[0] - SALT_FLATS_W / 2 + 1.5,
+          -0.022,
+          SALT_FLATS_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildSaltBrinePools(f),
+    buildSaltHarvesterHut(f, SALT_HUT_POS),
+    buildSaltBagStack(f, SALT_BAGS_POS),
+    buildSaltHalophytes(f),
+    buildSaltDustDevil(f, SALT_DUST_DEVIL_POS),
+    buildSaltCrystalCairns(f),
+  ]);
+}
+
+/**
+ * Four mineral pools scattered across the salt flats — three turquoise
+ * brine pools and one rust-orange iron-rich pool. Each pool is a slim
+ * shallow disc set into the crust with a slim shore lip ringing the edge
+ * and a darker deep-water core suggesting brine depth. The iron-rich pool
+ * carries a rust-orange tone reading as oxidised mineral runoff.
+ */
+function buildSaltBrinePools(f: NodeFactory): SceneNode {
+  const brine = std(C.saltBrine, 0.35, { metalness: 0.15 });
+  const brineDeep = std(C.saltBrineDeep, 0.45, { metalness: 0.2 });
+  const iron = std(C.saltIronPool, 0.4, { metalness: 0.15 });
+  const ironDeep = std(C.saltIronPoolDeep, 0.5, { metalness: 0.2 });
+  const lip = std(C.saltCrustShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  for (let i = 0; i < SALT_BRINE_POOLS.length; i++) {
+    const p = SALT_BRINE_POOLS[i]!;
+    const surface = p.iron ? iron : brine;
+    const depth = p.iron ? ironDeep : brineDeep;
+    // Shore lip — a slightly raised crusted ring around the pool edge so
+    // the depression reads with relief at glancing sun.
+    parts.push(
+      f.mesh(`Pool Lip ${i}`, cylinder(p.r + 0.1, p.r + 0.1, 0.02, 22), lip, {
+        position: [p.x, 0.01, p.z],
+      }, { receiveShadow: true }),
+      // Outer pool surface — a wider disc of mineral water.
+      f.mesh(`Pool Surface ${i}`, cylinder(p.r, p.r, 0.014, 22), surface, {
+        position: [p.x, 0.018, p.z],
+      }, { receiveShadow: true }),
+      // Deep core — a smaller dark disc at the pool centre.
+      f.mesh(`Pool Core ${i}`, cylinder(p.r * 0.55, p.r * 0.55, 0.016, 18), depth, {
+        position: [p.x, 0.025, p.z],
+        scale: [1.1, 1, 0.9],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Salt Brine Pools", parts);
+}
+
+/**
+ * A small board-and-batten salt-harvester's hut on four short stilts at
+ * the south corner of the flats. The stilts lift the hut off the corrosive
+ * salt crust; a slim plank ladder rises to a board-floor porch; the walls
+ * are weathered grey timber with a pitched sun-bleached shingle roof, a
+ * plank front door, a slim chimney trailing pale smoke and a glowing
+ * square window so the hut reads as inhabited even at low light.
+ */
+function buildSaltHarvesterHut(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.saltHutWall, 0.9, { texture: "wood", textureScale: [2, 2], flatShading: true });
+  const wallShade = std(C.saltHutWallShade, 0.95, { flatShading: true });
+  const roof = std(C.saltHutRoof, 0.95, { texture: "shingle", textureScale: [2, 2], flatShading: true });
+  const door = std(C.saltHutDoor, 0.85, { texture: "wood", textureScale: [1, 2], flatShading: true });
+  const glass: MaterialDef = {
+    color: C.saltHutGlow,
+    roughness: 0.25,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.85,
+    emissive: C.saltHutGlow,
+  };
+  const smoke: MaterialDef = {
+    color: "#d8cdb8",
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.42,
+  };
+  const w = 2.4;
+  const d = 1.9;
+  const wallH = 1.3;
+  const stiltH = 0.5;
+  const parts: SceneNode[] = [];
+  // ── Four stilt posts lifting the hut off the crust ──
+  for (let i = 0; i < 4; i++) {
+    const sx = (i % 2 === 0 ? 1 : -1) * (w / 2 - 0.15);
+    const sz = (i < 2 ? 1 : -1) * (d / 2 - 0.15);
+    parts.push(
+      f.mesh(`Stilt ${i}`, cylinder(0.08, 0.1, stiltH, 8), wallShade, {
+        position: [sx, stiltH / 2, sz],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim cross brace at the base of each stilt.
+      f.mesh(`Stilt Brace ${i}`, cylinder(0.04, 0.04, 0.18, 6), wallShade, {
+        position: [sx * 0.7, 0.06, sz * 0.7],
+        rotation: [Math.PI / 2, 0, Math.atan2(sz, sx)],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Plank board floor on top of the stilts ──
+  parts.push(
+    f.mesh("Hut Floor", box(w + 0.1, 0.08, d + 0.1), wallShade, {
+      position: [0, stiltH + 0.04, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Four walls ──
+  parts.push(
+    f.mesh("Wall S", box(w, wallH, 0.12), wall, {
+      position: [0, stiltH + 0.04 + wallH / 2, d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall N", box(w, wallH, 0.12), wall, {
+      position: [0, stiltH + 0.04 + wallH / 2, -d / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall W", box(0.12, wallH + 0.36, d), wallShade, {
+      position: [-w / 2, stiltH + 0.04 + (wallH + 0.36) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall E", box(0.12, wallH + 0.36, d), wallShade, {
+      position: [w / 2, stiltH + 0.04 + (wallH + 0.36) / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Slim board-and-batten battens running vertically along the south wall.
+  for (let i = 0; i < 5; i++) {
+    const bx = -w / 2 + 0.3 + i * (w - 0.6) / 4;
+    parts.push(
+      f.mesh(`Batten ${i}`, box(0.04, wallH - 0.1, 0.04), wallShade, {
+        position: [bx, stiltH + 0.04 + wallH / 2, d / 2 + 0.07],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Pitched shingle roof — two angled slabs meeting at a ridge ──
+  const ridgeY = stiltH + 0.04 + wallH + 0.6;
+  const halfD = d / 2 + 0.3;
+  const hyp = Math.hypot(0.6, halfD);
+  const slope = Math.atan2(0.6, halfD);
+  parts.push(
+    f.mesh("Roof S", box(w + 0.4, 0.1, hyp), roof, {
+      position: [0, ridgeY - 0.3, halfD / 2],
+      rotation: [-slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof N", box(w + 0.4, 0.1, hyp), roof, {
+      position: [0, ridgeY - 0.3, -halfD / 2],
+      rotation: [slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shingle ridge cap.
+    f.mesh("Roof Ridge", box(w + 0.42, 0.08, 0.16), wallShade, {
+      position: [0, ridgeY + 0.02, 0],
+    }, { castShadow: true }),
+  );
+  // ── Slim plank door on the south wall ──
+  parts.push(
+    f.mesh("Door Frame", box(0.5, 1.0, 0.04), wallShade, {
+      position: [-0.4, stiltH + 0.04 + 0.5, d / 2 + 0.07],
+    }, { castShadow: false }),
+    f.mesh("Door", box(0.42, 0.92, 0.04), door, {
+      position: [-0.4, stiltH + 0.04 + 0.46, d / 2 + 0.09],
+    }, { castShadow: false }),
+    // Slim brass knob.
+    f.mesh("Door Knob", sphere(0.025, 8, 6), std(C.gargoyleBronzeHi, 0.4, { metalness: 0.8 }), {
+      position: [-0.22, stiltH + 0.04 + 0.46, d / 2 + 0.12],
+    }, { castShadow: false }),
+  );
+  // ── Glowing square window on the south wall ──
+  parts.push(
+    f.mesh("Window Frame", box(0.5, 0.42, 0.04), wallShade, {
+      position: [0.55, stiltH + 0.04 + 0.85, d / 2 + 0.07],
+    }, { castShadow: false }),
+    f.mesh("Window Glass", box(0.4, 0.32, 0.02), glass, {
+      position: [0.55, stiltH + 0.04 + 0.85, d / 2 + 0.09],
+    }, { castShadow: false }),
+    // Slim cross muntin.
+    f.mesh("Window Muntin V", box(0.03, 0.32, 0.025), wallShade, {
+      position: [0.55, stiltH + 0.04 + 0.85, d / 2 + 0.11],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin H", box(0.4, 0.03, 0.025), wallShade, {
+      position: [0.55, stiltH + 0.04 + 0.85, d / 2 + 0.11],
+    }, { castShadow: false }),
+  );
+  // ── Slim stone chimney on the east gable trailing pale smoke ──
+  parts.push(
+    f.mesh("Chimney Stack", box(0.24, 0.7, 0.24), std(C.saltCrustShade, 0.95, { texture: "cobblestone", flatShading: true }), {
+      position: [w / 2 - 0.2, ridgeY + 0.18, -0.3],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Crown", box(0.32, 0.06, 0.32), wallShade, {
+      position: [w / 2 - 0.2, ridgeY + 0.56, -0.3],
+    }, { castShadow: true }),
+    // Three smoke wisps trailing east of the chimney.
+    f.mesh("Smoke A", sphere(0.12, 12, 8), smoke, {
+      position: [w / 2 - 0.05, ridgeY + 0.78, -0.28],
+      scale: [1.2, 0.9, 1.1],
+    }, { castShadow: false }),
+    f.mesh("Smoke B", sphere(0.14, 12, 8), smoke, {
+      position: [w / 2 + 0.2, ridgeY + 1.0, -0.12],
+      scale: [1.3, 0.85, 1.2],
+    }, { castShadow: false }),
+    f.mesh("Smoke C", sphere(0.16, 12, 8), smoke, {
+      position: [w / 2 + 0.55, ridgeY + 1.22, 0.1],
+      scale: [1.4, 0.8, 1.2],
+    }, { castShadow: false }),
+  );
+  // ── Slim plank ladder rising to the floor from the ground at the south
+  // wall, just east of the door — three rungs and two stringers. ──
+  const ladderX = 0.4;
+  const ladderZ = d / 2 + 0.2;
+  parts.push(
+    f.mesh("Ladder Stringer L", box(0.04, stiltH + 0.04, 0.04), wallShade, {
+      position: [ladderX - 0.1, (stiltH + 0.04) / 2, ladderZ],
+    }, { castShadow: true }),
+    f.mesh("Ladder Stringer R", box(0.04, stiltH + 0.04, 0.04), wallShade, {
+      position: [ladderX + 0.1, (stiltH + 0.04) / 2, ladderZ],
+    }, { castShadow: true }),
+  );
+  for (let i = 0; i < 3; i++) {
+    parts.push(
+      f.mesh(`Ladder Rung ${i}`, cylinder(0.018, 0.018, 0.22, 6), wallShade, {
+        position: [ladderX, 0.1 + i * 0.16, ladderZ],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Salt Harvester Hut", parts, { position: pos, rotation: [0, -Math.PI / 5, 0] });
+}
+
+/**
+ * A stack of three burlap salt-bags on a slate platform near the harvester's
+ * hut. Each bag is a slim slumped ovoid with a cinched neck rope at the top
+ * suggesting a hand-tied jute sack of harvested salt. The platform is a slim
+ * flat slate slab sitting just above the crust.
+ */
+function buildSaltBagStack(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bag = std(C.saltBag, 0.95, { texture: "burlap", flatShading: true });
+  const bagShade = std(C.saltBagShade, 0.95, { flatShading: true });
+  const slate = std(C.saltBagSlate, 0.95, { texture: "cobblestone", flatShading: true });
+  const rope = std("#8a6e4f", 0.85, { texture: "bark", flatShading: true });
+  const parts: SceneNode[] = [
+    // Slate platform — slim flat slab sitting just above the crust.
+    f.mesh("Slate Platform", box(1.4, 0.08, 0.9), slate, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+  ];
+  // Three bags stacked irregularly so the silhouette reads as a working pile.
+  const bags: { x: number; y: number; z: number; yaw: number; scale: number }[] = [
+    { x: -0.35, y: 0.32, z: 0.05, yaw: 0.2, scale: 1.0 },
+    { x: 0.32, y: 0.34, z: -0.05, yaw: -0.4, scale: 1.05 },
+    { x: -0.05, y: 0.66, z: 0.0, yaw: 0.6, scale: 0.95 },
+  ];
+  for (let i = 0; i < bags.length; i++) {
+    const b = bags[i]!;
+    parts.push(
+      f.mesh(`Salt Bag ${i}`, sphere(0.22 * b.scale, 14, 10), bag, {
+        position: [b.x, b.y, b.z],
+        rotation: [0, b.yaw, 0],
+        scale: [1.2, 1.3, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut beneath each bag.
+      f.mesh(`Salt Bag Shade ${i}`, sphere(0.2 * b.scale, 12, 8), bagShade, {
+        position: [b.x, b.y - 0.1, b.z],
+        rotation: [0, b.yaw, 0],
+        scale: [1.15, 0.55, 0.95],
+      }, { castShadow: false }),
+      // Slim cinched neck rope at the top of each bag.
+      f.mesh(`Salt Bag Cinch ${i}`, cylinder(0.06 * b.scale, 0.06 * b.scale, 0.04, 12), rope, {
+        position: [b.x, b.y + 0.22 * b.scale, b.z],
+      }, { castShadow: false }),
+      // Slim neck tuft above the cinch rope — a small puff of jute cloth.
+      f.mesh(`Salt Bag Tuft ${i}`, sphere(0.05 * b.scale, 10, 8), bagShade, {
+        position: [b.x, b.y + 0.27 * b.scale, b.z],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Salt Bag Stack", parts, { position: pos, rotation: [0, 0.3, 0] });
+}
+
+/**
+ * Three sun-bleached halophyte shrubs scattered across the flats — each
+ * shrub a slim woody mound crowned by a ring of small green-grey leaf
+ * clusters. Halophytes are the saltbushes and samphires that cling to
+ * salty soils where almost nothing else grows.
+ */
+function buildSaltHalophytes(f: NodeFactory): SceneNode {
+  const stem = std(C.saltHalophyte, 0.95, { flatShading: true });
+  const leaf = std(C.saltHalophyteHi, 0.9, { flatShading: true });
+  const layouts: { x: number; z: number; scale: number; yaw: number }[] = [
+    { x: 80, z: 9, scale: 1.0, yaw: 0.3 },
+    { x: 91, z: 8, scale: 0.85, yaw: 1.2 },
+    { x: 80, z: -5, scale: 0.95, yaw: 2.0 },
+  ];
+  const shrubs: SceneNode[] = [];
+  for (let i = 0; i < layouts.length; i++) {
+    const l = layouts[i]!;
+    const parts: SceneNode[] = [];
+    // Slim woody base mound.
+    parts.push(
+      f.mesh("Shrub Base", sphere(0.18, 12, 8), stem, {
+        position: [0, 0.1, 0],
+        scale: [1.4, 0.5, 1.4],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Six small leaf clusters fanning out from the crown.
+    for (let c = 0; c < 6; c++) {
+      const a = (c / 6) * Math.PI * 2;
+      const r = 0.18 + (c % 2) * 0.04;
+      parts.push(
+        f.mesh(`Leaf Cluster ${c}`, sphere(0.1, 10, 8), leaf, {
+          position: [Math.cos(a) * r, 0.22 + (c % 2) * 0.04, Math.sin(a) * r],
+          scale: [1.0, 0.7, 1.0],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    shrubs.push(
+      f.group(`Halophyte ${i + 1}`, parts, {
+        position: [l.x, 0, l.z],
+        rotation: [0, l.yaw, 0],
+        scale: [l.scale, l.scale, l.scale],
+      }),
+    );
+  }
+  return f.group("Halophytes", shrubs);
+}
+
+/**
+ * A slim wind-scoured dust devil column rising near the centre of the
+ * salt flats — a translucent twisting funnel of dust spiraling up from
+ * the crust. The funnel is built from a stack of progressively wider
+ * tilted discs so the silhouette reads as a slow vertical spin rather
+ * than a static cone.
+ */
+function buildSaltDustDevil(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const dust: MaterialDef = {
+    color: C.saltDustDevil,
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.32,
+  };
+  const dustHi: MaterialDef = {
+    color: "#ece2c8",
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.22,
+  };
+  const parts: SceneNode[] = [];
+  // Eight stacked tapering discs forming the funnel — wider at the top, slim
+  // at the base. Each disc is slightly tilted around the vertical axis so
+  // the funnel reads as wind-twisted.
+  const segCount = 8;
+  for (let s = 0; s < segCount; s++) {
+    const t = s / (segCount - 1);
+    const y = 0.2 + t * 2.4;
+    const r = 0.06 + t * 0.45;
+    const tilt = Math.sin(t * Math.PI * 1.5) * 0.18;
+    const material = s % 2 === 0 ? dust : dustHi;
+    parts.push(
+      f.mesh(`Devil Disc ${s}`, cylinder(r, r * 0.85, 0.08, 18), material, {
+        position: [Math.sin(t * Math.PI * 2) * 0.05, y, Math.cos(t * Math.PI * 2) * 0.05],
+        rotation: [tilt, t * Math.PI * 2, tilt * 0.5],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim scattered grit specks ringing the base — small flecks of grain
+  // being lifted from the crust into the funnel.
+  for (let i = 0; i < 14; i++) {
+    const a = (i / 14) * Math.PI * 2;
+    const r = 0.3 + (i % 3) * 0.08;
+    parts.push(
+      f.mesh(`Grit ${i}`, sphere(0.025, 8, 6), dust, {
+        position: [Math.cos(a) * r, 0.04 + (i % 5) * 0.03, Math.sin(a) * r],
+        scale: [1.0, 0.4, 1.0],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim shadow disc on the crust beneath the funnel — a darker ring of
+  // dust suggesting the spin's contact patch on the salt surface.
+  parts.push(
+    f.mesh("Devil Shadow", cylinder(0.32, 0.32, 0.014, 22), std(C.saltCrustShade, 0.95, { flatShading: true }), {
+      position: [0, 0.012, 0],
+    }, { receiveShadow: true }),
+  );
+  return f.group("Dust Devil", parts, { position: pos });
+}
+
+/**
+ * A scatter of five glinting salt-crystal cairns dotted along the western
+ * edge of the flats — each cairn a small stacked pile of pale prismatic
+ * crystal shards reading as harvested salt rocks left at the edge of the
+ * working pan. The crystals catch the sun so the silhouette reads at a
+ * glance even at distance.
+ */
+function buildSaltCrystalCairns(f: NodeFactory): SceneNode {
+  const crystal = std(C.saltCairnStone, 0.4, { metalness: 0.15, flatShading: true });
+  const crystalHi = std(C.saltCrustHi, 0.3, { metalness: 0.2, flatShading: true });
+  const layouts: { x: number; z: number; count: number }[] = [
+    { x: 77.5, z: -4, count: 3 },
+    { x: 77.5, z: 1, count: 4 },
+    { x: 77.5, z: 6, count: 3 },
+    { x: 77.5, z: 11, count: 4 },
+    { x: 77.5, z: 14, count: 2 },
+  ];
+  const cairns: SceneNode[] = [];
+  for (let i = 0; i < layouts.length; i++) {
+    const l = layouts[i]!;
+    const parts: SceneNode[] = [];
+    for (let s = 0; s < l.count; s++) {
+      const t = s / Math.max(1, l.count - 1);
+      const r = 0.14 - t * 0.06;
+      const y = 0.1 + s * 0.12;
+      const yaw = s * 1.2;
+      const material = s % 2 === 0 ? crystal : crystalHi;
+      parts.push(
+        f.mesh(`Crystal ${s}`, box(r, r * 1.2, r), material, {
+          position: [Math.sin(yaw) * 0.04, y, Math.cos(yaw) * 0.04],
+          rotation: [yaw * 0.3, yaw, yaw * 0.2],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    cairns.push(
+      f.group(`Salt Crystal Cairn ${i + 1}`, parts, {
+        position: [l.x, 0, l.z],
+        rotation: [0, i * 0.5, 0],
+      }),
+    );
+  }
+  return f.group("Salt Crystal Cairns", cairns);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -20441,6 +21445,44 @@ function buildPassFirs(f: NodeFactory): SceneNode {
  *    four snow-dusted alpine firs clinging to the ridges and a small
  *    frozen alpine tarn pond with a pale-blue ice surface, slim crack
  *    highlights and a ring of exposed alpine pebbles around the shore.
+ * 26. Courtyard: a Victorian bronze elephant statue on a fluted marble
+ *    pedestal, parked on the west outside-fence lawn between the carousel
+ *    horse (back-west) and the Victorian glider (south-west) as a mirror
+ *    to the peacock statue on the east outside-fence lawn — completing the
+ *    symmetric trio of marble pedestals along each side of the courtyard.
+ *    The elephant stands four-square on the plinth cap with a raised
+ *    curved trunk, two pendant ears, two small ivory tusks, a tasseled
+ *    tail and a slim saddle blanket draped across its back (the bronze
+ *    body, trunk, ears, tail and blanket reuse the existing
+ *    `copper-patina` colour + bump pair so the verdigris reads as crusted
+ *    relief on the cast metal, the tusks carry a slim warm ivory tone
+ *    and the marble plinth reuses the existing `marble` colour + bump
+ *    pair so the stone reads with veined relief). House: a pair of
+ *    Victorian copper-patina ornamental gargoyle waterspouts mounted at
+ *    the back-corner gutter outlets (companion to the rain chains at the
+ *    front-corner gutter outlets from pass 25) — each gargoyle a
+ *    stylised gothic beast head with two slim horn tips, two glinting
+ *    amber eyes and an open fanged mouth carrying a slim translucent
+ *    water trickle that pours from the lip into a small splash pebble
+ *    cluster on the ground below (the gargoyle bodies reuse the existing
+ *    `copper-patina` pair so the verdigris reads as crusted relief on
+ *    the cast metal). Scene: a far-east salt flats plane tucked beyond
+ *    the desert oasis's east edge — a sun-baked salt-crust ground
+ *    surfaced with the new `salt-flats` colour map paired with a
+ *    hexagonal crust-and-pool depth map (registered alongside the other
+ *    procedural textures) so the salt-crust polygon edges and shallow
+ *    brine pools read as raised relief at glancing sun, a sand apron
+ *    along the west join with the oasis so the ground layer has no
+ *    holes at the seam, four mineral pools (three turquoise brine pools
+ *    and one rust-orange iron-rich pool) scattered across the flats, a
+ *    small board-and-batten salt-harvester's stilted hut at the south
+ *    corner with a sun-bleached shingle roof, a slim chimney trailing
+ *    pale smoke and a glowing square window, a stacked pile of burlap
+ *    salt-bags on a slate platform near the hut, three sun-bleached
+ *    halophyte shrubs scattered across the flats, a focal slim
+ *    wind-scoured dust-devil column rising near the centre of the
+ *    flats and a scatter of five glinting salt-crystal cairns along
+ *    the western edge.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -20527,6 +21569,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: STAG_STATUE_POS[0], z: STAG_STATUE_POS[2], r: 1.0 },
     // Twenty-fifth-pass keep-out — peacock statue on the east outside-fence lawn.
     { x: PEACOCK_STATUE_POS[0], z: PEACOCK_STATUE_POS[2], r: 1.0 },
+    // Twenty-sixth-pass keep-out — elephant statue on the west outside-fence lawn.
+    { x: ELEPHANT_STATUE_POS[0], z: ELEPHANT_STATUE_POS[2], r: 1.0 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -20593,6 +21637,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildWeatherStation(f, WEATHER_STATION_POS),
     buildStagStatue(f, STAG_STATUE_POS),
     buildPeacockStatue(f, PEACOCK_STATUE_POS),
+    buildElephantStatue(f, ELEPHANT_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -20615,6 +21660,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fseTropicalLagoon = buildFarSoutheastTropicalLagoon(f);
   const fnwScottishGlen = buildFarNorthwestScottishGlen(f);
   const fneMountainPass = buildFarNortheastMountainPass(f);
+  const feSaltFlats = buildFarEastSaltFlats(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -20660,6 +21706,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildEyebrowDormers(f),
     buildPorchCornerBrackets(f),
     buildRainChains(f),
+    buildBackGargoyleSpouts(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -20689,6 +21736,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fseTropicalLagoon,
       fnwScottishGlen,
       fneMountainPass,
+      feSaltFlats,
       house,
     ],
   };
