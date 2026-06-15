@@ -542,6 +542,46 @@
 //   and a small frozen alpine tarn pond with a pale-blue ice surface,
 //   slim crack highlights and a ring of exposed alpine pebbles around
 //   the shore.
+//   Pass 26 — courtyard: a Victorian bronze elephant statue on a
+//   fluted marble pedestal, parked on the west outside-fence lawn
+//   between the carousel horse (back-west) and the Victorian glider
+//   (south-west) as a mirror to the peacock statue on the east
+//   outside-fence lawn so the pair of marble pedestals reads as a
+//   symmetric trio along each side of the courtyard — the elephant
+//   stands four-square on the plinth cap with a raised curved trunk,
+//   two pendant ears, two small ivory tusks, a tasseled tail and a
+//   slim saddle blanket draped across its back (the bronze body,
+//   trunk, ears, tail and blanket reuse the existing `copper-patina`
+//   colour + bump pair so the verdigris reads as crusted relief on
+//   the cast metal, the tusks carry a slim warm ivory tone and the
+//   plinth reuses the existing `marble` colour + bump pair so the
+//   stone reads with veined relief). House: a pair of Victorian
+//   copper-patina ornamental gargoyle waterspouts mounted at the
+//   back-corner gutter outlets (companion to the rain chains at the
+//   front-corner gutter outlets from pass 25) — each gargoyle a
+//   stylised gothic beast head with two slim horn tips, two glinting
+//   amber eyes and an open fanged mouth carrying a slim translucent
+//   water trickle that pours from the lip into a small splash pebble
+//   cluster on the ground below (the gargoyle bodies reuse the
+//   existing `copper-patina` pair so the verdigris reads as crusted
+//   relief on the cast metal). Scene: a far-east salt flats plane
+//   tucked beyond the desert oasis's east edge — a sun-baked
+//   salt-crust ground surfaced with the new `salt-flats` colour map
+//   paired with a hexagonal crust-and-pool depth map (registered
+//   alongside the other procedural textures) so the salt-crust
+//   polygon edges and shallow brine pools read as raised relief at
+//   glancing sun, a sand apron along the west join with the oasis so
+//   the ground layer has no holes at the seam, four mineral pools
+//   (three turquoise brine pools and one rust-orange iron-rich pool)
+//   scattered across the flats, a small board-and-batten
+//   salt-harvester's stilted hut at the south corner with a
+//   sun-bleached shingle roof, a slim chimney trailing pale smoke
+//   and a glowing square window, a stacked pile of burlap salt-bags
+//   on a slate platform near the hut, three sun-bleached halophyte
+//   shrubs scattered across the flats, a focal slim wind-scoured
+//   dust-devil column rising near the centre of the flats and a
+//   scatter of five glinting salt-crystal cairns along the western
+//   edge.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
