@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twenty-five enhancement passes.
+// house and its courtyard, layered over twenty-seven enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -582,6 +582,52 @@
 //   dust-devil column rising near the centre of the flats and a
 //   scatter of five glinting salt-crystal cairns along the western
 //   edge.
+//   Pass 27 — courtyard: a Victorian wrought-iron back-yard archway
+//   with brass wind chimes hanging from the crossbeam, parked on the
+//   back outside-fence lawn centred between the carousel horse
+//   (back-west) and the weather station (back-east) so it reads as a
+//   back-yard exit gateway out to the back meadow — a pair of fluted
+//   iron posts on slate footings linked by a curved arch beam with a
+//   top finial spire, three slim brass tube wind chimes hanging from
+//   the crossbeam around a central striker disc, leafy climbing
+//   vines winding the posts and a slim slate threshold strip on the
+//   lawn below (the arch posts, crossbeam, finial, chimes and
+//   striker disc reuse the existing `copper-patina` colour + bump
+//   pair so the verdigris reads as crusted relief on the cast
+//   metal). House: a Victorian leaded-glass illuminated ceiling
+//   rosette centred on the underside of the porch canopy — a small
+//   circular leaded-glass medallion using the existing
+//   `stained-glass` colour map paired with the leaded-muntin depth
+//   map (from pass 17) so the lead cames read as raised relief on
+//   the glass plane, framed by a slim copper-patina trim ring
+//   (reusing the existing `copper-patina` colour + bump pair) with a
+//   warm glow plate behind so the rosette reads as a soft overhead
+//   porch lamp at low light, eight slim radial lead cames dividing
+//   the glass into petal panels and three slim pendant crystal
+//   teardrops hanging from the rosette rim to catch the porch glow.
+//   Scene: a far-south sakura blossom grove plane south of the south
+//   heath, bridging the gap south of the heath — a pale-rose
+//   blossom-strewn grass ground surfaced with the new `sakura-grove`
+//   colour map paired with a petal-scatter depth map (registered
+//   alongside the other procedural textures) so the fallen petal
+//   mounds and exposed grass tufts read as raised relief at glancing
+//   sun, a heath-moss apron along the north join so the ground
+//   layer has no holes at the seam, five sakura cherry trees with
+//   layered foliage clusters in pale-rose, pink and white tints
+//   (different dominant tint per tree) and a sparse scatter of
+//   fallen petal dabs around each base, a small wooden Japanese-
+//   style teahouse at the south corner with a curved tile roof and
+//   slim upturn caps at each eave corner, a paper sliding door, a
+//   small front porch deck and a glowing paper lantern hanging from
+//   the eave, a short stone-stepping-stone path leading from the
+//   heath apron south to the teahouse door with three flat stepping
+//   stones, a traditional toro stone lantern marking the path
+//   entrance with a warm-glowing fire chamber, a small zen rock
+//   garden cluster of three boulders on a flat raked-sand pad ringed
+//   by a slim stone border with concentric ripple rings around each
+//   boulder, and a focal carved-stone moon-gate disc at the west
+//   edge with a slim stone ring frame on a low slate platform
+//   reading as a contemplative threshold.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
