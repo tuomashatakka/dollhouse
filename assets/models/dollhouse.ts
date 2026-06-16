@@ -939,6 +939,74 @@ const SALT_BRINE_POOLS: { x: number; z: number; r: number; iron: boolean }[] = [
   { x: 88, z: -3, r: 0.7, iron: true },
 ];
 
+/**
+ * Twenty-seventh-pass courtyard prop — a Victorian wrought-iron back-yard
+ * archway with brass wind chimes hanging from the crossbeam, parked on the
+ * back outside-fence lawn centred between the carousel horse (back-west) and
+ * the weather station (back-east) so it reads as a back-yard exit gateway
+ * out to the back meadow. The arch is built from a pair of fluted iron
+ * posts on slate footings linked by a curved arch beam with a top finial
+ * spire, three slim brass tube wind chimes hanging from the crossbeam
+ * around a central striker disc, leafy climbing vines winding the posts
+ * and a slim slate threshold strip on the lawn below. The arch posts,
+ * crossbeam, finial, chimes and striker disc reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal.
+ */
+const BACK_ARCHWAY_POS: [number, number, number] = [0, 0, -5.5];
+
+/**
+ * Twenty-seventh-pass house detail — a Victorian leaded-glass illuminated
+ * ceiling rosette centred on the underside of the porch canopy. The rosette
+ * is a small circular leaded-glass medallion using the existing
+ * `stained-glass` colour map paired with the leaded-muntin depth map (from
+ * pass 17) so the lead cames read as raised relief on the glass plane,
+ * framed by a slim copper-patina trim ring (reusing the existing
+ * `copper-patina` colour + bump pair) with a warm glow plate behind so the
+ * rosette reads as a soft overhead porch lamp at low light. Three slim
+ * pendant teardrops hang from the rosette rim to read as crystal drops.
+ */
+const PORCH_ROSETTE_POS: [number, number, number] = [0, 2.62, FRONT_Z + 0.45];
+
+/**
+ * Twenty-seventh-pass scene extension — a far-south sakura blossom grove
+ * plane south of the south heath, bridging the gap south of the heath. The
+ * plane overlaps the heath by ~3 units along its north join with a heath-
+ * moss apron so the ground layer has no holes at the seam. It carries a
+ * pale-rose blossom-strewn grass ground surfaced with the new `sakura-grove`
+ * colour map paired with a petal-scatter depth map (registered alongside
+ * the other procedural textures) so the fallen petal mounds and exposed
+ * grass tufts read as raised relief at glancing sun, five sakura cherry
+ * trees with layered foliage clusters in pale-rose, pink and white tints,
+ * a small wooden Japanese-style teahouse at the south corner with a curved
+ * shingle roof, a paper sliding door and a glowing paper lantern hanging
+ * from the eave, a short stone-stepping-stone path leading from the heath
+ * apron south to the teahouse door with three flat stepping stones, a
+ * traditional toro stone lantern marking the path entrance, a small zen
+ * rock garden cluster (three boulders + a raked sand pad ringed by a slim
+ * stone border) and a focal carved-stone moon-gate disc at the west edge
+ * reading as a contemplative threshold.
+ */
+const SAKURA_GROVE_POS: [number, number, number] = [0, -0.028, 70];
+const SAKURA_GROVE_W = 30;
+const SAKURA_GROVE_D = 20;
+const SAKURA_TEAHOUSE_POS: [number, number, number] = [-7, 0, 75];
+const SAKURA_TORO_POS: [number, number, number] = [4, 0, 65];
+const SAKURA_ZEN_POS: [number, number, number] = [9, 0, 73];
+const SAKURA_MOONGATE_POS: [number, number, number] = [-12, 0, 70];
+const SAKURA_TREES: { x: number; z: number; tint: 0 | 1 | 2; scale: number }[] = [
+  { x: -8, z: 66, tint: 0, scale: 1.0 },
+  { x: 8, z: 67, tint: 1, scale: 1.15 },
+  { x: -2, z: 72, tint: 2, scale: 0.95 },
+  { x: 11, z: 75, tint: 0, scale: 1.1 },
+  { x: -4, z: 76, tint: 1, scale: 1.05 },
+];
+const SAKURA_STEPPING_STONES: { x: number; z: number }[] = [
+  { x: 0, z: 67.5 },
+  { x: -2.5, z: 70 },
+  { x: -5, z: 72.5 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1846,6 +1914,57 @@ const C = {
   saltHalophyteHi: "#b4c068",
   saltDustDevil: "#d6c9aa",
   saltCairnStone: "#cfc6b2",
+  // Twenty-seventh enhancement pass — a Victorian wrought-iron back-yard
+  // archway with brass wind chimes on the back outside-fence lawn, a small
+  // leaded-glass illuminated porch ceiling rosette centred on the underside
+  // of the porch canopy, and a far-south sakura blossom grove plane south
+  // of the south heath. The new `sakura-grove` colour map is paired with a
+  // petal-scatter depth map registered alongside it so fallen petal mounds
+  // and exposed grass tufts read as raised relief at glancing sun.
+  archwayIron: "#5d8a6a",
+  archwayIronHi: "#9bc4a8",
+  archwayIronShade: "#2f5840",
+  archwaySlate: "#4e4a44",
+  archwaySlateHi: "#7a7468",
+  archwayChimeBrass: "#7c9c70",
+  archwayVine: "#3d6e3a",
+  archwayLeaf: "#5a8a3d",
+  archwayLeafHi: "#8cbb5e",
+  rosetteGlow: "#fff1c4",
+  rosetteLead: "#3a3a3a",
+  rosetteTrim: "#5d8a6a",
+  rosetteDrop: "#dfe8e4",
+  // Sakura blossom grove — pale rose-and-white flowering cherry grove with a
+  // wooden teahouse, a stepping-stone path, a toro stone lantern, a zen rock
+  // garden and a focal moon-gate disc.
+  sakuraGround: "#c8d9b0",
+  sakuraGroundShade: "#94aa78",
+  sakuraGroundHi: "#e6d8c2",
+  sakuraApronMoss: "#9aa46c",
+  sakuraBarkLight: "#6e4a36",
+  sakuraBarkDark: "#3e2818",
+  sakuraBloomPale: "#fadce0",
+  sakuraBloomPink: "#f5b6c4",
+  sakuraBloomWhite: "#fff4f0",
+  sakuraPetalDab: "#f8c8d4",
+  sakuraTeahouseWall: "#dccfae",
+  sakuraTeahouseWallShade: "#a89978",
+  sakuraTeahouseTrim: "#6e4a36",
+  sakuraTeahouseRoof: "#3a2a18",
+  sakuraTeahouseDoorPaper: "#f6efe0",
+  sakuraLanternPaper: "#f8e3a0",
+  sakuraLanternGlow: "#ffd870",
+  sakuraSteppingStone: "#8c8478",
+  sakuraSteppingStoneHi: "#bdb6a4",
+  sakuraToroStone: "#a89e8c",
+  sakuraToroStoneShade: "#6a6258",
+  sakuraToroFire: "#ffc870",
+  sakuraZenSand: "#ede4c8",
+  sakuraZenSandShade: "#b9a978",
+  sakuraZenBoulder: "#7e7468",
+  sakuraZenBoulderShade: "#3e3a30",
+  sakuraMoonGateStone: "#dcd2c2",
+  sakuraMoonGateStoneShade: "#a39880",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -20908,6 +21027,913 @@ function buildSaltCrystalCairns(f: NodeFactory): SceneNode {
   return f.group("Salt Crystal Cairns", cairns);
 }
 
+/* ─────────────── twenty-seventh-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian wrought-iron back-yard archway with brass wind chimes hanging
+ * from the crossbeam, parked on the back outside-fence lawn centred between
+ * the carousel horse and the weather station. The arch reads as a back-yard
+ * exit gateway out to the back meadow — a pair of fluted iron posts on
+ * slate footings linked by a curved arch beam with a top finial spire,
+ * three slim brass tube wind chimes hanging from the crossbeam around a
+ * central striker disc, leafy climbing vines winding the posts and a slim
+ * slate threshold strip on the lawn below. The arch posts, crossbeam,
+ * finial, chimes and striker disc reuse the existing `copper-patina` colour
+ * + bump pair so the verdigris reads as crusted relief on the cast metal.
+ */
+function buildBackArchway(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const iron: MaterialDef = {
+    color: C.archwayIron,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const ironHi = std(C.archwayIronHi, 0.4, { metalness: 0.85 });
+  const ironShade = std(C.archwayIronShade, 0.95, { flatShading: true });
+  const slate = std(C.archwaySlate, 0.95, { texture: "cobblestone", flatShading: true });
+  const slateHi = std(C.archwaySlateHi, 0.95, { flatShading: true });
+  const brass: MaterialDef = {
+    color: C.archwayChimeBrass,
+    roughness: 0.4,
+    metalness: 0.85,
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.015,
+  };
+  const vine = std(C.archwayVine, 0.85, { flatShading: true });
+  const leaf = std(C.archwayLeaf, 0.7, { flatShading: true });
+  const leafHi = std(C.archwayLeafHi, 0.6, { flatShading: true });
+  const archHalfW = 1.0;
+  const postH = 2.2;
+  const postR = 0.06;
+  const parts: SceneNode[] = [];
+  // ── Slim slate threshold strip on the lawn below the arch ──
+  parts.push(
+    f.mesh("Threshold Slab", box(archHalfW * 2 + 0.6, 0.06, 0.5), slate, {
+      position: [0, 0.03, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Threshold Trim", box(archHalfW * 2 + 0.6, 0.018, 0.05), slateHi, {
+      position: [0, 0.07, 0.21],
+    }, { castShadow: false }),
+    f.mesh("Threshold Trim Back", box(archHalfW * 2 + 0.6, 0.018, 0.05), slateHi, {
+      position: [0, 0.07, -0.21],
+    }, { castShadow: false }),
+  );
+  // ── Pair of fluted iron posts ──
+  for (const side of [-1, 1] as const) {
+    const postX = side * archHalfW;
+    parts.push(
+      // Slate footing under each post.
+      f.mesh(`Footing ${side}`, box(0.26, 0.06, 0.26), slate, {
+        position: [postX, 0.07, 0],
+      }, { receiveShadow: true }),
+      // Main post column.
+      f.mesh(`Post ${side}`, cylinder(postR, postR + 0.01, postH, 12), iron, {
+        position: [postX, 0.1 + postH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Post cap collar at the top.
+      f.mesh(`Post Cap ${side}`, cylinder(postR + 0.04, postR + 0.04, 0.05, 12), iron, {
+        position: [postX, 0.1 + postH - 0.025, 0],
+      }, { castShadow: true }),
+      // Post base collar at the foot.
+      f.mesh(`Post Base ${side}`, cylinder(postR + 0.04, postR + 0.05, 0.06, 12), iron, {
+        position: [postX, 0.13, 0],
+      }, { castShadow: true }),
+      // Slim highlight ridge along the post for sun catch.
+      f.mesh(`Post Hi ${side}`, box(0.012, postH * 0.86, 0.025), ironHi, {
+        position: [postX - side * 0.04, 0.1 + postH / 2, 0],
+      }, { castShadow: false }),
+      // Slim shaded undercut on the opposite side.
+      f.mesh(`Post Shade ${side}`, box(0.014, postH * 0.86, 0.022), ironShade, {
+        position: [postX + side * 0.04, 0.1 + postH / 2, 0],
+      }, { castShadow: false }),
+    );
+    // Six fluting grooves around the post.
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2;
+      parts.push(
+        f.mesh(`Post Flute ${side} ${i}`, box(0.012, postH * 0.78, 0.014), ironShade, {
+          position: [
+            postX + Math.cos(a) * (postR + 0.012),
+            0.1 + postH / 2,
+            Math.sin(a) * (postR + 0.012),
+          ],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Curved arch beam — five segments arranged in a shallow arc ──
+  const archCenterY = 0.1 + postH;
+  const archRise = 0.55;
+  const segmentCount = 7;
+  for (let i = 0; i < segmentCount; i++) {
+    const t0 = i / segmentCount;
+    const t1 = (i + 1) / segmentCount;
+    const tm = (t0 + t1) / 2;
+    const x0 = -archHalfW + 2 * archHalfW * t0;
+    const x1 = -archHalfW + 2 * archHalfW * t1;
+    const y0 = archCenterY + archRise * Math.sin(t0 * Math.PI);
+    const y1 = archCenterY + archRise * Math.sin(t1 * Math.PI);
+    const xm = (x0 + x1) / 2;
+    const ym = (y0 + y1) / 2;
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    const len = Math.hypot(dx, dy);
+    const angle = Math.atan2(dy, dx);
+    parts.push(
+      f.mesh(`Arch Seg ${i}`, cylinder(0.05, 0.05, len, 10), iron, {
+        position: [xm, ym, 0],
+        rotation: [0, 0, angle - Math.PI / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut along the arch beam belly.
+      f.mesh(`Arch Seg Shade ${i}`, cylinder(0.035, 0.035, len, 8), ironShade, {
+        position: [xm, ym - 0.05, 0],
+        rotation: [0, 0, angle - Math.PI / 2],
+      }, { castShadow: false }),
+    );
+    // Slim ornamental scroll cap at each segment join.
+    if (i > 0) {
+      parts.push(
+        f.mesh(`Arch Scroll ${i}`, sphere(0.05, 10, 8), iron, {
+          position: [x0, y0, 0],
+        }, { castShadow: true }),
+      );
+    }
+    // Drop pendant filigree under the arch belly midway.
+    if (i === Math.floor(segmentCount / 2)) {
+      void tm;
+      parts.push(
+        f.mesh(`Arch Centre Boss`, sphere(0.08, 12, 8), iron, {
+          position: [xm, ym - 0.04, 0],
+        }, { castShadow: true }),
+        f.mesh(`Arch Centre Boss Hi`, sphere(0.05, 10, 8), ironHi, {
+          position: [xm + 0.02, ym - 0.02, 0.04],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Crown finial spire at the arch apex ──
+  const apexY = archCenterY + archRise;
+  parts.push(
+    f.mesh("Finial Base", cylinder(0.07, 0.05, 0.08, 12), iron, {
+      position: [0, apexY + 0.06, 0],
+    }, { castShadow: true }),
+    f.mesh("Finial Bead", sphere(0.05, 12, 10), iron, {
+      position: [0, apexY + 0.15, 0],
+    }, { castShadow: true }),
+    f.mesh("Finial Spire", cone(0.04, 0.22, 10), iron, {
+      position: [0, apexY + 0.31, 0],
+    }, { castShadow: true }),
+    f.mesh("Finial Spire Hi", cone(0.025, 0.18, 8), ironHi, {
+      position: [0, apexY + 0.31, 0.02],
+    }, { castShadow: false }),
+  );
+  // ── Three brass tube wind chimes hanging from the crossbeam ──
+  const chimeY = archCenterY + 0.1;
+  const chimeXOffsets = [-0.22, 0, 0.22];
+  const chimeLengths = [0.5, 0.62, 0.42];
+  for (let i = 0; i < 3; i++) {
+    const cx = chimeXOffsets[i]!;
+    const cl = chimeLengths[i]!;
+    parts.push(
+      // Slim hanging string (dark iron filament) from beam down to chime cap.
+      f.mesh(`Chime String ${i}`, cylinder(0.005, 0.005, 0.18, 6), ironShade, {
+        position: [cx, chimeY - 0.09, 0],
+      }, { castShadow: false }),
+      // Chime cap collar.
+      f.mesh(`Chime Cap ${i}`, cylinder(0.022, 0.022, 0.024, 10), brass, {
+        position: [cx, chimeY - 0.2, 0],
+      }, { castShadow: false }),
+      // Brass chime tube.
+      f.mesh(`Chime Tube ${i}`, cylinder(0.018, 0.018, cl, 10), brass, {
+        position: [cx, chimeY - 0.2 - cl / 2, 0],
+      }, { castShadow: true }),
+      // Slim highlight stripe along the tube for sun catch.
+      f.mesh(`Chime Tube Hi ${i}`, box(0.008, cl * 0.85, 0.005), ironHi, {
+        position: [cx - 0.014, chimeY - 0.2 - cl / 2, 0.015],
+      }, { castShadow: false }),
+    );
+  }
+  // Central striker disc — a slim brass disc hanging below the chimes that
+  // catches the breeze and rings the tubes.
+  parts.push(
+    f.mesh("Striker String", cylinder(0.005, 0.005, 0.4, 6), ironShade, {
+      position: [0, chimeY - 0.2, 0],
+    }, { castShadow: false }),
+    f.mesh("Striker Disc", cylinder(0.05, 0.05, 0.012, 18), brass, {
+      position: [0, chimeY - 0.42, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Striker tail — a slim brass weight hanging from the disc rim.
+    f.mesh("Striker Tail", cylinder(0.008, 0.008, 0.12, 6), brass, {
+      position: [0, chimeY - 0.52, 0],
+    }, { castShadow: false }),
+    f.mesh("Striker Tail Bead", sphere(0.018, 8, 6), brass, {
+      position: [0, chimeY - 0.59, 0],
+    }, { castShadow: false }),
+  );
+  // ── Climbing vines winding the posts ──
+  for (const side of [-1, 1] as const) {
+    const postX = side * archHalfW;
+    // Slim spiraling vine wrapping the post.
+    for (let i = 0; i < 5; i++) {
+      const t = i / 4;
+      const angle = side * t * Math.PI * 1.6;
+      const y = 0.3 + t * (postH - 0.3);
+      parts.push(
+        f.mesh(`Vine ${side} ${i}`, cylinder(0.018, 0.018, 0.16, 6), vine, {
+          position: [
+            postX + Math.cos(angle) * (postR + 0.05),
+            y,
+            Math.sin(angle) * (postR + 0.05),
+          ],
+          rotation: [0, angle, side * 0.3],
+        }, { castShadow: false }),
+        // Two slim leaf clusters per vine segment.
+        f.mesh(`Vine Leaf A ${side} ${i}`, sphere(0.06, 8, 6), leaf, {
+          position: [
+            postX + Math.cos(angle) * (postR + 0.13),
+            y + 0.04,
+            Math.sin(angle) * (postR + 0.13),
+          ],
+          scale: [1.4, 0.35, 1.0],
+        }, { castShadow: false }),
+        f.mesh(`Vine Leaf B ${side} ${i}`, sphere(0.05, 8, 6), leafHi, {
+          position: [
+            postX + Math.cos(angle + 0.6) * (postR + 0.14),
+            y + 0.1,
+            Math.sin(angle + 0.6) * (postR + 0.14),
+          ],
+          scale: [1.3, 0.32, 0.95],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Leafy garland draped across the arch crown ──
+  for (let i = 0; i < 5; i++) {
+    const t = (i + 0.5) / 5;
+    const ax = -archHalfW + 2 * archHalfW * t;
+    const ay = archCenterY + archRise * Math.sin(t * Math.PI) - 0.08;
+    parts.push(
+      f.mesh(`Crown Leaf ${i}`, sphere(0.08, 8, 6), leaf, {
+        position: [ax, ay, 0.02],
+        scale: [1.3, 0.5, 0.8],
+        rotation: [0, 0, (i - 2) * 0.2],
+      }, { castShadow: false }),
+      f.mesh(`Crown Leaf Hi ${i}`, sphere(0.06, 8, 6), leafHi, {
+        position: [ax + 0.02, ay + 0.02, 0.05],
+        scale: [1.2, 0.45, 0.75],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Back Archway", parts, { position: pos });
+}
+
+/* ─────────────── twenty-seventh-pass house detail ─────────────── */
+
+/**
+ * A Victorian leaded-glass illuminated ceiling rosette centred on the
+ * underside of the porch canopy. The rosette is a small circular
+ * leaded-glass medallion using the existing `stained-glass` colour map
+ * paired with the leaded-muntin depth map (from pass 17) so the lead cames
+ * read as raised relief on the glass plane, framed by a slim copper-patina
+ * trim ring (reusing the existing `copper-patina` colour + bump pair) with
+ * a warm glow plate behind so the rosette reads as a soft overhead porch
+ * lamp at low light. Three slim pendant crystal teardrops hang from the
+ * rosette rim to catch the porch glow.
+ */
+function buildPorchCeilingRosette(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const glass: MaterialDef = {
+    color: C.rosetteGlow,
+    roughness: 0.25,
+    metalness: 0.1,
+    texture: "stained-glass",
+    textureScale: [1, 1],
+    bumpMap: "stained-glass-bump",
+    bumpScale: 0.025,
+    emissive: "#5e3818",
+  };
+  const glow: MaterialDef = {
+    color: C.rosetteGlow,
+    roughness: 0.4,
+    emissive: "#f7d28c",
+    transparent: true,
+    opacity: 0.75,
+  };
+  const trim: MaterialDef = {
+    color: C.rosetteTrim,
+    roughness: 0.55,
+    metalness: 0.55,
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.025,
+  };
+  const lead = std(C.rosetteLead, 0.65, { metalness: 0.4, flatShading: true });
+  const drop: MaterialDef = {
+    color: C.rosetteDrop,
+    roughness: 0.2,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.7,
+    emissive: "#cfd8d4",
+  };
+  const radius = 0.32;
+  const parts: SceneNode[] = [];
+  // Warm interior glow plate behind the stained glass — a slightly larger
+  // disc emitting warm light so the rosette reads as lit even at low light.
+  parts.push(
+    f.mesh("Rosette Glow", cylinder(radius - 0.02, radius - 0.02, 0.008, 24), glow, {
+      position: [0, -0.005, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // Stained-glass colour disc carrying the leaded-muntin texture and
+  // emissive warmth.
+  parts.push(
+    f.mesh("Rosette Glass", cylinder(radius, radius, 0.012, 24), glass, {
+      position: [0, 0, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  // Copper-patina trim ring framing the panel — a torus-ish ring built from
+  // a slim flat collar disc with a slightly raised inner lip.
+  parts.push(
+    f.mesh("Rosette Trim Ring", cylinder(radius + 0.04, radius + 0.04, 0.018, 26), trim, {
+      position: [0, -0.005, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Rosette Trim Inner Lip", cylinder(radius + 0.005, radius + 0.005, 0.024, 26), trim, {
+      position: [0, 0.005, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // Central boss medallion at the rosette hub — a slim disc with a small
+  // copper sphere on top reading as the ceiling-mount cap.
+  parts.push(
+    f.mesh("Rosette Hub", cylinder(0.09, 0.09, 0.02, 16), trim, {
+      position: [0, 0.012, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Rosette Cap Bead", sphere(0.05, 12, 10), trim, {
+      position: [0, 0.04, 0],
+    }, { castShadow: false }),
+  );
+  // Eight slim radial lead cames dividing the glass into petal panels.
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Came ${i}`, box(radius * 1.8, 0.012, 0.016), lead, {
+        position: [0, 0.008, 0],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Three slim pendant crystal teardrops hanging from the rosette rim.
+  const dropAngles = [-Math.PI / 4, 0, Math.PI / 4];
+  for (let i = 0; i < dropAngles.length; i++) {
+    const a = dropAngles[i]!;
+    const dx = Math.cos(a) * (radius - 0.05);
+    const dz = Math.sin(a) * (radius - 0.05);
+    parts.push(
+      // Slim hanging filament.
+      f.mesh(`Drop String ${i}`, cylinder(0.004, 0.004, 0.12, 6), lead, {
+        position: [dx, -0.06, dz],
+      }, { castShadow: false }),
+      // Teardrop crystal — an elongated sphere with emissive sparkle.
+      f.mesh(`Drop Crystal ${i}`, sphere(0.045, 10, 8), drop, {
+        position: [dx, -0.15, dz],
+        scale: [0.7, 1.2, 0.7],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Porch Ceiling Rosette", parts, {
+    position: pos,
+    rotation: [-Math.PI / 2, 0, 0],
+  });
+}
+
+/* ─────────────── twenty-seventh-pass scene extension ─────────────── */
+
+/**
+ * Far-south sakura blossom grove plane south of the south heath. The plane
+ * carries a pale-rose blossom-strewn grass ground with the new `sakura-grove`
+ * colour + depth map pair so fallen petal mounds and exposed grass tufts
+ * read as raised relief at glancing sun. Features five sakura cherry trees
+ * with layered foliage clusters in pale-rose, pink and white tints, a small
+ * wooden Japanese-style teahouse at the south corner with a curved shingle
+ * roof, a paper sliding door and a glowing paper lantern hanging from the
+ * eave, a short stone-stepping-stone path leading from the heath apron
+ * south to the teahouse door with three flat stepping stones, a traditional
+ * toro stone lantern marking the path entrance, a small zen rock garden
+ * cluster (three boulders + a raked sand pad ringed by a slim stone border)
+ * and a focal carved-stone moon-gate disc at the west edge.
+ */
+function buildFarSouthSakuraGrove(f: NodeFactory): SceneNode {
+  return f.group("Far South Sakura Grove", [
+    // Sakura grove ground plane — pale rose blossom-strewn grass with the new
+    // colour + depth map pair so fallen petal mounds and exposed grass tufts
+    // read as raised relief at glancing sun.
+    f.mesh(
+      "Sakura Grove Ground",
+      plane(SAKURA_GROVE_W, SAKURA_GROVE_D),
+      std(C.sakuraGround, 0.95, {
+        texture: "sakura-grove",
+        textureScale: [5, 4],
+        bumpMap: "sakura-grove-bump",
+        bumpScale: 0.045,
+      }),
+      { position: SAKURA_GROVE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the south heath's south edge with a heath-moss
+    // strip so the seam reads as a continuous heath-into-sakura join.
+    f.mesh(
+      "Sakura Grove North Apron",
+      plane(SAKURA_GROVE_W, 3),
+      std(C.sakuraApronMoss, 0.95, { texture: "grass", textureScale: [12, 1] }),
+      {
+        position: [
+          SAKURA_GROVE_POS[0],
+          -0.024,
+          SAKURA_GROVE_POS[2] - SAKURA_GROVE_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildSakuraTrees(f),
+    buildSakuraTeahouse(f, SAKURA_TEAHOUSE_POS),
+    buildSakuraSteppingPath(f),
+    buildSakuraToro(f, SAKURA_TORO_POS),
+    buildSakuraZenGarden(f, SAKURA_ZEN_POS),
+    buildSakuraMoonGate(f, SAKURA_MOONGATE_POS),
+  ]);
+}
+
+/**
+ * Five sakura cherry trees scattered across the grove — each tree a slim
+ * dark-bark trunk topped by three layered foliage clusters in pale-rose,
+ * pink and white tints (different dominant tint per tree). Each tree carries
+ * a sparse scatter of fallen petal dabs around its base.
+ */
+function buildSakuraTrees(f: NodeFactory): SceneNode {
+  const bark = std(C.sakuraBarkLight, 0.95, { texture: "wood", textureScale: [1, 3] });
+  const barkShade = std(C.sakuraBarkDark, 0.95, { flatShading: true });
+  const tints = [
+    [C.sakuraBloomPale, C.sakuraBloomPink, C.sakuraBloomWhite],
+    [C.sakuraBloomPink, C.sakuraBloomPale, C.sakuraBloomWhite],
+    [C.sakuraBloomWhite, C.sakuraBloomPale, C.sakuraBloomPink],
+  ] as const;
+  const petal = std(C.sakuraPetalDab, 0.85, { flatShading: true });
+  const trees: SceneNode[] = [];
+  for (let i = 0; i < SAKURA_TREES.length; i++) {
+    const t = SAKURA_TREES[i]!;
+    const tint = tints[t.tint];
+    const trunkH = 1.6 * t.scale;
+    const parts: SceneNode[] = [
+      // Trunk — a slim tapered cylinder.
+      f.mesh(`Trunk`, cylinder(0.08, 0.12, trunkH, 10), bark, {
+        position: [0, trunkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut along the trunk for relief.
+      f.mesh(`Trunk Shade`, cylinder(0.06, 0.08, trunkH * 0.9, 8), barkShade, {
+        position: [0.04, trunkH / 2, 0.04],
+      }, { castShadow: false }),
+      // Slim branch stubs forking off the trunk.
+      f.mesh(`Branch L`, cylinder(0.04, 0.04, 0.4, 6), bark, {
+        position: [-0.12, trunkH * 0.85, 0],
+        rotation: [0, 0, Math.PI / 4],
+      }, { castShadow: true }),
+      f.mesh(`Branch R`, cylinder(0.04, 0.04, 0.4, 6), bark, {
+        position: [0.12, trunkH * 0.85, 0],
+        rotation: [0, 0, -Math.PI / 4],
+      }, { castShadow: true }),
+    ];
+    // Three layered foliage clusters in three tints — broad rounded canopy.
+    const crownY = trunkH + 0.2 * t.scale;
+    const crownR = 0.65 * t.scale;
+    for (let c = 0; c < 3; c++) {
+      const cm = std(tint[c]!, 0.7, { flatShading: true });
+      const cx = (c - 1) * 0.28 * t.scale;
+      const cy = crownY + (c === 1 ? 0.16 * t.scale : 0);
+      const cz = (c === 0 ? 0.18 : c === 2 ? -0.18 : 0) * t.scale;
+      parts.push(
+        f.mesh(`Crown ${c}`, sphere(crownR, 12, 10), cm, {
+          position: [cx, cy, cz],
+          scale: [1.1, 0.85, 1.1],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    // Slim petal dabs scattered around the base.
+    for (let p = 0; p < 6; p++) {
+      const a = (p / 6) * Math.PI * 2 + i * 0.4;
+      const r = 0.7 + (p % 2) * 0.25;
+      parts.push(
+        f.mesh(`Fallen Petal ${p}`, cylinder(0.07, 0.07, 0.012, 8), petal, {
+          position: [Math.cos(a) * r, 0.01, Math.sin(a) * r],
+          scale: [1.4, 1, 1.4],
+        }, { castShadow: false, receiveShadow: true }),
+      );
+    }
+    trees.push(
+      f.group(`Sakura Tree ${i + 1}`, parts, {
+        position: [t.x, 0, t.z],
+        rotation: [0, i * 0.7, 0],
+        scale: [t.scale, t.scale, t.scale],
+      }),
+    );
+  }
+  return f.group("Sakura Trees", trees);
+}
+
+/**
+ * A small wooden Japanese-style teahouse at the south corner of the sakura
+ * grove — a slim board-and-batten structure with a curved tile roof, a
+ * paper sliding door, a small front porch deck and a glowing paper lantern
+ * hanging from the eave. The walls and porch read as warm timber, the roof
+ * carries a slim curved upturn at each eave end and the lantern emits a
+ * warm amber glow so the teahouse reads as inhabited even at low light.
+ */
+function buildSakuraTeahouse(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.sakuraTeahouseWall, 0.9, { texture: "wood", textureScale: [2, 2], flatShading: true });
+  const wallShade = std(C.sakuraTeahouseWallShade, 0.95, { flatShading: true });
+  const trim = std(C.sakuraTeahouseTrim, 0.85, { texture: "wood", textureScale: [1, 2], flatShading: true });
+  const roof = std(C.sakuraTeahouseRoof, 0.95, { texture: "shingle", textureScale: [2, 2], flatShading: true });
+  const paperDoor: MaterialDef = {
+    color: C.sakuraTeahouseDoorPaper,
+    roughness: 0.85,
+    transparent: true,
+    opacity: 0.9,
+    emissive: "#7c5a2e",
+  };
+  const lanternPaper: MaterialDef = {
+    color: C.sakuraLanternPaper,
+    roughness: 0.6,
+    transparent: true,
+    opacity: 0.85,
+    emissive: C.sakuraLanternGlow,
+  };
+  const w = 2.6;
+  const d = 2.0;
+  const wallH = 1.5;
+  const deckH = 0.18;
+  const parts: SceneNode[] = [];
+  // Porch deck — a slim raised platform under the entire structure.
+  parts.push(
+    f.mesh("Deck", box(w + 0.5, deckH, d + 0.4), trim, {
+      position: [0, deckH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Deck Trim", box(w + 0.55, 0.04, d + 0.45), wallShade, {
+      position: [0, deckH + 0.02, 0],
+    }, { castShadow: false }),
+  );
+  // Three slim deck-edge planks running front-to-back for slat texture.
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh(`Deck Plank ${i}`, box(w + 0.4, 0.012, 0.08), wallShade, {
+        position: [0, deckH + 0.005, -d / 2 + 0.08 + i * (d / 4)],
+      }, { castShadow: false }),
+    );
+  }
+  // Four walls — front is mostly paper door, sides + back are wood.
+  const wallY = deckH + wallH / 2;
+  parts.push(
+    f.mesh("Wall Back", box(w, wallH, 0.12), wall, {
+      position: [0, wallY, -d / 2 + 0.06],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall W", box(0.12, wallH, d), wallShade, {
+      position: [-w / 2 + 0.06, wallY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wall E", box(0.12, wallH, d), wallShade, {
+      position: [w / 2 - 0.06, wallY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Front wall — split into two paper sliding door panels with a slim
+  // central groove track and slim trim battens on each side.
+  parts.push(
+    f.mesh("Door Track", box(w * 0.7, 0.04, 0.06), trim, {
+      position: [0, deckH + 0.02, d / 2 - 0.06],
+    }, { castShadow: false }),
+    f.mesh("Door Header", box(w * 0.74, 0.06, 0.08), trim, {
+      position: [0, deckH + wallH * 0.92, d / 2 - 0.06],
+    }, { castShadow: true }),
+    f.mesh("Door Panel L", box(w * 0.34, wallH * 0.88, 0.04), paperDoor, {
+      position: [-w * 0.18, deckH + wallH * 0.46, d / 2 - 0.04],
+    }, { castShadow: false, receiveShadow: true }),
+    f.mesh("Door Panel R", box(w * 0.34, wallH * 0.88, 0.04), paperDoor, {
+      position: [w * 0.18, deckH + wallH * 0.46, d / 2 - 0.04],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim wall corners flanking the paper doors.
+    f.mesh("Wall Front L", box(w * 0.12, wallH, 0.12), wall, {
+      position: [-w / 2 + w * 0.06, wallY, d / 2 - 0.06],
+    }, { castShadow: true }),
+    f.mesh("Wall Front R", box(w * 0.12, wallH, 0.12), wall, {
+      position: [w / 2 - w * 0.06, wallY, d / 2 - 0.06],
+    }, { castShadow: true }),
+  );
+  // Slim vertical lattice battens on each door panel for paper-lattice grid.
+  for (const side of [-1, 1] as const) {
+    for (let i = 0; i < 5; i++) {
+      const bx = side * w * 0.18 + (i - 2) * (w * 0.07);
+      parts.push(
+        f.mesh(`Lattice V ${side} ${i}`, box(0.015, wallH * 0.84, 0.015), trim, {
+          position: [bx, deckH + wallH * 0.46, d / 2 - 0.015],
+        }, { castShadow: false }),
+      );
+    }
+    for (let j = 0; j < 4; j++) {
+      const by = deckH + wallH * (0.16 + j * 0.22);
+      parts.push(
+        f.mesh(`Lattice H ${side} ${j}`, box(w * 0.32, 0.012, 0.015), trim, {
+          position: [side * w * 0.18, by, d / 2 - 0.015],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Curved tile roof — two angled slabs meeting at a ridge, with slim
+  // upturn caps at each eave end giving the Japanese roof its lifted look.
+  const ridgeY = deckH + wallH + 0.55;
+  const halfD = d / 2 + 0.42;
+  const hyp = Math.hypot(0.55, halfD);
+  const slope = Math.atan2(0.55, halfD);
+  parts.push(
+    f.mesh("Roof S", box(w + 0.7, 0.1, hyp), roof, {
+      position: [0, ridgeY - 0.275, halfD / 2],
+      rotation: [-slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof N", box(w + 0.7, 0.1, hyp), roof, {
+      position: [0, ridgeY - 0.275, -halfD / 2],
+      rotation: [slope, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Ridge", box(w + 0.74, 0.08, 0.16), wallShade, {
+      position: [0, ridgeY + 0.02, 0],
+    }, { castShadow: true }),
+    // Slim upturn caps at each front-eave corner.
+    f.mesh("Eave Upturn FW", box(0.22, 0.1, 0.18), roof, {
+      position: [-w / 2 - 0.22, ridgeY - 0.55, halfD - 0.08],
+      rotation: [0, 0, -0.5],
+    }, { castShadow: true }),
+    f.mesh("Eave Upturn FE", box(0.22, 0.1, 0.18), roof, {
+      position: [w / 2 + 0.22, ridgeY - 0.55, halfD - 0.08],
+      rotation: [0, 0, 0.5],
+    }, { castShadow: true }),
+    f.mesh("Eave Upturn BW", box(0.22, 0.1, 0.18), roof, {
+      position: [-w / 2 - 0.22, ridgeY - 0.55, -halfD + 0.08],
+      rotation: [0, 0, -0.5],
+    }, { castShadow: true }),
+    f.mesh("Eave Upturn BE", box(0.22, 0.1, 0.18), roof, {
+      position: [w / 2 + 0.22, ridgeY - 0.55, -halfD + 0.08],
+      rotation: [0, 0, 0.5],
+    }, { castShadow: true }),
+  );
+  // Paper lantern hanging from the front eave — a slim cylinder of warm
+  // paper with a top-cap and tassel.
+  const lanternX = w * 0.35;
+  const lanternY = deckH + wallH + 0.2;
+  parts.push(
+    // Slim string from eave down to lantern cap.
+    f.mesh("Lantern String", cylinder(0.005, 0.005, 0.18, 6), trim, {
+      position: [lanternX, lanternY + 0.1, halfD - 0.12],
+    }, { castShadow: false }),
+    // Lantern body.
+    f.mesh("Lantern Body", cylinder(0.12, 0.12, 0.28, 14), lanternPaper, {
+      position: [lanternX, lanternY - 0.05, halfD - 0.12],
+    }, { castShadow: false, receiveShadow: true }),
+    // Cap and base trim rings.
+    f.mesh("Lantern Cap", cylinder(0.08, 0.1, 0.04, 12), trim, {
+      position: [lanternX, lanternY + 0.11, halfD - 0.12],
+    }, { castShadow: false }),
+    f.mesh("Lantern Base", cylinder(0.1, 0.08, 0.04, 12), trim, {
+      position: [lanternX, lanternY - 0.21, halfD - 0.12],
+    }, { castShadow: false }),
+    // Tassel hanging beneath the lantern.
+    f.mesh("Lantern Tassel String", cylinder(0.005, 0.005, 0.1, 6), trim, {
+      position: [lanternX, lanternY - 0.28, halfD - 0.12],
+    }, { castShadow: false }),
+    f.mesh("Lantern Tassel", cylinder(0.025, 0.018, 0.08, 6), trim, {
+      position: [lanternX, lanternY - 0.36, halfD - 0.12],
+    }, { castShadow: false }),
+  );
+  return f.group("Sakura Teahouse", parts, { position: pos });
+}
+
+/**
+ * A short stone-stepping-stone path leading from the heath apron south to
+ * the teahouse door. Three flat stepping stones with a slim shaded undercut
+ * around each so the depressions read with relief at glancing sun.
+ */
+function buildSakuraSteppingPath(f: NodeFactory): SceneNode {
+  const stone = std(C.sakuraSteppingStone, 0.95, { texture: "cobblestone", flatShading: true });
+  const stoneHi = std(C.sakuraSteppingStoneHi, 0.9, { flatShading: true });
+  const parts: SceneNode[] = [];
+  for (let i = 0; i < SAKURA_STEPPING_STONES.length; i++) {
+    const s = SAKURA_STEPPING_STONES[i]!;
+    parts.push(
+      f.mesh(`Stone ${i}`, cylinder(0.5, 0.5, 0.08, 12), stone, {
+        position: [s.x, 0.04, s.z],
+        scale: [1.2, 1, 0.95],
+        rotation: [0, i * 0.6, 0],
+      }, { receiveShadow: true }),
+      // Slim highlight rim along the stone's sun-facing edge.
+      f.mesh(`Stone Hi ${i}`, cylinder(0.46, 0.46, 0.022, 12), stoneHi, {
+        position: [s.x, 0.09, s.z],
+        scale: [1.18, 1, 0.92],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Sakura Stepping Path", parts);
+}
+
+/**
+ * A traditional toro stone lantern marking the entrance to the sakura grove
+ * path — a slim square stone column with a stepped cap and a small fire
+ * chamber housing a warm emissive flame. The lantern reuses a stone tone
+ * palette and the flame glows so it reads at low light.
+ */
+function buildSakuraToro(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.sakuraToroStone, 0.95, { flatShading: true });
+  const stoneShade = std(C.sakuraToroStoneShade, 0.95, { flatShading: true });
+  const fire: MaterialDef = {
+    color: C.sakuraToroFire,
+    roughness: 0.3,
+    transparent: true,
+    opacity: 0.85,
+    emissive: C.sakuraToroFire,
+  };
+  const parts: SceneNode[] = [
+    // Base — wide square footing.
+    f.mesh("Toro Base", box(0.55, 0.1, 0.55), stoneShade, {
+      position: [0, 0.05, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Toro Base Cap", box(0.45, 0.05, 0.45), stone, {
+      position: [0, 0.125, 0],
+    }, { receiveShadow: true }),
+    // Pillar — slim square column.
+    f.mesh("Toro Pillar", cylinder(0.1, 0.1, 0.65, 6), stone, {
+      position: [0, 0.475, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Mid-cap collar.
+    f.mesh("Toro Mid Cap", box(0.35, 0.05, 0.35), stoneShade, {
+      position: [0, 0.815, 0],
+    }, { castShadow: true }),
+    // Fire chamber — a slim hexagonal box with four faces and a glowing
+    // interior flame visible through the openings.
+    f.mesh("Toro Chamber", box(0.4, 0.32, 0.4), stone, {
+      position: [0, 1.0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Four slim window cutouts on the chamber sides (recessed dark patches).
+    f.mesh("Chamber Win N", box(0.22, 0.18, 0.04), stoneShade, {
+      position: [0, 1.0, -0.18],
+    }, { castShadow: false }),
+    f.mesh("Chamber Win S", box(0.22, 0.18, 0.04), stoneShade, {
+      position: [0, 1.0, 0.18],
+    }, { castShadow: false }),
+    f.mesh("Chamber Win W", box(0.04, 0.18, 0.22), stoneShade, {
+      position: [-0.18, 1.0, 0],
+    }, { castShadow: false }),
+    f.mesh("Chamber Win E", box(0.04, 0.18, 0.22), stoneShade, {
+      position: [0.18, 1.0, 0],
+    }, { castShadow: false }),
+    // Glowing flame at the chamber centre.
+    f.mesh("Chamber Flame", sphere(0.1, 10, 8), fire, {
+      position: [0, 1.0, 0],
+    }, { castShadow: false }),
+    // Stepped cap and finial.
+    f.mesh("Toro Roof Cap", box(0.5, 0.08, 0.5), stoneShade, {
+      position: [0, 1.2, 0],
+    }, { castShadow: true }),
+    f.mesh("Toro Roof", cone(0.32, 0.2, 6), stone, {
+      position: [0, 1.34, 0],
+    }, { castShadow: true }),
+    f.mesh("Toro Finial", sphere(0.06, 10, 8), stoneShade, {
+      position: [0, 1.5, 0],
+    }, { castShadow: false }),
+  ];
+  return f.group("Toro Stone Lantern", parts, { position: pos });
+}
+
+/**
+ * A small zen rock garden cluster — a flat raked-sand pad ringed by a slim
+ * stone border with three boulders arranged asymmetrically in a classical
+ * zen composition (one large, two smaller). The sand pad carries a slim
+ * concentric ripple pattern around each boulder.
+ */
+function buildSakuraZenGarden(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const sand = std(C.sakuraZenSand, 0.95, { flatShading: true });
+  const sandShade = std(C.sakuraZenSandShade, 0.9, { flatShading: true });
+  const boulder = std(C.sakuraZenBoulder, 0.95, { texture: "cobblestone", flatShading: true });
+  const boulderShade = std(C.sakuraZenBoulderShade, 0.95, { flatShading: true });
+  const radius = 1.6;
+  const parts: SceneNode[] = [
+    // Slim stone border ring around the sand pad.
+    f.mesh("Zen Border", cylinder(radius + 0.08, radius + 0.08, 0.08, 24), boulderShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    // Sand pad — flat raked sand surface.
+    f.mesh("Zen Sand", cylinder(radius, radius, 0.06, 24), sand, {
+      position: [0, 0.06, 0],
+    }, { receiveShadow: true }),
+  ];
+  // Three boulders — one large central + two smaller offset.
+  const boulders = [
+    { x: -0.4, z: 0.2, r: 0.28, rot: 0.3 },
+    { x: 0.6, z: -0.3, r: 0.18, rot: 0.7 },
+    { x: 0.2, z: 0.6, r: 0.14, rot: 1.1 },
+  ];
+  for (let i = 0; i < boulders.length; i++) {
+    const b = boulders[i]!;
+    parts.push(
+      f.mesh(`Boulder ${i}`, sphere(b.r, 10, 8), boulder, {
+        position: [b.x, 0.08 + b.r * 0.6, b.z],
+        scale: [1.3, 0.9, 1.1],
+        rotation: [0, b.rot, 0.1],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut at the boulder base.
+      f.mesh(`Boulder Shade ${i}`, sphere(b.r * 0.85, 10, 8), boulderShade, {
+        position: [b.x, 0.08 + b.r * 0.4, b.z],
+        scale: [1.25, 0.3, 1.05],
+      }, { castShadow: false }),
+    );
+    // Concentric ripple rings around each boulder.
+    for (let r = 0; r < 3; r++) {
+      const rad = b.r * 1.5 + r * 0.16;
+      parts.push(
+        f.mesh(`Ripple ${i} ${r}`, cylinder(rad, rad - 0.01, 0.014, 22), sandShade, {
+          position: [b.x, 0.085 + r * 0.002, b.z],
+        }, { castShadow: false }),
+        f.mesh(`Ripple Core ${i} ${r}`, cylinder(rad - 0.01, rad - 0.02, 0.015, 22), sand, {
+          position: [b.x, 0.087 + r * 0.002, b.z],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  return f.group("Zen Rock Garden", parts, { position: pos });
+}
+
+/**
+ * A focal carved-stone moon-gate disc at the west edge of the sakura grove —
+ * a circular stone aperture reading as a contemplative threshold. The disc
+ * is built from a slim ring frame on a low slate platform with a darker
+ * silhouette opening at its centre suggesting passage to the grove beyond.
+ */
+function buildSakuraMoonGate(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.sakuraMoonGateStone, 0.95, { texture: "marble", textureScale: [2, 2] });
+  const stoneShade = std(C.sakuraMoonGateStoneShade, 0.95, { flatShading: true });
+  const dark = std("#2a2418", 0.95, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Slate footing platform under the moon gate.
+    f.mesh("Moon Platform", box(2.0, 0.1, 0.8), stoneShade, {
+      position: [0, 0.05, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Moon Platform Cap", box(1.9, 0.04, 0.7), stone, {
+      position: [0, 0.12, 0],
+    }, { receiveShadow: true }),
+  ];
+  // Moon-gate ring — built from 18 segments tracing a circle. Outer stone
+  // ring with a slim shaded inner lip and a dark interior aperture.
+  const ringR = 0.85;
+  const ringT = 0.16;
+  const segCount = 18;
+  for (let i = 0; i < segCount; i++) {
+    const a = (i / segCount) * Math.PI * 2;
+    const x = Math.cos(a) * ringR;
+    const y = 0.14 + ringR + Math.sin(a) * ringR;
+    parts.push(
+      f.mesh(`Ring Seg ${i}`, box(ringT, 0.32, 0.28), stone, {
+        position: [x, y, 0],
+        rotation: [0, 0, a],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut along the ring's inner edge.
+      f.mesh(`Ring Shade ${i}`, box(ringT * 0.6, 0.18, 0.12), stoneShade, {
+        position: [x - Math.cos(a) * 0.08, y - Math.sin(a) * 0.08, 0],
+        rotation: [0, 0, a],
+      }, { castShadow: false }),
+    );
+  }
+  // Dark aperture disc in the moon-gate centre.
+  parts.push(
+    f.mesh("Moon Aperture", cylinder(ringR - 0.06, ringR - 0.06, 0.04, 28), dark, {
+      position: [0, 0.14 + ringR, -0.04],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // Slim keystone medallion at the top of the ring.
+  parts.push(
+    f.mesh("Moon Keystone", box(0.22, 0.22, 0.32), stone, {
+      position: [0, 0.14 + ringR * 2 + 0.08, 0],
+    }, { castShadow: true }),
+    f.mesh("Moon Keystone Bead", sphere(0.06, 10, 8), stoneShade, {
+      position: [0, 0.14 + ringR * 2 + 0.22, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Moon Gate", parts, { position: pos });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -21483,6 +22509,52 @@ function buildSaltCrystalCairns(f: NodeFactory): SceneNode {
  *    wind-scoured dust-devil column rising near the centre of the
  *    flats and a scatter of five glinting salt-crystal cairns along
  *    the western edge.
+ *  - Twenty-seventh pass — courtyard: a Victorian wrought-iron back-yard
+ *    archway with brass wind chimes hanging from the crossbeam, parked
+ *    on the back outside-fence lawn centred between the carousel horse
+ *    (back-west) and the weather station (back-east) so it reads as a
+ *    back-yard exit gateway out to the back meadow — a pair of fluted
+ *    iron posts on slate footings linked by a curved arch beam with a
+ *    top finial spire, three slim brass tube wind chimes hanging from
+ *    the crossbeam around a central striker disc, leafy climbing vines
+ *    winding the posts and a slim slate threshold strip on the lawn
+ *    below (the arch posts, crossbeam, finial, chimes and striker disc
+ *    reuse the existing `copper-patina` colour + bump pair so the
+ *    verdigris reads as crusted relief on the cast metal). House: a
+ *    Victorian leaded-glass illuminated ceiling rosette centred on the
+ *    underside of the porch canopy — a small circular leaded-glass
+ *    medallion using the existing `stained-glass` colour map paired
+ *    with the leaded-muntin depth map (from pass 17) so the lead cames
+ *    read as raised relief on the glass plane, framed by a slim
+ *    copper-patina trim ring (reusing the existing `copper-patina`
+ *    colour + bump pair) with a warm glow plate behind so the rosette
+ *    reads as a soft overhead porch lamp at low light, eight slim
+ *    radial lead cames dividing the glass into petal panels and three
+ *    slim pendant crystal teardrops hanging from the rosette rim to
+ *    catch the porch glow. Scene: a far-south sakura blossom grove
+ *    plane south of the south heath, bridging the gap south of the
+ *    heath — a pale-rose blossom-strewn grass ground surfaced with
+ *    the new `sakura-grove` colour map paired with a petal-scatter
+ *    depth map (registered alongside the other procedural textures)
+ *    so the fallen petal mounds and exposed grass tufts read as
+ *    raised relief at glancing sun, a heath-moss apron along the
+ *    north join so the ground layer has no holes at the seam, five
+ *    sakura cherry trees with layered foliage clusters in pale-rose,
+ *    pink and white tints (different dominant tint per tree) and a
+ *    sparse scatter of fallen petal dabs around each base, a small
+ *    wooden Japanese-style teahouse at the south corner with a curved
+ *    tile roof and slim upturn caps at each eave corner, a paper
+ *    sliding door, a small front porch deck and a glowing paper
+ *    lantern hanging from the eave, a short stone-stepping-stone
+ *    path leading from the heath apron south to the teahouse door
+ *    with three flat stepping stones, a traditional toro stone
+ *    lantern marking the path entrance with a warm-glowing fire
+ *    chamber, a small zen rock garden cluster of three boulders on a
+ *    flat raked-sand pad ringed by a slim stone border with
+ *    concentric ripple rings around each boulder, and a focal
+ *    carved-stone moon-gate disc at the west edge with a slim stone
+ *    ring frame on a low slate platform reading as a contemplative
+ *    threshold.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -21571,6 +22643,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: PEACOCK_STATUE_POS[0], z: PEACOCK_STATUE_POS[2], r: 1.0 },
     // Twenty-sixth-pass keep-out — elephant statue on the west outside-fence lawn.
     { x: ELEPHANT_STATUE_POS[0], z: ELEPHANT_STATUE_POS[2], r: 1.0 },
+    // Twenty-seventh-pass keep-out — back-yard archway on the back outside-fence lawn.
+    { x: BACK_ARCHWAY_POS[0], z: BACK_ARCHWAY_POS[2], r: 1.4 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -21638,6 +22712,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildStagStatue(f, STAG_STATUE_POS),
     buildPeacockStatue(f, PEACOCK_STATUE_POS),
     buildElephantStatue(f, ELEPHANT_STATUE_POS),
+    buildBackArchway(f, BACK_ARCHWAY_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -21661,6 +22736,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fnwScottishGlen = buildFarNorthwestScottishGlen(f);
   const fneMountainPass = buildFarNortheastMountainPass(f);
   const feSaltFlats = buildFarEastSaltFlats(f);
+  const fsSakuraGrove = buildFarSouthSakuraGrove(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -21707,6 +22783,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchCornerBrackets(f),
     buildRainChains(f),
     buildBackGargoyleSpouts(f),
+    buildPorchCeilingRosette(f, PORCH_ROSETTE_POS),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -21737,6 +22814,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fnwScottishGlen,
       fneMountainPass,
       feSaltFlats,
+      fsSakuraGrove,
       house,
     ],
   };

@@ -4093,4 +4093,216 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Twenty-seventh-pass additions ─────────────────────────────────
+  // The twenty-seventh enhancement pass introduces a pale-rose blossom-
+  // strewn grass ground surface for the far-south sakura blossom grove
+  // scene-extension plane south of the south heath — a soft grass canopy
+  // dotted with fallen pink-and-white sakura petals, slim grass tuft
+  // highlights and a scatter of mossy stones, paired with a petal-scatter
+  // depth map so the petal mounds and exposed grass tufts read as raised
+  // relief at glancing sun.
+
+  // Sakura-grove colour — a pale-green mossy grass base with scattered
+  // pink and white petal dabs, slim grass-tuft highlights and a faint
+  // diagonal sun cast so the surface reads as a blossom-strewn grove
+  // floor. Drawn on a power-of-two canvas so the mipmap chain stays
+  // clean.
+  registry["sakura-grove"] = makeCanvasTexture({
+    seed: 0x5a17a1a7,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly warmer toward the south so the grove
+      // floor reads with a hint of afternoon sun.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#c0d2a4");
+      bg.addColorStop(0.5, "#bccfa0");
+      bg.addColorStop(1, "#b0c498");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide pale grass lobes — soft radial highlights suggesting low
+      // grass swells underneath the surface mottle.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${78 + rng() * 18}, 32%, ${56 + rng() * 12}%, 0.36)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim grass-tuft highlight strokes — many short pale-green slats
+      // reading as upright grass blades catching the sun.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 1200; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 3 + rng() * 5;
+        const angle = (rng() - 0.5) * 0.6 + Math.PI / 2;
+        ctx.strokeStyle = `hsla(${72 + rng() * 16}, 32%, ${62 + rng() * 14}%, 0.55)`;
+        ctx.lineWidth = 0.8 + rng() * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y - Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Fallen sakura petal dabs — pink and white teardrop blobs scattered
+      // across the grass. The dabs read as fallen blossoms creating the
+      // signature carpet of the sakura grove.
+      for (let i = 0; i < 380; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.4 + rng() * 4;
+        const tint = rng();
+        let colour: string;
+        if (tint < 0.45) {
+          colour = `hsla(${336 + rng() * 10}, 62%, ${78 + rng() * 8}%, 0.85)`;
+        } else if (tint < 0.75) {
+          colour = `hsla(${346 + rng() * 12}, 48%, ${86 + rng() * 6}%, 0.8)`;
+        } else {
+          colour = `hsla(${24 + rng() * 18}, 22%, ${94 + rng() * 4}%, 0.78)`;
+        }
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, colour);
+        grad.addColorStop(1, "rgba(255,250,250,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.ellipse(x, y, r2 * 1.2, r2 * 0.8, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim petal highlights — small bright specks suggesting the curl of
+      // a petal edge catching the sun.
+      for (let i = 0; i < 280; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const tint = rng();
+        let colour: string;
+        if (tint < 0.5) {
+          colour = `rgba(252, 220, 228, 0.7)`;
+        } else {
+          colour = `rgba(255, 246, 246, 0.6)`;
+        }
+        ctx.fillStyle = colour;
+        ctx.fillRect(x, y, 1.6 + rng() * 0.8, 1.0 + rng() * 0.6);
+      }
+      // Mossy stone specks — a sparse scatter of slim greenish-grey dots
+      // suggesting small mossy pebbles in the grass.
+      for (let i = 0; i < 90; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2 + rng() * 3;
+        ctx.fillStyle = `hsla(${70 + rng() * 30}, 14%, ${44 + rng() * 12}%, 0.6)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Tiny grass-shadow flecks — many slim darker dots suggesting the
+      // shaded undercut between grass blades, keeping tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        ctx.fillStyle = `hsla(${70 + rng() * 28}, 22%, ${28 + rng() * 14}%, 0.42)`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1 + rng() * 1.2);
+      }
+      // Faint warm sun cast across the upper-left — a wide pale wash so
+      // glancing afternoon sun catches the rim of the grove.
+      const sun = ctx.createRadialGradient(size * 0.28, size * 0.22, 0, size * 0.28, size * 0.22, size * 0.85);
+      sun.addColorStop(0, "rgba(255,236,196,0.18)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 32, 0.0022);
+    },
+  });
+
+  // Sakura-grove depth map — the petal mounds sit slightly above the
+  // grass surface (light = high) and the exposed grass tufts read with a
+  // subtle ripple of low-and-high values so the grove shows raised relief
+  // on glancing sun.
+  registry["sakura-grove-bump"] = makeCanvasTexture({
+    seed: 0x5a17a1a7 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average grass height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling grass mounds — pale radial highlights suggesting low
+      // grass swells underneath the surface mottle.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(210,210,210,0.22)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim grass-tuft strokes — many short bright slats reading as
+      // upright grass blades raised slightly above the surface.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 1200; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 3 + rng() * 5;
+        const angle = (rng() - 0.5) * 0.6 + Math.PI / 2;
+        ctx.strokeStyle = `rgba(220,220,220,${0.4 + rng() * 0.2})`;
+        ctx.lineWidth = 0.8 + rng() * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y - Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Petal mound bumps — slim bright elliptical patches reading as the
+      // raised petal clumps where the fallen blossoms have piled up.
+      for (let i = 0; i < 380; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.4 + rng() * 4;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(232,232,232,0.7)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.ellipse(x, y, r2 * 1.2, r2 * 0.8, rng() * Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim shaded undercut around each petal mound — a sparse scatter of
+      // darker spots between petal clumps so the relief reads at glancing
+      // sun.
+      for (let i = 0; i < 200; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 1.4 + rng() * 2.5;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(40,40,40,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Mossy stone bumps — sparse small bright dots reading as raised
+      // mossy pebbles in the grass.
+      for (let i = 0; i < 90; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2 + rng() * 3;
+        ctx.fillStyle = `rgba(200,200,200,0.65)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
