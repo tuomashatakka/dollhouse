@@ -21,7 +21,14 @@ import {
  * reachable; mid + top floors have a rectangular hole at the stair landing.
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
- * incrementally enhanced meshes — see {@link buildDollhouseDocument}.
+ * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
+ * latest enhancement (pass 28) adds a Victorian bronze heraldic lion statue
+ * on a fluted marble pedestal to the front outside-gate apron, a triplet of
+ * copper-patina window pediment hood caps with central keystone medallions
+ * crowning the three back-wall window dressings, and a far-south bamboo
+ * grove plane south of the sakura grove with bamboo stalks, a wooden zen
+ * meditation deck, a stacked-stone pagoda mini-tower and a bamboo
+ * shishi-odoshi fountain.
  */
 const W = 7;
 const D = 5;
@@ -1007,6 +1014,78 @@ const SAKURA_STEPPING_STONES: { x: number; z: number }[] = [
   { x: -5, z: 72.5 },
 ];
 
+/**
+ * Twenty-eighth-pass courtyard prop — a Victorian bronze heraldic lion statue
+ * on a fluted marble pedestal, parked on the front outside-gate apron centred
+ * between the flagpole (front-west) and the stag statue (front-east) so it
+ * reads as the central focal sentinel above the welcome gate. The lion stands
+ * four-square on the plinth cap with a slim crowned mane, a curved tail
+ * swept back across its haunches and a forepaw resting on a small heraldic
+ * shield. The bronze body, mane, tail and shield reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal, and the plinth reuses the existing `marble`
+ * colour + bump pair so the stone reads with veined relief.
+ */
+const LION_STATUE_POS: [number, number, number] = [0, 0, 16.1];
+
+/**
+ * Twenty-eighth-pass house detail — a triplet of Victorian copper-patina
+ * ornamental window pediment hood caps with central keystone medallions
+ * crowning the three back-wall window dressings (one per floor). Each
+ * pediment is a slim shallow triangular hood projecting from the back wall
+ * above the existing shutter+flower-box dressing, with a row of small
+ * dentil teeth along the underside, a small carved central keystone disc
+ * bearing a fleur-de-lis emboss and a flanking pair of slim drop finials
+ * at each cornice tip. The hood, dentils, keystone and finials reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal.
+ */
+const PEDIMENT_X = 2.3;
+const PEDIMENT_Z = BACK_Z - WALL_T / 2 - 0.04;
+
+/**
+ * Twenty-eighth-pass scene extension — a far-south bamboo grove plane south
+ * of the sakura grove, bridging the gap south of it. The plane overlaps the
+ * sakura grove by ~3 units along its north join with a sakura-blossom apron
+ * so the ground layer has no holes at the seam. It carries a verdant-green
+ * bamboo-leaf-litter ground surfaced with the new `bamboo-grove` colour map
+ * paired with a leaf-and-shoot depth map (registered alongside the other
+ * procedural textures) so the leaf piles and exposed earth tufts read as
+ * raised relief at glancing sun, a grove of nine tall bamboo stalks
+ * scattered across the plane (each a slim segmented green pole with node
+ * rings and a slim upper-canopy of pale leaf clusters), a small wooden zen
+ * meditation deck at the southeast corner with a low cushion and a small
+ * paper lantern, a focal five-tier stacked-stone pagoda (gorinto-style mini
+ * tower) at the south corner with a carved pebble finial, a traditional
+ * bamboo shishi-odoshi water fountain at the west edge with a swiveling
+ * bamboo spout that pours a thin water column into a small stone basin
+ * with three submerged pebbles, and a slim stone stepping-path of four
+ * flat slabs leading from the sakura apron south to the meditation deck.
+ */
+const BAMBOO_GROVE_POS: [number, number, number] = [0, -0.030, 95];
+const BAMBOO_GROVE_W = 30;
+const BAMBOO_GROVE_D = 20;
+const BAMBOO_PAGODA_POS: [number, number, number] = [-10, 0, 100];
+const BAMBOO_DECK_POS: [number, number, number] = [10, 0, 99];
+const BAMBOO_SHISHI_POS: [number, number, number] = [-12, 0, 92];
+const BAMBOO_STALKS: { x: number; z: number; scale: number; tint: 0 | 1 | 2 }[] = [
+  { x: -6, z: 90, scale: 1.0, tint: 0 },
+  { x: -2, z: 92, scale: 1.1, tint: 1 },
+  { x: 2, z: 91, scale: 0.95, tint: 2 },
+  { x: 6, z: 93, scale: 1.05, tint: 1 },
+  { x: -7, z: 96, scale: 1.12, tint: 0 },
+  { x: -3, z: 98, scale: 0.9, tint: 2 },
+  { x: 3, z: 97, scale: 1.0, tint: 1 },
+  { x: 7, z: 99, scale: 1.08, tint: 0 },
+  { x: 0, z: 102, scale: 1.15, tint: 2 },
+];
+const BAMBOO_STEPPING_STONES: { x: number; z: number }[] = [
+  { x: 0, z: 88 },
+  { x: 2.5, z: 91 },
+  { x: 5, z: 94 },
+  { x: 7.5, z: 97 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -1965,6 +2044,56 @@ const C = {
   sakuraZenBoulderShade: "#3e3a30",
   sakuraMoonGateStone: "#dcd2c2",
   sakuraMoonGateStoneShade: "#a39880",
+  // Twenty-eighth enhancement pass — a Victorian bronze heraldic lion
+  // statue on a fluted marble pedestal centred on the front-gate apron,
+  // a triplet of copper-patina window pediment hood caps with keystone
+  // medallions crowning the back-wall windows, and a far-south bamboo
+  // grove plane south of the sakura grove. The new `bamboo-grove`
+  // colour map is paired with a leaf-and-shoot depth map registered
+  // alongside it so the leaf litter and exposed earth tufts read as
+  // raised relief at glancing sun.
+  lionBronze: "#62936d",
+  lionBronzeHi: "#9bcaa2",
+  lionBronzeShade: "#2f4f3a",
+  lionManeShade: "#324a3a",
+  lionPlinth: "#e9e2d2",
+  lionPlinthShade: "#a39d8c",
+  lionShield: "#b65a3a",
+  // Pediment caps — reuse the copper-patina pair for the hood, dentils,
+  // keystone and finials so the verdigris reads as crusted relief.
+  pedimentCopper: "#5d8a6a",
+  pedimentCopperHi: "#9bc4a8",
+  pedimentCopperShade: "#2f5840",
+  pedimentKeystoneInset: "#b48a4a",
+  // Bamboo grove — verdant green leaf-litter ground with bamboo stalks,
+  // a stacked-stone pagoda, a wooden meditation deck, a shishi-odoshi
+  // bamboo fountain and a stone stepping path.
+  bambooGround: "#7fa066",
+  bambooGroundShade: "#52723f",
+  bambooGroundHi: "#bccf9c",
+  bambooApronGrass: "#90a866",
+  bambooStalkLight: "#8db64a",
+  bambooStalkMid: "#74a338",
+  bambooStalkDark: "#4d7a26",
+  bambooNode: "#3c5818",
+  bambooLeafPale: "#a8c878",
+  bambooLeafMid: "#7eb04a",
+  bambooLeafDark: "#4f7a2e",
+  bambooDeckWood: "#7a5236",
+  bambooDeckTrim: "#a87f4a",
+  bambooDeckCushion: "#b85a3a",
+  bambooDeckLantern: "#f6dca0",
+  bambooDeckLanternFrame: "#3a2818",
+  bambooPagodaStone: "#a89e8c",
+  bambooPagodaStoneShade: "#6a6258",
+  bambooPagodaStoneHi: "#cdc6b2",
+  bambooShishiBamboo: "#a8b86a",
+  bambooShishiBambooDark: "#5a6e30",
+  bambooShishiWater: "#7ec1d8",
+  bambooShishiBasin: "#6a625a",
+  bambooShishiPebble: "#897e6e",
+  bambooSteppingStone: "#857c70",
+  bambooSteppingStoneHi: "#b8b0a0",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -21934,6 +22063,960 @@ function buildSakuraMoonGate(f: NodeFactory, pos: [number, number, number]): Sce
   return f.group("Moon Gate", parts, { position: pos });
 }
 
+/* ─────────────── twenty-eighth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze heraldic lion statue on a fluted marble pedestal,
+ * parked on the front outside-gate apron centred between the flagpole
+ * (front-west) and the stag statue (front-east) so it reads as the
+ * central focal sentinel above the welcome gate. The lion stands
+ * four-square on the plinth cap with a crowned mane ringing the head,
+ * a curved tail swept back across its haunches and a forepaw resting
+ * on a small heraldic shield with a slim cross emboss. The bronze body,
+ * mane, tail and shield reuse the existing `copper-patina` colour +
+ * bump pair so the verdigris reads as crusted relief on the cast metal,
+ * and the plinth reuses the existing `marble` colour + bump pair so the
+ * stone reads with veined relief.
+ */
+function buildLionStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.lionBronze,
+    roughness: 0.55,
+    metalness: 0.7,
+    texture: "copper-patina",
+    textureScale: [2, 2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.lionBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.lionBronzeShade, 0.95, { flatShading: true });
+  const maneShade = std(C.lionManeShade, 0.95, { flatShading: true });
+  const shield: MaterialDef = {
+    color: C.lionShield,
+    roughness: 0.5,
+    metalness: 0.55,
+    texture: "copper-patina",
+    textureScale: [1.5, 1.5],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.018,
+  };
+  const marble = std(C.lionPlinth, 0.85, {
+    texture: "marble",
+    bumpMap: "marble-bump",
+    bumpScale: 0.03,
+  });
+  const marbleShade = std(C.lionPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Fluted marble plinth — square footing, round column, plinth cap. ──
+  parts.push(
+    f.mesh("Plinth Footing", box(0.62, 0.08, 0.62), marbleShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Base", cylinder(0.28, 0.31, 0.1, 18), marble, {
+      position: [0, 0.13, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Column", cylinder(0.23, 0.25, 0.6, 18), marble, {
+      position: [0, 0.48, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", cylinder(0.29, 0.29, 0.06, 18), marble, {
+      position: [0, 0.81, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Trim", cylinder(0.28, 0.28, 0.022, 20), bronze, {
+      position: [0, 0.85, 0],
+    }, { castShadow: false }),
+  );
+  // Six slim fluting grooves around the column.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Plinth Flute ${i}`, box(0.022, 0.55, 0.025), marbleShade, {
+        position: [Math.cos(a) * 0.24, 0.48, Math.sin(a) * 0.24],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim plinth shoulder accent — a torus-ish bronze collar between the
+  // column and the cap so the silhouette reads with metalwork detail.
+  parts.push(
+    f.mesh("Plinth Shoulder", cylinder(0.265, 0.265, 0.018, 20), bronze, {
+      position: [0, 0.78, 0],
+    }, { castShadow: false }),
+  );
+  // ── Lion body — a stocky elongated barrel torso atop four columnar legs.
+  const bodyY = 1.18;
+  parts.push(
+    f.mesh("Lion Body", sphere(0.21, 16, 12), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.7, 0.95, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded belly undercut so the body reads with relief.
+    f.mesh("Lion Belly", sphere(0.18, 14, 10), bronzeShade, {
+      position: [0, bodyY - 0.06, 0],
+      scale: [1.55, 0.55, 0.85],
+    }, { castShadow: false }),
+    // Slim highlight ridge along the spine for sun catch.
+    f.mesh("Lion Spine Hi", cylinder(0.04, 0.05, 0.32, 10), bronzeHi, {
+      position: [0, bodyY + 0.12, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    // Slim shaded haunches undercut behind the back legs.
+    f.mesh("Lion Haunches", sphere(0.16, 14, 10), bronzeShade, {
+      position: [-0.26, bodyY + 0.02, 0],
+      scale: [1.0, 0.95, 0.95],
+    }, { castShadow: false }),
+  );
+  // ── Four columnar legs — front and rear pairs.
+  const legY = 0.92;
+  const legPositions: [number, number, number][] = [
+    [0.22, legY, 0.08],   // front-right
+    [0.22, legY, -0.08],  // front-left
+    [-0.22, legY, 0.08],  // rear-right
+    [-0.22, legY, -0.08], // rear-left
+  ];
+  for (let i = 0; i < legPositions.length; i++) {
+    const [lx, ly, lz] = legPositions[i]!;
+    parts.push(
+      f.mesh(`Lion Leg ${i}`, cylinder(0.05, 0.06, 0.34, 10), bronze, {
+        position: [lx, ly, lz],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim paw cap at the leg base — flatter pad shape.
+      f.mesh(`Lion Paw ${i}`, cylinder(0.075, 0.07, 0.05, 10), bronzeShade, {
+        position: [lx, ly - 0.18, lz],
+      }, { castShadow: false }),
+      // Three tiny claw dots on the front of each paw.
+      f.mesh(`Lion Claw A ${i}`, sphere(0.012, 8, 6), bronzeHi, {
+        position: [lx + 0.04, ly - 0.2, lz + 0.025],
+      }, { castShadow: false }),
+      f.mesh(`Lion Claw B ${i}`, sphere(0.012, 8, 6), bronzeHi, {
+        position: [lx + 0.045, ly - 0.2, lz],
+      }, { castShadow: false }),
+      f.mesh(`Lion Claw C ${i}`, sphere(0.012, 8, 6), bronzeHi, {
+        position: [lx + 0.04, ly - 0.2, lz - 0.025],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Forepaw resting on a small heraldic shield ──
+  const shieldX = 0.42;
+  parts.push(
+    // The right forepaw is lifted slightly forward to rest on the shield top.
+    f.mesh("Lion Forepaw Lifted", cylinder(0.05, 0.06, 0.34, 10), bronze, {
+      position: [shieldX - 0.08, legY + 0.04, 0.08],
+      rotation: [0, 0, -0.18],
+    }, { castShadow: true }),
+    f.mesh("Lion Forepaw Lifted Pad", cylinder(0.075, 0.07, 0.05, 10), bronzeShade, {
+      position: [shieldX - 0.01, legY - 0.1, 0.08],
+    }, { castShadow: false }),
+    // Heraldic shield — a flat teardrop shape with a slim raised border
+    // and a centred cross emboss.
+    f.mesh("Shield Body", box(0.22, 0.28, 0.05), shield, {
+      position: [shieldX + 0.04, 0.94, 0.08],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Shield Border", box(0.24, 0.3, 0.012), bronze, {
+      position: [shieldX + 0.04, 0.94, 0.04],
+    }, { castShadow: false }),
+    // Vertical cross arm.
+    f.mesh("Shield Cross V", box(0.04, 0.22, 0.012), bronzeHi, {
+      position: [shieldX + 0.04, 0.94, 0.105],
+    }, { castShadow: false }),
+    // Horizontal cross arm.
+    f.mesh("Shield Cross H", box(0.16, 0.04, 0.012), bronzeHi, {
+      position: [shieldX + 0.04, 0.96, 0.105],
+    }, { castShadow: false }),
+    // Slim shield tip — a small triangular wedge at the bottom for the
+    // shield's pointed silhouette.
+    f.mesh("Shield Tip", cone(0.1, 0.1, 4), shield, {
+      position: [shieldX + 0.04, 0.78, 0.08],
+      rotation: [0, Math.PI / 4, Math.PI],
+    }, { castShadow: false }),
+  );
+  // ── Head — a smaller round ovoid set at the front of the torso ──
+  const headX = 0.36;
+  const headY = bodyY + 0.08;
+  parts.push(
+    f.mesh("Lion Head", sphere(0.16, 14, 12), bronze, {
+      position: [headX, headY, 0],
+      scale: [1.05, 1.05, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded jowl undercut beneath the head.
+    f.mesh("Lion Jowl", sphere(0.13, 12, 8), bronzeShade, {
+      position: [headX, headY - 0.06, 0],
+      scale: [0.95, 0.6, 0.9],
+    }, { castShadow: false }),
+    // Two small eye dots flanking the muzzle.
+    f.mesh("Lion Eye L", sphere(0.018, 8, 6), bronzeHi, {
+      position: [headX + 0.1, headY + 0.04, 0.075],
+    }, { castShadow: false }),
+    f.mesh("Lion Eye R", sphere(0.018, 8, 6), bronzeHi, {
+      position: [headX + 0.1, headY + 0.04, -0.075],
+    }, { castShadow: false }),
+    // Snout cap — a small cone projecting forward from the head front.
+    f.mesh("Lion Snout", sphere(0.07, 10, 8), bronze, {
+      position: [headX + 0.13, headY - 0.04, 0],
+      scale: [1.0, 0.85, 0.95],
+    }, { castShadow: false }),
+    // Slim shaded nose pad on the snout tip.
+    f.mesh("Lion Nose", sphere(0.024, 8, 6), bronzeShade, {
+      position: [headX + 0.18, headY - 0.04, 0],
+    }, { castShadow: false }),
+  );
+  // ── Crowned mane — a ring of small bronze tufts framing the head with a
+  // slim shaded undercut so the mane reads as a textured ruff rather than
+  // a smooth collar. Twelve tufts in two staggered rows around the head.
+  const maneR = 0.21;
+  const maneCount = 12;
+  for (let i = 0; i < maneCount; i++) {
+    const a = (i / maneCount) * Math.PI * 2;
+    const tx = headX - 0.04 + Math.cos(a) * maneR * 0.7;
+    const ty = headY + Math.sin(a) * maneR * 0.7;
+    const tz = Math.cos(a) * 0.05 + Math.sin(a) * 0.08;
+    parts.push(
+      // Outer mane tuft.
+      f.mesh(`Mane Tuft ${i}`, sphere(0.075, 10, 8), bronze, {
+        position: [tx, ty, tz],
+        scale: [1.0, 1.0, 1.1],
+      }, { castShadow: true }),
+      // Slim shaded inner undercut on each tuft.
+      f.mesh(`Mane Tuft Shade ${i}`, sphere(0.055, 8, 6), maneShade, {
+        position: [tx - 0.015, ty - 0.015, tz - 0.015],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim mane crown bead — a small spike at the top of the head reading
+  // as the mane's central tuft tip.
+  parts.push(
+    f.mesh("Mane Crown Bead", sphere(0.06, 10, 8), bronzeHi, {
+      position: [headX - 0.04, headY + 0.18, 0],
+    }, { castShadow: false }),
+  );
+  // ── Tail — a slim tapered curl sweeping back across the haunches with
+  // a tassel tuft at the tip. Built from three linked tapered cylinders so
+  // the curl reads as a continuous tail arc rather than a stiff peg.
+  const tailRoot: [number, number, number] = [-0.36, bodyY + 0.0, 0.0];
+  const tailPath: { x: number; y: number; r: number }[] = [
+    { x: 0.0, y: 0.0, r: 0.04 },
+    { x: -0.08, y: 0.04, r: 0.034 },
+    { x: -0.12, y: 0.12, r: 0.028 },
+    { x: -0.08, y: 0.22, r: 0.022 },
+  ];
+  for (let s = 0; s < tailPath.length - 1; s++) {
+    const p0 = tailPath[s]!;
+    const p1 = tailPath[s + 1]!;
+    const cx = tailRoot[0] + (p0.x + p1.x) / 2;
+    const cy = tailRoot[1] + (p0.y + p1.y) / 2;
+    const len = Math.hypot(p1.x - p0.x, p1.y - p0.y);
+    const tilt = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+    parts.push(
+      f.mesh(`Tail Seg ${s}`, cylinder(p1.r, p0.r, len, 8), bronze, {
+        position: [cx, cy, 0],
+        rotation: [0, 0, tilt - Math.PI / 2],
+      }, { castShadow: true }),
+    );
+  }
+  // Slim tail tassel — a small sphere at the tip with a darker shaded core.
+  parts.push(
+    f.mesh("Tail Tassel", sphere(0.045, 10, 8), bronze, {
+      position: [tailRoot[0] - 0.08, tailRoot[1] + 0.26, 0],
+    }, { castShadow: true }),
+    f.mesh("Tail Tassel Shade", sphere(0.032, 8, 6), maneShade, {
+      position: [tailRoot[0] - 0.09, tailRoot[1] + 0.24, 0.01],
+    }, { castShadow: false }),
+  );
+  // ── Slim base plaque — a small inscription tablet on the plinth's front
+  // face so the statue reads as a memorial sentinel.
+  parts.push(
+    f.mesh("Plaque Tablet", box(0.36, 0.1, 0.018), bronze, {
+      position: [0, 0.5, 0.27],
+    }, { castShadow: false }),
+    f.mesh("Plaque Tablet Bead L", sphere(0.014, 8, 6), bronzeHi, {
+      position: [-0.15, 0.5, 0.286],
+    }, { castShadow: false }),
+    f.mesh("Plaque Tablet Bead R", sphere(0.014, 8, 6), bronzeHi, {
+      position: [0.15, 0.5, 0.286],
+    }, { castShadow: false }),
+    f.mesh("Plaque Tablet Bead C", sphere(0.014, 8, 6), bronzeHi, {
+      position: [0, 0.5, 0.286],
+    }, { castShadow: false }),
+  );
+  return f.group("Lion Statue", parts, { position: pos, rotation: [0, -Math.PI / 2, 0] });
+}
+
+/* ─────────────── twenty-eighth-pass house detail ─────────────── */
+
+/**
+ * A triplet of Victorian copper-patina ornamental window pediment hood
+ * caps with central keystone medallions crowning the three back-wall
+ * window dressings (one per floor). Each pediment is a slim shallow
+ * triangular hood projecting from the back wall above the existing
+ * shutter+flower-box dressing, with a row of small dentil teeth along
+ * the underside, a small carved central keystone disc bearing a
+ * fleur-de-lis emboss and a flanking pair of slim drop finials at each
+ * cornice tip. The hood, dentils, keystone and finials reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads
+ * as crusted relief on the cast metal.
+ *
+ * The pediments sit above the existing back-wall window dressings — the
+ * shutter-and-flower-box ensembles built by {@link buildWindowDressing}.
+ */
+function buildWindowPediments(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.pedimentCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [1.2, 1.2],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.pedimentCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.pedimentCopperShade, 0.95, { flatShading: true });
+  const keyInset = std(C.pedimentKeystoneInset, 0.5, { metalness: 0.6 });
+  const pediments: SceneNode[] = [];
+  // Three floors — match buildWindowDressing's wy + floor stride.
+  for (let floor = 0; floor < 3; floor++) {
+    const wy = 1.3 + floor * FLOOR_H;
+    // The window dressing sits with its centre at (wx, wy). The shutter
+    // pair spans ~1.0 wide. The pediment hood crowns the dressing about
+    // 0.65 above the dressing centre.
+    const py = wy + 0.65;
+    const parts: SceneNode[] = [];
+    // ── Lower cornice band — a slim horizontal slab below the hood that
+    // caps the window dressing and carries the dentil row.
+    parts.push(
+      f.mesh("Cornice Band", box(1.2, 0.06, 0.1), copper, {
+        position: [PEDIMENT_X, py - 0.02, PEDIMENT_Z],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut beneath the cornice band.
+      f.mesh("Cornice Band Shade", box(1.18, 0.022, 0.07), copperShade, {
+        position: [PEDIMENT_X, py - 0.058, PEDIMENT_Z + 0.012],
+      }, { castShadow: false }),
+      // Slim highlight strip along the cornice top edge.
+      f.mesh("Cornice Band Hi", box(1.2, 0.014, 0.03), copperHi, {
+        position: [PEDIMENT_X, py + 0.01, PEDIMENT_Z - 0.025],
+      }, { castShadow: false }),
+    );
+    // ── Row of seven small dentil teeth along the cornice underside.
+    for (let i = 0; i < 7; i++) {
+      const dx = PEDIMENT_X - 0.48 + i * 0.16;
+      parts.push(
+        f.mesh(`Dentil ${i}`, box(0.07, 0.05, 0.08), copper, {
+          position: [dx, py - 0.07, PEDIMENT_Z],
+        }, { castShadow: true }),
+        // Slim shaded undercut beneath each dentil.
+        f.mesh(`Dentil Shade ${i}`, box(0.06, 0.018, 0.05), copperShade, {
+          position: [dx, py - 0.097, PEDIMENT_Z + 0.012],
+        }, { castShadow: false }),
+      );
+    }
+    // ── Triangular hood — two angled slabs meeting at a central apex
+    // above the keystone. Each slab is a slim flat box tilted to read
+    // as a pitched pediment hood.
+    const slabHalfLen = 0.7;
+    const slabPitch = 0.32;
+    const apexY = py + 0.12 + slabPitch;
+    for (const dir of [-1, 1] as const) {
+      const slabAngle = dir * Math.atan2(slabPitch, slabHalfLen);
+      const slabLen = Math.hypot(slabHalfLen, slabPitch);
+      parts.push(
+        f.mesh(`Hood Slab ${dir}`, box(slabLen, 0.05, 0.12), copper, {
+          position: [
+            PEDIMENT_X + dir * slabHalfLen / 2,
+            py + 0.12 + slabPitch / 2,
+            PEDIMENT_Z - 0.005,
+          ],
+          rotation: [0, 0, slabAngle],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim highlight ridge along the top edge of each slab.
+        f.mesh(`Hood Slab Hi ${dir}`, box(slabLen * 0.85, 0.014, 0.04), copperHi, {
+          position: [
+            PEDIMENT_X + dir * slabHalfLen / 2,
+            py + 0.14 + slabPitch / 2,
+            PEDIMENT_Z - 0.035,
+          ],
+          rotation: [0, 0, slabAngle],
+        }, { castShadow: false }),
+        // Slim shaded undercut along the bottom edge of each slab.
+        f.mesh(`Hood Slab Shade ${dir}`, box(slabLen * 0.85, 0.016, 0.04), copperShade, {
+          position: [
+            PEDIMENT_X + dir * slabHalfLen / 2,
+            py + 0.1 + slabPitch / 2,
+            PEDIMENT_Z + 0.025,
+          ],
+          rotation: [0, 0, slabAngle],
+        }, { castShadow: false }),
+      );
+    }
+    // Apex bead — a small ornamental tip cap at the hood's peak.
+    parts.push(
+      f.mesh("Apex Bead", sphere(0.045, 10, 8), copper, {
+        position: [PEDIMENT_X, apexY + 0.04, PEDIMENT_Z],
+      }, { castShadow: true }),
+      f.mesh("Apex Bead Hi", sphere(0.028, 8, 6), copperHi, {
+        position: [PEDIMENT_X + 0.012, apexY + 0.05, PEDIMENT_Z - 0.012],
+      }, { castShadow: false }),
+    );
+    // ── Central keystone disc — a small carved medallion at the hood
+    // centre with a fleur-de-lis emboss reading as Victorian millwork.
+    const keyY = py + 0.08;
+    parts.push(
+      f.mesh("Keystone Disc", cylinder(0.085, 0.085, 0.032, 18), copper, {
+        position: [PEDIMENT_X, keyY, PEDIMENT_Z - 0.012],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: true }),
+      f.mesh("Keystone Disc Rim", cylinder(0.092, 0.092, 0.012, 18), copperHi, {
+        position: [PEDIMENT_X, keyY, PEDIMENT_Z - 0.022],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+      // Fleur-de-lis centre boss — a slim three-petal motif inset.
+      f.mesh("Keystone Boss", sphere(0.028, 10, 8), keyInset, {
+        position: [PEDIMENT_X, keyY, PEDIMENT_Z - 0.035],
+        scale: [1.0, 1.4, 0.6],
+      }, { castShadow: false }),
+      // Slim petal sprigs flanking the centre boss.
+      f.mesh("Keystone Petal L", sphere(0.016, 8, 6), keyInset, {
+        position: [PEDIMENT_X - 0.024, keyY + 0.012, PEDIMENT_Z - 0.033],
+        scale: [0.7, 1.4, 0.6],
+        rotation: [0, 0, -0.35],
+      }, { castShadow: false }),
+      f.mesh("Keystone Petal R", sphere(0.016, 8, 6), keyInset, {
+        position: [PEDIMENT_X + 0.024, keyY + 0.012, PEDIMENT_Z - 0.033],
+        scale: [0.7, 1.4, 0.6],
+        rotation: [0, 0, 0.35],
+      }, { castShadow: false }),
+      // Slim drop finial below the keystone disc.
+      f.mesh("Keystone Drop", sphere(0.022, 8, 6), copper, {
+        position: [PEDIMENT_X, keyY - 0.1, PEDIMENT_Z - 0.018],
+        scale: [0.8, 1.4, 0.8],
+      }, { castShadow: false }),
+    );
+    // ── Drop finials at each cornice tip — slim hanging pendants below
+    // the hood's outer corners. They read as Victorian eave drops.
+    for (const dir of [-1, 1] as const) {
+      const dx = PEDIMENT_X + dir * 0.6;
+      parts.push(
+        f.mesh(`Tip Drop ${dir}`, cylinder(0.018, 0.012, 0.07, 8), copper, {
+          position: [dx, py - 0.06, PEDIMENT_Z - 0.005],
+        }, { castShadow: false }),
+        f.mesh(`Tip Drop Bead ${dir}`, sphere(0.025, 10, 8), copper, {
+          position: [dx, py - 0.12, PEDIMENT_Z - 0.005],
+        }, { castShadow: false }),
+        f.mesh(`Tip Drop Tip ${dir}`, cone(0.014, 0.05, 6), copper, {
+          position: [dx, py - 0.18, PEDIMENT_Z - 0.005],
+        }, { castShadow: false }),
+        // Slim highlight bead on each drop's shoulder.
+        f.mesh(`Tip Drop Hi ${dir}`, sphere(0.014, 8, 6), copperHi, {
+          position: [dx + dir * 0.008, py - 0.105, PEDIMENT_Z - 0.018],
+        }, { castShadow: false }),
+      );
+    }
+    pediments.push(f.group(`Window Pediment ${floor + 1}`, parts));
+  }
+  return f.group("Window Pediments", pediments);
+}
+
+/* ─────────────── twenty-eighth-pass scene extension ─────────────── */
+
+/**
+ * Far-south bamboo grove plane south of the sakura grove. The plane carries
+ * a verdant green bamboo-leaf-litter ground with the new `bamboo-grove`
+ * colour + depth map pair so leaf piles and exposed earth tufts read as
+ * raised relief at glancing sun. Features nine tall bamboo stalks scattered
+ * across the plane (each a slim segmented green pole with node rings and a
+ * pale leaf-cluster canopy), a small wooden zen meditation deck with a low
+ * cushion and a paper lantern, a focal five-tier stacked-stone pagoda
+ * (gorinto-style mini tower) at the south corner, a traditional bamboo
+ * shishi-odoshi water fountain at the west edge with a swivelling bamboo
+ * spout that pours into a small stone basin with submerged pebbles, and a
+ * stone stepping-path of four flat slabs leading from the sakura apron
+ * south to the meditation deck.
+ */
+function buildFarSouthBambooGrove(f: NodeFactory): SceneNode {
+  return f.group("Far South Bamboo Grove", [
+    // Bamboo grove ground plane — verdant green bamboo-leaf-litter ground
+    // with the new colour + depth map pair so leaf piles and exposed earth
+    // tufts read as raised relief at glancing sun.
+    f.mesh(
+      "Bamboo Grove Ground",
+      plane(BAMBOO_GROVE_W, BAMBOO_GROVE_D),
+      std(C.bambooGround, 0.95, {
+        texture: "bamboo-grove",
+        textureScale: [5, 4],
+        bumpMap: "bamboo-grove-bump",
+        bumpScale: 0.05,
+      }),
+      { position: BAMBOO_GROVE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the sakura grove's south edge with a sakura-
+    // blossom grass strip so the seam reads as a continuous sakura-into-
+    // bamboo join with no holes at the ground layer.
+    f.mesh(
+      "Bamboo Grove North Apron",
+      plane(BAMBOO_GROVE_W, 3),
+      std(C.bambooApronGrass, 0.95, { texture: "grass", textureScale: [12, 1] }),
+      {
+        position: [
+          BAMBOO_GROVE_POS[0],
+          -0.026,
+          BAMBOO_GROVE_POS[2] - BAMBOO_GROVE_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildBambooStalks(f),
+    buildBambooPagoda(f, BAMBOO_PAGODA_POS),
+    buildBambooMeditationDeck(f, BAMBOO_DECK_POS),
+    buildBambooShishi(f, BAMBOO_SHISHI_POS),
+    buildBambooSteppingPath(f),
+  ]);
+}
+
+/**
+ * Nine tall bamboo stalks scattered across the grove. Each stalk is a slim
+ * segmented green pole with five tapering node rings and a slim pale-leaf
+ * canopy of five clusters splayed at the top. Three tint palettes cycle
+ * through the grove (pale, mid, dark) so the grove reads with chromatic
+ * variation rather than identical stamps.
+ */
+function buildBambooStalks(f: NodeFactory): SceneNode {
+  const tints: [string, string, string][] = [
+    [C.bambooStalkLight, C.bambooLeafPale, C.bambooLeafMid],
+    [C.bambooStalkMid, C.bambooLeafMid, C.bambooLeafPale],
+    [C.bambooStalkDark, C.bambooLeafDark, C.bambooLeafMid],
+  ];
+  const nodeBand = std(C.bambooNode, 0.95, { flatShading: true });
+  const stalks: SceneNode[] = [];
+  for (let i = 0; i < BAMBOO_STALKS.length; i++) {
+    const s = BAMBOO_STALKS[i]!;
+    const tint = tints[s.tint]!;
+    const stalkColor = std(tint[0], 0.7, { texture: "wood", textureScale: [1, 4] });
+    const leafA = std(tint[1], 0.8, { flatShading: true });
+    const leafB = std(tint[2], 0.8, { flatShading: true });
+    const stalkH = 3.2 * s.scale;
+    const stalkR = 0.07 * s.scale;
+    const parts: SceneNode[] = [
+      // Main bamboo stalk — slim green segmented pole.
+      f.mesh("Stalk", cylinder(stalkR * 0.85, stalkR, stalkH, 12), stalkColor, {
+        position: [0, stalkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded ridge along the stalk for relief.
+      f.mesh("Stalk Shade", cylinder(stalkR * 0.7, stalkR * 0.82, stalkH * 0.92, 8), std(tint[0], 0.95, { flatShading: true }), {
+        position: [0.025 * s.scale, stalkH / 2, 0.025 * s.scale],
+      }, { castShadow: false }),
+    ];
+    // Five tapering node rings along the stalk.
+    for (let n = 0; n < 5; n++) {
+      const ny = stalkH * (0.18 + n * 0.16);
+      const nr = stalkR * (1.05 - n * 0.04);
+      parts.push(
+        f.mesh(`Node Ring ${n}`, cylinder(nr, nr, 0.04, 12), nodeBand, {
+          position: [0, ny, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // Slim leaf canopy at the top — five clusters splayed in a fan around
+    // the stalk crown.
+    const crownY = stalkH + 0.18 * s.scale;
+    for (let c = 0; c < 5; c++) {
+      const a = (c / 5) * Math.PI * 2;
+      const cx = Math.cos(a) * 0.32 * s.scale;
+      const cz = Math.sin(a) * 0.32 * s.scale;
+      const cm = c % 2 === 0 ? leafA : leafB;
+      parts.push(
+        f.mesh(`Leaf Cluster ${c}`, sphere(0.18 * s.scale, 12, 8), cm, {
+          position: [cx, crownY, cz],
+          scale: [1.5, 0.7, 1.0],
+          rotation: [0, a, 0.2 * (c % 2 === 0 ? 1 : -1)],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    // Small upright leaf tuft at the very crown.
+    parts.push(
+      f.mesh("Crown Tuft", sphere(0.14 * s.scale, 10, 8), leafA, {
+        position: [0, crownY + 0.14 * s.scale, 0],
+        scale: [0.9, 1.4, 0.9],
+      }, { castShadow: true }),
+    );
+    // Slim drop leaf below each canopy — a hanging accent leaf for relief.
+    parts.push(
+      f.mesh("Drop Leaf", sphere(0.07 * s.scale, 8, 6), leafB, {
+        position: [0.18 * s.scale, stalkH * 0.78, 0.05 * s.scale],
+        scale: [1.6, 0.4, 0.9],
+        rotation: [0, 0.3, -0.6],
+      }, { castShadow: false }),
+    );
+    stalks.push(
+      f.group(`Bamboo Stalk ${i + 1}`, parts, {
+        position: [s.x, 0, s.z],
+        rotation: [0, (i * 0.4) % (Math.PI * 2), 0],
+      }),
+    );
+  }
+  return f.group("Bamboo Stalks", stalks);
+}
+
+/**
+ * Five-tier stacked-stone pagoda (gorinto-style mini tower) at the south
+ * corner of the bamboo grove. Each tier is a small box, sphere, hipped
+ * shingle slab or carved pebble stacked atop the last so the silhouette
+ * reads as the five elements (earth, water, fire, wind, sky) of a small
+ * memorial pagoda.
+ */
+function buildBambooPagoda(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.bambooPagodaStone, 0.95, {
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  });
+  const stoneShade = std(C.bambooPagodaStoneShade, 0.95, { flatShading: true });
+  const stoneHi = std(C.bambooPagodaStoneHi, 0.7, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Slate footing platform — broad square slab at the pagoda base.
+    f.mesh("Pagoda Footing", box(0.9, 0.08, 0.9), stoneShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Pagoda Footing Trim", box(0.84, 0.022, 0.84), stoneHi, {
+      position: [0, 0.09, 0],
+    }, { receiveShadow: true }),
+    // Tier 1 — earth (square cube base).
+    f.mesh("Tier Earth", box(0.6, 0.32, 0.6), stone, {
+      position: [0, 0.27, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Tier Earth Shade", box(0.58, 0.05, 0.58), stoneShade, {
+      position: [0, 0.45, 0],
+    }, { receiveShadow: true }),
+    // Tier 2 — water (sphere).
+    f.mesh("Tier Water", sphere(0.26, 16, 12), stone, {
+      position: [0, 0.68, 0],
+      scale: [1.0, 0.85, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Tier Water Shade", sphere(0.22, 12, 8), stoneShade, {
+      position: [0, 0.62, 0.04],
+      scale: [1.0, 0.7, 1.0],
+    }, { castShadow: false }),
+    // Tier 3 — fire (hipped pyramid roof).
+    f.mesh("Tier Fire", cone(0.28, 0.3, 4), stone, {
+      position: [0, 1.0, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Tier Fire Shade", cone(0.22, 0.22, 4), stoneShade, {
+      position: [0, 0.96, 0.02],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: false }),
+    // Tier 4 — wind (half-sphere reading as a curved dome).
+    f.mesh("Tier Wind", sphere(0.18, 14, 10), stone, {
+      position: [0, 1.22, 0],
+      scale: [1.1, 0.7, 1.1],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tier 5 — sky (carved pebble finial cap).
+    f.mesh("Tier Sky", sphere(0.12, 12, 8), stoneHi, {
+      position: [0, 1.36, 0],
+      scale: [0.9, 1.2, 0.9],
+    }, { castShadow: true }),
+    // Slim crown finial pebble at the very top.
+    f.mesh("Tier Sky Cap", sphere(0.05, 10, 8), stone, {
+      position: [0, 1.5, 0],
+    }, { castShadow: false }),
+  ];
+  // Slim stone moss accents — a sparse scatter of darker pebble dots on the
+  // earth tier's south face reading as weathered moss.
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh(`Moss Dot ${i}`, sphere(0.018, 8, 6), std(C.bambooLeafDark, 0.95, { flatShading: true }), {
+        position: [-0.12 + i * 0.07, 0.16 + (i % 2) * 0.05, 0.31],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Bamboo Pagoda", parts, { position: pos });
+}
+
+/**
+ * Small wooden zen meditation deck at the southeast corner of the grove —
+ * a low raised platform with a slim cushion at its centre, a small paper
+ * lantern hanging from a side post, and a slim wooden rail along the
+ * north and west edges. Reads as a contemplative perch for grove visitors.
+ */
+function buildBambooMeditationDeck(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.bambooDeckWood, 0.7, { texture: "wood", textureScale: [3, 2] });
+  const woodTrim = std(C.bambooDeckTrim, 0.75, { texture: "wood", textureScale: [2, 1] });
+  const woodShade = std(C.bambooDeckWood, 0.95, { flatShading: true });
+  const cushion = std(C.bambooDeckCushion, 0.85, { flatShading: true });
+  const cushionHi = std("#d27758", 0.7, { flatShading: true });
+  const lanternFrame = std(C.bambooDeckLanternFrame, 0.95, { flatShading: true });
+  const lanternPaper: MaterialDef = {
+    color: C.bambooDeckLantern,
+    roughness: 0.5,
+    emissive: "#d4a050",
+    transparent: true,
+    opacity: 0.88,
+  };
+  const parts: SceneNode[] = [
+    // Deck base — a slim wooden platform.
+    f.mesh("Deck Platform", box(2.0, 0.12, 2.0), wood, {
+      position: [0, 0.18, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Deck Trim Top", box(2.0, 0.024, 2.0), woodTrim, {
+      position: [0, 0.247, 0],
+    }, { receiveShadow: true }),
+    // Slim shaded undercut beneath the deck for relief.
+    f.mesh("Deck Underside", box(1.94, 0.04, 1.94), woodShade, {
+      position: [0, 0.12, 0],
+    }, { castShadow: false }),
+  ];
+  // Four corner posts holding the platform off the ground.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Deck Post ${sx} ${sz}`, box(0.1, 0.18, 0.1), wood, {
+          position: [sx * 0.85, 0.09, sz * 0.85],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Slim plank seams along the deck top — three narrow grooves so the
+  // surface reads as a planked deck rather than a smooth slab.
+  for (let i = -1; i <= 1; i++) {
+    parts.push(
+      f.mesh(`Deck Seam ${i}`, box(2.0, 0.005, 0.014), woodShade, {
+        position: [0, 0.262, i * 0.5],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim rail along the north and west edges.
+  parts.push(
+    f.mesh("Rail North", box(2.0, 0.04, 0.04), woodTrim, {
+      position: [0, 0.42, -0.95],
+    }, { castShadow: true }),
+    f.mesh("Rail West", box(0.04, 0.04, 2.0), woodTrim, {
+      position: [-0.95, 0.42, 0],
+    }, { castShadow: true }),
+  );
+  // Three slim balusters along the north rail and three along the west rail.
+  for (let i = 0; i < 3; i++) {
+    const t = (i + 1) / 4;
+    parts.push(
+      f.mesh(`Rail Baluster N ${i}`, box(0.024, 0.18, 0.024), woodShade, {
+        position: [-1.0 + t * 2.0, 0.33, -0.95],
+      }, { castShadow: false }),
+      f.mesh(`Rail Baluster W ${i}`, box(0.024, 0.18, 0.024), woodShade, {
+        position: [-0.95, 0.33, -1.0 + t * 2.0],
+      }, { castShadow: false }),
+    );
+  }
+  // Centred cushion mat — a slim square pillow on the deck top.
+  parts.push(
+    f.mesh("Cushion", box(0.5, 0.06, 0.5), cushion, {
+      position: [0.2, 0.3, 0.2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim highlight ridge along the cushion top edge.
+    f.mesh("Cushion Hi", box(0.46, 0.02, 0.46), cushionHi, {
+      position: [0.2, 0.33, 0.2],
+    }, { castShadow: false }),
+    // Slim tassel dots at each cushion corner.
+    f.mesh("Cushion Tassel A", sphere(0.022, 8, 6), cushionHi, {
+      position: [-0.05, 0.32, 0.45],
+    }, { castShadow: false }),
+    f.mesh("Cushion Tassel B", sphere(0.022, 8, 6), cushionHi, {
+      position: [0.45, 0.32, 0.45],
+    }, { castShadow: false }),
+    f.mesh("Cushion Tassel C", sphere(0.022, 8, 6), cushionHi, {
+      position: [-0.05, 0.32, -0.05],
+    }, { castShadow: false }),
+    f.mesh("Cushion Tassel D", sphere(0.022, 8, 6), cushionHi, {
+      position: [0.45, 0.32, -0.05],
+    }, { castShadow: false }),
+  );
+  // Slim post on the northwest corner carrying a paper lantern hanging from
+  // an arched bracket.
+  const lampPostX = -0.85;
+  const lampPostZ = -0.85;
+  parts.push(
+    // Tall post.
+    f.mesh("Lantern Post", box(0.06, 1.3, 0.06), lanternFrame, {
+      position: [lampPostX, 0.95, lampPostZ],
+    }, { castShadow: true }),
+    // Curved bracket arm extending inward.
+    f.mesh("Lantern Bracket", box(0.04, 0.04, 0.42), lanternFrame, {
+      position: [lampPostX + 0.21, 1.55, lampPostZ + 0.21],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: false }),
+    // Slim hanging string from bracket tip down to lantern cap.
+    f.mesh("Lantern String", cylinder(0.005, 0.005, 0.14, 6), lanternFrame, {
+      position: [lampPostX + 0.32, 1.42, lampPostZ + 0.32],
+    }, { castShadow: false }),
+    // Lantern paper body — a slim cylindrical paper lantern emitting a soft
+    // warm glow.
+    f.mesh("Lantern Body", cylinder(0.13, 0.13, 0.22, 12), lanternPaper, {
+      position: [lampPostX + 0.32, 1.24, lampPostZ + 0.32],
+    }, { castShadow: false }),
+    // Slim top and bottom rims framing the paper body.
+    f.mesh("Lantern Rim Top", cylinder(0.135, 0.135, 0.022, 14), lanternFrame, {
+      position: [lampPostX + 0.32, 1.36, lampPostZ + 0.32],
+    }, { castShadow: false }),
+    f.mesh("Lantern Rim Bot", cylinder(0.135, 0.135, 0.022, 14), lanternFrame, {
+      position: [lampPostX + 0.32, 1.12, lampPostZ + 0.32],
+    }, { castShadow: false }),
+    // Slim hanging tassel below the lantern.
+    f.mesh("Lantern Tassel String", cylinder(0.004, 0.004, 0.08, 6), lanternFrame, {
+      position: [lampPostX + 0.32, 1.06, lampPostZ + 0.32],
+    }, { castShadow: false }),
+    f.mesh("Lantern Tassel Bead", sphere(0.025, 8, 6), cushion, {
+      position: [lampPostX + 0.32, 1.0, lampPostZ + 0.32],
+    }, { castShadow: false }),
+  );
+  return f.group("Bamboo Meditation Deck", parts, {
+    position: pos,
+    rotation: [0, -Math.PI / 6, 0],
+  });
+}
+
+/**
+ * Traditional bamboo shishi-odoshi water fountain at the west edge of the
+ * grove — a swiveling bamboo spout balanced on a slim wooden fulcrum that
+ * pours a thin water column into a small stone basin with three submerged
+ * pebbles. Reads as the iconic Japanese garden water feature.
+ */
+function buildBambooShishi(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bamboo = std(C.bambooShishiBamboo, 0.7, { texture: "wood", textureScale: [1, 4] });
+  const bambooDark = std(C.bambooShishiBambooDark, 0.95, { flatShading: true });
+  const basinStone = std(C.bambooShishiBasin, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.5, 1.5],
+    flatShading: true,
+  });
+  const basinPebble = std(C.bambooShishiPebble, 0.95, { flatShading: true });
+  const water: MaterialDef = {
+    color: C.bambooShishiWater,
+    roughness: 0.2,
+    metalness: 0.05,
+    transparent: true,
+    opacity: 0.8,
+    emissive: "#1f4858",
+  };
+  const parts: SceneNode[] = [
+    // Stone basin base — a slim cylindrical bowl sunk into the ground.
+    f.mesh("Basin Footing", cylinder(0.4, 0.42, 0.06, 18), basinPebble, {
+      position: [0, 0.03, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Basin Body", cylinder(0.38, 0.4, 0.16, 18), basinStone, {
+      position: [0, 0.14, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Basin Rim", cylinder(0.4, 0.4, 0.022, 20), basinPebble, {
+      position: [0, 0.222, 0],
+    }, { castShadow: false }),
+    // Slim water disc at the basin top.
+    f.mesh("Basin Water", cylinder(0.36, 0.36, 0.014, 24), water, {
+      position: [0, 0.222, 0],
+    }, { castShadow: false }),
+  ];
+  // Three submerged pebbles in the basin.
+  const pebblePositions: [number, number][] = [
+    [-0.12, 0.08],
+    [0.1, -0.08],
+    [0.04, 0.14],
+  ];
+  for (let i = 0; i < pebblePositions.length; i++) {
+    const [px, pz] = pebblePositions[i]!;
+    parts.push(
+      f.mesh(`Pebble ${i}`, sphere(0.06, 10, 8), basinPebble, {
+        position: [px, 0.21, pz],
+        scale: [1.2, 0.5, 1.0],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim vertical fulcrum post — a wooden upright behind the basin.
+  parts.push(
+    f.mesh("Fulcrum Post", box(0.05, 0.85, 0.05), bambooDark, {
+      position: [0, 0.43, -0.4],
+    }, { castShadow: true }),
+    // Slim crossbar at the fulcrum pivot.
+    f.mesh("Fulcrum Bar", cylinder(0.025, 0.025, 0.22, 8), bambooDark, {
+      position: [0, 0.78, -0.4],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  // Bamboo spout — a slim diagonal hollow bamboo segment tilted to pour
+  // toward the basin. Built from a tapered cylinder so the segmented
+  // node rings read at glancing angles.
+  const spoutBase: [number, number, number] = [0.05, 0.85, -0.35];
+  parts.push(
+    f.mesh("Spout Tube", cylinder(0.05, 0.06, 0.6, 12), bamboo, {
+      position: [spoutBase[0] + 0.18, spoutBase[1] - 0.08, spoutBase[2] + 0.18],
+      rotation: [0, Math.PI / 4, -0.35],
+    }, { castShadow: true }),
+    // Slim node rings on the spout — three bands across the bamboo.
+    f.mesh("Spout Node A", cylinder(0.065, 0.065, 0.02, 12), bambooDark, {
+      position: [spoutBase[0] + 0.08, spoutBase[1] - 0.04, spoutBase[2] + 0.08],
+      rotation: [0, Math.PI / 4, -0.35],
+    }, { castShadow: false }),
+    f.mesh("Spout Node B", cylinder(0.06, 0.06, 0.02, 12), bambooDark, {
+      position: [spoutBase[0] + 0.2, spoutBase[1] - 0.085, spoutBase[2] + 0.2],
+      rotation: [0, Math.PI / 4, -0.35],
+    }, { castShadow: false }),
+    f.mesh("Spout Node C", cylinder(0.055, 0.055, 0.02, 12), bambooDark, {
+      position: [spoutBase[0] + 0.32, spoutBase[1] - 0.13, spoutBase[2] + 0.32],
+      rotation: [0, Math.PI / 4, -0.35],
+    }, { castShadow: false }),
+  );
+  // Slim water column trickling from the spout tip into the basin.
+  parts.push(
+    f.mesh("Water Column", cylinder(0.018, 0.022, 0.36, 8), water, {
+      position: [0.18, 0.46, -0.12],
+    }, { castShadow: false }),
+    // Splash ring on the basin surface where the water lands.
+    f.mesh("Splash Ring", cylinder(0.05, 0.05, 0.008, 14), water, {
+      position: [0.18, 0.226, -0.12],
+    }, { castShadow: false }),
+  );
+  // Slim back-rest bamboo lever — a counterweight tube extending behind
+  // the fulcrum that would tip forward when filled with water. Reads as
+  // the iconic shishi-odoshi lever.
+  parts.push(
+    f.mesh("Lever Tube", cylinder(0.04, 0.045, 0.42, 10), bamboo, {
+      position: [-0.18, 0.78, -0.55],
+      rotation: [0, Math.PI / 4, 0.18],
+    }, { castShadow: true }),
+    f.mesh("Lever End Cap", sphere(0.05, 10, 8), bambooDark, {
+      position: [-0.32, 0.7, -0.7],
+    }, { castShadow: false }),
+  );
+  return f.group("Bamboo Shishi Odoshi", parts, { position: pos });
+}
+
+/**
+ * Stone stepping-path of four flat slabs leading from the sakura apron
+ * south to the meditation deck. The slabs alternate sizes slightly so the
+ * path reads as a hand-laid stone walk rather than a uniform grid.
+ */
+function buildBambooSteppingPath(f: NodeFactory): SceneNode {
+  const stone = std(C.bambooSteppingStone, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.5, 1.5],
+    flatShading: true,
+  });
+  const stoneHi = std(C.bambooSteppingStoneHi, 0.85, { flatShading: true });
+  const slabs: SceneNode[] = [];
+  for (let i = 0; i < BAMBOO_STEPPING_STONES.length; i++) {
+    const s = BAMBOO_STEPPING_STONES[i]!;
+    const r = 0.4 + (i % 2) * 0.06;
+    slabs.push(
+      f.mesh(`Stepping Slab ${i}`, cylinder(r, r, 0.05, 12), stone, {
+        position: [s.x, 0.025, s.z],
+        rotation: [0, (i * 0.5) % Math.PI, 0],
+        scale: [1.1, 1.0, 0.85],
+      }, { receiveShadow: true }),
+      // Slim highlight cap on the slab's south edge for sun catch.
+      f.mesh(`Stepping Slab Hi ${i}`, cylinder(r - 0.05, r - 0.05, 0.014, 10), stoneHi, {
+        position: [s.x, 0.054, s.z],
+        rotation: [0, (i * 0.5) % Math.PI, 0],
+        scale: [1.0, 1.0, 0.75],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Bamboo Stepping Path", slabs);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -22645,6 +23728,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: ELEPHANT_STATUE_POS[0], z: ELEPHANT_STATUE_POS[2], r: 1.0 },
     // Twenty-seventh-pass keep-out — back-yard archway on the back outside-fence lawn.
     { x: BACK_ARCHWAY_POS[0], z: BACK_ARCHWAY_POS[2], r: 1.4 },
+    // Twenty-eighth-pass keep-out — heraldic lion statue on the front outside-gate apron.
+    { x: LION_STATUE_POS[0], z: LION_STATUE_POS[2], r: 1.0 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -22713,6 +23798,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPeacockStatue(f, PEACOCK_STATUE_POS),
     buildElephantStatue(f, ELEPHANT_STATUE_POS),
     buildBackArchway(f, BACK_ARCHWAY_POS),
+    buildLionStatue(f, LION_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -22737,6 +23823,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fneMountainPass = buildFarNortheastMountainPass(f);
   const feSaltFlats = buildFarEastSaltFlats(f);
   const fsSakuraGrove = buildFarSouthSakuraGrove(f);
+  const fsBambooGrove = buildFarSouthBambooGrove(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -22784,6 +23871,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildRainChains(f),
     buildBackGargoyleSpouts(f),
     buildPorchCeilingRosette(f, PORCH_ROSETTE_POS),
+    buildWindowPediments(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -22815,6 +23903,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fneMountainPass,
       feSaltFlats,
       fsSakuraGrove,
+      fsBambooGrove,
       house,
     ],
   };

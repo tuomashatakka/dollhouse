@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twenty-seven enhancement passes.
+// house and its courtyard, layered over twenty-eight enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -628,6 +628,78 @@
 //   boulder, and a focal carved-stone moon-gate disc at the west
 //   edge with a slim stone ring frame on a low slate platform
 //   reading as a contemplative threshold.
+//   Pass 28 — courtyard: a Victorian bronze heraldic lion statue
+//   on a fluted marble pedestal, parked on the front outside-gate
+//   apron centred between the flagpole (front-west) and the stag
+//   statue (front-east) so it reads as the central focal sentinel
+//   above the welcome gate — the lion stands four-square on the
+//   plinth cap with a crowned mane ringing the head (twelve bronze
+//   tufts in two staggered rows around the head with a slim shaded
+//   inner undercut on each so the ruff reads as textured millwork
+//   rather than a smooth collar), a curved tail swept back across
+//   its haunches in three linked tapered segments with a tassel
+//   tuft at the tip, and a lifted forepaw resting on a small
+//   heraldic shield with a slim raised border, a centred cross
+//   emboss in highlight tint and a pointed wedge tip below (the
+//   bronze body, mane, tail and shield reuse the existing
+//   `copper-patina` colour + bump pair so the verdigris reads as
+//   crusted relief on the cast metal, and the plinth reuses the
+//   existing `marble` colour + bump pair so the stone reads with
+//   veined relief). A slim bronze plaque tablet on the plinth's
+//   front face with three highlight beads reads as a memorial
+//   inscription. House: a triplet of Victorian copper-patina
+//   ornamental window pediment hood caps with central keystone
+//   medallions crowning the three back-wall window dressings (one
+//   per floor) — each pediment a slim shallow triangular hood
+//   projecting from the back wall above the existing
+//   shutter-and-flower-box ensemble with a slim cornice band
+//   below it carrying a row of seven small dentil teeth on its
+//   underside, two angled hood slabs meeting at a central apex
+//   bead, a central keystone disc bearing a fleur-de-lis emboss
+//   inlay flanked by two small petal sprigs and a slim drop
+//   pendant beneath, and a flanking pair of slim cornice-tip
+//   drop finials at each end (the hood, cornice band, dentils,
+//   keystone and tip drops reuse the existing `copper-patina`
+//   colour + bump pair so the verdigris reads as crusted relief
+//   on the cast metal). Scene: a far-south bamboo grove plane
+//   south of the sakura grove — a verdant-green bamboo-leaf-litter
+//   ground surfaced with the new `bamboo-grove` colour map paired
+//   with a leaf-and-shoot depth map (registered alongside the
+//   other procedural textures) so the leaf piles, slim bamboo
+//   leaves and exposed earth tufts read as raised relief at
+//   glancing sun, a sakura-blossom grass apron along the north
+//   join so the ground layer has no holes at the seam, a grove
+//   of nine tall bamboo stalks scattered across the plane (each
+//   a slim segmented green pole with five tapering node rings and
+//   a slim pale-leaf canopy of five clusters splayed in a fan at
+//   the top, crowned by a small upright leaf tuft and a slim
+//   hanging drop leaf below the canopy) in three tint palettes
+//   for chromatic variation, a small wooden zen meditation deck
+//   at the southeast corner with a low cushion (centred on the
+//   planked deck with a highlight ridge and four tassel beads at
+//   the corners), a slim wooden rail along the north and west
+//   edges with three balusters apiece, a paper lantern hanging
+//   from a curved bracket arm on a side post with a warm
+//   interior glow (cylindrical paper body framed by top and
+//   bottom rims) and a tassel pendant below it, a focal
+//   five-tier stacked-stone pagoda (gorinto-style mini tower)
+//   at the south corner reading as the five elements
+//   (earth/water/fire/wind/sky) stacked atop a slate footing
+//   platform — a square cube earth tier, a flattened sphere water
+//   tier, a hipped pyramid fire tier, a half-sphere wind tier
+//   and a carved pebble sky cap with a slim crown finial pebble
+//   at the very top — and a sparse scatter of darker pebble dots
+//   reading as weathered moss on the earth tier's south face,
+//   a traditional bamboo shishi-odoshi water fountain at the
+//   west edge with a swivelling diagonal bamboo spout (three
+//   node rings across the segmented tube) that pours a thin
+//   water column into a small stone basin with three submerged
+//   pebbles and a slim splash ring on the water surface where
+//   the column lands, a slim back-lever counterweight tube
+//   extending behind the fulcrum, and a stone stepping-path of
+//   four flat slabs leading from the sakura apron south to the
+//   meditation deck (the slab sizes alternate slightly so the
+//   path reads as hand-laid rather than uniformly stamped).
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
