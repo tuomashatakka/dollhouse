@@ -4305,4 +4305,232 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Twenty-eighth-pass additions ──────────────────────────────────
+  // The twenty-eighth enhancement pass introduces a verdant green
+  // bamboo-leaf-litter ground surface for the far-south bamboo grove
+  // scene-extension plane south of the sakura grove — a mossy grass
+  // canopy strewn with slim bamboo leaves and shoot tufts, paired with
+  // a leaf-and-shoot depth map so the leaf piles and exposed earth
+  // tufts read as raised relief at glancing sun.
+
+  // Bamboo-grove colour — a verdant mid-green grass base with scattered
+  // slim bamboo-leaf strokes in pale and dark greens, occasional shoot
+  // tufts and dark moss pebble dots. Drawn on a power-of-two canvas so
+  // the mipmap chain stays clean.
+  registry["bamboo-grove"] = makeCanvasTexture({
+    seed: 0xb4a5b0,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly darker toward the south edge so the
+      // grove floor reads with a hint of deep-shade leaf litter.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#82a566");
+      bg.addColorStop(0.5, "#74985a");
+      bg.addColorStop(1, "#5f834a");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide pale grass lobes — soft radial highlights suggesting low
+      // grass swells underneath the leaf-litter surface mottle.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${88 + rng() * 14}, 36%, ${48 + rng() * 12}%, 0.38)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Long slim bamboo-leaf strokes — many narrow slats reading as
+      // fallen bamboo leaves scattered across the grove floor in three
+      // tints (pale, mid, dark).
+      ctx.lineCap = "round";
+      for (let i = 0; i < 1500; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 8 + rng() * 14;
+        const angle = rng() * Math.PI * 2;
+        const tint = rng();
+        let h: number;
+        let l: number;
+        if (tint < 0.35) {
+          h = 84 + rng() * 14;
+          l = 64 + rng() * 8;
+        } else if (tint < 0.75) {
+          h = 92 + rng() * 12;
+          l = 48 + rng() * 8;
+        } else {
+          h = 86 + rng() * 12;
+          l = 32 + rng() * 8;
+        }
+        ctx.strokeStyle = `hsla(${h}, 38%, ${l}%, 0.65)`;
+        ctx.lineWidth = 0.6 + rng() * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Slim upright shoot tufts — short bright slats reading as fresh
+      // bamboo shoots pushing through the leaf litter.
+      for (let i = 0; i < 280; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 4 + rng() * 5;
+        const angle = (rng() - 0.5) * 0.4 + Math.PI / 2;
+        ctx.strokeStyle = `hsla(${86 + rng() * 14}, 52%, ${56 + rng() * 12}%, 0.7)`;
+        ctx.lineWidth = 0.8 + rng() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y - Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Mossy pebble dots — a sparse scatter of slim dark dots reading
+      // as small mossy stones partly hidden in the leaf carpet.
+      for (let i = 0; i < 110; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2 + rng() * 3;
+        ctx.fillStyle = `hsla(${78 + rng() * 24}, 18%, ${28 + rng() * 12}%, 0.65)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Exposed earth tufts — a sparse scatter of warm-brown dots
+      // suggesting bare soil patches between leaf piles.
+      for (let i = 0; i < 70; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.5 + rng() * 4;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${28 + rng() * 16}, 36%, ${30 + rng() * 10}%, 0.6)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Tiny grass-shadow flecks — many slim darker dots suggesting the
+      // shaded undercut between leaf piles, keeping tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1700; i++) {
+        ctx.fillStyle = `hsla(${88 + rng() * 18}, 28%, ${22 + rng() * 14}%, 0.42)`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1 + rng() * 1.2);
+      }
+      // Faint cool sun cast across the upper-right — a wide pale wash
+      // so glancing afternoon sun catches the rim of the grove canopy.
+      const sun = ctx.createRadialGradient(size * 0.72, size * 0.22, 0, size * 0.72, size * 0.22, size * 0.85);
+      sun.addColorStop(0, "rgba(232,244,202,0.18)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 32, 0.0022);
+    },
+  });
+
+  // Bamboo-grove depth map — the leaf piles sit slightly above the grass
+  // base (light = high) and the exposed earth tufts read with a subtle
+  // depression so the grove shows raised relief on glancing sun. The
+  // bamboo shoot tufts are slim bright slats so they catch the sun edge.
+  registry["bamboo-grove-bump"] = makeCanvasTexture({
+    seed: 0xb4a5b0 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average leaf-litter height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling grass mounds — pale radial highlights suggesting
+      // low grass swells underneath the leaf litter.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(210,210,210,0.22)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Long slim bamboo-leaf bumps — bright slim slats reading as
+      // raised leaves sitting on top of the grass.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 1500; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 8 + rng() * 14;
+        const angle = rng() * Math.PI * 2;
+        ctx.strokeStyle = `rgba(214,214,214,${0.55 + rng() * 0.25})`;
+        ctx.lineWidth = 0.7 + rng() * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Slim upright shoot bumps — bright slats reading as raised
+      // bamboo shoots pushing up through the leaf carpet.
+      for (let i = 0; i < 280; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 4 + rng() * 5;
+        const angle = (rng() - 0.5) * 0.4 + Math.PI / 2;
+        ctx.strokeStyle = `rgba(232,232,232,0.7)`;
+        ctx.lineWidth = 0.8 + rng() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y - Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Mossy pebble bumps — slim bright dots reading as raised pebbles
+      // partly hidden in the leaf litter.
+      for (let i = 0; i < 110; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2 + rng() * 3;
+        ctx.fillStyle = `rgba(204,204,204,0.65)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Exposed earth tuft dimples — slim dark depressions reading as
+      // sunken bare soil patches between leaf piles. Light = high so the
+      // dark dimples sit below the grass.
+      for (let i = 0; i < 70; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.5 + rng() * 4;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(46,46,46,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim shaded undercut around each leaf — a sparse scatter of
+      // darker dots between leaf strokes so the relief reads at
+      // glancing sun.
+      for (let i = 0; i < 220; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 1.4 + rng() * 2.5;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(40,40,40,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
