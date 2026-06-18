@@ -22,13 +22,13 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 28) adds a Victorian bronze heraldic lion statue
- * on a fluted marble pedestal to the front outside-gate apron, a triplet of
- * copper-patina window pediment hood caps with central keystone medallions
- * crowning the three back-wall window dressings, and a far-south bamboo
- * grove plane south of the sakura grove with bamboo stalks, a wooden zen
- * meditation deck, a stacked-stone pagoda mini-tower and a bamboo
- * shishi-odoshi fountain.
+ * latest enhancement (pass 29) adds a Victorian copper-patina ornamental
+ * garden obelisk with a lit lantern crown to the back outside-fence lawn,
+ * a copper-patina house-number address plaque mounted on the front wall
+ * above the porch door, and a far-south misty pine woodland plane south
+ * of the bamboo grove with tall pine trees, a small log cabin with a
+ * lit window, a forest creek strip with stepping stones and a scatter
+ * of fallen pinecones.
  */
 const W = 7;
 const D = 5;
@@ -1086,6 +1086,89 @@ const BAMBOO_STEPPING_STONES: { x: number; z: number }[] = [
   { x: 7.5, z: 97 },
 ];
 
+/**
+ * Twenty-ninth-pass courtyard prop — a Victorian copper-patina ornamental
+ * garden obelisk with a lit lantern crown, parked on the back outside-fence
+ * lawn between the back archway (at x=0) and the weather station (at
+ * x=12.5). The obelisk reads as a memorial sentinel marking the back-yard
+ * exit threshold — a tapered four-sided copper-patina shaft on a fluted
+ * marble plinth, capped with a small glass lantern crown that emits a
+ * warm glow at low light. The shaft body, plinth cap and lantern frame
+ * reuse the existing `copper-patina` colour + bump pair so the verdigris
+ * reads as crusted relief on the cast metal, and the plinth reuses the
+ * existing `marble` colour + bump pair so the stone reads with veined
+ * relief.
+ */
+const OBELISK_POS: [number, number, number] = [7, 0, -5.5];
+
+/**
+ * Twenty-ninth-pass house detail — a Victorian copper-patina ornamental
+ * house-number address plaque mounted on the front wall directly above
+ * the porch door, between the door arch and the porch canopy. The plaque
+ * is a slim rectangular tablet with a raised border, a raised central
+ * numeral "1" in highlight tint and a flanking pair of slim petal sprigs
+ * reading as the welcoming front-door address marker. The plaque body,
+ * border, numeral and sprigs reuse the existing `copper-patina` colour +
+ * bump pair so the verdigris reads as crusted relief on the cast metal.
+ */
+const ADDRESS_PLAQUE_POS: [number, number, number] = [
+  0,
+  2.42,
+  FRONT_Z + WALL_T / 2 + 0.012,
+];
+
+/**
+ * Twenty-ninth-pass scene extension — a far-south misty pine woodland plane
+ * south of the bamboo grove, bridging the gap south of it. The plane
+ * overlaps the bamboo grove by ~3 units along its north join with a bamboo-
+ * leaf apron so the ground layer has no holes at the seam. It carries a
+ * deep-forest-floor ground surfaced with the new `pine-woodland` colour
+ * map paired with a needle-litter depth map (registered alongside the
+ * other procedural textures) so the fallen pine-needle mats and exposed
+ * earth tufts read as raised relief at glancing sun, a grove of eight
+ * tall pine trees scattered across the plane (each a slim straight trunk
+ * with a stacked-cone foliage canopy of three tapering tiers), a small
+ * board-and-batten log cabin at the south corner with a peaked shingle
+ * roof, a small stone chimney trailing a translucent smoke wisp and a
+ * lit warm-glow front window catching the dusk, a slim east-west forest
+ * creek strip running east-west across the plane with a slim ripple
+ * highlight, four flat stepping stones crossing the creek at the path
+ * line, and a sparse scatter of fallen pinecones distributed beneath
+ * the canopies.
+ */
+const PINE_WOODLAND_POS: [number, number, number] = [0, -0.032, 120];
+const PINE_WOODLAND_W = 30;
+const PINE_WOODLAND_D = 20;
+const PINE_CABIN_POS: [number, number, number] = [-9, 0, 124];
+const PINE_CREEK_Z = 117;
+const PINE_TREES: { x: number; z: number; scale: number; tint: 0 | 1 | 2 }[] = [
+  { x: -6, z: 113, scale: 1.05, tint: 0 },
+  { x: -2, z: 115, scale: 1.15, tint: 1 },
+  { x: 3, z: 113, scale: 0.95, tint: 2 },
+  { x: 7, z: 115, scale: 1.1, tint: 1 },
+  { x: -4, z: 122, scale: 1.0, tint: 2 },
+  { x: 2, z: 124, scale: 1.12, tint: 0 },
+  { x: 6, z: 125, scale: 0.92, tint: 1 },
+  { x: 10, z: 122, scale: 1.08, tint: 2 },
+];
+const PINE_CONES: { x: number; z: number; rot: number; tint: 0 | 1 }[] = [
+  { x: -5.8, z: 114, rot: 0.4, tint: 0 },
+  { x: -1.5, z: 116, rot: 1.2, tint: 1 },
+  { x: 2.8, z: 114, rot: 2.1, tint: 0 },
+  { x: 6.6, z: 116, rot: 0.7, tint: 1 },
+  { x: -3.6, z: 123, rot: 1.5, tint: 1 },
+  { x: 2.4, z: 125, rot: 0.3, tint: 0 },
+  { x: 5.8, z: 126, rot: 2.4, tint: 0 },
+  { x: 9.8, z: 123, rot: 1.0, tint: 1 },
+  { x: 0.4, z: 119, rot: 1.7, tint: 1 },
+];
+const PINE_CREEK_STEPS: { x: number; z: number }[] = [
+  { x: -3.6, z: PINE_CREEK_Z - 0.4 },
+  { x: -1.2, z: PINE_CREEK_Z + 0.4 },
+  { x: 1.2, z: PINE_CREEK_Z - 0.4 },
+  { x: 3.6, z: PINE_CREEK_Z + 0.4 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -2094,6 +2177,49 @@ const C = {
   bambooShishiPebble: "#897e6e",
   bambooSteppingStone: "#857c70",
   bambooSteppingStoneHi: "#b8b0a0",
+  // Twenty-ninth enhancement pass — a Victorian copper-patina ornamental
+  // garden obelisk with a lit lantern crown on the back outside-fence lawn,
+  // a copper-patina house-number address plaque mounted on the front wall
+  // above the porch door, and a far-south misty pine woodland plane south
+  // of the bamboo grove. The new `pine-woodland` colour map is paired with
+  // a needle-litter depth map registered alongside it so the fallen
+  // pine-needle mats and exposed earth tufts read as raised relief at
+  // glancing sun.
+  obeliskCopper: "#5d8a6a",
+  obeliskCopperHi: "#9bc4a8",
+  obeliskCopperShade: "#2f5840",
+  obeliskPlinth: "#e9e2d2",
+  obeliskPlinthShade: "#a39d8c",
+  obeliskGlow: "#ffe8a8",
+  obeliskGlowWarm: "#f7b860",
+  plaqueCopper: "#5d8a6a",
+  plaqueCopperHi: "#9bc4a8",
+  plaqueCopperShade: "#2f5840",
+  plaqueNumeralInset: "#b48a4a",
+  // Pine woodland — deep-forest-floor ground with tall pines, a log cabin,
+  // a forest creek with stepping stones and a scatter of fallen pinecones.
+  pwGround: "#46603a",
+  pwGroundShade: "#2a3c22",
+  pwGroundHi: "#7c986c",
+  pwApronLeaf: "#6e8a4a",
+  pwTrunk: "#4a3826",
+  pwTrunkDark: "#2c2014",
+  pwFoliagePale: "#5e8a4e",
+  pwFoliageMid: "#3f6a36",
+  pwFoliageDeep: "#264a26",
+  pwConeBrown: "#6e4a26",
+  pwConeBrownDark: "#3e2814",
+  pwCabinWall: "#6e4a32",
+  pwCabinWallShade: "#3e2818",
+  pwCabinRoof: "#3a2a1c",
+  pwCabinChimney: "#7e7468",
+  pwCabinWindowGlow: "#ffd07a",
+  pwCabinSmoke: "#dcd6cc",
+  pwCreekWater: "#3e6e7e",
+  pwCreekWaterHi: "#9ec6d0",
+  pwCreekBank: "#5e4a36",
+  pwSteppingStone: "#7e7468",
+  pwSteppingStoneHi: "#b8b0a0",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -23017,6 +23143,627 @@ function buildBambooSteppingPath(f: NodeFactory): SceneNode {
   return f.group("Bamboo Stepping Path", slabs);
 }
 
+/* ─────────────── twenty-ninth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian copper-patina ornamental garden obelisk with a lit lantern
+ * crown, parked on the back outside-fence lawn between the back archway
+ * (at x=0) and the weather station (back-east) so it reads as a memorial
+ * sentinel marking the back-yard threshold. The obelisk is a tapered
+ * four-sided copper-patina shaft on a fluted marble plinth, capped with
+ * a small glass lantern that emits a warm glow at low light. The shaft
+ * body, plinth cap and lantern frame reuse the existing `copper-patina`
+ * colour + bump pair so the verdigris reads as crusted relief on the
+ * cast metal, and the plinth reuses the existing `marble` colour + bump
+ * pair so the stone reads with veined relief.
+ */
+function buildGardenObelisk(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const copper: MaterialDef = {
+    color: C.obeliskCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [1.2, 2.4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.obeliskCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.obeliskCopperShade, 0.95, { flatShading: true });
+  const marble: MaterialDef = {
+    color: C.obeliskPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.obeliskPlinthShade, 0.95, { flatShading: true });
+  const glow: MaterialDef = {
+    color: C.obeliskGlow,
+    roughness: 0.3,
+    emissive: C.obeliskGlowWarm,
+    transparent: true,
+    opacity: 0.85,
+  };
+  const parts: SceneNode[] = [];
+  // ── Plinth base — a broad square marble base with a slim shaded undercut.
+  parts.push(
+    f.mesh("Plinth Base", box(0.78, 0.16, 0.78), marble, {
+      position: [0, 0.08, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.72, 0.04, 0.72), marbleShade, {
+      position: [0, 0.18, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft — a slim fluted marble column above the base.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.5, 0.6, 0.5), marble, {
+      position: [0, 0.5, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Shaft Top Cap", box(0.6, 0.06, 0.6), marble, {
+      position: [0, 0.83, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Shaft Top Cap Hi", box(0.56, 0.022, 0.56), copperHi, {
+      position: [0, 0.872, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.255;
+    const fz = Math.sin(a) * 0.255;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.5, 0.04), marbleShade, {
+        position: [fx, 0.5, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Obelisk shaft — a tall tapered four-sided copper-patina spike.
+  const shaftBase = 0.34;
+  const shaftTop = 0.08;
+  const shaftH = 1.8;
+  const shaftY = 0.92 + shaftH / 2;
+  parts.push(
+    // Slim tapered cylinder approximating the four-sided obelisk silhouette.
+    f.mesh("Obelisk Shaft", cylinder(shaftTop, shaftBase, shaftH, 4), copper, {
+      position: [0, shaftY, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim highlight ridge along the south-facing edge of the shaft.
+    f.mesh("Obelisk Edge Hi", box(0.02, shaftH * 0.92, 0.02), copperHi, {
+      position: [0, shaftY, shaftBase * 0.55],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: false }),
+    // Slim shaded undercut along the north-facing edge of the shaft.
+    f.mesh("Obelisk Edge Shade", box(0.018, shaftH * 0.9, 0.018), copperShade, {
+      position: [0, shaftY, -shaftBase * 0.55],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: false }),
+  );
+  // Slim raised emboss bands at three heights along the shaft — reading as
+  // decorative ornament bands.
+  for (let i = 0; i < 3; i++) {
+    const t = 0.18 + i * 0.28;
+    const by = 0.92 + t * shaftH;
+    const br = shaftBase * (1.0 - t * 0.7);
+    parts.push(
+      f.mesh(`Band ${i}`, cylinder(br + 0.012, br + 0.012, 0.02, 4), copperHi, {
+        position: [0, by, 0],
+        rotation: [0, Math.PI / 4, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Lantern crown at the obelisk tip — a small glass lantern emitting a
+  // warm glow at low light.
+  const lanternY = 0.92 + shaftH + 0.16;
+  parts.push(
+    // Slim copper-patina lantern base disc.
+    f.mesh("Lantern Base", cylinder(0.11, 0.13, 0.04, 12), copper, {
+      position: [0, lanternY - 0.06, 0],
+    }, { castShadow: true }),
+    // Glass body — a slim translucent box with warm emissive glow.
+    f.mesh("Lantern Glass", box(0.14, 0.14, 0.14), glow, {
+      position: [0, lanternY, 0],
+    }, { castShadow: false }),
+    // Copper-patina frame around the lantern glass — four slim posts.
+  );
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Lantern Post ${sx} ${sz}`, box(0.014, 0.16, 0.014), copperShade, {
+          position: [sx * 0.07, lanternY, sz * 0.07],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  parts.push(
+    // Slim copper top cap above the glass.
+    f.mesh("Lantern Top Cap", cylinder(0.11, 0.13, 0.04, 12), copper, {
+      position: [0, lanternY + 0.08, 0],
+    }, { castShadow: true }),
+    // Pyramidal finial cap above the lantern.
+    f.mesh("Lantern Finial Cone", cone(0.09, 0.18, 4), copper, {
+      position: [0, lanternY + 0.18, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true }),
+    // Slim finial tip bead at the very top.
+    f.mesh("Lantern Finial Tip", sphere(0.03, 10, 8), copperHi, {
+      position: [0, lanternY + 0.3, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Plaque Tablet", box(0.34, 0.12, 0.018), copper, {
+      position: [0, 0.5, 0.27],
+    }, { castShadow: false }),
+    f.mesh("Plaque Tablet Bead L", sphere(0.014, 8, 6), copperHi, {
+      position: [-0.13, 0.5, 0.286],
+    }, { castShadow: false }),
+    f.mesh("Plaque Tablet Bead R", sphere(0.014, 8, 6), copperHi, {
+      position: [0.13, 0.5, 0.286],
+    }, { castShadow: false }),
+    f.mesh("Plaque Tablet Bead C", sphere(0.014, 8, 6), copperHi, {
+      position: [0, 0.5, 0.286],
+    }, { castShadow: false }),
+  );
+  return f.group("Garden Obelisk", parts, { position: pos });
+}
+
+/* ─────────────── twenty-ninth-pass house detail ─────────────── */
+
+/**
+ * A Victorian copper-patina ornamental house-number address plaque mounted
+ * on the front wall directly above the porch door, between the door arch
+ * and the porch canopy. The plaque is a slim rectangular tablet with a
+ * raised border, a raised central numeral "1" in highlight tint and a
+ * flanking pair of slim petal sprigs reading as the welcoming front-door
+ * address marker. The plaque body, border, numeral and sprigs reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal.
+ */
+function buildAddressPlaque(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const copper: MaterialDef = {
+    color: C.plaqueCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [1, 1],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.plaqueCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.plaqueCopperShade, 0.95, { flatShading: true });
+  const numeralInset = std(C.plaqueNumeralInset, 0.5, { metalness: 0.6 });
+  const parts: SceneNode[] = [];
+  // ── Plaque body — a slim rectangular tablet on the wall.
+  parts.push(
+    f.mesh("Plaque Body", box(0.46, 0.22, 0.03), copper, {
+      position: [0, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim raised border ring — a flat trim band around the plaque face.
+    f.mesh("Plaque Border Top", box(0.46, 0.022, 0.04), copperHi, {
+      position: [0, 0.1, 0.005],
+    }, { castShadow: false }),
+    f.mesh("Plaque Border Bottom", box(0.46, 0.022, 0.04), copperHi, {
+      position: [0, -0.1, 0.005],
+    }, { castShadow: false }),
+    f.mesh("Plaque Border L", box(0.022, 0.22, 0.04), copperHi, {
+      position: [-0.22, 0, 0.005],
+    }, { castShadow: false }),
+    f.mesh("Plaque Border R", box(0.022, 0.22, 0.04), copperHi, {
+      position: [0.22, 0, 0.005],
+    }, { castShadow: false }),
+    // Slim shaded undercut beneath the plaque for relief.
+    f.mesh("Plaque Shade", box(0.42, 0.18, 0.012), copperShade, {
+      position: [0, -0.005, -0.014],
+    }, { castShadow: false }),
+  );
+  // ── Central numeral "1" — a slim raised vertical bar with a slim top
+  // serif and a slim base serif. Reads as the welcoming address numeral.
+  parts.push(
+    f.mesh("Numeral Bar", box(0.038, 0.13, 0.018), numeralInset, {
+      position: [0, 0, 0.02],
+    }, { castShadow: false }),
+    f.mesh("Numeral Top Serif", box(0.05, 0.018, 0.018), numeralInset, {
+      position: [0, 0.07, 0.02],
+    }, { castShadow: false }),
+    f.mesh("Numeral Base Serif", box(0.082, 0.022, 0.018), numeralInset, {
+      position: [0, -0.07, 0.02],
+    }, { castShadow: false }),
+    // Slim diagonal top flag — a small tilted accent at the top of the "1".
+    f.mesh("Numeral Top Flag", box(0.04, 0.022, 0.018), numeralInset, {
+      position: [-0.02, 0.062, 0.02],
+      rotation: [0, 0, -0.7],
+    }, { castShadow: false }),
+  );
+  // ── Flanking pair of slim petal sprigs reading as small ornament accents.
+  for (const dir of [-1, 1] as const) {
+    const sx = dir * 0.14;
+    parts.push(
+      f.mesh(`Petal Sprig ${dir}`, sphere(0.018, 8, 6), numeralInset, {
+        position: [sx, 0, 0.02],
+        scale: [0.6, 1.6, 0.5],
+        rotation: [0, 0, dir * 0.3],
+      }, { castShadow: false }),
+      // Slim leaf bead beneath each sprig.
+      f.mesh(`Petal Bead ${dir}`, sphere(0.012, 6, 5), numeralInset, {
+        position: [sx + dir * 0.018, -0.04, 0.02],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Address Plaque", parts, { position: pos });
+}
+
+/* ─────────────── twenty-ninth-pass scene extension ─────────────── */
+
+/**
+ * Far-south misty pine woodland plane south of the bamboo grove. The plane
+ * carries a deep-forest-floor ground surfaced with the new `pine-woodland`
+ * colour + depth map pair so fallen pine-needle mats and exposed earth tufts
+ * read as raised relief at glancing sun. Features eight tall pine trees
+ * with stacked-cone foliage canopies, a small log cabin at the southwest
+ * corner with a peaked shingle roof, a stone chimney, a glowing window and
+ * a smoke wisp, a slim east-west forest creek with a ripple highlight and
+ * four flat stepping stones crossing it, and a sparse scatter of fallen
+ * pinecones distributed beneath the canopies.
+ */
+function buildFarSouthPineWoodland(f: NodeFactory): SceneNode {
+  return f.group("Far South Pine Woodland", [
+    // Pine woodland ground plane — deep-forest-floor with the new colour +
+    // depth map pair so leaf piles and exposed earth tufts read as raised
+    // relief at glancing sun.
+    f.mesh(
+      "Pine Woodland Ground",
+      plane(PINE_WOODLAND_W, PINE_WOODLAND_D),
+      std(C.pwGround, 0.95, {
+        texture: "pine-woodland",
+        textureScale: [5, 4],
+        bumpMap: "pine-woodland-bump",
+        bumpScale: 0.05,
+      }),
+      { position: PINE_WOODLAND_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the bamboo grove's south edge with a
+    // bamboo-leaf-litter strip so the seam reads as a continuous
+    // bamboo-into-pine join with no holes at the ground layer.
+    f.mesh(
+      "Pine Woodland North Apron",
+      plane(PINE_WOODLAND_W, 3),
+      std(C.pwApronLeaf, 0.95, { texture: "grass", textureScale: [12, 1] }),
+      {
+        position: [
+          PINE_WOODLAND_POS[0],
+          -0.028,
+          PINE_WOODLAND_POS[2] - PINE_WOODLAND_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildPineTrees(f),
+    buildPineCabin(f, PINE_CABIN_POS),
+    buildPineCreek(f),
+    buildPineConeScatter(f),
+  ]);
+}
+
+/**
+ * Eight tall pine trees scattered across the woodland. Each tree is a slim
+ * straight trunk with a stacked-cone foliage canopy of three tapering tiers.
+ * Three tint palettes cycle through the grove (pale, mid, dark) so the grove
+ * reads with chromatic variation rather than identical stamps.
+ */
+function buildPineTrees(f: NodeFactory): SceneNode {
+  const tints: string[] = [C.pwFoliagePale, C.pwFoliageMid, C.pwFoliageDeep];
+  const trunkMat = std(C.pwTrunk, 0.95, { texture: "pine-bark", textureScale: [1, 4] });
+  const trunkShade = std(C.pwTrunkDark, 0.95, { flatShading: true });
+  const trees: SceneNode[] = [];
+  for (let i = 0; i < PINE_TREES.length; i++) {
+    const s = PINE_TREES[i]!;
+    const tint = tints[s.tint]!;
+    const foliage = std(tint, 0.85, { flatShading: true });
+    const foliageShade = std(C.pwFoliageDeep, 0.95, { flatShading: true });
+    const trunkH = 2.6 * s.scale;
+    const trunkR = 0.14 * s.scale;
+    const parts: SceneNode[] = [
+      // Main trunk — slim straight pole.
+      f.mesh("Trunk", cylinder(trunkR * 0.7, trunkR, trunkH, 8), trunkMat, {
+        position: [0, trunkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded ridge along the trunk's north side for relief.
+      f.mesh("Trunk Shade", cylinder(trunkR * 0.6, trunkR * 0.8, trunkH * 0.9, 6), trunkShade, {
+        position: [0.03 * s.scale, trunkH / 2, -0.03 * s.scale],
+      }, { castShadow: false }),
+    ];
+    // Three tapering canopy tiers stacked atop the trunk.
+    const tierBaseY = trunkH * 0.4;
+    const tierH = trunkH * 0.55;
+    for (let t = 0; t < 3; t++) {
+      const tt = t / 2;
+      const tierR = (0.95 - tt * 0.3) * s.scale;
+      const tierTH = (0.85 + (1 - tt) * 0.4) * s.scale;
+      const tierY = tierBaseY + t * tierH * 0.42;
+      parts.push(
+        f.mesh(`Canopy Tier ${t}`, cone(tierR, tierTH, 10), foliage, {
+          position: [0, tierY, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim shaded undercut beneath each tier for relief.
+        f.mesh(`Canopy Tier Shade ${t}`, cone(tierR * 0.92, tierTH * 0.18, 8), foliageShade, {
+          position: [0, tierY - tierTH * 0.4, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // Slim crown tuft at the very top of the canopy.
+    parts.push(
+      f.mesh("Crown Tuft", cone(0.18 * s.scale, 0.34 * s.scale, 8), foliage, {
+        position: [0, tierBaseY + 2 * tierH * 0.42 + 0.5 * s.scale, 0],
+      }, { castShadow: true }),
+    );
+    trees.push(
+      f.group(`Pine Tree ${i + 1}`, parts, {
+        position: [s.x, 0, s.z],
+        rotation: [0, (i * 0.6) % (Math.PI * 2), 0],
+      }),
+    );
+  }
+  return f.group("Pine Trees", trees);
+}
+
+/**
+ * Small board-and-batten log cabin at the southwest corner of the woodland.
+ * Reads as a hunter's retreat with a peaked shingle roof, a stone chimney
+ * trailing a translucent smoke wisp and a warm-glowing front window catching
+ * the dusk.
+ */
+function buildPineCabin(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.pwCabinWall, 0.85, { texture: "wood", textureScale: [2, 1] });
+  const wallShade = std(C.pwCabinWallShade, 0.95, { flatShading: true });
+  const roof = std(C.pwCabinRoof, 0.7, { texture: "shingle", textureScale: [2, 1.5] });
+  const chimney = std(C.pwCabinChimney, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.2, 1.2],
+    flatShading: true,
+  });
+  const door = std(C.pwCabinWallShade, 0.7, { texture: "wood", textureScale: [1, 2] });
+  const window: MaterialDef = {
+    color: C.pwCabinWindowGlow,
+    roughness: 0.3,
+    emissive: C.pwCabinWindowGlow,
+    transparent: true,
+    opacity: 0.9,
+  };
+  const smoke: MaterialDef = {
+    color: C.pwCabinSmoke,
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.45,
+  };
+  const parts: SceneNode[] = [];
+  // ── Cabin body — a small square hut.
+  const cabinW = 2.2;
+  const cabinD = 1.8;
+  const cabinH = 1.4;
+  parts.push(
+    f.mesh("Cabin Walls", box(cabinW, cabinH, cabinD), wall, {
+      position: [0, cabinH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded plinth beneath the cabin for relief.
+    f.mesh("Cabin Plinth", box(cabinW + 0.08, 0.08, cabinD + 0.08), wallShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Roof — a pitched gable above the cabin body.
+  const roofH = 0.75;
+  parts.push(
+    f.mesh("Roof Slab Front", box(cabinW + 0.14, 0.08, 1.05), roof, {
+      position: [0, cabinH + roofH * 0.45, cabinD / 2 - 0.05],
+      rotation: [Math.atan2(roofH, cabinD / 2 + 0.1), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Slab Back", box(cabinW + 0.14, 0.08, 1.05), roof, {
+      position: [0, cabinH + roofH * 0.45, -cabinD / 2 + 0.05],
+      rotation: [-Math.atan2(roofH, cabinD / 2 + 0.1), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim gable end faces — small triangular caps on each gable end.
+    f.mesh("Gable End L", box(0.06, roofH, cabinD), wallShade, {
+      position: [-cabinW / 2 - 0.02, cabinH + roofH / 2, 0],
+      scale: [1, 1, 0.65],
+    }, { castShadow: true }),
+    f.mesh("Gable End R", box(0.06, roofH, cabinD), wallShade, {
+      position: [cabinW / 2 + 0.02, cabinH + roofH / 2, 0],
+      scale: [1, 1, 0.65],
+    }, { castShadow: true }),
+    // Slim ridge cap along the roof crest.
+    f.mesh("Roof Ridge", box(cabinW + 0.18, 0.06, 0.1), roof, {
+      position: [0, cabinH + roofH, 0],
+    }, { castShadow: true }),
+  );
+  // ── Front door on the south face.
+  parts.push(
+    f.mesh("Front Door", box(0.42, 0.85, 0.05), door, {
+      position: [-0.4, 0.425, cabinD / 2 + 0.005],
+    }, { castShadow: false }),
+    // Slim door frame trim.
+    f.mesh("Door Frame Top", box(0.48, 0.05, 0.06), wallShade, {
+      position: [-0.4, 0.875, cabinD / 2 + 0.012],
+    }, { castShadow: false }),
+    // Slim door knob bead.
+    f.mesh("Door Knob", sphere(0.022, 8, 6), std("#b48a4a", 0.5, { metalness: 0.6 }), {
+      position: [-0.22, 0.45, cabinD / 2 + 0.04],
+    }, { castShadow: false }),
+  );
+  // ── Lit warm-glow front window on the south face — catches the dusk.
+  parts.push(
+    f.mesh("Window Glass", box(0.5, 0.4, 0.03), window, {
+      position: [0.45, 0.85, cabinD / 2 + 0.012],
+    }, { castShadow: false }),
+    // Slim window frame.
+    f.mesh("Window Frame Top", box(0.56, 0.04, 0.05), wallShade, {
+      position: [0.45, 1.07, cabinD / 2 + 0.018],
+    }, { castShadow: false }),
+    f.mesh("Window Frame Bottom", box(0.56, 0.04, 0.05), wallShade, {
+      position: [0.45, 0.63, cabinD / 2 + 0.018],
+    }, { castShadow: false }),
+    // Slim window muntin cross — divides the pane into four sections.
+    f.mesh("Window Muntin H", box(0.5, 0.022, 0.04), wallShade, {
+      position: [0.45, 0.85, cabinD / 2 + 0.026],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin V", box(0.022, 0.4, 0.04), wallShade, {
+      position: [0.45, 0.85, cabinD / 2 + 0.026],
+    }, { castShadow: false }),
+  );
+  // ── Stone chimney on the east side of the cabin trailing a smoke wisp.
+  parts.push(
+    f.mesh("Chimney Stack", box(0.24, 1.4, 0.24), chimney, {
+      position: [cabinW / 2 - 0.18, 1.1, -0.4],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Cap", box(0.3, 0.06, 0.3), chimney, {
+      position: [cabinW / 2 - 0.18, 1.83, -0.4],
+    }, { castShadow: true }),
+    // Slim translucent smoke wisp above the chimney.
+    f.mesh("Smoke Wisp A", sphere(0.16, 12, 10), smoke, {
+      position: [cabinW / 2 - 0.18, 2.05, -0.4],
+      scale: [1, 0.7, 1],
+    }, { castShadow: false }),
+    f.mesh("Smoke Wisp B", sphere(0.18, 12, 10), smoke, {
+      position: [cabinW / 2 - 0.1, 2.35, -0.46],
+      scale: [1.1, 0.6, 1.1],
+    }, { castShadow: false }),
+    f.mesh("Smoke Wisp C", sphere(0.22, 12, 10), smoke, {
+      position: [cabinW / 2, 2.7, -0.55],
+      scale: [1.2, 0.6, 1.2],
+    }, { castShadow: false }),
+  );
+  return f.group("Pine Cabin", parts, { position: pos });
+}
+
+/**
+ * A slim east-west forest creek strip running across the woodland with a
+ * slim ripple highlight and four flat stepping stones crossing it at the
+ * path line. The slab sizes alternate slightly so the path reads as
+ * hand-laid rather than uniformly stamped.
+ */
+function buildPineCreek(f: NodeFactory): SceneNode {
+  const water: MaterialDef = {
+    color: C.pwCreekWater,
+    roughness: 0.2,
+    metalness: 0.05,
+    transparent: true,
+    opacity: 0.85,
+    emissive: "#1f4858",
+  };
+  const waterHi: MaterialDef = {
+    color: C.pwCreekWaterHi,
+    roughness: 0.15,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const bank = std(C.pwCreekBank, 0.95, { flatShading: true });
+  const stone = std(C.pwSteppingStone, 0.92, {
+    texture: "cobblestone",
+    textureScale: [1.5, 1.5],
+    flatShading: true,
+  });
+  const stoneHi = std(C.pwSteppingStoneHi, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Creek water strip — a slim translucent band running east-west across
+    // the woodland.
+    f.mesh("Creek Water", plane(PINE_WOODLAND_W - 4, 1.4), water, {
+      position: [0, -0.014, PINE_CREEK_Z],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { receiveShadow: true }),
+    // Slim bright ripple highlight strip running along the creek's south
+    // bank for sun-catch.
+    f.mesh("Creek Ripple", plane(PINE_WOODLAND_W - 6, 0.4), waterHi, {
+      position: [0, -0.008, PINE_CREEK_Z + 0.3],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // North bank trim — a slim darker strip along the creek's north edge.
+    f.mesh("Creek Bank N", plane(PINE_WOODLAND_W - 4, 0.18), bank, {
+      position: [0, -0.012, PINE_CREEK_Z - 0.7],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { receiveShadow: true }),
+    // South bank trim — a slim darker strip along the creek's south edge.
+    f.mesh("Creek Bank S", plane(PINE_WOODLAND_W - 4, 0.18), bank, {
+      position: [0, -0.012, PINE_CREEK_Z + 0.7],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { receiveShadow: true }),
+  ];
+  // Four flat stepping stones crossing the creek at the path line.
+  for (let i = 0; i < PINE_CREEK_STEPS.length; i++) {
+    const s = PINE_CREEK_STEPS[i]!;
+    const r = 0.32 + (i % 2) * 0.06;
+    parts.push(
+      f.mesh(`Creek Step ${i}`, cylinder(r, r, 0.06, 12), stone, {
+        position: [s.x, 0.03, s.z],
+        rotation: [0, (i * 0.7) % Math.PI, 0],
+        scale: [1.1, 1.0, 0.85],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim highlight cap on the slab's south edge for sun-catch.
+      f.mesh(`Creek Step Hi ${i}`, cylinder(r - 0.05, r - 0.05, 0.014, 10), stoneHi, {
+        position: [s.x, 0.062, s.z],
+        rotation: [0, (i * 0.7) % Math.PI, 0],
+        scale: [1.0, 1.0, 0.75],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Pine Creek", parts);
+}
+
+/**
+ * Sparse scatter of fallen pinecones distributed beneath the canopies.
+ * Each cone is a slim layered cone of two tints reading as a fallen
+ * scale-textured pinecone catching the dappled forest sun.
+ */
+function buildPineConeScatter(f: NodeFactory): SceneNode {
+  const tints: [string, string][] = [
+    [C.pwConeBrown, C.pwConeBrownDark],
+    [C.pwConeBrownDark, C.pwConeBrown],
+  ];
+  const cones: SceneNode[] = [];
+  for (let i = 0; i < PINE_CONES.length; i++) {
+    const c = PINE_CONES[i]!;
+    const tint = tints[c.tint]!;
+    const body = std(tint[0], 0.85, { flatShading: true });
+    const scale = std(tint[1], 0.95, { flatShading: true });
+    const parts: SceneNode[] = [
+      // Main cone body — a slim tapered cone reading as a closed pinecone.
+      f.mesh("Cone Body", cone(0.07, 0.18, 10), body, {
+        position: [0, 0.09, 0],
+        rotation: [Math.PI / 2 + 0.2, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim darker scale ridges along the cone body for relief.
+      f.mesh("Cone Scale A", sphere(0.025, 8, 6), scale, {
+        position: [0, 0.05, 0.05],
+        scale: [1.2, 0.5, 1.2],
+      }, { castShadow: false }),
+      f.mesh("Cone Scale B", sphere(0.025, 8, 6), scale, {
+        position: [0, 0.05, -0.05],
+        scale: [1.2, 0.5, 1.2],
+      }, { castShadow: false }),
+      f.mesh("Cone Scale C", sphere(0.022, 8, 6), scale, {
+        position: [0.03, 0.1, 0],
+        scale: [1.2, 0.5, 1.2],
+      }, { castShadow: false }),
+      // Slim stem tuft at the base of the cone.
+      f.mesh("Cone Stem", cylinder(0.012, 0.012, 0.04, 6), scale, {
+        position: [0, 0.02, -0.06],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    ];
+    cones.push(
+      f.group(`Pinecone ${i + 1}`, parts, {
+        position: [c.x, 0, c.z],
+        rotation: [0, c.rot, 0],
+      }),
+    );
+  }
+  return f.group("Pinecone Scatter", cones);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -23638,6 +24385,49 @@ function buildBambooSteppingPath(f: NodeFactory): SceneNode {
  *    carved-stone moon-gate disc at the west edge with a slim stone
  *    ring frame on a low slate platform reading as a contemplative
  *    threshold.
+ *  - Twenty-eighth pass — courtyard: a Victorian bronze heraldic lion
+ *    statue on a fluted marble pedestal centred on the front-gate apron.
+ *    House: a triplet of copper-patina ornamental window pediment hood
+ *    caps with central keystone medallions crowning the three back-wall
+ *    window dressings. Scene: a far-south bamboo grove plane south of
+ *    the sakura grove with bamboo stalks, a wooden zen meditation deck,
+ *    a stacked-stone pagoda mini-tower and a bamboo shishi-odoshi
+ *    fountain.
+ *  - Twenty-ninth pass — courtyard: a Victorian copper-patina ornamental
+ *    garden obelisk with a lit lantern crown, parked on the back outside-
+ *    fence lawn between the back archway (at x=0) and the weather station
+ *    (back-east), reading as a memorial sentinel marking the back-yard
+ *    threshold — a tapered four-sided copper-patina shaft on a fluted
+ *    marble plinth with a small glass lantern crown that emits a warm
+ *    glow at low light (the shaft, plinth cap and lantern frame reuse
+ *    the existing `copper-patina` colour + bump pair so the verdigris
+ *    reads as crusted relief on the cast metal, and the plinth reuses
+ *    the existing `marble` colour + bump pair so the stone reads with
+ *    veined relief). House: a Victorian copper-patina ornamental
+ *    house-number address plaque mounted on the front wall above the
+ *    porch door, between the door arch and the porch canopy — a slim
+ *    rectangular tablet with a raised border, a raised central numeral
+ *    "1" in highlight tint and a flanking pair of slim petal sprigs
+ *    reading as the welcoming front-door address marker (the plaque
+ *    body, border, numeral and sprigs reuse the existing `copper-patina`
+ *    pair). Scene: a far-south misty pine woodland plane south of the
+ *    bamboo grove, bridging the gap south of it — a deep-forest-floor
+ *    ground surfaced with the new `pine-woodland` colour map paired with
+ *    a needle-litter depth map (registered alongside the other procedural
+ *    textures) so the fallen pine-needle mats and exposed earth tufts
+ *    read as raised relief at glancing sun, a bamboo-leaf apron along
+ *    the north join so the ground layer has no holes at the seam, a
+ *    grove of eight tall pine trees scattered across the plane (each a
+ *    slim straight trunk with a stacked-cone foliage canopy of three
+ *    tapering tiers in pale, mid and dark green tints for chromatic
+ *    variation), a small board-and-batten log cabin at the southwest
+ *    corner with a peaked shingle roof, a small stone chimney trailing
+ *    a translucent smoke wisp and a lit warm-glow front window catching
+ *    the dusk, a slim east-west forest creek strip running across the
+ *    plane with a slim ripple highlight, four flat stepping stones
+ *    crossing the creek (the slab sizes alternate slightly so the path
+ *    reads as hand-laid rather than uniformly stamped) and a sparse
+ *    scatter of nine fallen pinecones distributed beneath the canopies.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -23730,6 +24520,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: BACK_ARCHWAY_POS[0], z: BACK_ARCHWAY_POS[2], r: 1.4 },
     // Twenty-eighth-pass keep-out — heraldic lion statue on the front outside-gate apron.
     { x: LION_STATUE_POS[0], z: LION_STATUE_POS[2], r: 1.0 },
+    // Twenty-ninth-pass keep-out — garden obelisk on the back outside-fence lawn.
+    { x: OBELISK_POS[0], z: OBELISK_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -23799,6 +24591,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildElephantStatue(f, ELEPHANT_STATUE_POS),
     buildBackArchway(f, BACK_ARCHWAY_POS),
     buildLionStatue(f, LION_STATUE_POS),
+    buildGardenObelisk(f, OBELISK_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -23824,6 +24617,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const feSaltFlats = buildFarEastSaltFlats(f);
   const fsSakuraGrove = buildFarSouthSakuraGrove(f);
   const fsBambooGrove = buildFarSouthBambooGrove(f);
+  const fsPineWoodland = buildFarSouthPineWoodland(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -23872,6 +24666,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildBackGargoyleSpouts(f),
     buildPorchCeilingRosette(f, PORCH_ROSETTE_POS),
     buildWindowPediments(f),
+    buildAddressPlaque(f, ADDRESS_PLAQUE_POS),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -23904,6 +24699,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       feSaltFlats,
       fsSakuraGrove,
       fsBambooGrove,
+      fsPineWoodland,
       house,
     ],
   };

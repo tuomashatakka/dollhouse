@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twenty-eight enhancement passes.
+// house and its courtyard, layered over twenty-nine enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -700,6 +700,57 @@
 //   four flat slabs leading from the sakura apron south to the
 //   meditation deck (the slab sizes alternate slightly so the
 //   path reads as hand-laid rather than uniformly stamped).
+//   Pass 29 — courtyard: a Victorian copper-patina ornamental
+//   garden obelisk with a lit lantern crown, parked on the back
+//   outside-fence lawn between the back archway (at x=0) and the
+//   weather station (back-east) so it reads as a memorial sentinel
+//   marking the back-yard threshold — a tapered four-sided
+//   copper-patina shaft on a fluted marble plinth (the shaft body
+//   carries three slim raised emboss bands at three heights for
+//   ornament), capped with a small glass lantern crown framed by
+//   four slim copper-patina posts that emits a warm glow at low
+//   light, with a slim copper-patina pyramidal finial cone and a
+//   tip bead above the lantern and a slim engraved plaque tablet
+//   on the plinth's south face (the shaft, plinth cap and lantern
+//   frame reuse the existing `copper-patina` colour + bump pair so
+//   the verdigris reads as crusted relief on the cast metal, and
+//   the plinth reuses the existing `marble` colour + bump pair so
+//   the stone reads with veined relief). House: a Victorian
+//   copper-patina ornamental house-number address plaque mounted
+//   on the front wall directly above the porch door, between the
+//   door arch and the porch canopy — a slim rectangular tablet
+//   with a raised border ring, a raised central numeral "1" in
+//   highlight tint (a slim raised vertical bar with a top serif,
+//   a base serif and a slim diagonal top-flag accent) and a
+//   flanking pair of slim petal sprigs reading as the welcoming
+//   front-door address marker (the plaque body, border, numeral
+//   and sprigs reuse the existing `copper-patina` colour + bump
+//   pair so the verdigris reads as crusted relief on the cast
+//   metal). Scene: a far-south misty pine woodland plane south of
+//   the bamboo grove, bridging the gap south of it — a deep-
+//   forest-floor ground surfaced with the new `pine-woodland`
+//   colour map paired with a needle-litter depth map (registered
+//   alongside the other procedural textures) so the fallen
+//   pine-needle mats and exposed earth tufts read as raised
+//   relief at glancing sun, a bamboo-leaf apron along the north
+//   join so the ground layer has no holes at the seam, a grove
+//   of eight tall pine trees scattered across the plane (each a
+//   slim straight trunk with a stacked-cone foliage canopy of
+//   three tapering tiers in pale, mid and dark green tints for
+//   chromatic variation, crowned by a slim crown tuft), a small
+//   board-and-batten log cabin at the southwest corner with a
+//   peaked shingle roof, a stone chimney trailing three
+//   translucent smoke wisps, a warm-glowing front window with a
+//   muntin cross catching the dusk and a slim front door with a
+//   brass knob, a slim east-west forest creek strip running
+//   across the plane with a slim ripple highlight, a slim north
+//   and south bank trim along its edges and four flat stepping
+//   stones crossing the creek (the slab sizes alternate slightly
+//   so the path reads as hand-laid rather than uniformly stamped),
+//   and a sparse scatter of nine fallen pinecones distributed
+//   beneath the canopies (each a slim tapered cone with three
+//   darker scale beads for relief and a slim stem tuft at the
+//   base).
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

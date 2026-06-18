@@ -4533,4 +4533,233 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // ── Twenty-ninth-pass additions ──────────────────────────────────
+  // The twenty-ninth enhancement pass introduces a deep-forest-floor
+  // ground surface for the far-south pine woodland scene-extension plane
+  // south of the bamboo grove — a mossy mid-green grass canopy strewn
+  // with slim pine-needle strokes and exposed earth tufts, paired with a
+  // needle-litter depth map so the fallen needle mats and exposed soil
+  // patches read as raised relief at glancing sun.
+
+  // Pine-woodland colour — a deep-green mossy grass base with scattered
+  // slim pine-needle strokes in pale, mid and dark greens, occasional
+  // exposed earth tuft dots and dark moss pebble dabs. Drawn on a
+  // power-of-two canvas so the mipmap chain stays clean.
+  registry["pine-woodland"] = makeCanvasTexture({
+    seed: 0xb14e500,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly darker toward the south edge so the
+      // forest floor reads with a hint of deep-shade needle litter.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#4d6a3c");
+      bg.addColorStop(0.5, "#3f5b32");
+      bg.addColorStop(1, "#2e4624");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide pale grass lobes — soft radial highlights suggesting low
+      // grass swells underneath the needle-litter surface mottle.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${94 + rng() * 18}, 30%, ${42 + rng() * 12}%, 0.36)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Long slim pine-needle strokes — many narrow slats reading as
+      // fallen pine needles scattered across the woodland floor in three
+      // tints (pale, mid, dark).
+      ctx.lineCap = "round";
+      for (let i = 0; i < 1700; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 6 + rng() * 12;
+        const angle = rng() * Math.PI * 2;
+        const tint = rng();
+        let h: number;
+        let l: number;
+        if (tint < 0.35) {
+          h = 92 + rng() * 14;
+          l = 48 + rng() * 8;
+        } else if (tint < 0.75) {
+          h = 100 + rng() * 14;
+          l = 32 + rng() * 8;
+        } else {
+          h = 88 + rng() * 14;
+          l = 22 + rng() * 8;
+        }
+        ctx.strokeStyle = `hsla(${h}, 32%, ${l}%, 0.7)`;
+        ctx.lineWidth = 0.5 + rng() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Slim upright grass-tuft highlights — short bright slats reading as
+      // upright grass blades catching the dappled forest sun.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 3 + rng() * 5;
+        const angle = (rng() - 0.5) * 0.4 + Math.PI / 2;
+        ctx.strokeStyle = `hsla(${94 + rng() * 18}, 36%, ${56 + rng() * 12}%, 0.65)`;
+        ctx.lineWidth = 0.7 + rng() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y - Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Mossy pebble dots — a sparse scatter of slim dark dots reading
+      // as small mossy stones partly hidden in the needle carpet.
+      for (let i = 0; i < 130; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2 + rng() * 3;
+        ctx.fillStyle = `hsla(${82 + rng() * 22}, 16%, ${24 + rng() * 12}%, 0.7)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Exposed earth tufts — a sparse scatter of warm-brown dots
+      // suggesting bare soil patches between needle mats.
+      for (let i = 0; i < 80; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.5 + rng() * 4;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${22 + rng() * 16}, 38%, ${28 + rng() * 10}%, 0.65)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Tiny needle-shadow flecks — many slim darker dots suggesting the
+      // shaded undercut between needle layers, keeping tonal life at
+      // deep mip levels.
+      for (let i = 0; i < 1900; i++) {
+        ctx.fillStyle = `hsla(${96 + rng() * 20}, 26%, ${18 + rng() * 14}%, 0.45)`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1 + rng() * 1.2);
+      }
+      // Faint cool sun cast across the upper-left — a wide pale wash so
+      // glancing afternoon sun catches the rim of the forest canopy.
+      const sun = ctx.createRadialGradient(size * 0.28, size * 0.22, 0, size * 0.28, size * 0.22, size * 0.85);
+      sun.addColorStop(0, "rgba(220,232,196,0.18)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 32, 0.0024);
+    },
+  });
+
+  // Pine-woodland depth map — the needle mats sit slightly above the
+  // grass base (light = high) and the exposed earth tufts read with a
+  // subtle depression so the woodland floor shows raised relief on
+  // glancing sun. Pine-needle strokes are slim bright slats so they
+  // catch the sun edge.
+  registry["pine-woodland-bump"] = makeCanvasTexture({
+    seed: 0xb14e500 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average needle-litter height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling grass mounds — pale radial highlights suggesting
+      // low grass swells underneath the needle litter.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 80 + rng() * 70;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(212,212,212,0.22)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Long slim pine-needle bumps — bright slim slats reading as
+      // raised needles sitting on top of the grass.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 1700; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 6 + rng() * 12;
+        const angle = rng() * Math.PI * 2;
+        ctx.strokeStyle = `rgba(216,216,216,${0.55 + rng() * 0.25})`;
+        ctx.lineWidth = 0.6 + rng() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Slim upright grass-tuft bumps — bright slats reading as raised
+      // grass blades pushing up through the needle carpet.
+      for (let i = 0; i < 320; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 3 + rng() * 5;
+        const angle = (rng() - 0.5) * 0.4 + Math.PI / 2;
+        ctx.strokeStyle = `rgba(232,232,232,0.7)`;
+        ctx.lineWidth = 0.7 + rng() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y - Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Mossy pebble bumps — slim bright dots reading as raised pebbles
+      // partly hidden in the needle litter.
+      for (let i = 0; i < 130; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2 + rng() * 3;
+        ctx.fillStyle = `rgba(204,204,204,0.65)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Exposed earth tuft dimples — slim dark depressions reading as
+      // sunken bare soil patches between needle mats. Light = high so
+      // the dark dimples sit below the grass.
+      for (let i = 0; i < 80; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 2.5 + rng() * 4;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(48,48,48,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim shaded undercut around each needle — a sparse scatter of
+      // darker dots between needle strokes so the relief reads at
+      // glancing sun.
+      for (let i = 0; i < 240; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 1.4 + rng() * 2.5;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(40,40,40,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1600; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
