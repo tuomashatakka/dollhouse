@@ -22,13 +22,13 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 29) adds a Victorian copper-patina ornamental
- * garden obelisk with a lit lantern crown to the back outside-fence lawn,
- * a copper-patina house-number address plaque mounted on the front wall
- * above the porch door, and a far-south misty pine woodland plane south
- * of the bamboo grove with tall pine trees, a small log cabin with a
- * lit window, a forest creek strip with stepping stones and a scatter
- * of fallen pinecones.
+ * latest enhancement (pass 30) adds a Victorian bronze fox statue on a
+ * fluted marble pedestal to the back outside-fence lawn, a row of four
+ * copper-patina ornamental porch corner finial drops at the porch canopy
+ * corners, and a far-west prairie plane reaching beyond the lavender
+ * field's west edge with a frontier homestead cabin, a Western multi-blade
+ * wind pump, a covered Conestoga wagon, a hitching post, a focal trail
+ * cairn and a scatter of tumbleweeds.
  */
 const W = 7;
 const D = 5;
@@ -1169,6 +1169,69 @@ const PINE_CREEK_STEPS: { x: number; z: number }[] = [
   { x: 3.6, z: PINE_CREEK_Z + 0.4 },
 ];
 
+/**
+ * Thirtieth-pass courtyard prop — a Victorian bronze fox statue on a fluted
+ * marble pedestal, parked on the back outside-fence lawn between the
+ * carousel horse (back-west at x=-12.5) and the back archway (x=0) so it
+ * reads as another marble-pedestal sentinel along the back perimeter. The
+ * fox stands four-square on the plinth cap in a slim alert pose with a
+ * tapered snout, two pointed ears and a long bushy tail swept forward
+ * across its haunches. The bronze body, ears, snout and tail reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal, and the plinth reuses the existing
+ * `marble` colour + bump pair so the stone reads with veined relief.
+ */
+const FOX_STATUE_POS: [number, number, number] = [-6, 0, -5.5];
+
+/**
+ * Thirtieth-pass house detail — a row of four small Victorian copper-patina
+ * ornamental porch corner finial drops mounted at the four corners of the
+ * porch canopy where the canopy meets each porch post. Each drop is a slim
+ * stepped pendant with a lobed medallion cap and a slim tip bead, hanging
+ * just below the porch canopy edge. The cap, drop pendant and tip bead
+ * reuse the existing `copper-patina` colour + bump pair so the verdigris
+ * reads as crusted relief on the cast metal.
+ */
+const PORCH_FINIAL_POSITIONS: [number, number, number][] = [
+  [-1.05, 1.95, FRONT_Z + 0.86],
+  [1.05, 1.95, FRONT_Z + 0.86],
+  [-1.05, 1.95, FRONT_Z + 0.06],
+  [1.05, 1.95, FRONT_Z + 0.06],
+];
+
+/**
+ * Thirtieth-pass scene extension — a far-west prairie plane reaching beyond
+ * the lavender field's west edge. The plane overlaps the lavender field by
+ * ~2 units along its east join with a sun-bleached grass apron so the
+ * ground layer has no holes at the seam. It carries a golden wild-grass
+ * ground surfaced with the new `prairie-grass` colour map paired with a
+ * grass-tuft depth map (registered alongside the other procedural textures)
+ * so the upright grass blades and scattered seed clumps read as raised
+ * relief at glancing sun. Features a small frontier homestead cabin at
+ * the southwest corner with a peaked shingle roof, a stone chimney trailing
+ * translucent smoke wisps and a warm-glowing front window catching the
+ * dusk, a Western-style multi-blade wind pump at the north end (a tall
+ * lattice tower crowned by a circle of fan blades and a tail vane), a
+ * weathered wooden Conestoga wagon with two large spoked wheels and a
+ * canvas canopy parked at the centre of the prairie, a slim three-rail
+ * wooden hitching post, a focal dry-stone trail cairn marking the prairie
+ * crossroads, and a scatter of three rolling tumbleweeds across the
+ * grass.
+ */
+const PRAIRIE_POS: [number, number, number] = [-68, -0.034, 5];
+const PRAIRIE_W = 18;
+const PRAIRIE_D = 28;
+const PRAIRIE_CABIN_POS: [number, number, number] = [-72, 0, 16];
+const PRAIRIE_WINDPUMP_POS: [number, number, number] = [-66, 0, -6];
+const PRAIRIE_WAGON_POS: [number, number, number] = [-70, 0, 5];
+const PRAIRIE_HITCH_POS: [number, number, number] = [-64, 0, 10];
+const PRAIRIE_CAIRN_POS: [number, number, number] = [-66, 0, 0];
+const PRAIRIE_TUMBLEWEEDS: { x: number; z: number; rot: number; scale: number }[] = [
+  { x: -73, z: -2, rot: 0.5, scale: 1.0 },
+  { x: -65, z: 3, rot: 1.3, scale: 0.9 },
+  { x: -69, z: 13, rot: 2.0, scale: 1.1 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -2220,6 +2283,52 @@ const C = {
   pwCreekBank: "#5e4a36",
   pwSteppingStone: "#7e7468",
   pwSteppingStoneHi: "#b8b0a0",
+  // Thirtieth enhancement pass — a Victorian bronze fox statue on a fluted
+  // marble pedestal on the back outside-fence lawn, a row of copper-patina
+  // porch corner finial drops at the porch canopy corners, and a far-west
+  // prairie plane reaching beyond the lavender field's west edge. The new
+  // `prairie-grass` colour map is paired with a grass-tuft depth map
+  // registered alongside it so the upright grass blades and scattered
+  // seed clumps read as raised relief at glancing sun.
+  foxBronze: "#5d8a6a",
+  foxBronzeHi: "#9bc4a8",
+  foxBronzeShade: "#2f5840",
+  foxPlinth: "#ede2d0",
+  foxPlinthShade: "#a89776",
+  porchFinialCopper: "#5d8a6a",
+  porchFinialCopperHi: "#9bc4a8",
+  porchFinialCopperShade: "#2f5840",
+  // Far-west prairie — sun-bleached golden grass ground with a frontier
+  // homestead cabin, a Western multi-blade wind pump, a covered wagon, a
+  // hitching post, a scatter of tumbleweeds and a focal trail cairn.
+  prairieGround: "#c8a958",
+  prairieGroundShade: "#806930",
+  prairieGroundHi: "#e8d49a",
+  prairieApronGrass: "#a8a058",
+  prairieCabinWall: "#7c5a3a",
+  prairieCabinWallShade: "#3e2818",
+  prairieCabinRoof: "#3a2a1c",
+  prairieCabinChimney: "#7e7468",
+  prairieCabinWindow: "#ffd07a",
+  prairieCabinSmoke: "#dcd6cc",
+  prairiePumpWood: "#7c5a3a",
+  prairiePumpWoodShade: "#3e2818",
+  prairiePumpBlade: "#d8cba8",
+  prairiePumpBladeShade: "#7c6a3e",
+  prairiePumpHub: "#5d8a6a",
+  prairiePumpVane: "#a8543a",
+  prairieWagonWood: "#7c5536",
+  prairieWagonWoodShade: "#3e2818",
+  prairieWagonCanvas: "#e6d6b2",
+  prairieWagonCanvasShade: "#a89570",
+  prairieWagonWheel: "#5e3c1f",
+  prairieWagonIron: "#3a3636",
+  prairieRopeJute: "#cbb487",
+  prairieTumbleweed: "#a89058",
+  prairieTumbleweedDark: "#6a583a",
+  prairieCairnStone: "#9d9286",
+  prairieCairnStoneHi: "#cdc4b8",
+  prairieCairnStoneShade: "#5a5048",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -23764,6 +23873,801 @@ function buildPineConeScatter(f: NodeFactory): SceneNode {
   return f.group("Pinecone Scatter", cones);
 }
 
+/* ─────────────── thirtieth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze fox statue on a fluted marble pedestal, parked on the
+ * back outside-fence lawn between the carousel horse (back-west) and the
+ * back archway (centre). The fox stands four-square on the plinth cap in a
+ * slim alert pose with a tapered snout, two pointed ears and a long bushy
+ * tail swept forward across its haunches. The bronze body, ears, snout and
+ * tail reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal, and the plinth
+ * reuses the existing `marble` colour + bump pair so the stone reads with
+ * veined relief.
+ */
+function buildFoxStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.foxBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.foxBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.foxBronzeShade, 0.95, { flatShading: true });
+  const marble: MaterialDef = {
+    color: C.foxPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.foxPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base — a broad square marble base with a shaded undercut.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft — a slim fluted marble column above the base.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Fox body — a slim tapered torso on four legs.
+  const bodyY = 0.86 + 0.12;
+  parts.push(
+    f.mesh("Fox Body", box(0.42, 0.16, 0.22), bronze, {
+      position: [0, bodyY, 0],
+      rotation: [0, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded undercut along the body's underside for relief.
+    f.mesh("Fox Body Shade", box(0.38, 0.04, 0.18), bronzeShade, {
+      position: [0, bodyY - 0.08, 0],
+    }, { castShadow: false }),
+  );
+  // ── Four slim legs.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(
+          `Fox Leg ${sx} ${sz}`,
+          cylinder(0.03, 0.035, 0.24, 6),
+          bronze,
+          { position: [sx * 0.15, bodyY - 0.2, sz * 0.08] },
+          { castShadow: true, receiveShadow: true },
+        ),
+        // Slim paw cap at the bottom of each leg.
+        f.mesh(
+          `Fox Paw ${sx} ${sz}`,
+          sphere(0.04, 8, 6),
+          bronzeShade,
+          {
+            position: [sx * 0.15, bodyY - 0.32, sz * 0.08],
+            scale: [1, 0.6, 1.1],
+          },
+          { castShadow: false },
+        ),
+      );
+    }
+  }
+  // ── Fox head — a slim alert head with a tapered snout and pointed ears.
+  const headX = 0.22;
+  const headY = bodyY + 0.12;
+  parts.push(
+    f.mesh("Fox Head", box(0.18, 0.16, 0.18), bronze, {
+      position: [headX, headY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim tapered snout extending forward from the head.
+    f.mesh("Fox Snout", cylinder(0.035, 0.06, 0.14, 8), bronze, {
+      position: [headX + 0.14, headY - 0.02, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    // Slim shaded nose tip bead at the end of the snout.
+    f.mesh("Fox Nose", sphere(0.025, 8, 6), bronzeShade, {
+      position: [headX + 0.21, headY - 0.02, 0],
+    }, { castShadow: false }),
+    // Two pointed ears atop the head.
+    f.mesh("Fox Ear L", cone(0.038, 0.08, 4), bronze, {
+      position: [headX - 0.02, headY + 0.12, 0.06],
+      rotation: [0, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Fox Ear R", cone(0.038, 0.08, 4), bronze, {
+      position: [headX - 0.02, headY + 0.12, -0.06],
+      rotation: [0, 0, 0],
+    }, { castShadow: true }),
+    // Slim shaded ear interior beads for relief.
+    f.mesh("Fox Ear L Inner", cone(0.024, 0.05, 4), bronzeShade, {
+      position: [headX - 0.014, headY + 0.10, 0.06],
+    }, { castShadow: false }),
+    f.mesh("Fox Ear R Inner", cone(0.024, 0.05, 4), bronzeShade, {
+      position: [headX - 0.014, headY + 0.10, -0.06],
+    }, { castShadow: false }),
+    // Two glinting eye highlights catching the sun.
+    f.mesh("Fox Eye L", sphere(0.014, 8, 6), bronzeHi, {
+      position: [headX + 0.06, headY + 0.03, 0.05],
+    }, { castShadow: false }),
+    f.mesh("Fox Eye R", sphere(0.014, 8, 6), bronzeHi, {
+      position: [headX + 0.06, headY + 0.03, -0.05],
+    }, { castShadow: false }),
+  );
+  // ── Fox tail — a long bushy tail swept forward across the haunches in
+  // three tapered segments reading as a fluffy brush.
+  const tailX = -0.25;
+  parts.push(
+    f.mesh("Fox Tail A", cylinder(0.055, 0.07, 0.14, 8), bronze, {
+      position: [tailX, bodyY + 0.04, 0],
+      rotation: [0, 0, -0.5],
+    }, { castShadow: true }),
+    f.mesh("Fox Tail B", cylinder(0.04, 0.055, 0.14, 8), bronze, {
+      position: [tailX - 0.1, bodyY + 0.16, 0],
+      rotation: [0, 0, -0.9],
+    }, { castShadow: true }),
+    f.mesh("Fox Tail Tip", sphere(0.045, 10, 8), bronzeHi, {
+      position: [tailX - 0.18, bodyY + 0.28, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Fox Plaque Tablet", box(0.3, 0.1, 0.018), bronze, {
+      position: [0, 0.46, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Fox Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Fox Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Fox Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+  );
+  return f.group("Fox Statue", parts, { position: pos });
+}
+
+/* ─────────────── thirtieth-pass house detail ─────────────── */
+
+/**
+ * A row of four small Victorian copper-patina ornamental porch corner
+ * finial drops mounted at the four corners of the porch canopy. Each drop
+ * is a slim stepped pendant with a lobed medallion cap and a slim tip
+ * bead, hanging just below the porch canopy edge. The cap, drop pendant
+ * and tip bead reuse the existing `copper-patina` colour + bump pair so
+ * the verdigris reads as crusted relief on the cast metal.
+ */
+function buildPorchCornerFinials(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.porchFinialCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.porchFinialCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.porchFinialCopperShade, 0.95, { flatShading: true });
+  const finials: SceneNode[] = [];
+  for (let i = 0; i < PORCH_FINIAL_POSITIONS.length; i++) {
+    const pos = PORCH_FINIAL_POSITIONS[i]!;
+    const parts: SceneNode[] = [
+      // Upper flange — a slim disc flush against the canopy corner.
+      f.mesh("Finial Flange", cylinder(0.05, 0.05, 0.02, 10), copperHi, {
+        position: [0, 0.05, 0],
+      }, { castShadow: false }),
+      // Lobed medallion cap — a slim flattened sphere reading as ornament.
+      f.mesh("Finial Cap", sphere(0.045, 10, 8), copper, {
+        position: [0, 0.02, 0],
+        scale: [1, 0.5, 1],
+      }, { castShadow: true }),
+      // Mid-shaft bead — a slim tapered drop hanging below the cap.
+      f.mesh("Finial Drop", cylinder(0.022, 0.014, 0.08, 8), copper, {
+        position: [0, -0.04, 0],
+      }, { castShadow: true }),
+      // Slim shaded undercut beneath the cap for relief.
+      f.mesh("Finial Shade", cylinder(0.018, 0.012, 0.04, 8), copperShade, {
+        position: [0, -0.02, 0],
+      }, { castShadow: false }),
+      // Slim tip bead at the very bottom of the drop.
+      f.mesh("Finial Tip", sphere(0.018, 10, 8), copperHi, {
+        position: [0, -0.1, 0],
+      }, { castShadow: false }),
+    ];
+    finials.push(f.group(`Porch Finial ${i + 1}`, parts, { position: pos }));
+  }
+  return f.group("Porch Corner Finials", finials);
+}
+
+/* ─────────────── thirtieth-pass scene extension ─────────────── */
+
+/**
+ * Far-west prairie plane reaching beyond the lavender field's west edge.
+ * Carries a sun-bleached golden wild-grass ground surfaced with the new
+ * `prairie-grass` colour + depth map pair so upright grass blades and
+ * scattered seed clumps read as raised relief at glancing sun. Features
+ * a small frontier homestead cabin at the southwest corner, a Western
+ * multi-blade wind pump at the north end, a covered Conestoga wagon at
+ * the centre, a three-rail hitching post, a focal trail cairn and a
+ * scatter of three rolling tumbleweeds.
+ */
+function buildFarWestPrairie(f: NodeFactory): SceneNode {
+  return f.group("Far West Prairie", [
+    // Prairie ground plane — sun-bleached golden grass with the new colour
+    // + depth map pair so upright grass blades and seed clumps read as
+    // raised relief at glancing sun.
+    f.mesh(
+      "Prairie Ground",
+      plane(PRAIRIE_W, PRAIRIE_D),
+      std(C.prairieGround, 0.95, {
+        texture: "prairie-grass",
+        textureScale: [4, 6],
+        bumpMap: "prairie-grass-bump",
+        bumpScale: 0.05,
+      }),
+      { position: PRAIRIE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // East apron — overlaps the lavender field's west edge with a sun-
+    // bleached grass strip so the seam reads as a continuous lavender-into-
+    // prairie join with no holes at the ground layer.
+    f.mesh(
+      "Prairie East Apron",
+      plane(2.4, PRAIRIE_D),
+      std(C.prairieApronGrass, 0.95, { texture: "grass", textureScale: [1, 12] }),
+      {
+        position: [
+          PRAIRIE_POS[0] + PRAIRIE_W / 2 - 1.2,
+          -0.030,
+          PRAIRIE_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildPrairieCabin(f, PRAIRIE_CABIN_POS),
+    buildPrairieWindPump(f, PRAIRIE_WINDPUMP_POS),
+    buildPrairieWagon(f, PRAIRIE_WAGON_POS),
+    buildPrairieHitchingPost(f, PRAIRIE_HITCH_POS),
+    buildPrairieCairn(f, PRAIRIE_CAIRN_POS),
+    buildPrairieTumbleweeds(f),
+  ]);
+}
+
+/**
+ * Small board-and-batten frontier homestead cabin at the southwest corner
+ * of the prairie. Reads as a settler's retreat with a peaked shingle roof,
+ * a stone chimney trailing translucent smoke wisps and a warm-glowing
+ * front window catching the dusk.
+ */
+function buildPrairieCabin(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.prairieCabinWall, 0.85, { texture: "wood", textureScale: [2, 1] });
+  const wallShade = std(C.prairieCabinWallShade, 0.95, { flatShading: true });
+  const roof = std(C.prairieCabinRoof, 0.7, { texture: "shingle", textureScale: [2, 1.5] });
+  const chimney = std(C.prairieCabinChimney, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.2, 1.2],
+    flatShading: true,
+  });
+  const door = std(C.prairieCabinWallShade, 0.7, { texture: "wood", textureScale: [1, 2] });
+  const window: MaterialDef = {
+    color: C.prairieCabinWindow,
+    roughness: 0.3,
+    emissive: C.prairieCabinWindow,
+    transparent: true,
+    opacity: 0.9,
+  };
+  const smoke: MaterialDef = {
+    color: C.prairieCabinSmoke,
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.45,
+  };
+  const parts: SceneNode[] = [];
+  const cabinW = 2.4;
+  const cabinD = 1.8;
+  const cabinH = 1.4;
+  parts.push(
+    f.mesh("Cabin Walls", box(cabinW, cabinH, cabinD), wall, {
+      position: [0, cabinH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cabin Plinth", box(cabinW + 0.08, 0.08, cabinD + 0.08), wallShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+  );
+  // Roof — a pitched gable above the cabin body.
+  const roofH = 0.75;
+  parts.push(
+    f.mesh("Roof Slab Front", box(cabinW + 0.14, 0.08, 1.05), roof, {
+      position: [0, cabinH + roofH * 0.45, cabinD / 2 - 0.05],
+      rotation: [Math.atan2(roofH, cabinD / 2 + 0.1), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Slab Back", box(cabinW + 0.14, 0.08, 1.05), roof, {
+      position: [0, cabinH + roofH * 0.45, -cabinD / 2 + 0.05],
+      rotation: [-Math.atan2(roofH, cabinD / 2 + 0.1), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Gable End L", box(0.06, roofH, cabinD), wallShade, {
+      position: [-cabinW / 2 - 0.02, cabinH + roofH / 2, 0],
+      scale: [1, 1, 0.65],
+    }, { castShadow: true }),
+    f.mesh("Gable End R", box(0.06, roofH, cabinD), wallShade, {
+      position: [cabinW / 2 + 0.02, cabinH + roofH / 2, 0],
+      scale: [1, 1, 0.65],
+    }, { castShadow: true }),
+    f.mesh("Roof Ridge", box(cabinW + 0.18, 0.06, 0.1), roof, {
+      position: [0, cabinH + roofH, 0],
+    }, { castShadow: true }),
+  );
+  // Front door on the east face — facing the open prairie.
+  parts.push(
+    f.mesh("Front Door", box(0.05, 0.85, 0.42), door, {
+      position: [cabinW / 2 + 0.005, 0.425, -0.3],
+    }, { castShadow: false }),
+    f.mesh("Door Frame Top", box(0.06, 0.05, 0.48), wallShade, {
+      position: [cabinW / 2 + 0.012, 0.875, -0.3],
+    }, { castShadow: false }),
+    f.mesh("Door Knob", sphere(0.022, 8, 6), std("#b48a4a", 0.5, { metalness: 0.6 }), {
+      position: [cabinW / 2 + 0.04, 0.45, -0.12],
+    }, { castShadow: false }),
+  );
+  // Lit warm-glow front window on the east face — catches the dusk.
+  parts.push(
+    f.mesh("Window Glass", box(0.03, 0.4, 0.5), window, {
+      position: [cabinW / 2 + 0.012, 0.85, 0.45],
+    }, { castShadow: false }),
+    f.mesh("Window Frame Top", box(0.05, 0.04, 0.56), wallShade, {
+      position: [cabinW / 2 + 0.018, 1.07, 0.45],
+    }, { castShadow: false }),
+    f.mesh("Window Frame Bottom", box(0.05, 0.04, 0.56), wallShade, {
+      position: [cabinW / 2 + 0.018, 0.63, 0.45],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin H", box(0.04, 0.022, 0.5), wallShade, {
+      position: [cabinW / 2 + 0.026, 0.85, 0.45],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin V", box(0.04, 0.4, 0.022), wallShade, {
+      position: [cabinW / 2 + 0.026, 0.85, 0.45],
+    }, { castShadow: false }),
+  );
+  // Stone chimney on the south side of the cabin trailing a smoke wisp.
+  parts.push(
+    f.mesh("Chimney Stack", box(0.26, 1.5, 0.26), chimney, {
+      position: [-0.4, 1.15, -cabinD / 2 + 0.16],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Cap", box(0.32, 0.06, 0.32), chimney, {
+      position: [-0.4, 1.93, -cabinD / 2 + 0.16],
+    }, { castShadow: true }),
+    f.mesh("Smoke Wisp A", sphere(0.16, 12, 10), smoke, {
+      position: [-0.4, 2.15, -cabinD / 2 + 0.16],
+      scale: [1, 0.7, 1],
+    }, { castShadow: false }),
+    f.mesh("Smoke Wisp B", sphere(0.18, 12, 10), smoke, {
+      position: [-0.34, 2.45, -cabinD / 2 + 0.08],
+      scale: [1.1, 0.6, 1.1],
+    }, { castShadow: false }),
+    f.mesh("Smoke Wisp C", sphere(0.22, 12, 10), smoke, {
+      position: [-0.26, 2.8, -cabinD / 2 - 0.02],
+      scale: [1.2, 0.6, 1.2],
+    }, { castShadow: false }),
+  );
+  return f.group("Prairie Cabin", parts, { position: pos });
+}
+
+/**
+ * Western-style multi-blade wind pump at the north end of the prairie. A
+ * tall four-leg lattice tower crowned by a circle of fan blades around a
+ * central hub and a slim tail vane that catches the wind.
+ */
+function buildPrairieWindPump(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.prairiePumpWood, 0.85, { texture: "wood", textureScale: [0.4, 4] });
+  const woodShade = std(C.prairiePumpWoodShade, 0.95, { flatShading: true });
+  const blade = std(C.prairiePumpBlade, 0.6, { metalness: 0.2, flatShading: true });
+  const bladeShade = std(C.prairiePumpBladeShade, 0.95, { flatShading: true });
+  const hub: MaterialDef = {
+    color: C.prairiePumpHub,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const vane = std(C.prairiePumpVane, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [];
+  const towerH = 3.4;
+  const towerBase = 0.45;
+  const towerTop = 0.15;
+  // ── Four splayed corner legs for the lattice tower.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      const angle = Math.atan2(sx * towerBase - sx * towerTop, towerH);
+      parts.push(
+        f.mesh(
+          `Tower Leg ${sx} ${sz}`,
+          box(0.04, towerH, 0.04),
+          wood,
+          {
+            position: [sx * (towerBase + towerTop) / 2, towerH / 2, sz * (towerBase + towerTop) / 2],
+            rotation: [sz * angle, 0, -sx * angle],
+          },
+          { castShadow: true, receiveShadow: true },
+        ),
+      );
+    }
+  }
+  // ── Four horizontal cross-bands at quarter heights for lattice ornament.
+  for (let i = 1; i <= 3; i++) {
+    const t = i / 4;
+    const y = t * towerH;
+    const r = towerBase * (1 - t) + towerTop * t;
+    parts.push(
+      f.mesh(`Tower Band ${i} N`, box(2 * r, 0.03, 0.04), woodShade, {
+        position: [0, y, r],
+      }, { castShadow: false }),
+      f.mesh(`Tower Band ${i} S`, box(2 * r, 0.03, 0.04), woodShade, {
+        position: [0, y, -r],
+      }, { castShadow: false }),
+      f.mesh(`Tower Band ${i} E`, box(0.04, 0.03, 2 * r), woodShade, {
+        position: [r, y, 0],
+      }, { castShadow: false }),
+      f.mesh(`Tower Band ${i} W`, box(0.04, 0.03, 2 * r), woodShade, {
+        position: [-r, y, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Four diagonal cross-braces between the cross-bands for lattice X's.
+  for (let i = 0; i < 3; i++) {
+    const yLo = (i / 4) * towerH;
+    const yHi = ((i + 1) / 4) * towerH;
+    const yMid = (yLo + yHi) / 2;
+    const rLo = towerBase * (1 - i / 4) + towerTop * (i / 4);
+    const rHi = towerBase * (1 - (i + 1) / 4) + towerTop * ((i + 1) / 4);
+    const rMid = (rLo + rHi) / 2;
+    const braceLen = Math.sqrt((yHi - yLo) ** 2 + (2 * rMid) ** 2);
+    const angle = Math.atan2(yHi - yLo, 2 * rMid);
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Brace ${i} N${sz}`, box(braceLen * 0.96, 0.025, 0.03), woodShade, {
+          position: [0, yMid, sz * rMid],
+          rotation: [0, 0, sz > 0 ? angle - Math.PI / 2 : -(angle - Math.PI / 2)],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Pump head platform — a slim square cap at the top of the tower.
+  const headY = towerH + 0.04;
+  parts.push(
+    f.mesh("Pump Head Cap", box(2 * towerTop + 0.06, 0.08, 2 * towerTop + 0.06), wood, {
+      position: [0, headY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Fan blades — a circle of 12 slim trapezoidal blades around a central
+  // copper-patina hub. Each blade is a slim flat slat tilted forward.
+  const fanY = headY + 0.42;
+  const fanZ = 0.2;
+  const fanBlades = 12;
+  for (let i = 0; i < fanBlades; i++) {
+    const a = (i / fanBlades) * Math.PI * 2;
+    const cx = Math.cos(a) * 0.28;
+    const cy = Math.sin(a) * 0.28;
+    parts.push(
+      f.mesh(`Fan Blade ${i}`, box(0.06, 0.34, 0.018), blade, {
+        position: [cx, fanY + cy, fanZ],
+        rotation: [0, 0, a + Math.PI / 2],
+      }, { castShadow: true }),
+      f.mesh(`Fan Blade Shade ${i}`, box(0.05, 0.3, 0.012), bladeShade, {
+        position: [cx, fanY + cy, fanZ - 0.012],
+        rotation: [0, 0, a + Math.PI / 2],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Central hub disc and axle.
+  parts.push(
+    f.mesh("Fan Hub", cylinder(0.1, 0.1, 0.1, 12), hub, {
+      position: [0, fanY, fanZ],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Fan Axle", cylinder(0.04, 0.04, 0.36, 8), hub, {
+      position: [0, fanY, fanZ - 0.18],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Slim outer ring around the fan blades for an ornament rim.
+    f.mesh("Fan Rim", cylinder(0.4, 0.4, 0.025, 24), hub, {
+      position: [0, fanY, fanZ - 0.012],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Tail vane behind the fan — a slim arrow with a fin.
+  parts.push(
+    f.mesh("Vane Arm", box(0.04, 0.04, 0.9), wood, {
+      position: [0, fanY, fanZ - 0.6],
+    }, { castShadow: true }),
+    f.mesh("Vane Fin", box(0.01, 0.32, 0.46), vane, {
+      position: [0, fanY, fanZ - 0.96],
+    }, { castShadow: true }),
+    f.mesh("Vane Fin Edge", box(0.02, 0.36, 0.05), bladeShade, {
+      position: [0, fanY, fanZ - 1.18],
+    }, { castShadow: false }),
+  );
+  return f.group("Prairie Wind Pump", parts, { position: pos });
+}
+
+/**
+ * Weathered wooden Conestoga wagon with two large spoked wheels and a
+ * curved canvas canopy. Parked at the centre of the prairie as a focal
+ * frontier prop catching the dusk sun.
+ */
+function buildPrairieWagon(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.prairieWagonWood, 0.85, { texture: "wood", textureScale: [1.5, 0.7] });
+  const woodShade = std(C.prairieWagonWoodShade, 0.95, { flatShading: true });
+  const canvas = std(C.prairieWagonCanvas, 0.85, { flatShading: true });
+  const canvasShade = std(C.prairieWagonCanvasShade, 0.95, { flatShading: true });
+  const wheel = std(C.prairieWagonWheel, 0.95, { flatShading: true });
+  const iron = std(C.prairieWagonIron, 0.5, { metalness: 0.7, flatShading: true });
+  const parts: SceneNode[] = [];
+  const wagonBedY = 0.42;
+  // ── Wagon bed — a slim rectangular box riding above the axle.
+  parts.push(
+    f.mesh("Wagon Bed", box(1.4, 0.16, 0.7), wood, {
+      position: [0, wagonBedY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded undercut beneath the bed for relief.
+    f.mesh("Wagon Bed Shade", box(1.32, 0.04, 0.62), woodShade, {
+      position: [0, wagonBedY - 0.08, 0],
+    }, { receiveShadow: true }),
+    // Slim side rails along the bed's east and west sides.
+    f.mesh("Wagon Side L", box(1.36, 0.18, 0.04), woodShade, {
+      position: [0, wagonBedY + 0.12, 0.34],
+    }, { castShadow: true }),
+    f.mesh("Wagon Side R", box(1.36, 0.18, 0.04), woodShade, {
+      position: [0, wagonBedY + 0.12, -0.34],
+    }, { castShadow: true }),
+  );
+  // ── Two large spoked wheels on each side.
+  for (const sz of [-1, 1]) {
+    for (const sx of [-1, 1]) {
+      const wx = sx * 0.5;
+      const wz = sz * 0.4;
+      parts.push(
+        // Wheel rim — a slim hollow torus.
+        f.mesh(`Wheel Rim ${sx} ${sz}`, cylinder(0.32, 0.32, 0.06, 16), wheel, {
+          position: [wx, 0.32, wz],
+          rotation: [Math.PI / 2, 0, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Hub — a slim central disc.
+        f.mesh(`Wheel Hub ${sx} ${sz}`, cylinder(0.07, 0.07, 0.08, 10), iron, {
+          position: [wx, 0.32, wz],
+          rotation: [Math.PI / 2, 0, 0],
+        }, { castShadow: true }),
+      );
+      // Six spokes in each wheel.
+      for (let s = 0; s < 6; s++) {
+        const a = (s / 6) * Math.PI;
+        parts.push(
+          f.mesh(`Wheel Spoke ${sx} ${sz} ${s}`, box(0.6, 0.025, 0.025), wheel, {
+            position: [wx, 0.32, wz],
+            rotation: [Math.PI / 2, 0, a],
+          }, { castShadow: false }),
+        );
+      }
+    }
+  }
+  // ── Axles connecting the wheel pairs.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Axle ${sx}`, cylinder(0.04, 0.04, 0.86, 8), iron, {
+        position: [sx * 0.5, 0.32, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Curved canvas canopy — five arched ribs over the bed forming a
+  // rounded shell with a canvas drape.
+  const ribCount = 5;
+  const ribR = 0.42;
+  const ribH = wagonBedY + 0.08 + ribR;
+  for (let i = 0; i < ribCount; i++) {
+    const t = (i / (ribCount - 1)) * 2 - 1;
+    const rx = t * 0.6;
+    parts.push(
+      f.mesh(`Canopy Rib ${i}`, cylinder(0.02, 0.02, 0.78, 8), woodShade, {
+        position: [rx, ribH, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Canvas drape — a wide arched shell built from a slim half-cylinder shell.
+  parts.push(
+    f.mesh("Canvas Roof", cylinder(ribR, ribR, 1.4, 10), canvas, {
+      position: [0, ribH, 0],
+      rotation: [0, 0, Math.PI / 2],
+      scale: [1, 1, 1],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded undercut along the bottom edge of the canvas for relief.
+    f.mesh("Canvas Roof Shade", cylinder(ribR + 0.01, ribR + 0.01, 1.35, 10), canvasShade, {
+      position: [0, ribH - 0.02, 0],
+      rotation: [0, 0, Math.PI / 2],
+      scale: [1, 1, 0.8],
+    }, { castShadow: false }),
+    // Canvas gable cap at the front (east-facing) opening of the canopy.
+    f.mesh("Canvas Gable Front", cylinder(ribR, ribR, 0.04, 12), canvas, {
+      position: [0.7, ribH, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  // ── Yoke pole extending forward from the front axle.
+  parts.push(
+    f.mesh("Yoke Pole", box(0.78, 0.04, 0.04), wood, {
+      position: [0.9, 0.3, 0],
+    }, { castShadow: false }),
+    f.mesh("Yoke Cross", box(0.06, 0.04, 0.4), wood, {
+      position: [1.26, 0.3, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Prairie Wagon", parts, { position: pos });
+}
+
+/**
+ * Slim three-rail wooden hitching post for tying horses, sitting in the
+ * middle of the prairie. A coiled rope hangs from one of the upright
+ * posts as a frontier accent.
+ */
+function buildPrairieHitchingPost(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wood = std(C.prairieWagonWood, 0.85, { texture: "wood", textureScale: [0.6, 2] });
+  const woodShade = std(C.prairieWagonWoodShade, 0.95, { flatShading: true });
+  const rope = std(C.prairieRopeJute, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Two upright posts.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Post ${sx}`, box(0.08, 1.1, 0.08), wood, {
+        position: [sx * 0.7, 0.55, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim cap bead atop each post.
+      f.mesh(`Post Cap ${sx}`, sphere(0.06, 8, 6), woodShade, {
+        position: [sx * 0.7, 1.13, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Three horizontal rails between the posts.
+  for (let i = 0; i < 3; i++) {
+    const y = 0.35 + i * 0.28;
+    parts.push(
+      f.mesh(`Rail ${i}`, box(1.46, 0.04, 0.04), wood, {
+        position: [0, y, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim coiled rope hanging from the east post — three stacked rings.
+  for (let i = 0; i < 3; i++) {
+    parts.push(
+      f.mesh(`Rope Coil ${i}`, cylinder(0.05, 0.05, 0.02, 10), rope, {
+        position: [0.7 + 0.08, 0.74 - i * 0.04, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Prairie Hitching Post", parts, { position: pos });
+}
+
+/**
+ * Focal dry-stone trail cairn marking the prairie crossroads — a slim
+ * stack of three weathered granite boulders read as a frontier waypoint
+ * marker against the open grass.
+ */
+function buildPrairieCairn(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone = std(C.prairieCairnStone, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1, 1],
+    flatShading: true,
+  });
+  const stoneHi = std(C.prairieCairnStoneHi, 0.85, { flatShading: true });
+  const stoneShade = std(C.prairieCairnStoneShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Bottom boulder — the broad base stone.
+  parts.push(
+    f.mesh("Cairn Base", sphere(0.32, 12, 10), stone, {
+      position: [0, 0.22, 0],
+      scale: [1.2, 0.6, 1.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cairn Base Shade", sphere(0.26, 10, 8), stoneShade, {
+      position: [0.03, 0.18, -0.04],
+      scale: [1.1, 0.4, 1.1],
+    }, { castShadow: false }),
+  );
+  // Middle boulder — slightly smaller.
+  parts.push(
+    f.mesh("Cairn Mid", sphere(0.25, 12, 10), stone, {
+      position: [0.02, 0.5, 0.03],
+      scale: [1.1, 0.6, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cairn Mid Hi", sphere(0.18, 10, 8), stoneHi, {
+      position: [-0.02, 0.55, 0.05],
+      scale: [0.9, 0.3, 0.9],
+    }, { castShadow: false }),
+  );
+  // Top boulder — slimmest stone capping the stack.
+  parts.push(
+    f.mesh("Cairn Top", sphere(0.2, 12, 10), stone, {
+      position: [-0.02, 0.76, -0.02],
+      scale: [1, 0.55, 1],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cairn Top Hi", sphere(0.12, 10, 8), stoneHi, {
+      position: [0, 0.82, 0],
+      scale: [0.9, 0.3, 0.9],
+    }, { castShadow: false }),
+  );
+  return f.group("Prairie Cairn", parts, { position: pos });
+}
+
+/**
+ * A scatter of three rolling tumbleweeds across the prairie. Each
+ * tumbleweed is a slim sphere of criss-cross stick bundles reading as
+ * the iconic dry rolling ball of the open frontier.
+ */
+function buildPrairieTumbleweeds(f: NodeFactory): SceneNode {
+  const body = std(C.prairieTumbleweed, 0.95, { flatShading: true });
+  const dark = std(C.prairieTumbleweedDark, 0.95, { flatShading: true });
+  const weeds: SceneNode[] = [];
+  for (let i = 0; i < PRAIRIE_TUMBLEWEEDS.length; i++) {
+    const t = PRAIRIE_TUMBLEWEEDS[i]!;
+    const r = 0.26 * t.scale;
+    const parts: SceneNode[] = [
+      // Outer sphere — the airy stick-bundle body of the tumbleweed.
+      f.mesh("Tumbleweed Body", sphere(r, 12, 10), body, {
+        position: [0, r, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded core suggesting the denser inner stick bundle.
+      f.mesh("Tumbleweed Core", sphere(r * 0.6, 10, 8), dark, {
+        position: [0, r, 0],
+      }, { castShadow: false }),
+    ];
+    // Six criss-cross stick rings reading as woven brittle stems.
+    for (let s = 0; s < 6; s++) {
+      const a = (s / 6) * Math.PI;
+      parts.push(
+        f.mesh(`Stick Ring ${s}`, cylinder(r * 1.04, r * 1.04, 0.02, 12), dark, {
+          position: [0, r, 0],
+          rotation: [s * 0.7, a, 0],
+        }, { castShadow: false }),
+      );
+    }
+    weeds.push(
+      f.group(`Tumbleweed ${i + 1}`, parts, {
+        position: [t.x, 0, t.z],
+        rotation: [0, t.rot, 0],
+      }),
+    );
+  }
+  return f.group("Prairie Tumbleweeds", weeds);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -24428,6 +25332,47 @@ function buildPineConeScatter(f: NodeFactory): SceneNode {
  *    crossing the creek (the slab sizes alternate slightly so the path
  *    reads as hand-laid rather than uniformly stamped) and a sparse
  *    scatter of nine fallen pinecones distributed beneath the canopies.
+ *  - Thirtieth pass — courtyard: a Victorian bronze fox statue on a
+ *    fluted marble pedestal, parked on the back outside-fence lawn
+ *    between the carousel horse (back-west) and the back archway
+ *    (centre), continuing the parade of marble-pedestal sentinels along
+ *    the back perimeter — the fox stands four-square on the plinth cap
+ *    in a slim alert pose with a tapered snout, two pointed ears, a
+ *    long bushy tail swept forward across its haunches and two glinting
+ *    eye highlights (the bronze body, ears, snout and tail reuse the
+ *    existing `copper-patina` colour + bump pair so the verdigris reads
+ *    as crusted relief on the cast metal, and the plinth reuses the
+ *    existing `marble` colour + bump pair so the stone reads with
+ *    veined relief). House: a row of four Victorian copper-patina
+ *    ornamental porch corner finial drops mounted at the four corners
+ *    of the porch canopy where the canopy meets each porch post — each
+ *    drop a slim stepped pendant with a lobed medallion cap, a slim
+ *    drop body and a slim tip bead hanging just below the porch canopy
+ *    edge (the cap, drop pendant and tip bead reuse the existing
+ *    `copper-patina` pair so the verdigris reads as crusted relief on
+ *    the cast metal). Scene: a far-west prairie plane reaching beyond
+ *    the lavender field's west edge — a sun-bleached golden wild-grass
+ *    ground surfaced with the new `prairie-grass` colour map paired
+ *    with a grass-tuft depth map (registered alongside the other
+ *    procedural textures) so the upright grass blades and scattered
+ *    seed clumps read as raised relief at glancing sun, a lavender-
+ *    grass apron along the east join so the ground layer has no holes
+ *    at the seam, a small board-and-batten frontier homestead cabin
+ *    at the southwest corner with a peaked shingle roof, a stone
+ *    chimney trailing three translucent smoke wisps and a warm-glowing
+ *    front window catching the dusk, a Western-style multi-blade wind
+ *    pump at the north end (a tall four-leg lattice tower crowned by a
+ *    circle of twelve fan blades around a copper-patina central hub
+ *    and a slim arrow-tail vane fin that catches the prairie wind), a
+ *    weathered wooden Conestoga wagon at the centre of the prairie
+ *    (slim rectangular bed riding above two large spoked wheels per
+ *    side, a curved canvas canopy of arched ribs and a slim yoke pole
+ *    extending forward), a slim three-rail wooden hitching post with
+ *    a coiled jute rope hanging from one of the upright posts, a focal
+ *    dry-stone trail cairn of three stacked weathered granite boulders
+ *    marking the prairie crossroads and a scatter of three rolling
+ *    tumbleweeds (each a slim sphere of criss-cross stick rings with a
+ *    denser shaded inner core) distributed across the open grass.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -24522,6 +25467,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: LION_STATUE_POS[0], z: LION_STATUE_POS[2], r: 1.0 },
     // Twenty-ninth-pass keep-out — garden obelisk on the back outside-fence lawn.
     { x: OBELISK_POS[0], z: OBELISK_POS[2], r: 0.9 },
+    // Thirtieth-pass keep-out — bronze fox statue on the back outside-fence lawn.
+    { x: FOX_STATUE_POS[0], z: FOX_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -24592,6 +25539,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildBackArchway(f, BACK_ARCHWAY_POS),
     buildLionStatue(f, LION_STATUE_POS),
     buildGardenObelisk(f, OBELISK_POS),
+    buildFoxStatue(f, FOX_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -24618,6 +25566,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fsSakuraGrove = buildFarSouthSakuraGrove(f);
   const fsBambooGrove = buildFarSouthBambooGrove(f);
   const fsPineWoodland = buildFarSouthPineWoodland(f);
+  const fwPrairie = buildFarWestPrairie(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -24667,6 +25616,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchCeilingRosette(f, PORCH_ROSETTE_POS),
     buildWindowPediments(f),
     buildAddressPlaque(f, ADDRESS_PLAQUE_POS),
+    buildPorchCornerFinials(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -24700,6 +25650,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fsSakuraGrove,
       fsBambooGrove,
       fsPineWoodland,
+      fwPrairie,
       house,
     ],
   };
