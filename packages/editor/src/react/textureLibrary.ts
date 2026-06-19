@@ -4762,4 +4762,202 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // Thirtieth-pass scene extension — a far-west prairie plane reaching
+  // beyond the lavender field's west edge. The new `prairie-grass` colour
+  // map shows golden wild grass strewn with upright wheat-coloured grass
+  // tufts, slim seed clumps and the occasional dry herb dot; paired with
+  // the depth map so the upright grass blades and seed clumps read as
+  // raised relief at glancing sun.
+
+  // Prairie-grass colour — a warm tawny-gold base with a sun-bleached
+  // gradient toward the south, scattered upright wild-grass blades in
+  // pale, mid and dark tints, seed-clump dots and rare dry-herb scatter.
+  // Drawn on a power-of-two canvas so the mipmap chain stays clean.
+  registry["prairie-grass"] = makeCanvasTexture({
+    seed: 0x9ea11e,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly darker toward the south edge so the
+      // prairie reads with a hint of deep dried-grass shade.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#c8a958");
+      bg.addColorStop(0.5, "#b69248");
+      bg.addColorStop(1, "#806930");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling sun-bleached lobes — soft radial highlights
+      // suggesting low golden swells across the open prairie.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 90 + rng() * 80;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${42 + rng() * 14}, 52%, ${66 + rng() * 8}%, 0.4)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Upright wild-grass blade strokes — many slim near-vertical slats
+      // in three tint palettes (pale-gold, mid-gold, dark-tan) reading as
+      // dried prairie grass blades catching the dusk sun.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 2200; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 4 + rng() * 8;
+        const angle = (rng() - 0.5) * 0.6 + Math.PI / 2;
+        const tint = rng();
+        let h: number;
+        let l: number;
+        if (tint < 0.35) {
+          h = 44 + rng() * 10;
+          l = 64 + rng() * 12;
+        } else if (tint < 0.75) {
+          h = 40 + rng() * 10;
+          l = 48 + rng() * 10;
+        } else {
+          h = 36 + rng() * 12;
+          l = 32 + rng() * 8;
+        }
+        ctx.strokeStyle = `hsla(${h}, 48%, ${l}%, 0.7)`;
+        ctx.lineWidth = 0.5 + rng() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y - Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Seed-clump dabs — slim dotted clumps of pale seed heads.
+      for (let i = 0; i < 220; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 1.5 + rng() * 2.5;
+        ctx.fillStyle = `hsla(${48 + rng() * 12}, 50%, ${72 + rng() * 10}%, 0.7)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Dry-herb scatter — sparse darker dots suggesting brittle stems.
+      for (let i = 0; i < 110; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 1.6 + rng() * 2;
+        ctx.fillStyle = `hsla(${30 + rng() * 14}, 32%, ${28 + rng() * 10}%, 0.6)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Sun-bleached patches — pale wash radial highlights suggesting
+      // bare windswept soil between grass tussocks.
+      for (let i = 0; i < 14; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 14 + rng() * 24;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, `hsla(${50 + rng() * 12}, 40%, ${78 + rng() * 8}%, 0.35)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash so
+      // glancing afternoon sun catches the rim of the prairie.
+      const sun = ctx.createRadialGradient(size * 0.72, size * 0.22, 0, size * 0.72, size * 0.22, size * 0.85);
+      sun.addColorStop(0, "rgba(252,240,200,0.2)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0024);
+    },
+  });
+
+  // Prairie-grass depth map — the upright grass blades sit slightly above
+  // the soil base (light = high) and the bare soil patches between
+  // tussocks read with a subtle depression so the prairie surface shows
+  // raised relief at glancing sun.
+  registry["prairie-grass-bump"] = makeCanvasTexture({
+    seed: 0x9ea11e + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average grass-mat height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Wide rolling grass mounds — pale radial highlights suggesting
+      // low grass swells across the prairie.
+      for (let i = 0; i < 9; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 90 + rng() * 80;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(212,212,212,0.24)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Upright grass-blade bumps — bright slim slats reading as raised
+      // wild-grass blades catching the rim sun.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 2200; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const len = 4 + rng() * 8;
+        const angle = (rng() - 0.5) * 0.6 + Math.PI / 2;
+        ctx.strokeStyle = `rgba(232,232,232,${0.5 + rng() * 0.25})`;
+        ctx.lineWidth = 0.7 + rng() * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(angle) * len, y - Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Seed-clump bumps — slim bright dots reading as raised seed heads.
+      for (let i = 0; i < 220; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 1.5 + rng() * 2.5;
+        ctx.fillStyle = `rgba(220,220,220,0.7)`;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Bare-soil dimples — dark radial depressions reading as sunken
+      // windswept soil patches between tussocks.
+      for (let i = 0; i < 14; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 14 + rng() * 24;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(56,56,56,0.45)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim shaded undercut around each blade — sparse darker dots
+      // between blade strokes so the relief reads at glancing sun.
+      for (let i = 0; i < 260; i++) {
+        const x = rng() * size;
+        const y = rng() * size;
+        const r2 = 1.4 + rng() * 2.5;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r2);
+        grad.addColorStop(0, "rgba(44,44,44,0.55)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1600; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

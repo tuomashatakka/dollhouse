@@ -751,6 +751,51 @@
 //   beneath the canopies (each a slim tapered cone with three
 //   darker scale beads for relief and a slim stem tuft at the
 //   base).
+//   Pass 30 — courtyard: a Victorian bronze fox statue on a fluted
+//   marble pedestal, parked on the back outside-fence lawn between
+//   the carousel horse (back-west at x=-12.5) and the back archway
+//   (at x=0) so it reads as another marble-pedestal sentinel along
+//   the back perimeter — the fox stands four-square on the plinth
+//   cap in a slim alert pose with a tapered snout, two pointed
+//   ears, a long bushy tail swept forward across its haunches and
+//   two glinting eye highlights (the bronze body, ears, snout and
+//   tail reuse the existing `copper-patina` colour + bump pair so
+//   the verdigris reads as crusted relief on the cast metal, and
+//   the plinth reuses the existing `marble` colour + bump pair so
+//   the stone reads with veined relief). House: a row of four
+//   Victorian copper-patina ornamental porch corner finial drops
+//   mounted at the four corners of the porch canopy where the
+//   canopy meets each porch post — each drop a slim stepped
+//   pendant with a lobed medallion cap, a slim drop body and a
+//   slim tip bead hanging just below the porch canopy edge (the
+//   cap, drop pendant and tip bead reuse the existing
+//   `copper-patina` pair so the verdigris reads as crusted relief
+//   on the cast metal). Scene: a far-west prairie plane reaching
+//   beyond the lavender field's west edge — a sun-bleached golden
+//   wild-grass ground surfaced with the new `prairie-grass` colour
+//   map paired with a grass-tuft depth map (registered alongside
+//   the other procedural textures) so the upright grass blades
+//   and scattered seed clumps read as raised relief at glancing
+//   sun, a lavender-grass apron along the east join so the ground
+//   layer has no holes at the seam, a small board-and-batten
+//   frontier homestead cabin at the southwest corner with a
+//   peaked shingle roof, a stone chimney trailing three
+//   translucent smoke wisps and a warm-glowing front window
+//   catching the dusk, a Western-style multi-blade wind pump at
+//   the north end (a tall four-leg lattice tower crowned by a
+//   circle of twelve fan blades around a copper-patina central
+//   hub and a slim arrow-tail vane fin that catches the prairie
+//   wind), a weathered wooden Conestoga wagon at the centre of
+//   the prairie (slim rectangular bed riding above two large
+//   spoked wheels per side, a curved canvas canopy of arched
+//   ribs and a slim yoke pole extending forward), a slim
+//   three-rail wooden hitching post with a coiled jute rope
+//   hanging from one of the upright posts, a focal dry-stone
+//   trail cairn of three stacked weathered granite boulders
+//   marking the prairie crossroads, and a scatter of three
+//   rolling tumbleweeds (each a slim sphere of criss-cross stick
+//   rings with a denser shaded inner core) distributed across
+//   the open grass.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
