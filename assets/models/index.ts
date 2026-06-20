@@ -796,6 +796,47 @@
 //   rolling tumbleweeds (each a slim sphere of criss-cross stick
 //   rings with a denser shaded inner core) distributed across
 //   the open grass.
+//   Pass 31 — courtyard: a Victorian bronze hare statue on a
+//   fluted marble pedestal, parked on the back outside-fence
+//   lawn between the back archway (at x=0) and the garden
+//   obelisk (back-east) so it reads as a mirror sentinel to the
+//   fox statue on the back-west outside fence — the hare
+//   crouches four-square on the plinth cap with long perked
+//   ears, a powerful haunch, a tapered snout, two glinting eye
+//   highlights and a short tail tuft (the bronze body, ears,
+//   snout and tail reuse the existing `copper-patina` colour +
+//   bump pair so the verdigris reads as crusted relief on the
+//   cast metal, and the plinth reuses the existing `marble`
+//   colour + bump pair so the stone reads with veined relief).
+//   House: a pair of Victorian copper-patina ornamental door
+//   entrance pilasters flanking the front door arch — each
+//   pilaster a slim fluted vertical shaft with a foliate capital
+//   cap at the top, three drop beads beneath the cap and a
+//   stepped plinth block at the bottom (the shaft, flutes,
+//   capital and base reuse the existing `copper-patina` pair so
+//   the verdigris reads as crusted relief on the cast metal).
+//   Scene: a far-southwest redrock mesa plane bridging the gap
+//   south of the prairie and west of the peat moor — a cinnamon-
+//   rust sandstone ground surfaced with the new `redrock-mesa`
+//   colour map paired with a cracked-plateau depth map
+//   (registered alongside the other procedural textures) so the
+//   bedding strata bands and scattered pebbles read as raised
+//   relief at glancing sun, a sun-bleached prairie-grass apron
+//   along the north join and a moss-toned apron along the east
+//   join so the ground layer has no holes at either seam, a
+//   focal multi-tier Anasazi-style pueblo cliff dwelling at the
+//   northwest corner with stacked adobe blocks, dark window
+//   openings, viga roof-beam ends and a leaning kiva ladder, a
+//   natural sandstone arch spanning the centre of the mesa with
+//   a seven-block curved lintel, three eroded hoodoo spires
+//   scattered across the plane (each a stacked column of
+//   weathered sandstone tapering toward a mushroom cap on a
+//   footing boulder), a scatter of four saguaro cacti (slim
+//   ribbed trunks with raised arms and crown bloom dabs) and a
+//   slim dry-wash arroyo strip threading diagonally across the
+//   mesa from the south-west corner toward the north-east edge
+//   with darker bank trims and a sparse scatter of stream-worn
+//   pebbles along the bed.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
