@@ -4960,4 +4960,192 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // Thirty-first-pass scene extension — a far-southwest redrock mesa plane
+  // bridging the gap south of the prairie and west of the peat moor. The
+  // new `redrock-mesa` colour map shows cinnamon-rust sandstone with
+  // banded strata bands, scattered pebbles and slim wind-cracked fissures;
+  // paired with the depth map so the strata ridges and pebble caps read
+  // as raised relief at glancing sun.
+
+  // Redrock-mesa colour — a cinnamon-rust sandstone base with horizontal
+  // strata banding in warm ochre, rust and shaded ferrous tints, scattered
+  // pebbles and slim wind-cracked fissures. Drawn on a power-of-two canvas
+  // so the mipmap chain stays clean.
+  registry["redrock-mesa"] = makeCanvasTexture({
+    seed: 0xa70c5a,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly darker toward the south so the mesa reads
+      // with a hint of cool shadow on the cliff floor.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#c97048");
+      bg.addColorStop(0.55, "#a85838");
+      bg.addColorStop(1, "#7a3a26");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Horizontal strata bands — slim slabs of slightly varied tint
+      // running across the canvas at irregular y-positions so the sandstone
+      // reads with bedding planes.
+      let y = 0;
+      while (y < size) {
+        const bandH = 6 + rng() * 18;
+        const hueShift = (rng() - 0.5) * 12;
+        const lightShift = (rng() - 0.5) * 18;
+        ctx.fillStyle = `hsla(${18 + hueShift}, 52%, ${44 + lightShift}%, 0.42)`;
+        ctx.fillRect(0, y, size, bandH);
+        // Slim brighter strata edge along the upper rim of each band.
+        ctx.fillStyle = `hsla(${24 + hueShift}, 58%, ${64 + lightShift}%, 0.32)`;
+        ctx.fillRect(0, y, size, 1.5);
+        y += bandH;
+      }
+      // Wide rolling sun-baked lobes — soft radial highlights suggesting
+      // mesa swells and shaded undercuts.
+      for (let i = 0; i < 8; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 90 + rng() * 80;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r2);
+        const bright = rng() < 0.5;
+        if (bright) {
+          grad.addColorStop(0, `hsla(${18 + rng() * 10}, 56%, ${64 + rng() * 10}%, 0.36)`);
+        } else {
+          grad.addColorStop(0, `hsla(${14 + rng() * 8}, 40%, ${24 + rng() * 6}%, 0.42)`);
+        }
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Scattered pebbles — small irregular polygons in three sandstone
+      // tints reading as fallen rock fragments along the mesa floor.
+      for (let i = 0; i < 240; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 1.4 + rng() * 3;
+        const tint = rng();
+        let h: number;
+        let l: number;
+        if (tint < 0.4) {
+          h = 16 + rng() * 10;
+          l = 28 + rng() * 8;
+        } else if (tint < 0.75) {
+          h = 22 + rng() * 12;
+          l = 46 + rng() * 10;
+        } else {
+          h = 28 + rng() * 14;
+          l = 62 + rng() * 10;
+        }
+        ctx.fillStyle = `hsla(${h}, 48%, ${l}%, 0.75)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Wind-cracked fissures — slim dark hairlines following the strata
+      // direction with a slight wander so they read as weathered cracks.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 90; i++) {
+        const x0 = rng() * size;
+        const y0 = rng() * size;
+        const len = 6 + rng() * 22;
+        const angle = (rng() - 0.5) * 0.6;
+        ctx.strokeStyle = `rgba(40,18,12,${0.4 + rng() * 0.3})`;
+        ctx.lineWidth = 0.6 + rng() * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x0 + Math.cos(angle) * len, y0 + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash so
+      // glancing afternoon sun catches the rim of the mesa.
+      const sun = ctx.createRadialGradient(size * 0.72, size * 0.22, 0, size * 0.72, size * 0.22, size * 0.9);
+      sun.addColorStop(0, "rgba(252,232,180,0.22)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 38, 0.0026);
+    },
+  });
+
+  // Redrock-mesa depth map — the strata bands sit slightly above the
+  // recessed seams (light = high) and the wind-cracked fissures read as
+  // narrow depressions so the mesa surface shows banded relief at
+  // glancing sun.
+  registry["redrock-mesa-bump"] = makeCanvasTexture({
+    seed: 0xa70c5a + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average sandstone height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Strata bands — alternating brighter and darker bands matching the
+      // colour map's strata pattern so the relief tracks the visual bands.
+      let y = 0;
+      let up = true;
+      while (y < size) {
+        const bandH = 6 + rng() * 18;
+        const v = up ? 180 + Math.floor(rng() * 40) : 70 + Math.floor(rng() * 40);
+        ctx.fillStyle = `rgba(${v},${v},${v},0.55)`;
+        ctx.fillRect(0, y, size, bandH);
+        // Slim bright cap at the top of brighter bands for raised edge.
+        if (up) {
+          ctx.fillStyle = `rgba(232,232,232,0.7)`;
+          ctx.fillRect(0, y, size, 1.5);
+        }
+        up = !up;
+        y += bandH;
+      }
+      // Wide rolling mesa swells — pale radial highlights suggesting low
+      // sandstone mounds across the surface.
+      for (let i = 0; i < 8; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 90 + rng() * 80;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r2);
+        grad.addColorStop(0, "rgba(212,212,212,0.26)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Pebble bumps — slim bright dots reading as raised stone fragments.
+      for (let i = 0; i < 240; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 1.4 + rng() * 3;
+        ctx.fillStyle = `rgba(220,220,220,0.72)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+        // Slim shaded undercut on the south-east side of each pebble.
+        ctx.fillStyle = `rgba(54,54,54,0.45)`;
+        ctx.beginPath();
+        ctx.arc(cx + 0.6, cy + 0.6, r2 * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Wind-cracked fissure depressions — slim dark hairlines reading as
+      // narrow cracks etched into the bedrock.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 90; i++) {
+        const x0 = rng() * size;
+        const y0 = rng() * size;
+        const len = 6 + rng() * 22;
+        const angle = (rng() - 0.5) * 0.6;
+        ctx.strokeStyle = `rgba(36,36,36,${0.55 + rng() * 0.25})`;
+        ctx.lineWidth = 0.7 + rng() * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x0 + Math.cos(angle) * len, y0 + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep mip
+      // levels.
+      for (let i = 0; i < 1600; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

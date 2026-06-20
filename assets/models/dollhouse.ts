@@ -22,13 +22,14 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 30) adds a Victorian bronze fox statue on a
- * fluted marble pedestal to the back outside-fence lawn, a row of four
- * copper-patina ornamental porch corner finial drops at the porch canopy
- * corners, and a far-west prairie plane reaching beyond the lavender
- * field's west edge with a frontier homestead cabin, a Western multi-blade
- * wind pump, a covered Conestoga wagon, a hitching post, a focal trail
- * cairn and a scatter of tumbleweeds.
+ * latest enhancement (pass 31) adds a Victorian bronze hare statue on a
+ * fluted marble pedestal to the back outside-fence lawn (mirror to the
+ * pass-30 fox statue), a pair of copper-patina ornamental door entrance
+ * pilasters flanking the front door arch, and a far-southwest redrock
+ * mesa plane bridging the gap south of the prairie and west of the peat
+ * moor with a focal Anasazi pueblo cliff dwelling, a natural sandstone
+ * arch, three eroded hoodoo spires, a scatter of saguaro cacti and a
+ * slim dry-wash arroyo strip threading diagonally across the plane.
  */
 const W = 7;
 const D = 5;
@@ -1232,6 +1233,77 @@ const PRAIRIE_TUMBLEWEEDS: { x: number; z: number; rot: number; scale: number }[
   { x: -69, z: 13, rot: 2.0, scale: 1.1 },
 ];
 
+/**
+ * Thirty-first-pass courtyard prop — a Victorian bronze hare statue on a
+ * fluted marble pedestal, parked on the back outside-fence lawn between the
+ * back archway (at x=0) and the garden obelisk (back-east at x=7) so it
+ * reads as a mirror sentinel to the fox statue on the back-west outside
+ * fence. The hare crouches four-square on the plinth cap with long perked
+ * ears, a powerful haunch, a tapered snout, two glinting eye highlights
+ * and a short tail tuft. The bronze body, ears, snout and tail reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal, and the plinth reuses the existing
+ * `marble` colour + bump pair so the stone reads with veined relief.
+ */
+const HARE_STATUE_POS: [number, number, number] = [3.5, 0, -5.5];
+
+/**
+ * Thirty-first-pass house detail — a pair of Victorian copper-patina
+ * ornamental door entrance pilasters flanking the front door arch. Each
+ * pilaster is a slim fluted vertical shaft with a foliate capital cap at
+ * the top and a stepped plinth block at the bottom, mounted on the front
+ * wall on either side of the door arch. The shaft, flutes, capital and
+ * base reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal.
+ */
+const FRONT_DOOR_PILASTER_POSITIONS: [number, number, number][] = [
+  [-0.9, 1.1, FRONT_Z + WALL_T / 2 + 0.012],
+  [0.9, 1.1, FRONT_Z + WALL_T / 2 + 0.012],
+];
+
+/**
+ * Thirty-first-pass scene extension — a far-southwest redrock mesa plane
+ * bridging the gap south of the prairie and west of the peat moor. The
+ * plane overlaps the prairie's south edge with a sun-bleached grass apron
+ * and the peat moor's west edge with a moss-toned apron so the ground
+ * layer has no holes at either seam. It carries a cinnamon-rust sandstone
+ * ground surfaced with the new `redrock-mesa` colour map paired with a
+ * cracked-plateau depth map (registered alongside the other procedural
+ * textures) so the bedding strata bands and scattered pebbles read as
+ * raised relief at glancing sun. Features a focal multi-tier Anasazi-style
+ * pueblo cliff dwelling at the northwest corner with stacked adobe blocks,
+ * dark window openings, viga roof-beam ends and a leaning kiva ladder; a
+ * natural sandstone arch spanning the centre of the mesa; three eroded
+ * hoodoo spires reading as desert sentinels; a scatter of four saguaro
+ * cacti with raised arms and crown bloom dabs; and a slim dry-wash arroyo
+ * strip meandering diagonally across the plane from the south-west corner
+ * to the north-east edge with darker bank trims and a sparse scatter of
+ * stream-worn pebbles along the bed.
+ */
+const REDROCK_MESA_POS: [number, number, number] = [-68, -0.038, 28];
+const REDROCK_MESA_W = 18;
+const REDROCK_MESA_D = 18;
+const PUEBLO_POS: [number, number, number] = [-74, 0, 23];
+const SANDSTONE_ARCH_POS: [number, number, number] = [-68, 0, 28];
+const HOODOOS: { x: number; z: number; scale: number }[] = [
+  { x: -64, z: 24, scale: 1.0 },
+  { x: -71, z: 32, scale: 1.15 },
+  { x: -65, z: 34, scale: 0.9 },
+];
+const SAGUAROS: { x: number; z: number; rot: number; scale: number; arms: 0 | 1 | 2 }[] = [
+  { x: -76, z: 30, rot: 0.4, scale: 1.0, arms: 2 },
+  { x: -62, z: 28, rot: 1.7, scale: 1.1, arms: 1 },
+  { x: -73, z: 35, rot: 2.3, scale: 0.95, arms: 1 },
+  { x: -69, z: 25, rot: 0.9, scale: 1.05, arms: 2 },
+];
+const REDROCK_ARROYO_PATH: { x: number; z: number }[] = [
+  { x: -76, z: 19.5 },
+  { x: -72, z: 24 },
+  { x: -66, z: 29 },
+  { x: -62, z: 33 },
+  { x: -59.5, z: 36 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -2329,6 +2401,48 @@ const C = {
   prairieCairnStone: "#9d9286",
   prairieCairnStoneHi: "#cdc4b8",
   prairieCairnStoneShade: "#5a5048",
+  // Thirty-first enhancement pass — a Victorian bronze hare statue on a
+  // fluted marble pedestal on the back outside-fence lawn (mirror to the
+  // fox statue), a pair of copper-patina ornamental door entrance
+  // pilasters flanking the front door arch, and a far-southwest redrock
+  // mesa plane bridging the gap south of the prairie and west of the
+  // peat moor. The new `redrock-mesa` colour map is paired with a
+  // cracked-plateau depth map registered alongside it so bedding strata
+  // bands and scattered pebbles read as raised relief at glancing sun.
+  hareBronze: "#5d8a6a",
+  hareBronzeHi: "#9bc4a8",
+  hareBronzeShade: "#2f5840",
+  harePlinth: "#ede2d0",
+  harePlinthShade: "#a89776",
+  doorPilasterCopper: "#5d8a6a",
+  doorPilasterCopperHi: "#9bc4a8",
+  doorPilasterCopperShade: "#2f5840",
+  // Far-southwest redrock mesa — cinnamon-rust sandstone with banded
+  // strata, a focal Anasazi pueblo cliff dwelling, a natural sandstone
+  // arch, eroded hoodoo spires, saguaro cacti and a dry-wash arroyo.
+  redrockGround: "#c97048",
+  redrockGroundShade: "#7a3a26",
+  redrockGroundHi: "#e8a070",
+  redrockApronGrass: "#a8a058",
+  redrockApronMoss: "#6e7a52",
+  puebloAdobe: "#b86848",
+  puebloAdobeShade: "#6e3826",
+  puebloAdobeHi: "#d28968",
+  puebloRoof: "#5a3a26",
+  puebloWindow: "#1a1410",
+  puebloLadderWood: "#7c5536",
+  sandstoneArchStone: "#c0664a",
+  sandstoneArchStoneHi: "#e89876",
+  sandstoneArchStoneShade: "#7c3826",
+  hoodooStone: "#b85a3a",
+  hoodooStoneHi: "#e09070",
+  hoodooStoneShade: "#6a2e1a",
+  saguaroBody: "#5e7a48",
+  saguaroBodyShade: "#3a5028",
+  saguaroBloom: "#fcf4e6",
+  arroyoSand: "#d8a876",
+  arroyoSandShade: "#a8784a",
+  arroyoStone: "#7e5a38",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -24668,6 +24782,707 @@ function buildPrairieTumbleweeds(f: NodeFactory): SceneNode {
   return f.group("Prairie Tumbleweeds", weeds);
 }
 
+/* ─────────────── thirty-first-pass courtyard prop ─────────────── */
+
+/**
+ * Victorian bronze hare statue on a fluted marble pedestal, parked on the
+ * back outside-fence lawn between the back archway (at x=0) and the
+ * garden obelisk (back-east at x=7) so it reads as a mirror sentinel to
+ * the fox statue (back-west at x=-6) across the back archway threshold.
+ * The hare crouches four-square on the plinth cap in a slim alert pose
+ * with long perked ears, a powerful haunch, a tapered snout, two glinting
+ * eye highlights and a short tail tuft.
+ */
+function buildHareStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.hareBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.hareBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.hareBronzeShade, 0.95, { flatShading: true });
+  const marble: MaterialDef = {
+    color: C.harePlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.harePlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base — a broad square marble base.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft + cap.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Hare body — a slim crouched torso.
+  const bodyY = 0.95;
+  parts.push(
+    f.mesh("Hare Body", box(0.38, 0.2, 0.22), bronze, {
+      position: [0, bodyY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded undercut beneath the body for relief.
+    f.mesh("Hare Body Shade", box(0.34, 0.04, 0.18), bronzeShade, {
+      position: [0, bodyY - 0.10, 0],
+    }, { castShadow: false }),
+  );
+  // ── Powerful rear haunch — a slim swelled sphere at the back of the body.
+  parts.push(
+    f.mesh("Hare Haunch", sphere(0.13, 10, 8), bronze, {
+      position: [-0.16, bodyY + 0.02, 0],
+      scale: [1, 1.05, 1.1],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Four slim legs.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      const lx = sx * 0.13;
+      const lz = sz * 0.07;
+      const isRear = sx < 0;
+      parts.push(
+        f.mesh(
+          `Hare Leg ${sx} ${sz}`,
+          cylinder(0.03, 0.035, isRear ? 0.18 : 0.22, 6),
+          bronze,
+          { position: [lx, bodyY - 0.18, lz] },
+          { castShadow: true, receiveShadow: true },
+        ),
+        f.mesh(
+          `Hare Foot ${sx} ${sz}`,
+          sphere(0.04, 8, 6),
+          bronzeShade,
+          {
+            position: [lx, bodyY - 0.30, lz],
+            scale: [1, 0.6, 1.2],
+          },
+          { castShadow: false },
+        ),
+      );
+    }
+  }
+  // ── Hare head — slim alert head with a tapered snout and long ears.
+  const headX = 0.22;
+  const headY = bodyY + 0.16;
+  parts.push(
+    f.mesh("Hare Head", box(0.16, 0.16, 0.16), bronze, {
+      position: [headX, headY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Hare Snout", cylinder(0.03, 0.05, 0.10, 8), bronze, {
+      position: [headX + 0.10, headY - 0.02, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    f.mesh("Hare Nose", sphere(0.022, 8, 6), bronzeShade, {
+      position: [headX + 0.16, headY - 0.02, 0],
+    }, { castShadow: false }),
+    // Two long perked ears atop the head.
+    f.mesh("Hare Ear L", cylinder(0.022, 0.018, 0.20, 6), bronze, {
+      position: [headX - 0.02, headY + 0.18, 0.05],
+      rotation: [0, 0, -0.15],
+    }, { castShadow: true }),
+    f.mesh("Hare Ear R", cylinder(0.022, 0.018, 0.20, 6), bronze, {
+      position: [headX - 0.02, headY + 0.18, -0.05],
+      rotation: [0, 0, -0.15],
+    }, { castShadow: true }),
+    // Slim shaded ear interior beads for relief.
+    f.mesh("Hare Ear L Inner", cylinder(0.014, 0.010, 0.16, 6), bronzeShade, {
+      position: [headX - 0.012, headY + 0.16, 0.05],
+      rotation: [0, 0, -0.15],
+    }, { castShadow: false }),
+    f.mesh("Hare Ear R Inner", cylinder(0.014, 0.010, 0.16, 6), bronzeShade, {
+      position: [headX - 0.012, headY + 0.16, -0.05],
+      rotation: [0, 0, -0.15],
+    }, { castShadow: false }),
+    // Two glinting eye highlights.
+    f.mesh("Hare Eye L", sphere(0.014, 8, 6), bronzeHi, {
+      position: [headX + 0.05, headY + 0.03, 0.05],
+    }, { castShadow: false }),
+    f.mesh("Hare Eye R", sphere(0.014, 8, 6), bronzeHi, {
+      position: [headX + 0.05, headY + 0.03, -0.05],
+    }, { castShadow: false }),
+    // Short tail tuft at the back.
+    f.mesh("Hare Tail", sphere(0.045, 10, 8), bronzeHi, {
+      position: [-0.24, bodyY + 0.04, 0],
+      scale: [1, 0.9, 0.9],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Hare Plaque Tablet", box(0.3, 0.1, 0.018), bronze, {
+      position: [0, 0.46, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Hare Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Hare Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Hare Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+  );
+  return f.group("Hare Statue", parts, { position: pos });
+}
+
+/* ─────────────── thirty-first-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental door entrance pilasters
+ * flanking the front door arch. Each pilaster is a slim fluted vertical
+ * shaft running from porch height to door arch height, with a foliate
+ * capital cap at the top and a stepped plinth block at the bottom. The
+ * shaft, flutes, capital and base reuse the existing `copper-patina`
+ * colour + bump pair so the verdigris reads as crusted relief on the
+ * cast metal.
+ */
+function buildDoorPilasters(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.doorPilasterCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 1.5],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.doorPilasterCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.doorPilasterCopperShade, 0.95, { flatShading: true });
+  const pilasters: SceneNode[] = [];
+  for (let i = 0; i < FRONT_DOOR_PILASTER_POSITIONS.length; i++) {
+    const pos = FRONT_DOOR_PILASTER_POSITIONS[i]!;
+    const parts: SceneNode[] = [
+      // Slim base plinth block at the bottom of the pilaster.
+      f.mesh("Pilaster Base", box(0.16, 0.14, 0.05), copper, {
+        position: [0, -0.96, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Pilaster Base Trim", box(0.18, 0.03, 0.06), copperHi, {
+        position: [0, -0.87, 0],
+      }, { castShadow: false }),
+      // Fluted vertical shaft — slim rectangular slab with three vertical
+      // groove highlights so the millwork reads as fluted.
+      f.mesh("Pilaster Shaft", box(0.12, 1.74, 0.04), copper, {
+        position: [0, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Three slim vertical flute beads on the shaft front for relief.
+      f.mesh("Pilaster Flute L", box(0.018, 1.6, 0.045), copperShade, {
+        position: [-0.038, 0, 0.005],
+      }, { castShadow: false }),
+      f.mesh("Pilaster Flute C", box(0.018, 1.6, 0.045), copperShade, {
+        position: [0, 0, 0.005],
+      }, { castShadow: false }),
+      f.mesh("Pilaster Flute R", box(0.018, 1.6, 0.045), copperShade, {
+        position: [0.038, 0, 0.005],
+      }, { castShadow: false }),
+      // Foliate capital cap at the top — a stepped block with a slim
+      // crown bead reading as a small leaf ornament.
+      f.mesh("Pilaster Capital", box(0.18, 0.10, 0.06), copper, {
+        position: [0, 0.92, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Pilaster Capital Hi", box(0.20, 0.025, 0.07), copperHi, {
+        position: [0, 0.98, 0],
+      }, { castShadow: false }),
+      // Slim drop beads beneath the capital reading as a foliate cluster.
+      f.mesh("Pilaster Capital Drop L", sphere(0.018, 8, 6), copperHi, {
+        position: [-0.05, 0.86, 0.025],
+      }, { castShadow: false }),
+      f.mesh("Pilaster Capital Drop C", sphere(0.022, 8, 6), copperHi, {
+        position: [0, 0.85, 0.025],
+      }, { castShadow: false }),
+      f.mesh("Pilaster Capital Drop R", sphere(0.018, 8, 6), copperHi, {
+        position: [0.05, 0.86, 0.025],
+      }, { castShadow: false }),
+    ];
+    pilasters.push(f.group(`Door Pilaster ${i + 1}`, parts, { position: pos }));
+  }
+  return f.group("Door Pilasters", pilasters);
+}
+
+/* ─────────────── thirty-first-pass scene extension ─────────────── */
+
+/**
+ * Far-southwest redrock mesa plane bridging the gap south of the prairie
+ * and west of the peat moor. Carries a cinnamon-rust sandstone ground
+ * surfaced with the new `redrock-mesa` colour + depth map pair so bedding
+ * strata bands and scattered pebbles read as raised relief at glancing
+ * sun. Features a focal Anasazi pueblo cliff dwelling at the northwest
+ * corner, a natural sandstone arch, three eroded hoodoo spires, a scatter
+ * of saguaro cacti and a slim dry-wash arroyo strip.
+ */
+function buildFarSouthwestRedrockMesa(f: NodeFactory): SceneNode {
+  return f.group("Far Southwest Redrock Mesa", [
+    // Redrock mesa ground plane — cinnamon-rust sandstone with the new
+    // colour + depth map pair so bedding strata bands and scattered
+    // pebbles read as raised relief at glancing sun.
+    f.mesh(
+      "Redrock Mesa Ground",
+      plane(REDROCK_MESA_W, REDROCK_MESA_D),
+      std(C.redrockGround, 0.95, {
+        texture: "redrock-mesa",
+        textureScale: [4, 4],
+        bumpMap: "redrock-mesa-bump",
+        bumpScale: 0.06,
+      }),
+      { position: REDROCK_MESA_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the prairie's south edge with a sun-bleached
+    // grass strip so the seam reads as a continuous prairie-into-mesa join
+    // with no holes at the ground layer.
+    f.mesh(
+      "Redrock Mesa North Apron",
+      plane(REDROCK_MESA_W, 3),
+      std(C.redrockApronGrass, 0.95, { texture: "grass", textureScale: [6, 1] }),
+      {
+        position: [
+          REDROCK_MESA_POS[0],
+          -0.034,
+          REDROCK_MESA_POS[2] - REDROCK_MESA_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    // East apron — overlaps the peat moor's west edge with a moss-toned
+    // strip so the seam reads as a continuous mesa-into-moor join with no
+    // holes at the ground layer.
+    f.mesh(
+      "Redrock Mesa East Apron",
+      plane(3, REDROCK_MESA_D),
+      std(C.redrockApronMoss, 0.95, { texture: "grass", textureScale: [1, 6] }),
+      {
+        position: [
+          REDROCK_MESA_POS[0] + REDROCK_MESA_W / 2 - 1.5,
+          -0.034,
+          REDROCK_MESA_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildPuebloCliffDwelling(f, PUEBLO_POS),
+    buildSandstoneArch(f, SANDSTONE_ARCH_POS),
+    buildRedrockHoodoos(f),
+    buildSaguaroCacti(f),
+    buildArroyoWash(f),
+  ]);
+}
+
+/**
+ * Focal Anasazi-style pueblo cliff dwelling stacked on a sandstone ledge
+ * at the northwest corner of the redrock mesa. Three tiered adobe blocks
+ * with dark window openings on the south faces, viga roof-beam ends
+ * protruding from each tier and a leaning kiva ladder against the base
+ * tier's east face.
+ */
+function buildPuebloCliffDwelling(
+  f: NodeFactory,
+  pos: [number, number, number],
+): SceneNode {
+  const adobe = std(C.puebloAdobe, 0.95, {
+    texture: "brick",
+    textureScale: [1.6, 0.9],
+    flatShading: true,
+  });
+  const adobeShade = std(C.puebloAdobeShade, 0.95, { flatShading: true });
+  const adobeHi = std(C.puebloAdobeHi, 0.85, { flatShading: true });
+  const roof = std(C.puebloRoof, 0.92, { flatShading: true });
+  const win = std(C.puebloWindow, 0.95, { flatShading: true });
+  const ladderWood = std(C.puebloLadderWood, 0.85, {
+    texture: "wood",
+    textureScale: [0.4, 2],
+    flatShading: true,
+  });
+  const parts: SceneNode[] = [];
+  // ── Base tier — broad rectangular adobe block.
+  parts.push(
+    f.mesh("Pueblo Tier 1", box(3.4, 1.4, 1.8), adobe, {
+      position: [0, 0.7, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pueblo Tier 1 Plinth", box(3.5, 0.08, 1.9), adobeShade, {
+      position: [0, 0.04, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Pueblo Tier 1 Cap", box(3.5, 0.06, 1.9), adobeHi, {
+      position: [0, 1.43, 0],
+    }, { castShadow: false }),
+    f.mesh("Pueblo Tier 1 Roof", box(3.4, 0.04, 1.8), roof, {
+      position: [0, 1.47, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Middle tier — narrower block centred and set back.
+  parts.push(
+    f.mesh("Pueblo Tier 2", box(2.4, 1.2, 1.4), adobe, {
+      position: [-0.3, 2.1, -0.2],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pueblo Tier 2 Cap", box(2.5, 0.06, 1.5), adobeHi, {
+      position: [-0.3, 2.73, -0.2],
+    }, { castShadow: false }),
+    f.mesh("Pueblo Tier 2 Roof", box(2.4, 0.04, 1.4), roof, {
+      position: [-0.3, 2.77, -0.2],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Top tier — small lookout block on the north-west side.
+  parts.push(
+    f.mesh("Pueblo Tier 3", box(1.4, 0.9, 1.0), adobe, {
+      position: [-0.7, 3.25, -0.4],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pueblo Tier 3 Cap", box(1.5, 0.06, 1.1), adobeHi, {
+      position: [-0.7, 3.73, -0.4],
+    }, { castShadow: false }),
+    f.mesh("Pueblo Tier 3 Roof", box(1.4, 0.04, 1.0), roof, {
+      position: [-0.7, 3.77, -0.4],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Window / door openings — small dark squares inset on south faces.
+  const windows: [number, number, number][] = [
+    [-1.2, 0.85, 0.92],
+    [-0.4, 0.95, 0.92],
+    [0.5, 0.95, 0.92],
+    [1.2, 0.85, 0.92],
+    [-0.9, 2.2, 0.52],
+    [0.0, 2.2, 0.52],
+    [-0.7, 3.35, 0.12],
+  ];
+  for (let i = 0; i < windows.length; i++) {
+    const w = windows[i]!;
+    parts.push(
+      f.mesh(`Pueblo Window ${i}`, box(0.18, 0.28, 0.03), win, {
+        position: w,
+      }, { castShadow: false }),
+    );
+  }
+  // Central door — slightly larger dark opening at base of tier 1.
+  parts.push(
+    f.mesh("Pueblo Door", box(0.24, 0.5, 0.03), win, {
+      position: [-1.55, 0.27, 0.92],
+    }, { castShadow: false }),
+  );
+  // ── Round viga roof-beam ends along the south face of each tier.
+  for (const sx of [-1, 0, 1]) {
+    parts.push(
+      f.mesh(`Viga T1 ${sx}`, cylinder(0.05, 0.05, 0.16, 6), ladderWood, {
+        position: [sx * 0.9, 1.36, 0.96],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+  }
+  for (const sx of [-1, 0]) {
+    parts.push(
+      f.mesh(`Viga T2 ${sx}`, cylinder(0.045, 0.045, 0.14, 6), ladderWood, {
+        position: [-0.3 + sx * 0.7, 2.66, 0.56],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Leaning kiva ladder against the tier 1 east face — two slim rails
+  // tilted slightly out from the wall, with five horizontal rungs between.
+  const ladderTilt = 0.18;
+  parts.push(
+    f.mesh("Kiva Ladder Rail L", box(0.05, 1.8, 0.05), ladderWood, {
+      position: [1.85, 0.9, 0.55],
+      rotation: [0, 0, ladderTilt],
+    }, { castShadow: true }),
+    f.mesh("Kiva Ladder Rail R", box(0.05, 1.8, 0.05), ladderWood, {
+      position: [1.95, 0.9, 0.25],
+      rotation: [0, 0, ladderTilt],
+    }, { castShadow: true }),
+  );
+  for (let i = 0; i < 5; i++) {
+    const ry = 0.25 + i * 0.32;
+    parts.push(
+      f.mesh(`Kiva Ladder Rung ${i}`, cylinder(0.025, 0.025, 0.34, 6), ladderWood, {
+        position: [1.9, ry, 0.4],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Pueblo Cliff Dwelling", parts, { position: pos });
+}
+
+/**
+ * A natural sandstone arch at the centre of the redrock mesa. Two stout
+ * sandstone piers with a curved spanning lintel of stacked blocks forming
+ * the iconic desert arch silhouette.
+ */
+function buildSandstoneArch(
+  f: NodeFactory,
+  pos: [number, number, number],
+): SceneNode {
+  const stone = std(C.sandstoneArchStone, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.2, 1.2],
+    flatShading: true,
+  });
+  const stoneHi = std(C.sandstoneArchStoneHi, 0.85, { flatShading: true });
+  const stoneShade = std(C.sandstoneArchStoneShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Two sandstone piers flanking the arch opening.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Arch Pier ${sx}`, box(0.6, 2.4, 0.9), stone, {
+        position: [sx * 1.0, 1.2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim highlight footing at the base of each pier.
+      f.mesh(`Arch Pier Hi ${sx}`, box(0.55, 0.18, 0.85), stoneHi, {
+        position: [sx * 1.0, 0.18, 0],
+      }, { castShadow: false }),
+      // Slim shaded buttress on the outer face for relief.
+      f.mesh(`Arch Pier Shade ${sx}`, box(0.16, 1.6, 0.4), stoneShade, {
+        position: [sx * 1.32, 1.0, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Curved spanning lintel — a sequence of slim shifted blocks that
+  // approximate the iconic arch silhouette.
+  const segments = 7;
+  const spanW = 2.6;
+  for (let i = 0; i < segments; i++) {
+    const t = (i + 0.5) / segments;
+    const x = (t - 0.5) * spanW;
+    const y = 2.4 + Math.sin(t * Math.PI) * 0.7;
+    const tilt = Math.cos(t * Math.PI) * 0.4;
+    parts.push(
+      f.mesh(`Arch Span ${i}`, box(0.46, 0.42, 0.9), stone, {
+        position: [x, y, 0],
+        rotation: [0, 0, tilt],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Arch Span Hi ${i}`, box(0.42, 0.06, 0.85), stoneHi, {
+        position: [x, y + 0.22, 0],
+        rotation: [0, 0, tilt],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Slim shaded undercut beneath the arch span for relief.
+  parts.push(
+    f.mesh("Arch Underside Shade", sphere(0.9, 16, 10), stoneShade, {
+      position: [0, 2.4, 0],
+      scale: [1.4, 0.55, 0.5],
+    }, { castShadow: false }),
+  );
+  return f.group("Sandstone Arch", parts, { position: pos });
+}
+
+/**
+ * Three eroded hoodoo rock spires scattered across the mesa, each a slim
+ * stacked column of weathered sandstone tapering toward a top cap stone
+ * sitting on a stout footing boulder.
+ */
+function buildRedrockHoodoos(f: NodeFactory): SceneNode {
+  const stone = std(C.hoodooStone, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1, 1],
+    flatShading: true,
+  });
+  const stoneHi = std(C.hoodooStoneHi, 0.85, { flatShading: true });
+  const stoneShade = std(C.hoodooStoneShade, 0.95, { flatShading: true });
+  const spires: SceneNode[] = [];
+  for (let i = 0; i < HOODOOS.length; i++) {
+    const h = HOODOOS[i]!;
+    const s = h.scale;
+    const baseR = 0.45 * s;
+    const midR = 0.30 * s;
+    const topR = 0.36 * s;
+    const parts: SceneNode[] = [
+      // Base footing boulder.
+      f.mesh("Hoodoo Base", cylinder(baseR, baseR + 0.05, 0.4 * s, 10), stone, {
+        position: [0, 0.2 * s, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Hoodoo Base Hi", cylinder(baseR - 0.04, baseR - 0.02, 0.08 * s, 10), stoneHi, {
+        position: [0, 0.04 * s, 0],
+      }, { castShadow: false }),
+      // Tapering mid shaft — the eroded waist of the hoodoo.
+      f.mesh("Hoodoo Shaft", cylinder(midR, midR + 0.06, 1.2 * s, 8), stone, {
+        position: [0, (0.4 + 0.6) * s, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Hoodoo Shaft Shade", cylinder(midR - 0.05, midR - 0.03, 1.0 * s, 8), stoneShade, {
+        position: [0.04 * s, (0.4 + 0.5) * s, -0.04 * s],
+      }, { castShadow: false }),
+      // Top cap stone — a wider mushroom cap.
+      f.mesh("Hoodoo Cap", cylinder(topR, topR - 0.06, 0.34 * s, 10), stone, {
+        position: [0, (0.4 + 1.2 + 0.17) * s, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Hoodoo Cap Hi", cylinder(topR - 0.05, topR - 0.08, 0.06 * s, 10), stoneHi, {
+        position: [0, (0.4 + 1.2 + 0.36) * s, 0],
+      }, { castShadow: false }),
+    ];
+    spires.push(
+      f.group(`Hoodoo ${i + 1}`, parts, {
+        position: [h.x, 0, h.z],
+      }),
+    );
+  }
+  return f.group("Redrock Hoodoos", spires);
+}
+
+/**
+ * A scatter of four saguaro cacti across the redrock mesa. Each cactus is
+ * a slim ribbed trunk with one or two raised arms and a small white bloom
+ * dab at the crown — the iconic Sonoran desert plant catching the dusk
+ * sun on the open mesa.
+ */
+function buildSaguaroCacti(f: NodeFactory): SceneNode {
+  const body = std(C.saguaroBody, 0.85, { flatShading: true });
+  const bodyShade = std(C.saguaroBodyShade, 0.95, { flatShading: true });
+  const bloom = std(C.saguaroBloom, 0.5, { flatShading: true });
+  const cacti: SceneNode[] = [];
+  for (let i = 0; i < SAGUAROS.length; i++) {
+    const s = SAGUAROS[i]!;
+    const parts: SceneNode[] = [
+      // Main trunk — a slim ribbed column.
+      f.mesh("Saguaro Trunk", cylinder(0.16, 0.22, 1.9, 10), body, {
+        position: [0, 0.95, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded rib bands for relief.
+      f.mesh("Saguaro Rib L", box(0.04, 1.7, 0.02), bodyShade, {
+        position: [-0.16, 0.85, 0.01],
+      }, { castShadow: false }),
+      f.mesh("Saguaro Rib R", box(0.04, 1.7, 0.02), bodyShade, {
+        position: [0.16, 0.85, 0.01],
+      }, { castShadow: false }),
+      // Crown bloom dab at the top.
+      f.mesh("Saguaro Bloom", sphere(0.08, 10, 8), bloom, {
+        position: [0, 1.95, 0],
+        scale: [1, 0.6, 1],
+      }, { castShadow: false }),
+    ];
+    if (s.arms >= 1) {
+      // Right arm — a slim L-shape branching upward.
+      parts.push(
+        f.mesh("Saguaro Arm R Bend", cylinder(0.10, 0.12, 0.4, 8), body, {
+          position: [0.20, 1.0, 0],
+          rotation: [0, 0, -Math.PI / 2],
+        }, { castShadow: true }),
+        f.mesh("Saguaro Arm R Up", cylinder(0.10, 0.12, 0.8, 8), body, {
+          position: [0.36, 1.4, 0],
+        }, { castShadow: true }),
+        f.mesh("Saguaro Arm R Cap", sphere(0.10, 8, 6), body, {
+          position: [0.36, 1.80, 0],
+        }, { castShadow: false }),
+      );
+    }
+    if (s.arms >= 2) {
+      // Left arm — a slim L-shape branching upward on the opposite side.
+      parts.push(
+        f.mesh("Saguaro Arm L Bend", cylinder(0.10, 0.12, 0.4, 8), body, {
+          position: [-0.20, 1.25, 0],
+          rotation: [0, 0, Math.PI / 2],
+        }, { castShadow: true }),
+        f.mesh("Saguaro Arm L Up", cylinder(0.10, 0.12, 0.6, 8), body, {
+          position: [-0.36, 1.55, 0],
+        }, { castShadow: true }),
+        f.mesh("Saguaro Arm L Cap", sphere(0.10, 8, 6), body, {
+          position: [-0.36, 1.85, 0],
+        }, { castShadow: false }),
+      );
+    }
+    cacti.push(
+      f.group(`Saguaro ${i + 1}`, parts, {
+        position: [s.x, 0, s.z],
+        rotation: [0, s.rot, 0],
+        scale: [s.scale, s.scale, s.scale],
+      }),
+    );
+  }
+  return f.group("Saguaro Cacti", cacti);
+}
+
+/**
+ * A slim dry-wash arroyo strip running diagonally across the mesa from
+ * the south-west corner toward the north-east edge. A sun-bleached sand
+ * ribbon built from a chain of oriented plane segments, with darker bank
+ * trims along its edges and a sparse scatter of small stream-worn
+ * pebbles along the bed.
+ */
+function buildArroyoWash(f: NodeFactory): SceneNode {
+  const sand = std(C.arroyoSand, 0.95, { flatShading: true });
+  const sandShade = std(C.arroyoSandShade, 0.95, { flatShading: true });
+  const stone = std(C.arroyoStone, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Build the wash from a chain of slim oriented segments connecting
+  // successive waypoints along the arroyo path.
+  for (let i = 0; i < REDROCK_ARROYO_PATH.length - 1; i++) {
+    const a = REDROCK_ARROYO_PATH[i]!;
+    const b = REDROCK_ARROYO_PATH[i + 1]!;
+    const dx = b.x - a.x;
+    const dz = b.z - a.z;
+    const len = Math.sqrt(dx * dx + dz * dz);
+    const cx = (a.x + b.x) / 2;
+    const cz = (a.z + b.z) / 2;
+    // Yaw is rotation around the world Y axis. After laying the plane flat
+    // via X = -PI/2, we rotate around the new local Z axis (which was the
+    // world Y axis pre-rotation) so the seg orients along the path.
+    const yaw = Math.atan2(dx, dz);
+    // Pre-yaw bank offsets in world XZ. Bank L sits on the +X side of the
+    // wash direction; bank R sits on the -X side.
+    const nx = Math.cos(yaw);
+    const nz = -Math.sin(yaw);
+    parts.push(
+      f.mesh(`Arroyo Seg ${i}`, plane(0.9, len + 0.2), sand, {
+        position: [cx, -0.032, cz],
+        rotation: [-Math.PI / 2, 0, yaw],
+      }, { receiveShadow: true }),
+      f.mesh(`Arroyo Bank L ${i}`, plane(0.18, len + 0.2), sandShade, {
+        position: [cx + nx * 0.5, -0.030, cz + nz * 0.5],
+        rotation: [-Math.PI / 2, 0, yaw],
+      }, { receiveShadow: true }),
+      f.mesh(`Arroyo Bank R ${i}`, plane(0.18, len + 0.2), sandShade, {
+        position: [cx - nx * 0.5, -0.030, cz - nz * 0.5],
+        rotation: [-Math.PI / 2, 0, yaw],
+      }, { receiveShadow: true }),
+    );
+  }
+  // Sparse scatter of small stream-worn pebbles along the arroyo bed.
+  const pebblePositions: [number, number][] = [
+    [-74, 22],
+    [-71, 25],
+    [-68, 28],
+    [-65, 31],
+    [-62, 34],
+  ];
+  for (let i = 0; i < pebblePositions.length; i++) {
+    const [px, pz] = pebblePositions[i]!;
+    parts.push(
+      f.mesh(`Arroyo Pebble ${i}`, sphere(0.12, 10, 8), stone, {
+        position: [px, 0.05, pz],
+        scale: [1.2, 0.4, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  return f.group("Arroyo Wash", parts);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -25373,6 +26188,42 @@ function buildPrairieTumbleweeds(f: NodeFactory): SceneNode {
  *    marking the prairie crossroads and a scatter of three rolling
  *    tumbleweeds (each a slim sphere of criss-cross stick rings with a
  *    denser shaded inner core) distributed across the open grass.
+ *  - Thirty-first pass — courtyard: a Victorian bronze hare statue on a
+ *    fluted marble pedestal, parked on the back outside-fence lawn
+ *    between the back archway (centre) and the garden obelisk (back-
+ *    east) so it reads as a mirror sentinel to the fox statue on the
+ *    back-west fence — the hare crouches four-square on the plinth cap
+ *    with long perked ears, a powerful haunch, a tapered snout, two
+ *    glinting eye highlights and a short tail tuft (the bronze body,
+ *    ears, snout and tail reuse the existing `copper-patina` colour +
+ *    bump pair so the verdigris reads as crusted relief on the cast
+ *    metal, and the plinth reuses the existing `marble` colour + bump
+ *    pair so the stone reads with veined relief). House: a pair of
+ *    Victorian copper-patina ornamental door entrance pilasters flanking
+ *    the front door arch — each pilaster a slim fluted vertical shaft
+ *    with a foliate capital cap at the top, three drop beads beneath
+ *    the cap and a stepped plinth block at the bottom (the shaft, flutes,
+ *    capital and base reuse the existing `copper-patina` pair so the
+ *    verdigris reads as crusted relief on the cast metal). Scene: a far-
+ *    southwest redrock mesa plane bridging the gap south of the prairie
+ *    and west of the peat moor — a cinnamon-rust sandstone ground
+ *    surfaced with the new `redrock-mesa` colour map paired with a
+ *    cracked-plateau depth map (registered alongside the other
+ *    procedural textures) so the bedding strata bands and scattered
+ *    pebbles read as raised relief at glancing sun, a sun-bleached
+ *    prairie-grass apron along the north join and a moss-toned apron
+ *    along the east join so the ground layer has no holes at either
+ *    seam, a focal multi-tier Anasazi-style pueblo cliff dwelling at
+ *    the northwest corner with stacked adobe blocks, dark window
+ *    openings, viga roof-beam ends and a leaning kiva ladder, a natural
+ *    sandstone arch spanning the centre of the mesa, three eroded
+ *    hoodoo spires scattered across the plane (each a stacked column of
+ *    weathered sandstone tapering toward a mushroom cap), a scatter of
+ *    four saguaro cacti (slim ribbed trunks with raised arms and crown
+ *    bloom dabs) and a slim dry-wash arroyo strip threading diagonally
+ *    across the mesa from the south-west corner toward the north-east
+ *    edge with darker bank trims and a sparse scatter of stream-worn
+ *    pebbles along the bed.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -25469,6 +26320,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: OBELISK_POS[0], z: OBELISK_POS[2], r: 0.9 },
     // Thirtieth-pass keep-out — bronze fox statue on the back outside-fence lawn.
     { x: FOX_STATUE_POS[0], z: FOX_STATUE_POS[2], r: 0.9 },
+    // Thirty-first-pass keep-out — bronze hare statue on the back outside-fence lawn.
+    { x: HARE_STATUE_POS[0], z: HARE_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -25540,6 +26393,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildLionStatue(f, LION_STATUE_POS),
     buildGardenObelisk(f, OBELISK_POS),
     buildFoxStatue(f, FOX_STATUE_POS),
+    buildHareStatue(f, HARE_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -25567,6 +26421,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fsBambooGrove = buildFarSouthBambooGrove(f);
   const fsPineWoodland = buildFarSouthPineWoodland(f);
   const fwPrairie = buildFarWestPrairie(f);
+  const fswRedrockMesa = buildFarSouthwestRedrockMesa(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -25617,6 +26472,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildWindowPediments(f),
     buildAddressPlaque(f, ADDRESS_PLAQUE_POS),
     buildPorchCornerFinials(f),
+    buildDoorPilasters(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -25651,6 +26507,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fsBambooGrove,
       fsPineWoodland,
       fwPrairie,
+      fswRedrockMesa,
       house,
     ],
   };
