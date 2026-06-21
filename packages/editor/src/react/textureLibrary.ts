@@ -5148,4 +5148,184 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // Thirty-second-pass scene extension — a far-south alpine ridge plane
+  // south of the pine woodland. The new `alpine-ridge` colour map shows a
+  // moss-and-scree ridge floor with tufted moss patches, loose granite
+  // scree shards, exposed bedrock tablets and slim weathered lichen
+  // crusts; paired with the depth map so the tussocks and scree caps
+  // read as raised relief at glancing sun.
+
+  // Alpine-ridge colour — a mossy granite ridge floor with mid-green
+  // tussock patches breaking up the cool-grey scree, scattered loose
+  // stones in three tints, slim weathered lichen crusts and a low warm
+  // sun-cast across the upper-right. Drawn on a power-of-two canvas so
+  // the mipmap chain stays clean.
+  registry["alpine-ridge"] = makeCanvasTexture({
+    seed: 0xb1c4d5,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly darker toward the south so the ridge
+      // floor reads with cool shadow on the lower edge and a hint of
+      // warmer mossy tone toward the north.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#8a948c");
+      bg.addColorStop(0.55, "#6e7a72");
+      bg.addColorStop(1, "#4e5852");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Mossy tussock patches — soft radial moss tufts of varied size
+      // scattered across the canvas reading as cushion moss.
+      for (let i = 0; i < 38; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 18 + rng() * 32;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r2);
+        const mossL = 32 + rng() * 14;
+        grad.addColorStop(0, `hsla(${88 + rng() * 24}, 38%, ${mossL}%, 0.55)`);
+        grad.addColorStop(0.7, `hsla(${82 + rng() * 18}, 30%, ${mossL - 10}%, 0.32)`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Exposed bedrock tablets — soft elongated slate-grey patches
+      // suggesting flat granite slabs poking through the moss.
+      for (let i = 0; i < 18; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const rx = 24 + rng() * 36;
+        const ry = 14 + rng() * 22;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rng() * Math.PI);
+        ctx.fillStyle = `hsla(${210 + rng() * 18}, 6%, ${48 + rng() * 12}%, 0.32)`;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Scattered loose scree — small irregular polygons in three
+      // granite tints reading as fallen rock fragments across the
+      // ridge floor.
+      for (let i = 0; i < 280; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 1.2 + rng() * 3;
+        const tint = rng();
+        let h: number;
+        let l: number;
+        if (tint < 0.4) {
+          h = 210 + rng() * 18;
+          l = 26 + rng() * 8;
+        } else if (tint < 0.78) {
+          h = 30 + rng() * 14;
+          l = 42 + rng() * 10;
+        } else {
+          h = 30 + rng() * 18;
+          l = 68 + rng() * 12;
+        }
+        ctx.fillStyle = `hsla(${h}, 12%, ${l}%, 0.78)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim weathered lichen crusts — soft pale ochre dabs scattered
+      // across the bedrock tablets reading as crustose lichen.
+      for (let i = 0; i < 60; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 2 + rng() * 4;
+        ctx.fillStyle = `hsla(${52 + rng() * 18}, 30%, ${64 + rng() * 12}%, 0.42)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash
+      // so glancing afternoon sun catches the rim of the ridge.
+      const sun = ctx.createRadialGradient(size * 0.74, size * 0.22, 0, size * 0.74, size * 0.22, size * 0.9);
+      sun.addColorStop(0, "rgba(248,232,196,0.18)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 36, 0.0024);
+    },
+  });
+
+  // Alpine-ridge depth map — moss tussocks sit slightly above the
+  // recessed bedrock tablets (light = high), loose scree caps read as
+  // small bright dots and weathered lichen crusts read as low relief so
+  // the ridge surface shows tufted scree relief at glancing sun.
+  registry["alpine-ridge-bump"] = makeCanvasTexture({
+    seed: 0xb1c4d5 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average ridge-floor height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Tussock bumps — pale radial highlights for raised moss cushions.
+      for (let i = 0; i < 38; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 18 + rng() * 32;
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r2);
+        grad.addColorStop(0, "rgba(216,216,216,0.46)");
+        grad.addColorStop(0.7, "rgba(196,196,196,0.22)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Exposed bedrock recesses — soft elongated darker patches reading
+      // as low-relief flat slabs sunk slightly below the moss.
+      for (let i = 0; i < 18; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const rx = 24 + rng() * 36;
+        const ry = 14 + rng() * 22;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rng() * Math.PI);
+        ctx.fillStyle = `rgba(58,58,58,0.32)`;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Scree pebble bumps — slim bright dots reading as raised stones.
+      for (let i = 0; i < 280; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 1.2 + rng() * 3;
+        ctx.fillStyle = `rgba(220,220,220,0.74)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+        // Slim shaded undercut on the south-east side of each pebble.
+        ctx.fillStyle = `rgba(54,54,54,0.45)`;
+        ctx.beginPath();
+        ctx.arc(cx + 0.6, cy + 0.6, r2 * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim lichen-crust low bumps — soft pale dots reading as raised
+      // crustose patches on the bedrock slabs.
+      for (let i = 0; i < 60; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 2 + rng() * 4;
+        ctx.fillStyle = `rgba(186,186,186,0.36)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1600; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }
