@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over twenty-nine enhancement passes.
+// house and its courtyard, layered over thirty-two enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -837,6 +837,54 @@
 //   mesa from the south-west corner toward the north-east edge
 //   with darker bank trims and a sparse scatter of stream-worn
 //   pebbles along the bed.
+//   Pass 32 — courtyard: a Victorian bronze raven sentinel
+//   statue on a fluted marble pedestal, parked on the back
+//   outside-fence lawn between the fox statue (back-west at
+//   x=-6) and the back archway (centre at x=0) so it reads as
+//   a mirror sentinel to the hare statue (back-east-close at
+//   x=+3.5) across the back archway threshold — the raven
+//   stands four-square on the plinth cap with a slim arched
+//   back, two glinting eye highlights, a tapered beak parted
+//   around a small brass key clamped between the mandible
+//   halves and a pair of half-spread wings raised slightly
+//   above the body for relief (the bronze body, wings, beak,
+//   tail and brass key reuse the existing `copper-patina`
+//   colour + bump pair so the verdigris reads as crusted relief
+//   on the cast metal, and the plinth reuses the existing
+//   `marble` colour + bump pair so the stone reads with veined
+//   relief). House: a pair of Victorian copper-patina
+//   ornamental crown caps mounted atop the existing brick
+//   chimney pots — each cap a slim flanged copper ring with a
+//   small foliate crown cluster of four upright tip beads
+//   around a centred finial spire reading as cast-iron millwork
+//   that catches a rim of sunlight along the chimney top (the
+//   cap, flange, crown beads and spire reuse the existing
+//   `copper-patina` pair so the verdigris reads as crusted
+//   relief on the cast metal). Scene: a far-south alpine ridge
+//   plane south of the pine woodland — a moss-and-scree ridge
+//   floor surfaced with the new `alpine-ridge` colour map
+//   paired with a scree-and-tussock depth map (registered
+//   alongside the other procedural textures) so loose stones
+//   and tufted moss read as raised relief at glancing sun, a
+//   slim needle-litter north apron along the pine-woodland join
+//   so the ground layer has no holes at the seam, a focal stone
+//   climbers' shelter cabin at the southwest corner with a
+//   peaked shingle roof, a stone chimney trailing a slim smoke
+//   wisp and a glowing front window catching the dusk, a
+//   granite trail cairn at the northeast clearing marking the
+//   saddle of the ridge (a stack of four weathered boulders
+//   tapering toward a small crown stone), a grove of five
+//   compact alpine juniper trees with twin-cone foliage
+//   canopies in three tints (pale / mid / deep) for chromatic
+//   variation, two eroded rocky outcrops crowned by loose
+//   stones, a slim east-west glacial creek strip with a ripple
+//   highlight, north and south bank trims and four flat
+//   stepping stones crossing the creek at the path line (the
+//   slab sizes alternate slightly so the path reads as hand-
+//   laid rather than uniformly stamped), and a sparse scatter
+//   of five edelweiss alpine wildflower clusters dotted across
+//   the moss tufts (each cluster a small ring of six pale
+//   woolly petals around a golden core on a slim leaf rosette).
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

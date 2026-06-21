@@ -22,14 +22,15 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 31) adds a Victorian bronze hare statue on a
+ * latest enhancement (pass 32) adds a Victorian bronze raven sentinel on a
  * fluted marble pedestal to the back outside-fence lawn (mirror to the
- * pass-30 fox statue), a pair of copper-patina ornamental door entrance
- * pilasters flanking the front door arch, and a far-southwest redrock
- * mesa plane bridging the gap south of the prairie and west of the peat
- * moor with a focal Anasazi pueblo cliff dwelling, a natural sandstone
- * arch, three eroded hoodoo spires, a scatter of saguaro cacti and a
- * slim dry-wash arroyo strip threading diagonally across the plane.
+ * pass-31 hare statue across the back archway), a pair of Victorian
+ * copper-patina ornamental crown caps mounted atop the existing chimney
+ * pots, and a far-south alpine ridge plane south of the pine woodland
+ * with a focal stone climbers' shelter, a granite trail cairn, a small
+ * grove of alpine juniper trees, two eroded rocky outcrops, a slim
+ * glacial creek strip and a sparse scatter of edelweiss alpine
+ * wildflowers across the moss-and-scree floor.
  */
 const W = 7;
 const D = 5;
@@ -1304,6 +1305,89 @@ const REDROCK_ARROYO_PATH: { x: number; z: number }[] = [
   { x: -59.5, z: 36 },
 ];
 
+/**
+ * Thirty-second-pass courtyard prop — a Victorian bronze raven sentinel
+ * statue on a fluted marble pedestal, parked on the back outside-fence
+ * lawn between the fox statue (back-west at x=-6) and the back archway
+ * (centre at x=0) so it reads as a mirror sentinel to the hare statue
+ * (back-east-close at x=+3.5) across the back archway threshold. The
+ * raven stands four-square on the plinth cap with a slim arched back,
+ * two glinting eye highlights, a tapered beak parted around a small
+ * brass key clamped between the upper and lower mandible halves, and a
+ * pair of half-spread wings raised slightly above the body for relief.
+ */
+const RAVEN_STATUE_POS: [number, number, number] = [-3.5, 0, -5.5];
+
+/**
+ * Thirty-second-pass house detail — a pair of Victorian copper-patina
+ * ornamental crown caps mounted atop the existing brick chimney pots.
+ * Each cap is a slim flanged copper ring with a small foliate crown
+ * cluster reading as cast-iron millwork that catches a rim of sunlight
+ * along the chimney top. The chimney pots sit at world y≈11.49 (cx=-2.0,
+ * cz=0.7), so the caps anchor just above each pot's rim and reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal.
+ */
+const CHIMNEY_CAP_POSITIONS: [number, number, number][] = [
+  [-2.16, 11.55, 0.7],
+  [-1.84, 11.55, 0.7],
+];
+
+/**
+ * Thirty-second-pass scene extension — a far-south alpine ridge plane
+ * south of the pine woodland (which is at z=120 with D=20, so spans
+ * z=110..130). The new plane is centred at z=140 with D=20 so the
+ * northern apron overlaps the pine woodland's south edge with a slim
+ * needle-litter strip and the ground layer has no holes at the seam.
+ * The plane carries a moss-and-scree ridge floor surfaced with the new
+ * `alpine-ridge` colour map paired with a scree-and-tussock depth map
+ * (registered alongside the other procedural textures) so the loose
+ * stones and tufted moss read as raised relief at glancing sun.
+ * Features a focal stone climbers' shelter cabin at the southwest
+ * corner with a peaked shingle roof, a stone chimney trailing a slim
+ * smoke wisp and a glowing front window; a granite trail cairn at the
+ * northeast clearing marking the saddle of the ridge; a small grove of
+ * five compact alpine juniper trees with twin-cone foliage canopies in
+ * three tints (pale / mid / deep) so the grove reads with chromatic
+ * variation; two eroded rocky outcrops crowned by loose stones; a slim
+ * glacial creek strip running east-west across the ridge with a
+ * ripple highlight, a north and south bank trim and three flat
+ * stepping stones crossing the creek; and a sparse scatter of five
+ * edelweiss alpine wildflower clusters dotted across the moss tufts
+ * (each cluster a small ring of six pale woolly petals around a golden
+ * core on a slim leaf rosette).
+ */
+const ALPINE_RIDGE_POS: [number, number, number] = [0, -0.036, 140];
+const ALPINE_RIDGE_W = 24;
+const ALPINE_RIDGE_D = 20;
+const ALPINE_SHELTER_POS: [number, number, number] = [-8, 0, 145];
+const ALPINE_CAIRN_POS: [number, number, number] = [7, 0, 134];
+const ALPINE_CREEK_Z = 141;
+const ALPINE_CREEK_STEPS: { x: number; z: number }[] = [
+  { x: -4, z: 141 },
+  { x: -1, z: 141.1 },
+  { x: 2, z: 140.9 },
+  { x: 5, z: 141 },
+];
+const ALPINE_JUNIPERS: { x: number; z: number; scale: number; tint: 0 | 1 | 2 }[] = [
+  { x: -4, z: 134, scale: 0.85, tint: 0 },
+  { x: 5, z: 138, scale: 1.0, tint: 1 },
+  { x: -10, z: 137, scale: 0.95, tint: 2 },
+  { x: 9, z: 148, scale: 1.05, tint: 0 },
+  { x: -3, z: 147, scale: 0.9, tint: 1 },
+];
+const ALPINE_OUTCROPS: { x: number; z: number; scale: number }[] = [
+  { x: -9, z: 138, scale: 1.0 },
+  { x: 9, z: 144, scale: 1.2 },
+];
+const ALPINE_EDELWEISS: { x: number; z: number }[] = [
+  { x: 2, z: 136 },
+  { x: -6, z: 142 },
+  { x: 7, z: 146 },
+  { x: -2, z: 148 },
+  { x: 4, z: 134 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -2443,6 +2527,59 @@ const C = {
   arroyoSand: "#d8a876",
   arroyoSandShade: "#a8784a",
   arroyoStone: "#7e5a38",
+  // Thirty-second enhancement pass — a Victorian bronze raven sentinel
+  // statue on a fluted marble pedestal on the back outside-fence lawn
+  // (mirror to the hare statue across the back archway), a pair of
+  // copper-patina ornamental crown caps mounted atop the existing
+  // brick chimney pots, and a far-south alpine ridge plane south of
+  // the pine woodland with a focal stone climbers' shelter, a granite
+  // trail cairn, a grove of alpine juniper trees, two eroded outcrops,
+  // a glacial creek strip and a scatter of edelweiss wildflowers.
+  ravenBronze: "#3a4842",
+  ravenBronzeHi: "#7e9c8e",
+  ravenBronzeShade: "#1c2622",
+  ravenBeak: "#26201a",
+  ravenKeyBrass: "#c8a560",
+  ravenKeyBrassHi: "#f0d088",
+  ravenPlinth: "#ede2d0",
+  ravenPlinthShade: "#a89776",
+  chimneyCapCopper: "#5d8a6a",
+  chimneyCapCopperHi: "#9bc4a8",
+  chimneyCapCopperShade: "#2f5840",
+  // Far-south alpine ridge — a moss-and-scree ridge floor with a focal
+  // stone climbers' shelter, a granite trail cairn, alpine juniper
+  // grove, eroded outcrops, a glacial creek strip and edelweiss
+  // wildflowers scattered across the moss tufts.
+  arGround: "#7e8a82",
+  arGroundShade: "#4a5450",
+  arGroundHi: "#b6c0b8",
+  arApronNeedle: "#5a6e4a",
+  arJuniperFoliage: "#3a5a48",
+  arJuniperFoliagePale: "#5e7e66",
+  arJuniperFoliageDeep: "#1e3a2a",
+  arJuniperBark: "#5a4030",
+  arJuniperBarkShade: "#322015",
+  arShelterStone: "#888278",
+  arShelterStoneShade: "#4e4a40",
+  arShelterStoneHi: "#bab6a8",
+  arShelterRoof: "#4a3a26",
+  arShelterDoor: "#3a2818",
+  arShelterWindow: "#f8e0a4",
+  arShelterSmoke: "#d8dadc",
+  arCairnStone: "#8a8278",
+  arCairnStoneHi: "#bcb4a8",
+  arCairnStoneShade: "#4a4438",
+  arEdelweissPetal: "#fdfaf0",
+  arEdelweissCore: "#f4d058",
+  arEdelweissLeaf: "#7a8e62",
+  arCreekWater: "#6a8a90",
+  arCreekWaterHi: "#a8c8ce",
+  arCreekBank: "#4e524a",
+  arSteppingStone: "#7e7468",
+  arSteppingStoneHi: "#b4a896",
+  arOutcropStone: "#7e7468",
+  arOutcropStoneHi: "#b4a896",
+  arOutcropStoneShade: "#3a3528",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -25483,6 +25620,756 @@ function buildArroyoWash(f: NodeFactory): SceneNode {
   return f.group("Arroyo Wash", parts);
 }
 
+/* ─────────────── thirty-second-pass courtyard prop ─────────────── */
+
+/**
+ * Victorian bronze raven sentinel statue on a fluted marble pedestal,
+ * parked on the back outside-fence lawn between the fox statue (back-
+ * west at x=-6) and the back archway (centre at x=0) so it reads as a
+ * mirror sentinel to the hare statue (back-east-close at x=+3.5) across
+ * the back archway threshold. The raven stands four-square on the
+ * plinth cap with a slim arched back, two glinting eye highlights, a
+ * tapered beak parted around a small brass key clamped between the
+ * mandible halves and a pair of half-spread wings raised slightly above
+ * the body. The bronze body, wings, beak and tail reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal, and the plinth reuses the existing `marble`
+ * colour + bump pair so the stone reads with veined relief.
+ */
+function buildRavenStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.ravenBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.ravenBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.ravenBronzeShade, 0.95, { flatShading: true });
+  const beak = std(C.ravenBeak, 0.45, { metalness: 0.6 });
+  const brass = std(C.ravenKeyBrass, 0.4, { metalness: 0.85 });
+  const brassHi = std(C.ravenKeyBrassHi, 0.35, { metalness: 0.9 });
+  const marble: MaterialDef = {
+    color: C.ravenPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.ravenPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base — a broad square marble base.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft + cap.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Raven body — a slim arched torso pitched slightly forward.
+  const bodyY = 0.96;
+  parts.push(
+    f.mesh("Raven Body", box(0.30, 0.22, 0.20), bronze, {
+      position: [0, bodyY, 0],
+      rotation: [0.12, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Raven Body Shade", box(0.26, 0.04, 0.16), bronzeShade, {
+      position: [0, bodyY - 0.10, 0],
+    }, { castShadow: false }),
+  );
+  // ── Two slim talon legs anchoring the raven to the plinth cap.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Raven Leg ${sz}`, cylinder(0.028, 0.034, 0.16, 6), bronze, {
+        position: [0, bodyY - 0.18, sz * 0.06],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim splayed three-toed talon foot at the base of each leg.
+      f.mesh(`Raven Talon ${sz}`, sphere(0.045, 8, 6), bronzeShade, {
+        position: [0, bodyY - 0.27, sz * 0.06],
+        scale: [1.4, 0.4, 1.1],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Raven head — a slim alert head tilted slightly upward.
+  const headX = 0.16;
+  const headY = bodyY + 0.18;
+  parts.push(
+    f.mesh("Raven Head", box(0.14, 0.14, 0.14), bronze, {
+      position: [headX, headY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tapered upper beak — a slim cone projecting forward.
+    f.mesh("Raven Beak Upper", cone(0.028, 0.12, 8), beak, {
+      position: [headX + 0.10, headY + 0.01, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: true }),
+    // Slim parted lower mandible just beneath the upper beak.
+    f.mesh("Raven Beak Lower", cone(0.024, 0.09, 8), beak, {
+      position: [headX + 0.085, headY - 0.04, 0],
+      rotation: [0, 0, -Math.PI / 2 + 0.18],
+    }, { castShadow: true }),
+    // Two glinting eye highlights flanking the head.
+    f.mesh("Raven Eye L", sphere(0.014, 8, 6), bronzeHi, {
+      position: [headX + 0.04, headY + 0.025, 0.05],
+    }, { castShadow: false }),
+    f.mesh("Raven Eye R", sphere(0.014, 8, 6), bronzeHi, {
+      position: [headX + 0.04, headY + 0.025, -0.05],
+    }, { castShadow: false }),
+    // Slim feather crest tuft atop the head.
+    f.mesh("Raven Crest", sphere(0.025, 8, 6), bronzeShade, {
+      position: [headX - 0.04, headY + 0.10, 0],
+      scale: [1.2, 0.7, 0.9],
+    }, { castShadow: false }),
+  );
+  // ── Small brass key clamped between the beak mandibles — a slim shank
+  // with a circular bow at one end and a notched bit at the other.
+  parts.push(
+    f.mesh("Raven Key Bow", cylinder(0.022, 0.022, 0.012, 10), brass, {
+      position: [headX + 0.20, headY - 0.018, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Raven Key Bow Hi", cylinder(0.016, 0.016, 0.014, 10), brassHi, {
+      position: [headX + 0.20, headY - 0.018, 0.002],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Raven Key Shank", cylinder(0.008, 0.008, 0.08, 6), brass, {
+      position: [headX + 0.16, headY - 0.018, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    f.mesh("Raven Key Bit", box(0.03, 0.024, 0.012), brass, {
+      position: [headX + 0.13, headY - 0.028, 0],
+    }, { castShadow: false }),
+  );
+  // ── Pair of half-spread wings raised slightly above the body for
+  // relief — each wing a slim sweeping slab tilted outward from the
+  // shoulder with a brighter feather highlight ridge along the leading
+  // edge so the silhouette catches the sun.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Raven Wing ${sz}`, box(0.18, 0.05, 0.24), bronze, {
+        position: [-0.02, bodyY + 0.10, sz * 0.16],
+        rotation: [0, 0, 0.22 * sz],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Raven Wing Tip ${sz}`, box(0.12, 0.04, 0.16), bronzeShade, {
+        position: [-0.16, bodyY + 0.16, sz * 0.22],
+        rotation: [0, 0, 0.32 * sz],
+      }, { castShadow: true }),
+      f.mesh(`Raven Wing Edge ${sz}`, box(0.18, 0.012, 0.04), bronzeHi, {
+        position: [-0.02, bodyY + 0.13, sz * 0.27],
+        rotation: [0, 0, 0.22 * sz],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Tapered tail fan at the back — a slim wedge with three feather
+  // highlight ridges along the upper surface.
+  parts.push(
+    f.mesh("Raven Tail", box(0.18, 0.05, 0.16), bronze, {
+      position: [-0.20, bodyY + 0.02, 0],
+      rotation: [0, 0, -0.18],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Raven Tail Hi", box(0.16, 0.012, 0.14), bronzeHi, {
+      position: [-0.20, bodyY + 0.06, 0],
+      rotation: [0, 0, -0.18],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Raven Plaque Tablet", box(0.3, 0.1, 0.018), bronze, {
+      position: [0, 0.46, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Raven Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Raven Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Raven Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+  );
+  return f.group("Raven Statue", parts, { position: pos });
+}
+
+/* ─────────────── thirty-second-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental crown caps mounted atop
+ * the existing brick chimney pots. Each cap is a slim flanged copper
+ * ring with a small foliate crown cluster of four upright tip beads
+ * around a centred finial spire, reading as cast-iron millwork that
+ * catches a rim of sunlight along the chimney top. The cap, flange,
+ * crown beads and spire reuse the existing `copper-patina` colour +
+ * bump pair so the verdigris reads as crusted relief on the cast
+ * metal.
+ */
+function buildChimneyPotCaps(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.chimneyCapCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.chimneyCapCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.chimneyCapCopperShade, 0.95, { flatShading: true });
+  const caps: SceneNode[] = [];
+  for (let i = 0; i < CHIMNEY_CAP_POSITIONS.length; i++) {
+    const pos = CHIMNEY_CAP_POSITIONS[i]!;
+    const parts: SceneNode[] = [
+      // Slim flanged copper base ring sitting on the chimney pot rim.
+      f.mesh("Cap Flange", cylinder(0.14, 0.14, 0.018, 12), copper, {
+        position: [0, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim bright highlight ring on the upper face of the flange.
+      f.mesh("Cap Flange Hi", cylinder(0.12, 0.12, 0.008, 12), copperHi, {
+        position: [0, 0.013, 0],
+      }, { castShadow: false }),
+      // Slim shaded undercut ring on the lower face of the flange.
+      f.mesh("Cap Flange Shade", cylinder(0.13, 0.13, 0.006, 12), copperShade, {
+        position: [0, -0.011, 0],
+      }, { castShadow: false }),
+      // Slim tapered crown body atop the flange — a low cone reading as
+      // a small upturned cup for the crown beads.
+      f.mesh("Cap Crown Body", cone(0.10, 0.06, 10), copper, {
+        position: [0, 0.052, 0],
+      }, { castShadow: true }),
+      // Centred finial spire crowning the cap.
+      f.mesh("Cap Spire", cone(0.022, 0.10, 8), copper, {
+        position: [0, 0.13, 0],
+      }, { castShadow: true }),
+      f.mesh("Cap Spire Tip", sphere(0.018, 8, 6), copperHi, {
+        position: [0, 0.20, 0],
+      }, { castShadow: false }),
+    ];
+    // Four upright tip beads around the crown — a small foliate cluster.
+    for (let j = 0; j < 4; j++) {
+      const a = (j / 4) * Math.PI * 2;
+      const bx = Math.cos(a) * 0.085;
+      const bz = Math.sin(a) * 0.085;
+      parts.push(
+        f.mesh(`Cap Crown Bead ${j}`, sphere(0.022, 8, 6), copperHi, {
+          position: [bx, 0.082, bz],
+        }, { castShadow: false }),
+      );
+    }
+    caps.push(f.group(`Chimney Pot Cap ${i + 1}`, parts, { position: pos }));
+  }
+  return f.group("Chimney Pot Caps", caps);
+}
+
+/* ─────────────── thirty-second-pass scene extension ─────────────── */
+
+/**
+ * Far-south alpine ridge plane south of the pine woodland. Carries a
+ * moss-and-scree ridge floor surfaced with the new `alpine-ridge`
+ * colour + depth map pair so loose stones and tufted moss read as
+ * raised relief at glancing sun. Features a focal stone climbers'
+ * shelter at the southwest corner, a granite trail cairn at the
+ * northeast clearing, a grove of five alpine juniper trees, two
+ * eroded rocky outcrops, a slim glacial creek strip running east-west
+ * across the ridge with three flat stepping stones crossing it, and
+ * a sparse scatter of edelweiss alpine wildflowers.
+ */
+function buildFarSouthAlpineRidge(f: NodeFactory): SceneNode {
+  return f.group("Far South Alpine Ridge", [
+    // Alpine ridge ground plane — moss-and-scree ridge floor with the
+    // new colour + depth map pair so loose stones and tufted moss read
+    // as raised relief at glancing sun.
+    f.mesh(
+      "Alpine Ridge Ground",
+      plane(ALPINE_RIDGE_W, ALPINE_RIDGE_D),
+      std(C.arGround, 0.95, {
+        texture: "alpine-ridge",
+        textureScale: [5, 4],
+        bumpMap: "alpine-ridge-bump",
+        bumpScale: 0.06,
+      }),
+      { position: ALPINE_RIDGE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // North apron — overlaps the pine woodland's south edge with a slim
+    // needle-litter strip so the seam reads as a continuous pine-into-
+    // alpine join with no holes at the ground layer.
+    f.mesh(
+      "Alpine Ridge North Apron",
+      plane(ALPINE_RIDGE_W, 3),
+      std(C.arApronNeedle, 0.95, { texture: "grass", textureScale: [12, 1] }),
+      {
+        position: [
+          ALPINE_RIDGE_POS[0],
+          -0.032,
+          ALPINE_RIDGE_POS[2] - ALPINE_RIDGE_D / 2 + 1.5,
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildAlpineJunipers(f),
+    buildAlpineShelter(f, ALPINE_SHELTER_POS),
+    buildAlpineCairn(f, ALPINE_CAIRN_POS),
+    buildAlpineOutcrops(f),
+    buildAlpineCreek(f),
+    buildAlpineEdelweiss(f),
+  ]);
+}
+
+/**
+ * Five compact alpine juniper trees scattered across the ridge. Each
+ * tree is a slim sturdy trunk with a twin-cone foliage canopy in one of
+ * three tints (pale / mid / deep) so the grove reads with chromatic
+ * variation rather than identical stamps.
+ */
+function buildAlpineJunipers(f: NodeFactory): SceneNode {
+  const tints: string[] = [C.arJuniperFoliage, C.arJuniperFoliagePale, C.arJuniperFoliageDeep];
+  const trunkMat = std(C.arJuniperBark, 0.95, { texture: "pine-bark", textureScale: [1, 3] });
+  const trunkShade = std(C.arJuniperBarkShade, 0.95, { flatShading: true });
+  const trees: SceneNode[] = [];
+  for (let i = 0; i < ALPINE_JUNIPERS.length; i++) {
+    const s = ALPINE_JUNIPERS[i]!;
+    const tint = tints[s.tint]!;
+    const foliage = std(tint, 0.85, { flatShading: true });
+    const foliageShade = std(C.arJuniperFoliageDeep, 0.95, { flatShading: true });
+    const trunkH = 1.6 * s.scale;
+    const trunkR = 0.13 * s.scale;
+    const parts: SceneNode[] = [
+      // Stout sturdy trunk — slim straight pole.
+      f.mesh("Trunk", cylinder(trunkR * 0.75, trunkR, trunkH, 8), trunkMat, {
+        position: [0, trunkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded ridge along the trunk's north side for relief.
+      f.mesh("Trunk Shade", cylinder(trunkR * 0.55, trunkR * 0.7, trunkH * 0.85, 6), trunkShade, {
+        position: [0.025 * s.scale, trunkH / 2, -0.025 * s.scale],
+      }, { castShadow: false }),
+    ];
+    // Twin-cone canopy — a wider lower cone and a slimmer upper cone
+    // crowned by a small tuft so the silhouette reads as alpine juniper.
+    const lowerY = trunkH * 0.55;
+    const upperY = trunkH * 0.95;
+    parts.push(
+      f.mesh("Canopy Lower", cone(0.95 * s.scale, 0.95 * s.scale, 10), foliage, {
+        position: [0, lowerY, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Canopy Lower Shade", cone(0.88 * s.scale, 0.16 * s.scale, 8), foliageShade, {
+        position: [0, lowerY - 0.42 * s.scale, 0],
+      }, { castShadow: false }),
+      f.mesh("Canopy Upper", cone(0.65 * s.scale, 0.78 * s.scale, 10), foliage, {
+        position: [0, upperY, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Canopy Crown Tuft", cone(0.18 * s.scale, 0.32 * s.scale, 8), foliage, {
+        position: [0, upperY + 0.42 * s.scale, 0],
+      }, { castShadow: true }),
+    );
+    trees.push(
+      f.group(`Alpine Juniper ${i + 1}`, parts, {
+        position: [s.x, 0, s.z],
+        rotation: [0, (i * 0.7) % (Math.PI * 2), 0],
+      }),
+    );
+  }
+  return f.group("Alpine Junipers", trees);
+}
+
+/**
+ * Small stone climbers' shelter cabin at the southwest corner of the
+ * ridge. Reads as a high-altitude refuge with a peaked shingle roof, a
+ * stone chimney trailing a translucent smoke wisp and a warm-glowing
+ * front window catching the dusk.
+ */
+function buildAlpineShelter(
+  f: NodeFactory,
+  pos: [number, number, number],
+): SceneNode {
+  const wall = std(C.arShelterStone, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.6, 1.0],
+    flatShading: true,
+  });
+  const wallShade = std(C.arShelterStoneShade, 0.95, { flatShading: true });
+  const wallHi = std(C.arShelterStoneHi, 0.85, { flatShading: true });
+  const roof = std(C.arShelterRoof, 0.85, { texture: "shingle", textureScale: [2, 1.5] });
+  const door = std(C.arShelterDoor, 0.7, { texture: "wood", textureScale: [1, 2] });
+  const window: MaterialDef = {
+    color: C.arShelterWindow,
+    roughness: 0.3,
+    emissive: C.arShelterWindow,
+    transparent: true,
+    opacity: 0.9,
+  };
+  const smoke: MaterialDef = {
+    color: C.arShelterSmoke,
+    roughness: 0.95,
+    transparent: true,
+    opacity: 0.45,
+  };
+  const parts: SceneNode[] = [];
+  // ── Shelter body — a small stout stone hut.
+  const cabinW = 2.0;
+  const cabinD = 1.6;
+  const cabinH = 1.3;
+  parts.push(
+    f.mesh("Shelter Walls", box(cabinW, cabinH, cabinD), wall, {
+      position: [0, cabinH / 2, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded plinth course at the cabin base for relief.
+    f.mesh("Shelter Plinth", box(cabinW + 0.10, 0.10, cabinD + 0.10), wallShade, {
+      position: [0, 0.05, 0],
+    }, { receiveShadow: true }),
+    // Slim bright cap course along the wall top for relief.
+    f.mesh("Shelter Wall Cap", box(cabinW + 0.04, 0.05, cabinD + 0.04), wallHi, {
+      position: [0, cabinH - 0.025, 0],
+    }, { castShadow: false }),
+  );
+  // ── Roof — a pitched gable above the shelter body.
+  const roofH = 0.6;
+  parts.push(
+    f.mesh("Roof Slab Front", box(cabinW + 0.16, 0.08, 0.95), roof, {
+      position: [0, cabinH + roofH * 0.45, cabinD / 2 - 0.05],
+      rotation: [Math.atan2(roofH, cabinD / 2 + 0.1), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Slab Back", box(cabinW + 0.16, 0.08, 0.95), roof, {
+      position: [0, cabinH + roofH * 0.45, -cabinD / 2 + 0.05],
+      rotation: [-Math.atan2(roofH, cabinD / 2 + 0.1), 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim gable end faces — small triangular caps on each gable end.
+    f.mesh("Gable End L", box(0.06, roofH, cabinD), wallShade, {
+      position: [-cabinW / 2 - 0.02, cabinH + roofH / 2, 0],
+      scale: [1, 1, 0.62],
+    }, { castShadow: true }),
+    f.mesh("Gable End R", box(0.06, roofH, cabinD), wallShade, {
+      position: [cabinW / 2 + 0.02, cabinH + roofH / 2, 0],
+      scale: [1, 1, 0.62],
+    }, { castShadow: true }),
+    // Slim ridge cap along the roof crest.
+    f.mesh("Roof Ridge", box(cabinW + 0.2, 0.06, 0.1), roof, {
+      position: [0, cabinH + roofH, 0],
+    }, { castShadow: true }),
+  );
+  // ── Front door on the south face.
+  parts.push(
+    f.mesh("Front Door", box(0.4, 0.8, 0.05), door, {
+      position: [-0.4, 0.4, cabinD / 2 + 0.005],
+    }, { castShadow: false }),
+    // Slim door frame trim along the top edge.
+    f.mesh("Door Frame Top", box(0.46, 0.04, 0.06), wallShade, {
+      position: [-0.4, 0.82, cabinD / 2 + 0.012],
+    }, { castShadow: false }),
+    // Slim door knob bead.
+    f.mesh("Door Knob", sphere(0.022, 8, 6), std("#b48a4a", 0.5, { metalness: 0.6 }), {
+      position: [-0.22, 0.42, cabinD / 2 + 0.04],
+    }, { castShadow: false }),
+  );
+  // ── Lit warm-glow front window on the south face — catches the dusk.
+  parts.push(
+    f.mesh("Window Glass", box(0.46, 0.38, 0.03), window, {
+      position: [0.45, 0.82, cabinD / 2 + 0.012],
+    }, { castShadow: false }),
+    // Slim window frame top + bottom rails.
+    f.mesh("Window Frame Top", box(0.52, 0.04, 0.05), wallShade, {
+      position: [0.45, 1.03, cabinD / 2 + 0.018],
+    }, { castShadow: false }),
+    f.mesh("Window Frame Bottom", box(0.52, 0.04, 0.05), wallShade, {
+      position: [0.45, 0.61, cabinD / 2 + 0.018],
+    }, { castShadow: false }),
+    // Slim window muntin cross — divides the pane into four sections.
+    f.mesh("Window Muntin H", box(0.46, 0.022, 0.04), wallShade, {
+      position: [0.45, 0.82, cabinD / 2 + 0.026],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin V", box(0.022, 0.38, 0.04), wallShade, {
+      position: [0.45, 0.82, cabinD / 2 + 0.026],
+    }, { castShadow: false }),
+  );
+  // ── Stone chimney rising along the east face trailing a smoke wisp.
+  parts.push(
+    f.mesh("Chimney Stack", box(0.22, 1.4, 0.22), wall, {
+      position: [cabinW / 2 - 0.15, 1.1, -0.4],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Cap", box(0.28, 0.06, 0.28), wallHi, {
+      position: [cabinW / 2 - 0.15, 1.83, -0.4],
+    }, { castShadow: true }),
+    // Slim translucent smoke wisps drifting upward above the chimney.
+    f.mesh("Smoke Wisp A", sphere(0.15, 12, 10), smoke, {
+      position: [cabinW / 2 - 0.15, 2.05, -0.4],
+      scale: [1, 0.7, 1],
+    }, { castShadow: false }),
+    f.mesh("Smoke Wisp B", sphere(0.18, 12, 10), smoke, {
+      position: [cabinW / 2 - 0.08, 2.35, -0.46],
+      scale: [1.1, 0.6, 1.1],
+    }, { castShadow: false }),
+    f.mesh("Smoke Wisp C", sphere(0.22, 12, 10), smoke, {
+      position: [cabinW / 2, 2.7, -0.55],
+      scale: [1.2, 0.6, 1.2],
+    }, { castShadow: false }),
+  );
+  return f.group("Alpine Shelter", parts, { position: pos });
+}
+
+/**
+ * Focal granite trail cairn at the northeast clearing marking the saddle
+ * of the ridge — a stack of four weathered granite boulders tapering
+ * toward a small crown stone, reading as a hikers' route marker.
+ */
+function buildAlpineCairn(
+  f: NodeFactory,
+  pos: [number, number, number],
+): SceneNode {
+  const stone = std(C.arCairnStone, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.1, 1.1],
+    flatShading: true,
+  });
+  const stoneHi = std(C.arCairnStoneHi, 0.85, { flatShading: true });
+  const stoneShade = std(C.arCairnStoneShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Base boulder — broad rounded slab.
+  parts.push(
+    f.mesh("Cairn Stone 1", sphere(0.4, 12, 10), stone, {
+      position: [0, 0.22, 0],
+      scale: [1.2, 0.55, 1.1],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cairn Stone 1 Shade", sphere(0.36, 12, 10), stoneShade, {
+      position: [0.05, 0.18, 0.05],
+      scale: [1.1, 0.4, 1.0],
+    }, { castShadow: false }),
+  );
+  // ── Mid boulder — slightly smaller, offset.
+  parts.push(
+    f.mesh("Cairn Stone 2", sphere(0.32, 12, 10), stone, {
+      position: [-0.04, 0.48, 0.03],
+      scale: [1.1, 0.7, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Cairn Stone 2 Hi", sphere(0.28, 12, 10), stoneHi, {
+      position: [-0.04, 0.55, 0.03],
+      scale: [1.0, 0.45, 0.95],
+    }, { castShadow: false }),
+  );
+  // ── Upper boulder — smaller rounded stone.
+  parts.push(
+    f.mesh("Cairn Stone 3", sphere(0.24, 12, 10), stone, {
+      position: [0.02, 0.78, -0.02],
+      scale: [1.0, 0.8, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Crown stone — small finial-like cap at the top.
+  parts.push(
+    f.mesh("Cairn Crown", sphere(0.14, 12, 10), stoneHi, {
+      position: [0.02, 1.02, -0.02],
+      scale: [1.0, 1.1, 1.0],
+    }, { castShadow: true }),
+  );
+  return f.group("Alpine Cairn", parts, { position: pos });
+}
+
+/**
+ * Two eroded rocky outcrops scattered across the ridge. Each outcrop
+ * is a slim weathered granite slab on a stout base with a crown of
+ * loose stones reading as the wind-eroded summit of a small ridge spur.
+ */
+function buildAlpineOutcrops(f: NodeFactory): SceneNode {
+  const stone = std(C.arOutcropStone, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.4, 1.0],
+    flatShading: true,
+  });
+  const stoneHi = std(C.arOutcropStoneHi, 0.85, { flatShading: true });
+  const stoneShade = std(C.arOutcropStoneShade, 0.95, { flatShading: true });
+  const outcrops: SceneNode[] = [];
+  for (let i = 0; i < ALPINE_OUTCROPS.length; i++) {
+    const o = ALPINE_OUTCROPS[i]!;
+    const parts: SceneNode[] = [
+      // Stout slim base slab.
+      f.mesh("Outcrop Base", box(0.9, 0.5, 0.7), stone, {
+        position: [0, 0.25, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Outcrop Base Shade", box(0.8, 0.06, 0.6), stoneShade, {
+        position: [0, 0.55, 0],
+      }, { castShadow: false }),
+      // Tapered upper slab tilted slightly.
+      f.mesh("Outcrop Upper", box(0.6, 0.7, 0.5), stone, {
+        position: [-0.05, 0.85, 0.02],
+        rotation: [0.05, 0, 0.12],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim bright cap face for sun-catch.
+      f.mesh("Outcrop Upper Hi", box(0.5, 0.05, 0.4), stoneHi, {
+        position: [-0.05, 1.18, 0.02],
+        rotation: [0.05, 0, 0.12],
+      }, { castShadow: false }),
+    ];
+    // Three loose crown stones perched atop the upper slab.
+    for (let j = 0; j < 3; j++) {
+      const a = (j / 3) * Math.PI * 2 + 0.3;
+      const sx = Math.cos(a) * 0.18;
+      const sz = Math.sin(a) * 0.14;
+      parts.push(
+        f.mesh(`Outcrop Crown Stone ${j}`, sphere(0.10, 10, 8), stoneHi, {
+          position: [sx - 0.05, 1.28, sz + 0.02],
+          scale: [1.1, 0.7, 1.0],
+        }, { castShadow: true }),
+      );
+    }
+    outcrops.push(
+      f.group(`Alpine Outcrop ${i + 1}`, parts, {
+        position: [o.x, 0, o.z],
+        scale: [o.scale, o.scale, o.scale],
+        rotation: [0, i * 1.3, 0],
+      }),
+    );
+  }
+  return f.group("Alpine Outcrops", outcrops);
+}
+
+/**
+ * A slim east-west glacial creek strip running across the alpine ridge.
+ * Carries a translucent water band with a ripple highlight, a darker
+ * north and south bank trim and three flat stepping stones crossing
+ * the creek at the path line. The slab sizes alternate slightly so the
+ * crossing reads as hand-laid rather than uniformly stamped.
+ */
+function buildAlpineCreek(f: NodeFactory): SceneNode {
+  const water: MaterialDef = {
+    color: C.arCreekWater,
+    roughness: 0.2,
+    metalness: 0.05,
+    transparent: true,
+    opacity: 0.85,
+    emissive: "#1f4858",
+  };
+  const waterHi: MaterialDef = {
+    color: C.arCreekWaterHi,
+    roughness: 0.15,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const bank = std(C.arCreekBank, 0.95, { flatShading: true });
+  const stone = std(C.arSteppingStone, 0.92, {
+    texture: "cobblestone",
+    textureScale: [1.5, 1.5],
+    flatShading: true,
+  });
+  const stoneHi = std(C.arSteppingStoneHi, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [
+    // Creek water strip — slim translucent band running east-west across
+    // the ridge.
+    f.mesh("Creek Water", plane(ALPINE_RIDGE_W - 4, 1.2), water, {
+      position: [0, -0.014, ALPINE_CREEK_Z],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { receiveShadow: true }),
+    // Slim ripple highlight strip along the creek's south bank.
+    f.mesh("Creek Ripple", plane(ALPINE_RIDGE_W - 6, 0.32), waterHi, {
+      position: [0, -0.008, ALPINE_CREEK_Z + 0.26],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // North bank trim — slim darker strip along the creek's north edge.
+    f.mesh("Creek Bank N", plane(ALPINE_RIDGE_W - 4, 0.16), bank, {
+      position: [0, -0.012, ALPINE_CREEK_Z - 0.6],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { receiveShadow: true }),
+    // South bank trim — slim darker strip along the creek's south edge.
+    f.mesh("Creek Bank S", plane(ALPINE_RIDGE_W - 4, 0.16), bank, {
+      position: [0, -0.012, ALPINE_CREEK_Z + 0.6],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { receiveShadow: true }),
+  ];
+  // Four flat stepping stones crossing the creek at the path line.
+  for (let i = 0; i < ALPINE_CREEK_STEPS.length; i++) {
+    const s = ALPINE_CREEK_STEPS[i]!;
+    const scale = i % 2 === 0 ? 1.0 : 0.9;
+    parts.push(
+      f.mesh(`Stepping Stone ${i}`, cylinder(0.18 * scale, 0.20 * scale, 0.08, 10), stone, {
+        position: [s.x, 0.04, s.z],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Stepping Stone Hi ${i}`, cylinder(0.14 * scale, 0.14 * scale, 0.025, 10), stoneHi, {
+        position: [s.x, 0.085, s.z],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Alpine Creek", parts);
+}
+
+/**
+ * A sparse scatter of five edelweiss alpine wildflower clusters dotted
+ * across the moss tufts. Each cluster is a small ring of six pale woolly
+ * petals around a golden core on a slim leaf rosette so the silhouette
+ * reads as the iconic high-altitude bloom.
+ */
+function buildAlpineEdelweiss(f: NodeFactory): SceneNode {
+  const petal = std(C.arEdelweissPetal, 0.92, { flatShading: true });
+  const core = std(C.arEdelweissCore, 0.7);
+  const leaf = std(C.arEdelweissLeaf, 0.9, { flatShading: true });
+  const clusters: SceneNode[] = [];
+  for (let i = 0; i < ALPINE_EDELWEISS.length; i++) {
+    const e = ALPINE_EDELWEISS[i]!;
+    const parts: SceneNode[] = [
+      // Slim leaf rosette at the base of the cluster.
+      f.mesh("Edelweiss Leaf 1", box(0.16, 0.012, 0.06), leaf, {
+        position: [0, 0.02, 0],
+      }, { castShadow: false }),
+      f.mesh("Edelweiss Leaf 2", box(0.16, 0.012, 0.06), leaf, {
+        position: [0, 0.02, 0],
+        rotation: [0, Math.PI / 2, 0],
+      }, { castShadow: false }),
+      f.mesh("Edelweiss Leaf 3", box(0.14, 0.012, 0.05), leaf, {
+        position: [0, 0.022, 0],
+        rotation: [0, Math.PI / 4, 0],
+      }, { castShadow: false }),
+      // Centred golden core of the bloom.
+      f.mesh("Edelweiss Core", sphere(0.028, 8, 6), core, {
+        position: [0, 0.07, 0],
+      }, { castShadow: false }),
+    ];
+    // Six pale woolly petals radiating around the core.
+    for (let j = 0; j < 6; j++) {
+      const a = (j / 6) * Math.PI * 2;
+      const px = Math.cos(a) * 0.05;
+      const pz = Math.sin(a) * 0.05;
+      parts.push(
+        f.mesh(`Edelweiss Petal ${j}`, sphere(0.030, 8, 6), petal, {
+          position: [px, 0.07, pz],
+          scale: [1.4, 0.5, 0.7],
+          rotation: [0, a, 0],
+        }, { castShadow: false }),
+      );
+    }
+    clusters.push(
+      f.group(`Edelweiss Cluster ${i + 1}`, parts, {
+        position: [e.x, 0, e.z],
+        rotation: [0, i * 0.9, 0],
+      }),
+    );
+  }
+  return f.group("Alpine Edelweiss", clusters);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -26224,6 +27111,42 @@ function buildArroyoWash(f: NodeFactory): SceneNode {
  *    across the mesa from the south-west corner toward the north-east
  *    edge with darker bank trims and a sparse scatter of stream-worn
  *    pebbles along the bed.
+ *  - Thirty-second pass — courtyard: a Victorian bronze raven sentinel
+ *    statue on a fluted marble pedestal, parked on the back outside-
+ *    fence lawn between the fox statue (back-west) and the back
+ *    archway (centre) so it reads as a mirror sentinel to the hare
+ *    statue (back-east-close) across the back archway threshold — the
+ *    raven stands four-square on the plinth cap with a slim arched
+ *    back, two glinting eye highlights, a tapered beak parted around
+ *    a small brass key clamped between the mandible halves and a pair
+ *    of half-spread wings raised slightly above the body (the bronze
+ *    body, wings, beak, tail and brass key reuse the existing
+ *    `copper-patina` colour + bump pair so the verdigris reads as
+ *    crusted relief on the cast metal, and the plinth reuses the
+ *    existing `marble` colour + bump pair so the stone reads with
+ *    veined relief). House: a pair of Victorian copper-patina
+ *    ornamental crown caps mounted atop the existing brick chimney
+ *    pots — each cap a slim flanged copper ring with a foliate crown
+ *    cluster of four upright tip beads around a centred finial spire
+ *    (the cap, flange, crown beads and spire reuse the existing
+ *    `copper-patina` pair so the verdigris reads as crusted relief on
+ *    the cast metal). Scene: a far-south alpine ridge plane south of
+ *    the pine woodland — a moss-and-scree ridge floor surfaced with
+ *    the new `alpine-ridge` colour map paired with a scree-and-tussock
+ *    depth map (registered alongside the other procedural textures) so
+ *    loose stones and tufted moss read as raised relief at glancing
+ *    sun, a slim needle-litter north apron along the pine-woodland
+ *    join so the ground layer has no holes at the seam, a focal stone
+ *    climbers' shelter at the southwest corner with a peaked shingle
+ *    roof, a stone chimney trailing a slim smoke wisp and a glowing
+ *    front window, a granite trail cairn at the northeast clearing
+ *    marking the saddle of the ridge, a grove of five compact alpine
+ *    juniper trees with twin-cone foliage canopies in three tints, two
+ *    eroded rocky outcrops crowned by loose stones, a slim east-west
+ *    glacial creek strip with a ripple highlight, north and south bank
+ *    trims and four flat stepping stones crossing the creek at the
+ *    path line, and a sparse scatter of five edelweiss alpine
+ *    wildflower clusters dotted across the moss tufts.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -26322,6 +27245,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: FOX_STATUE_POS[0], z: FOX_STATUE_POS[2], r: 0.9 },
     // Thirty-first-pass keep-out — bronze hare statue on the back outside-fence lawn.
     { x: HARE_STATUE_POS[0], z: HARE_STATUE_POS[2], r: 0.9 },
+    // Thirty-second-pass keep-out — bronze raven statue on the back outside-fence lawn.
+    { x: RAVEN_STATUE_POS[0], z: RAVEN_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -26394,6 +27319,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildGardenObelisk(f, OBELISK_POS),
     buildFoxStatue(f, FOX_STATUE_POS),
     buildHareStatue(f, HARE_STATUE_POS),
+    buildRavenStatue(f, RAVEN_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -26422,6 +27348,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fsPineWoodland = buildFarSouthPineWoodland(f);
   const fwPrairie = buildFarWestPrairie(f);
   const fswRedrockMesa = buildFarSouthwestRedrockMesa(f);
+  const fsAlpineRidge = buildFarSouthAlpineRidge(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -26473,6 +27400,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildAddressPlaque(f, ADDRESS_PLAQUE_POS),
     buildPorchCornerFinials(f),
     buildDoorPilasters(f),
+    buildChimneyPotCaps(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -26508,6 +27436,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fsPineWoodland,
       fwPrairie,
       fswRedrockMesa,
+      fsAlpineRidge,
       house,
     ],
   };
