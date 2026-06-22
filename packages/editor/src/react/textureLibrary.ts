@@ -5328,4 +5328,185 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // Thirty-third-pass scene extension — a far-east geothermal hot springs
+  // valley plane east of the alpine ridge. The new `geothermal-sinter`
+  // colour map shows a warm cream-and-grey sinter ground with layered
+  // mineral crusts in pale cream tones, shallow turquoise brine pools,
+  // a sparse scatter of mineral-stained pebbles and slim warm sun-cast
+  // across the upper-right. Paired with the depth map so the layered
+  // crusts and shallow pools read as raised relief at glancing sun.
+
+  // Geothermal-sinter colour — a warm cream-and-grey sinter ground with
+  // layered mineral crust bands, scattered shallow brine pools and
+  // mineral-stained pebbles. Drawn on a power-of-two canvas so the
+  // mipmap chain stays clean.
+  registry["geothermal-sinter"] = makeCanvasTexture({
+    seed: 0xc5e1f0,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly warmer toward the south so the valley
+      // floor reads with creamy mineral-stained tone in the foreground
+      // and cooler grey toward the north.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#a89e8c");
+      bg.addColorStop(0.55, "#c0b4a0");
+      bg.addColorStop(1, "#d8ccb4");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Layered mineral crust bands — soft horizontal stripes suggesting
+      // sedimentary sinter terracing of varied height and saturation.
+      for (let i = 0; i < 22; i++) {
+        const cy = rng() * size;
+        const bh = 10 + rng() * 28;
+        const tint = rng();
+        const l = tint < 0.5 ? 78 + rng() * 12 : 60 + rng() * 14;
+        const h = 30 + rng() * 14;
+        const grad = ctx.createLinearGradient(0, cy - bh / 2, 0, cy + bh / 2);
+        grad.addColorStop(0, `hsla(${h}, 24%, ${l}%, 0.0)`);
+        grad.addColorStop(0.5, `hsla(${h}, 24%, ${l}%, 0.44)`);
+        grad.addColorStop(1, `hsla(${h}, 24%, ${l - 8}%, 0.0)`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, cy - bh / 2, size, bh);
+      }
+      // Shallow turquoise brine pools — soft elliptical patches reading
+      // as small mineral-rich water surface dabs.
+      for (let i = 0; i < 14; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const rx = 22 + rng() * 36;
+        const ry = 14 + rng() * 24;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rng() * Math.PI);
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+        grad.addColorStop(0, "hsla(185, 38%, 52%, 0.62)");
+        grad.addColorStop(0.6, "hsla(185, 32%, 44%, 0.34)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Mineral-stained pebbles — small scattered ovals in two tints
+      // reading as scree across the sinter floor.
+      for (let i = 0; i < 220; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 1.5 + rng() * 3.2;
+        const tint = rng();
+        let h: number;
+        let l: number;
+        if (tint < 0.5) {
+          h = 32 + rng() * 14;
+          l = 52 + rng() * 14;
+        } else {
+          h = 22 + rng() * 14;
+          l = 30 + rng() * 14;
+        }
+        ctx.fillStyle = `hsla(${h}, 18%, ${l}%, 0.72)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Slim pale mineral crust dabs — pale flecks scattered across the
+      // sinter floor reading as fresh-deposit caps.
+      for (let i = 0; i < 80; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 2 + rng() * 4;
+        ctx.fillStyle = `hsla(${36 + rng() * 12}, 28%, ${82 + rng() * 8}%, 0.46)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash
+      // so glancing afternoon sun catches the rim of the valley.
+      const sun = ctx.createRadialGradient(size * 0.74, size * 0.22, 0, size * 0.74, size * 0.22, size * 0.9);
+      sun.addColorStop(0, "rgba(248,232,196,0.20)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 32, 0.0022);
+    },
+  });
+
+  // Geothermal-sinter depth map — layered crust bands sit slightly above
+  // the recessed brine pools (light = high), mineral pebbles read as
+  // small bright dots and the pale crust dabs read as low relief so the
+  // sinter surface shows tiered mineral relief at glancing sun.
+  registry["geothermal-sinter-bump"] = makeCanvasTexture({
+    seed: 0xc5e1f0 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average sinter-floor height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Crust band ridges — pale horizontal stripes reading as raised
+      // mineral layers.
+      for (let i = 0; i < 22; i++) {
+        const cy = rng() * size;
+        const bh = 10 + rng() * 28;
+        const grad = ctx.createLinearGradient(0, cy - bh / 2, 0, cy + bh / 2);
+        grad.addColorStop(0, "rgba(140,140,140,0.0)");
+        grad.addColorStop(0.5, "rgba(212,212,212,0.5)");
+        grad.addColorStop(1, "rgba(140,140,140,0.0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, cy - bh / 2, size, bh);
+      }
+      // Brine pool recesses — soft elliptical darker patches reading as
+      // shallow water-filled depressions.
+      for (let i = 0; i < 14; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const rx = 22 + rng() * 36;
+        const ry = 14 + rng() * 24;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rng() * Math.PI);
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+        grad.addColorStop(0, "rgba(38,38,38,0.55)");
+        grad.addColorStop(0.7, "rgba(58,58,58,0.32)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Mineral pebble bumps — slim bright dots reading as raised stones
+      // with a slim shaded undercut on the south-east side.
+      for (let i = 0; i < 220; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 1.5 + rng() * 3.2;
+        ctx.fillStyle = `rgba(218,218,218,0.72)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(54,54,54,0.45)`;
+        ctx.beginPath();
+        ctx.arc(cx + 0.6, cy + 0.6, r2 * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Pale crust deposit dabs — soft pale dots reading as raised fresh
+      // mineral deposits on the sinter floor.
+      for (let i = 0; i < 80; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 2 + rng() * 4;
+        ctx.fillStyle = `rgba(196,196,196,0.4)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

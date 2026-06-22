@@ -22,15 +22,16 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 32) adds a Victorian bronze raven sentinel on a
- * fluted marble pedestal to the back outside-fence lawn (mirror to the
- * pass-31 hare statue across the back archway), a pair of Victorian
- * copper-patina ornamental crown caps mounted atop the existing chimney
- * pots, and a far-south alpine ridge plane south of the pine woodland
- * with a focal stone climbers' shelter, a granite trail cairn, a small
- * grove of alpine juniper trees, two eroded rocky outcrops, a slim
- * glacial creek strip and a sparse scatter of edelweiss alpine
- * wildflowers across the moss-and-scree floor.
+ * latest enhancement (pass 33) adds a Victorian bronze tortoise statue on
+ * a fluted marble pedestal to the back outside-fence lawn (between the
+ * carousel horse at back-west-far and the fox statue at back-west-close,
+ * continuing the line of marble-pedestal sentinels along the back-west
+ * perimeter), a pair of Victorian copper-patina ornamental side window
+ * valance crowns mounted above the existing side bay windows, and a
+ * far-east geothermal hot springs valley plane east of the alpine ridge
+ * with a focal wooden bathhouse cottage, a steaming turquoise hot spring
+ * pool, a layered cream sinter terrace, two mineral-cone cairns and a
+ * small grove of three steam-misted pines clinging to the valley rim.
  */
 const W = 7;
 const D = 5;
@@ -1388,6 +1389,77 @@ const ALPINE_EDELWEISS: { x: number; z: number }[] = [
   { x: 4, z: 134 },
 ];
 
+/**
+ * Thirty-third-pass courtyard prop — a Victorian bronze tortoise statue
+ * on a fluted marble pedestal, parked on the back outside-fence lawn
+ * between the carousel horse (back-west-far at x=-12.5) and the fox
+ * statue (back-west-close at x=-6) so it reads as a slow sentinel
+ * continuing the line of marble-pedestal sentinels along the back-west
+ * perimeter of the courtyard. The tortoise crouches four-square on the
+ * plinth cap with a domed hexagonal-scute shell, a slim outstretched
+ * head with two glinting eye highlights, four stout legs and a small
+ * pointed tail tucked to one side.
+ */
+const TORTOISE_STATUE_POS: [number, number, number] = [-9.5, 0, -5.5];
+
+/**
+ * Thirty-third-pass house detail — a pair of Victorian copper-patina
+ * ornamental window valance crowns mounted above the existing side bay
+ * window hoods on the east and west side walls. Each valance is a slim
+ * scroll cornice with a central foliate crest, four small tip beads
+ * across the crown and three pendant drop beads hanging below the
+ * scroll. The bay-window centre height is y=1.0 and the hood ridge sits
+ * at y≈1.36, so the valance crowns anchor just above the hood ridge.
+ */
+const SIDE_VALANCE_E_POS: [number, number, number] = [
+  W / 2 + 0.36,
+  1.5,
+  -0.6,
+];
+const SIDE_VALANCE_W_POS: [number, number, number] = [
+  -W / 2 - 0.36,
+  1.5,
+  -0.6,
+];
+
+/**
+ * Thirty-third-pass scene extension — a far-east geothermal hot springs
+ * valley plane east of the alpine ridge (which is at x=0, z=140 with
+ * W=24, so its east edge sits at x=12). The new plane is centred at
+ * x=24 with W=20 so the western apron overlaps the alpine ridge's east
+ * edge with a slim moss-and-scree strip and the ground layer has no
+ * holes at the seam. The plane carries a warm cream-and-grey sinter
+ * floor surfaced with the new `geothermal-sinter` colour map paired
+ * with a sinter-terrace depth map (registered alongside the other
+ * procedural textures) so the layered mineral crusts and shallow
+ * brine pools read as raised relief at glancing sun. Features a focal
+ * timber bathhouse cottage at the southeast corner with a peaked
+ * shingle roof, a stone chimney trailing a translucent steam wisp and
+ * a glowing front window catching the dusk; a steaming turquoise hot
+ * spring pool ringed by darker mineral-deposit lip stones with three
+ * rising steam wisps and a small ripple highlight; a layered cream
+ * sinter terrace on the north side of the pool — three concentric
+ * step rings reading as the mineral terraces built by the spring
+ * outflow; two slim mineral-cone cairns (small upturned cones
+ * crowned by drip beads); and a grove of three slim alpine pines
+ * clinging to the valley rim with stacked-cone foliage canopies.
+ */
+const GEOTHERMAL_VALLEY_POS: [number, number, number] = [24, -0.040, 140];
+const GEOTHERMAL_VALLEY_W = 20;
+const GEOTHERMAL_VALLEY_D = 20;
+const GEOTHERMAL_BATHHOUSE_POS: [number, number, number] = [30, 0, 146];
+const GEOTHERMAL_POOL_POS: [number, number, number] = [22, 0, 142];
+const GEOTHERMAL_TERRACE_POS: [number, number, number] = [27, 0, 137];
+const GEOTHERMAL_PINES: { x: number; z: number; scale: number }[] = [
+  { x: 17, z: 133, scale: 0.9 },
+  { x: 33, z: 138, scale: 1.05 },
+  { x: 19, z: 148, scale: 0.95 },
+];
+const GEOTHERMAL_CAIRNS: { x: number; z: number; scale: number }[] = [
+  { x: 25, z: 148, scale: 1.0 },
+  { x: 32, z: 134, scale: 0.9 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -2580,6 +2652,56 @@ const C = {
   arOutcropStone: "#7e7468",
   arOutcropStoneHi: "#b4a896",
   arOutcropStoneShade: "#3a3528",
+  // Thirty-third enhancement pass — a Victorian bronze tortoise statue on
+  // a fluted marble pedestal on the back outside-fence lawn (continuing
+  // the row of marble-pedestal sentinels along the back perimeter), a
+  // pair of copper-patina ornamental side window valance crowns mounted
+  // above the existing side bay window hoods, and a far-east geothermal
+  // hot springs valley plane east of the alpine ridge with a focal
+  // wooden bathhouse, a steaming turquoise hot spring pool, a layered
+  // sinter terrace, mineral-cone cairns and a small grove of pines.
+  tortoiseBronze: "#3e5048",
+  tortoiseBronzeHi: "#86a292",
+  tortoiseBronzeShade: "#1d2620",
+  tortoiseShellPlate: "#2e3a32",
+  tortoiseShellPlateHi: "#6a8276",
+  tortoisePlinth: "#ede2d0",
+  tortoisePlinthShade: "#a89776",
+  sideValanceCopper: "#5d8a6a",
+  sideValanceCopperHi: "#9bc4a8",
+  sideValanceCopperShade: "#2f5840",
+  // Far-east geothermal hot springs valley — a warm cream-and-grey
+  // sinter ground with a steaming turquoise hot spring pool, a layered
+  // sinter terrace, a focal wooden bathhouse, mineral-cone cairns and a
+  // grove of steam-misted pines.
+  gtGround: "#c9bdaa",
+  gtGroundShade: "#766b56",
+  gtGroundHi: "#ece2cc",
+  gtApronMoss: "#7e8a82",
+  gtPoolWater: "#3aa6b0",
+  gtPoolWaterHi: "#9be0e6",
+  gtPoolWaterDeep: "#1c5e66",
+  gtPoolLip: "#776852",
+  gtPoolLipHi: "#a89878",
+  gtSteam: "#e6ecf0",
+  gtTerraceCream: "#e8dcc4",
+  gtTerraceCreamHi: "#f6eedc",
+  gtTerraceCreamShade: "#9a8e72",
+  gtBathhouseWall: "#7a5638",
+  gtBathhouseWallTrim: "#3a2616",
+  gtBathhouseRoof: "#4a3826",
+  gtBathhouseDoor: "#2e1e10",
+  gtBathhouseWindow: "#f8e0a4",
+  gtBathhouseStone: "#807466",
+  gtBathhouseStoneHi: "#aea293",
+  gtBathhouseSmoke: "#dbdee0",
+  gtPineBark: "#4e3a26",
+  gtPineFoliage: "#3a5e4a",
+  gtPineFoliagePale: "#5e7e66",
+  gtCairnCone: "#a89880",
+  gtCairnConeHi: "#dccbb0",
+  gtCairnConeShade: "#665846",
+  gtCairnDrip: "#e6dccc",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -26370,6 +26492,784 @@ function buildAlpineEdelweiss(f: NodeFactory): SceneNode {
   return f.group("Alpine Edelweiss", clusters);
 }
 
+/* ─────────────── thirty-third-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze tortoise statue on a fluted marble pedestal, parked
+ * on the back outside-fence lawn between the carousel horse (back-west-far)
+ * and the fox statue (back-west-close) so it reads as a slow sentinel
+ * continuing the line of marble-pedestal sentinels along the back-west
+ * perimeter of the courtyard. The tortoise crouches four-square on the
+ * plinth cap with a domed shell stamped by a ring of hexagonal-scute
+ * plates, a slim outstretched head with two glinting eye highlights,
+ * four stout splayed legs and a small pointed tail tucked to one side.
+ * The bronze body, shell plates, head and tail reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal, and the plinth reuses the existing `marble`
+ * colour + bump pair so the stone reads with veined relief.
+ */
+function buildTortoiseStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.tortoiseBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.tortoiseBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.tortoiseBronzeShade, 0.95, { flatShading: true });
+  const shellPlate: MaterialDef = {
+    color: C.tortoiseShellPlate,
+    roughness: 0.5,
+    metalness: 0.6,
+    texture: "copper-patina",
+    textureScale: [1.0, 1.0],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.03,
+  };
+  const shellPlateHi = std(C.tortoiseShellPlateHi, 0.45, { metalness: 0.8 });
+  const marble: MaterialDef = {
+    color: C.tortoisePlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.tortoisePlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base — broad square marble base.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft + cap.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Tortoise body block — slim oblong base sitting on the plinth cap.
+  const bodyY = 0.92;
+  parts.push(
+    f.mesh("Tortoise Body", box(0.42, 0.16, 0.30), bronze, {
+      position: [0, bodyY, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Tortoise Belly Shade", box(0.36, 0.04, 0.24), bronzeShade, {
+      position: [0, bodyY - 0.10, 0],
+    }, { castShadow: false }),
+  );
+  // ── Domed shell — a swelled half-sphere over the body block.
+  const shellY = bodyY + 0.12;
+  parts.push(
+    f.mesh("Tortoise Shell", sphere(0.26, 14, 10), shellPlate, {
+      position: [0, shellY, 0],
+      scale: [1.0, 0.85, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim bright crown cap on the shell apex for sun-catch.
+    f.mesh("Tortoise Shell Crown", sphere(0.10, 10, 8), shellPlateHi, {
+      position: [0, shellY + 0.13, 0],
+      scale: [1.4, 0.25, 1.2],
+    }, { castShadow: false }),
+  );
+  // Six hexagonal scute plates stamped in a ring around the shell crown,
+  // each a small flattened hex-disc tilted to follow the dome curve.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    const px = Math.cos(a) * 0.16;
+    const pz = Math.sin(a) * 0.14;
+    parts.push(
+      f.mesh(`Shell Scute ${i}`, cylinder(0.06, 0.06, 0.02, 6), shellPlateHi, {
+        position: [px, shellY + 0.08, pz],
+        rotation: [Math.PI / 2 - 0.25, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Six smaller scute plates around the lower shell rim.
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+    const px = Math.cos(a) * 0.23;
+    const pz = Math.sin(a) * 0.20;
+    parts.push(
+      f.mesh(`Shell Rim Scute ${i}`, cylinder(0.04, 0.04, 0.018, 6), shellPlate, {
+        position: [px, shellY - 0.04, pz],
+        rotation: [Math.PI / 2 - 0.45, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Slim outstretched head poking forward beyond the shell rim.
+  const headX = 0.26;
+  const headY = bodyY + 0.04;
+  parts.push(
+    f.mesh("Tortoise Neck", cylinder(0.05, 0.06, 0.10, 8), bronze, {
+      position: [headX - 0.06, headY, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: true }),
+    f.mesh("Tortoise Head", sphere(0.07, 10, 8), bronze, {
+      position: [headX + 0.02, headY + 0.01, 0],
+      scale: [1.2, 0.9, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    // Two glinting eye highlights flanking the head.
+    f.mesh("Tortoise Eye L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [headX + 0.05, headY + 0.025, 0.04],
+    }, { castShadow: false }),
+    f.mesh("Tortoise Eye R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [headX + 0.05, headY + 0.025, -0.04],
+    }, { castShadow: false }),
+    // Slim parted beak mouth at the front of the head.
+    f.mesh("Tortoise Beak", box(0.04, 0.012, 0.05), bronzeShade, {
+      position: [headX + 0.075, headY - 0.012, 0],
+    }, { castShadow: false }),
+  );
+  // ── Four stout splayed legs anchoring the tortoise to the plinth cap.
+  const legPositions: [number, number][] = [
+    [0.16, 0.10],
+    [0.16, -0.10],
+    [-0.16, 0.10],
+    [-0.16, -0.10],
+  ];
+  for (let i = 0; i < legPositions.length; i++) {
+    const [lx, lz] = legPositions[i]!;
+    parts.push(
+      f.mesh(`Tortoise Leg ${i}`, cylinder(0.05, 0.06, 0.12, 8), bronze, {
+        position: [lx, bodyY - 0.14, lz],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim splayed foot pad with three small claw nubs.
+      f.mesh(`Tortoise Foot ${i}`, sphere(0.06, 10, 8), bronzeShade, {
+        position: [lx, bodyY - 0.21, lz],
+        scale: [1.2, 0.5, 1.1],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Small pointed tail tucked to one side at the back of the shell.
+  parts.push(
+    f.mesh("Tortoise Tail", cone(0.04, 0.12, 8), bronze, {
+      position: [-0.26, bodyY + 0.02, 0.06],
+      rotation: [0, 0, Math.PI / 2 + 0.3],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Tortoise Plaque Tablet", box(0.3, 0.1, 0.018), bronze, {
+      position: [0, 0.46, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Tortoise Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Tortoise Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Tortoise Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+  );
+  return f.group("Tortoise Statue", parts, { position: pos });
+}
+
+/* ─────────────── thirty-third-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental window valance crowns
+ * mounted above the existing side bay window hoods on the east and
+ * west side walls. Each valance is a slim scroll cornice with a central
+ * foliate crest, four small tip beads across the crown and three
+ * pendant drop beads hanging below the scroll, reading as cast-iron
+ * millwork finishing the bay window roofs. The cornice, crest, tip
+ * beads and drop beads reuse the existing `copper-patina` colour +
+ * bump pair so the verdigris reads as crusted relief on the cast metal.
+ */
+function buildSideValances(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.sideValanceCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.sideValanceCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.sideValanceCopperShade, 0.95, { flatShading: true });
+  const valances: SceneNode[] = [];
+  // East valance (side=+1) sits at +X from the side wall; west valance
+  // (side=-1) sits at -X. The hood ridge of each bay window sits at
+  // x=±(W/2 + 0.06), y≈1.36 in the host wall's local frame. We anchor
+  // the valance just above the ridge.
+  const positions: { pos: [number, number, number]; side: 1 | -1 }[] = [
+    { pos: SIDE_VALANCE_E_POS, side: 1 },
+    { pos: SIDE_VALANCE_W_POS, side: -1 },
+  ];
+  for (const { pos, side } of positions) {
+    const parts: SceneNode[] = [];
+    // Slim cornice bar — a horizontal copper strip running along the
+    // hood ridge.
+    parts.push(
+      f.mesh("Cornice Bar", box(0.04, 0.05, 1.4), copper, {
+        position: [0, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Cornice Bar Hi", box(0.02, 0.012, 1.36), copperHi, {
+        position: [side * -0.012, 0.022, 0],
+      }, { castShadow: false }),
+      f.mesh("Cornice Bar Shade", box(0.03, 0.014, 1.38), copperShade, {
+        position: [0, -0.022, 0],
+      }, { castShadow: false }),
+    );
+    // Central foliate crest — a small lobed scroll medallion in the
+    // middle of the cornice.
+    parts.push(
+      f.mesh("Crest Disc", cylinder(0.08, 0.08, 0.022, 12), copper, {
+        position: [side * 0.02, 0.08, 0],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: true }),
+      f.mesh("Crest Disc Hi", cylinder(0.06, 0.06, 0.015, 12), copperHi, {
+        position: [side * 0.04, 0.08, 0],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: false }),
+      // Slim foliate tip spire crowning the crest.
+      f.mesh("Crest Spire", cone(0.022, 0.10, 8), copper, {
+        position: [side * 0.02, 0.18, 0],
+      }, { castShadow: true }),
+      f.mesh("Crest Spire Tip", sphere(0.018, 8, 6), copperHi, {
+        position: [side * 0.02, 0.24, 0],
+      }, { castShadow: false }),
+    );
+    // Two scroll C-curve volutes flanking the crest medallion — slim
+    // cylinder segments curling up at each shoulder of the cornice.
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Volute ${sz}`, cylinder(0.024, 0.024, 0.12, 8), copper, {
+          position: [side * 0.02, 0.05, sz * 0.18],
+          rotation: [sz * 0.6, 0, 0],
+        }, { castShadow: false }),
+        f.mesh(`Volute Tip ${sz}`, sphere(0.022, 8, 6), copperHi, {
+          position: [side * 0.04, 0.10, sz * 0.22],
+        }, { castShadow: false }),
+      );
+    }
+    // Four small tip beads across the crown — slim foliate cluster.
+    for (let i = 0; i < 4; i++) {
+      const tz = (-1.5 + i) * 0.32;
+      parts.push(
+        f.mesh(`Tip Bead ${i}`, sphere(0.020, 8, 6), copperHi, {
+          position: [side * 0.02, 0.046, tz],
+        }, { castShadow: false }),
+      );
+    }
+    // Three pendant drop beads hanging below the scroll cornice.
+    for (let i = 0; i < 3; i++) {
+      const dz = (-1 + i) * 0.40;
+      parts.push(
+        f.mesh(`Drop Bead Bar ${i}`, cylinder(0.008, 0.008, 0.06, 6), copper, {
+          position: [side * 0.012, -0.06, dz],
+        }, { castShadow: false }),
+        f.mesh(`Drop Bead ${i}`, sphere(0.022, 8, 6), copperHi, {
+          position: [side * 0.012, -0.11, dz],
+          scale: [1.0, 1.3, 1.0],
+        }, { castShadow: false }),
+      );
+    }
+    valances.push(f.group(`Side Valance ${side === 1 ? "East" : "West"}`, parts, { position: pos }));
+  }
+  return f.group("Side Valances", valances);
+}
+
+/* ─────────────── thirty-third-pass scene extension ─────────────── */
+
+/**
+ * Far-east geothermal hot springs valley plane east of the alpine ridge.
+ * Carries a warm cream-and-grey sinter floor surfaced with the new
+ * `geothermal-sinter` colour + depth map pair so the layered mineral
+ * crusts and shallow brine pools read as raised relief at glancing sun.
+ * Features a focal wooden bathhouse cottage at the southeast corner, a
+ * steaming turquoise hot spring pool, a layered cream sinter terrace,
+ * two slim mineral-cone cairns and a grove of three steam-misted alpine
+ * pines clinging to the valley rim.
+ */
+function buildFarEastGeothermalValley(f: NodeFactory): SceneNode {
+  return f.group("Far East Geothermal Valley", [
+    // Sinter ground plane — warm cream-and-grey sinter floor with the
+    // new colour + depth map pair so the layered mineral crusts and
+    // shallow brine pools read as raised relief at glancing sun.
+    f.mesh(
+      "Geothermal Valley Ground",
+      plane(GEOTHERMAL_VALLEY_W, GEOTHERMAL_VALLEY_D),
+      std(C.gtGround, 0.95, {
+        texture: "geothermal-sinter",
+        textureScale: [4, 4],
+        bumpMap: "geothermal-sinter-bump",
+        bumpScale: 0.07,
+      }),
+      { position: GEOTHERMAL_VALLEY_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the alpine ridge's east edge with a slim
+    // moss-and-scree strip so the seam reads as a continuous alpine-
+    // into-geothermal join with no holes at the ground layer.
+    f.mesh(
+      "Geothermal Valley West Apron",
+      plane(3, GEOTHERMAL_VALLEY_D),
+      std(C.gtApronMoss, 0.95, {
+        texture: "alpine-ridge",
+        textureScale: [1, 4],
+      }),
+      {
+        position: [
+          GEOTHERMAL_VALLEY_POS[0] - GEOTHERMAL_VALLEY_W / 2 + 1.5,
+          -0.036,
+          GEOTHERMAL_VALLEY_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildGeothermalBathhouse(f, GEOTHERMAL_BATHHOUSE_POS),
+    buildGeothermalHotSpring(f, GEOTHERMAL_POOL_POS),
+    buildGeothermalSinterTerrace(f, GEOTHERMAL_TERRACE_POS),
+    buildGeothermalCairns(f),
+    buildGeothermalPines(f),
+  ]);
+}
+
+/**
+ * Focal wooden bathhouse cottage at the southeast corner of the valley.
+ * A small board-and-batten timber cottage with a peaked shingle roof, a
+ * dark plank front door, a glowing square front window catching the
+ * dusk, a stout fieldstone foundation course and a slim stone chimney
+ * trailing a translucent steam wisp.
+ */
+function buildGeothermalBathhouse(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.gtBathhouseWall, 0.95, {
+    texture: "wood",
+    textureScale: [2, 1],
+  });
+  const wallTrim = std(C.gtBathhouseWallTrim, 0.95, { flatShading: true });
+  const roof = std(C.gtBathhouseRoof, 0.95, {
+    texture: "shingle",
+    textureScale: [2, 1.5],
+    flatShading: true,
+  });
+  const door = std(C.gtBathhouseDoor, 0.95);
+  const stone = std(C.gtBathhouseStone, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.4, 1.0],
+    flatShading: true,
+  });
+  const stoneHi = std(C.gtBathhouseStoneHi, 0.85, { flatShading: true });
+  const windowGlow: MaterialDef = {
+    color: C.gtBathhouseWindow,
+    roughness: 0.3,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.9,
+    emissive: "#f6d68a",
+  };
+  const smoke: MaterialDef = {
+    color: C.gtBathhouseSmoke,
+    roughness: 0.5,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const parts: SceneNode[] = [];
+  // ── Stone foundation course — a low fieldstone base under the timber walls.
+  parts.push(
+    f.mesh("Bathhouse Foundation", box(2.0, 0.20, 1.5), stone, {
+      position: [0, 0.10, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Bathhouse Foundation Hi", box(1.9, 0.04, 1.4), stoneHi, {
+      position: [0, 0.22, 0],
+    }, { castShadow: false }),
+  );
+  // ── Timber walls — board-and-batten sided cottage box.
+  parts.push(
+    f.mesh("Bathhouse Wall Block", box(1.85, 0.95, 1.4), wall, {
+      position: [0, 0.70, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim corner trim battens at each vertical edge.
+    f.mesh("Bathhouse Corner NE", box(0.06, 0.92, 0.06), wallTrim, {
+      position: [0.91, 0.70, 0.68],
+    }, { castShadow: false }),
+    f.mesh("Bathhouse Corner NW", box(0.06, 0.92, 0.06), wallTrim, {
+      position: [-0.91, 0.70, 0.68],
+    }, { castShadow: false }),
+    f.mesh("Bathhouse Corner SE", box(0.06, 0.92, 0.06), wallTrim, {
+      position: [0.91, 0.70, -0.68],
+    }, { castShadow: false }),
+    f.mesh("Bathhouse Corner SW", box(0.06, 0.92, 0.06), wallTrim, {
+      position: [-0.91, 0.70, -0.68],
+    }, { castShadow: false }),
+  );
+  // ── Plank front door on the west wall facing the valley.
+  parts.push(
+    f.mesh("Bathhouse Door", box(0.06, 0.65, 0.42), door, {
+      position: [-0.94, 0.50, 0.20],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim door trim frame.
+    f.mesh("Door Frame Top", box(0.04, 0.04, 0.50), wallTrim, {
+      position: [-0.93, 0.85, 0.20],
+    }, { castShadow: false }),
+    f.mesh("Door Frame Side N", box(0.04, 0.66, 0.04), wallTrim, {
+      position: [-0.93, 0.50, 0.43],
+    }, { castShadow: false }),
+    f.mesh("Door Frame Side S", box(0.04, 0.66, 0.04), wallTrim, {
+      position: [-0.93, 0.50, -0.03],
+    }, { castShadow: false }),
+  );
+  // ── Glowing front window on the west wall north of the door.
+  parts.push(
+    f.mesh("Bathhouse Window", box(0.04, 0.40, 0.50), windowGlow, {
+      position: [-0.94, 0.95, -0.36],
+    }, { castShadow: false }),
+    // Slim window cross muntin and frame.
+    f.mesh("Window Mullion V", box(0.025, 0.40, 0.05), wallTrim, {
+      position: [-0.92, 0.95, -0.36],
+    }, { castShadow: false }),
+    f.mesh("Window Mullion H", box(0.025, 0.05, 0.50), wallTrim, {
+      position: [-0.92, 0.95, -0.36],
+    }, { castShadow: false }),
+    f.mesh("Window Frame", box(0.025, 0.46, 0.56), wallTrim, {
+      position: [-0.93, 0.95, -0.36],
+    }, { castShadow: false }),
+  );
+  // ── Peaked shingle roof — angled slabs forming a gabled top.
+  parts.push(
+    f.mesh("Roof Slope N", box(2.1, 0.06, 0.86), roof, {
+      position: [0, 1.40, 0.36],
+      rotation: [-0.6, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Slope S", box(2.1, 0.06, 0.86), roof, {
+      position: [0, 1.40, -0.36],
+      rotation: [0.6, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim ridge cap cylinder along the peak.
+    f.mesh("Roof Ridge Cap", cylinder(0.05, 0.05, 2.1, 8), roof, {
+      position: [0, 1.62, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    // Slim gable face boards filling each end of the peak.
+    f.mesh("Gable End E", box(0.06, 0.46, 1.4), wallTrim, {
+      position: [0.97, 1.40, 0],
+    }, { castShadow: false }),
+    f.mesh("Gable End W", box(0.06, 0.46, 1.4), wallTrim, {
+      position: [-0.97, 1.40, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim stone chimney rising from the south slope of the roof.
+  parts.push(
+    f.mesh("Bathhouse Chimney", box(0.22, 0.6, 0.22), stone, {
+      position: [0.55, 1.85, -0.30],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Cap", box(0.30, 0.05, 0.30), stoneHi, {
+      position: [0.55, 2.18, -0.30],
+    }, { castShadow: true }),
+  );
+  // Translucent steam wisp drifting from the chimney crown.
+  parts.push(
+    f.mesh("Chimney Steam 1", sphere(0.14, 12, 10), smoke, {
+      position: [0.55, 2.40, -0.30],
+      scale: [1.4, 0.8, 1.2],
+    }, { castShadow: false }),
+    f.mesh("Chimney Steam 2", sphere(0.11, 12, 10), smoke, {
+      position: [0.60, 2.58, -0.36],
+      scale: [1.3, 0.7, 1.2],
+    }, { castShadow: false }),
+  );
+  return f.group("Geothermal Bathhouse", parts, { position: pos, rotation: [0, -Math.PI / 6, 0] });
+}
+
+/**
+ * Steaming turquoise hot spring pool at the centre-west of the valley.
+ * A swelled translucent water disc with a darker deep-water core, ringed
+ * by a slim mineral-deposit lip stone band and crowned by three rising
+ * steam wisps so the pool reads as a hot mineral spring catching the
+ * afternoon sun.
+ */
+function buildGeothermalHotSpring(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const water: MaterialDef = {
+    color: C.gtPoolWater,
+    roughness: 0.2,
+    metalness: 0.05,
+    transparent: true,
+    opacity: 0.85,
+    emissive: "#175058",
+  };
+  const waterDeep: MaterialDef = {
+    color: C.gtPoolWaterDeep,
+    roughness: 0.2,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.9,
+    emissive: "#0e2e36",
+  };
+  const waterHi: MaterialDef = {
+    color: C.gtPoolWaterHi,
+    roughness: 0.15,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.6,
+  };
+  const lip = std(C.gtPoolLip, 0.95, {
+    texture: "cobblestone",
+    textureScale: [1.6, 1.6],
+    flatShading: true,
+  });
+  const lipHi = std(C.gtPoolLipHi, 0.85, { flatShading: true });
+  const steam: MaterialDef = {
+    color: C.gtSteam,
+    roughness: 0.5,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.42,
+  };
+  const parts: SceneNode[] = [];
+  // Mineral lip stone ring — a slim torus-like band of cobblestone
+  // pebbles around the pool circumference.
+  for (let i = 0; i < 18; i++) {
+    const a = (i / 18) * Math.PI * 2;
+    const px = Math.cos(a) * 1.4;
+    const pz = Math.sin(a) * 1.4;
+    const size = 0.18 + ((i % 3) * 0.04);
+    parts.push(
+      f.mesh(`Lip Stone ${i}`, sphere(size, 10, 8), lip, {
+        position: [px, 0.08, pz],
+        scale: [1.0, 0.7, 1.0],
+        rotation: [0, a, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Slim bright lichen crust along the upper face of the lip ring.
+  for (let i = 0; i < 9; i++) {
+    const a = (i / 9) * Math.PI * 2;
+    const px = Math.cos(a) * 1.4;
+    const pz = Math.sin(a) * 1.4;
+    parts.push(
+      f.mesh(`Lip Hi ${i}`, sphere(0.10, 8, 6), lipHi, {
+        position: [px, 0.18, pz],
+        scale: [1.0, 0.3, 1.0],
+      }, { castShadow: false }),
+    );
+  }
+  // Outer translucent water disc — the bright turquoise surface.
+  parts.push(
+    f.mesh("Pool Water", cylinder(1.30, 1.30, 0.06, 28), water, {
+      position: [0, 0.06, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Deep core disc — darker centre suggesting depth.
+    f.mesh("Pool Water Deep", cylinder(0.70, 0.70, 0.04, 24), waterDeep, {
+      position: [0, 0.075, 0],
+    }, { castShadow: false }),
+    // Slim ripple highlight ring around the deep core.
+    f.mesh("Pool Ripple", cylinder(0.94, 0.94, 0.018, 24), waterHi, {
+      position: [0, 0.085, 0],
+    }, { castShadow: false }),
+  );
+  // Three rising steam wisps above the pool surface.
+  const steamWisps: [number, number, number, number][] = [
+    [-0.4, 0.8, 0.3, 1.0],
+    [0.5, 1.0, -0.1, 1.2],
+    [-0.1, 1.3, -0.4, 0.9],
+  ];
+  for (let i = 0; i < steamWisps.length; i++) {
+    const [sx, sy, sz, sc] = steamWisps[i]!;
+    parts.push(
+      f.mesh(`Steam Wisp ${i}`, sphere(0.28 * sc, 14, 10), steam, {
+        position: [sx, sy, sz],
+        scale: [1.6, 0.9, 1.4],
+      }, { castShadow: false }),
+      f.mesh(`Steam Wisp Top ${i}`, sphere(0.20 * sc, 14, 10), steam, {
+        position: [sx + 0.05, sy + 0.35, sz - 0.05],
+        scale: [1.4, 0.8, 1.2],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Hot Spring Pool", parts, { position: pos });
+}
+
+/**
+ * Layered cream sinter terrace — three concentric stepped rings reading
+ * as the mineral terraces built up by the hot spring's outflow over the
+ * centuries. Each step has a slim bright cap face for sun-catch and a
+ * darker shaded base ring beneath. A small thin water-film highlight on
+ * the lowest step suggests the slow outflow trickle from the spring.
+ */
+function buildGeothermalSinterTerrace(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const cream = std(C.gtTerraceCream, 0.92, {
+    texture: "marble",
+    textureScale: [1.4, 1.4],
+    flatShading: true,
+  });
+  const creamHi = std(C.gtTerraceCreamHi, 0.85, { flatShading: true });
+  const creamShade = std(C.gtTerraceCreamShade, 0.95, { flatShading: true });
+  const water: MaterialDef = {
+    color: C.gtPoolWaterHi,
+    roughness: 0.15,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.55,
+  };
+  const parts: SceneNode[] = [];
+  // Three concentric stepped rings — bottom (widest), middle, top.
+  const tiers: { r: number; h: number; y: number }[] = [
+    { r: 1.10, h: 0.08, y: 0.04 },
+    { r: 0.80, h: 0.10, y: 0.13 },
+    { r: 0.50, h: 0.10, y: 0.23 },
+  ];
+  for (let i = 0; i < tiers.length; i++) {
+    const t = tiers[i]!;
+    parts.push(
+      f.mesh(`Sinter Step ${i}`, cylinder(t.r, t.r, t.h, 20), cream, {
+        position: [0, t.y, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Sinter Step Hi ${i}`, cylinder(t.r - 0.04, t.r - 0.04, 0.018, 20), creamHi, {
+        position: [0, t.y + t.h / 2 + 0.009, 0],
+      }, { castShadow: false }),
+      f.mesh(`Sinter Step Shade ${i}`, cylinder(t.r, t.r, 0.018, 20), creamShade, {
+        position: [0, t.y - t.h / 2 - 0.009, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim water-film highlight on the lowest step suggesting outflow trickle.
+  parts.push(
+    f.mesh("Sinter Outflow", cylinder(1.00, 1.00, 0.012, 20), water, {
+      position: [0, 0.085, 0],
+    }, { castShadow: false }),
+  );
+  // Crown bubble dab on the top tier — a small dome reading as a
+  // mineral deposit cap at the spring outlet.
+  parts.push(
+    f.mesh("Sinter Crown", sphere(0.20, 12, 10), creamHi, {
+      position: [0, 0.32, 0],
+      scale: [1.0, 0.5, 1.0],
+    }, { castShadow: true }),
+  );
+  return f.group("Sinter Terrace", parts, { position: pos });
+}
+
+/**
+ * Two slim mineral-cone cairns scattered across the valley — small
+ * upturned cones (chimney mounds built up by smaller geothermal vents)
+ * crowned by a bright drip bead reading as a mineral deposit drop.
+ * Each cone alternates a brighter highlight cap and a darker shaded
+ * undercut so the silhouette reads with relief at glancing sun.
+ */
+function buildGeothermalCairns(f: NodeFactory): SceneNode {
+  const cone1 = std(C.gtCairnCone, 0.92, {
+    texture: "marble",
+    textureScale: [1.2, 1.2],
+    flatShading: true,
+  });
+  const coneHi = std(C.gtCairnConeHi, 0.85, { flatShading: true });
+  const coneShade = std(C.gtCairnConeShade, 0.95, { flatShading: true });
+  const drip = std(C.gtCairnDrip, 0.6);
+  const cairns: SceneNode[] = [];
+  for (let i = 0; i < GEOTHERMAL_CAIRNS.length; i++) {
+    const c = GEOTHERMAL_CAIRNS[i]!;
+    const parts: SceneNode[] = [
+      // Slim base ring footing.
+      f.mesh("Cairn Footing", cylinder(0.34, 0.40, 0.05, 14), coneShade, {
+        position: [0, 0.025, 0],
+      }, { receiveShadow: true }),
+      // Tapered upturned cone body.
+      f.mesh("Cairn Cone", cone(0.32, 0.60, 14), cone1, {
+        position: [0, 0.36, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim bright cap face for sun-catch.
+      f.mesh("Cairn Cone Hi", cone(0.18, 0.20, 14), coneHi, {
+        position: [0, 0.62, 0],
+      }, { castShadow: false }),
+      // Crown drip bead at the cone tip.
+      f.mesh("Cairn Drip", sphere(0.04, 8, 6), drip, {
+        position: [0, 0.76, 0],
+      }, { castShadow: false }),
+    ];
+    cairns.push(
+      f.group(`Mineral Cairn ${i + 1}`, parts, {
+        position: [c.x, 0, c.z],
+        scale: [c.scale, c.scale, c.scale],
+        rotation: [0, i * 1.1, 0],
+      }),
+    );
+  }
+  return f.group("Geothermal Cairns", cairns);
+}
+
+/**
+ * Three slim alpine pines clinging to the valley rim — each tree a slim
+ * straight bark trunk topped by a stacked-cone foliage canopy of two
+ * tapering tiers in mid and pale green so the grove reads with chromatic
+ * variation. A thin steam-misted halo highlight sits over each canopy
+ * suggesting the warm humid air of the valley.
+ */
+function buildGeothermalPines(f: NodeFactory): SceneNode {
+  const trunkMat = std(C.gtPineBark, 0.95, {
+    texture: "pine-bark",
+    textureScale: [1, 3],
+  });
+  const foliage = std(C.gtPineFoliage, 0.92, { flatShading: true });
+  const foliagePale = std(C.gtPineFoliagePale, 0.85, { flatShading: true });
+  const mist: MaterialDef = {
+    color: C.gtSteam,
+    roughness: 0.5,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.28,
+  };
+  const trees: SceneNode[] = [];
+  for (let i = 0; i < GEOTHERMAL_PINES.length; i++) {
+    const t = GEOTHERMAL_PINES[i]!;
+    const trunkH = 1.4 * t.scale;
+    const parts: SceneNode[] = [
+      f.mesh("Pine Trunk", cylinder(0.08 * t.scale, 0.12 * t.scale, trunkH, 7), trunkMat, {
+        position: [0, trunkH / 2, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Two cone foliage tiers, lower wide / upper narrow.
+      f.mesh("Pine Foliage Lower", cone(0.45 * t.scale, 0.72 * t.scale, 9), foliage, {
+        position: [0, trunkH + 0.30 * t.scale, 0],
+      }, { castShadow: true }),
+      f.mesh("Pine Foliage Upper", cone(0.30 * t.scale, 0.55 * t.scale, 9), foliagePale, {
+        position: [0, trunkH + 0.72 * t.scale, 0],
+      }, { castShadow: true }),
+      // Slim steam-misted halo highlight over the canopy.
+      f.mesh("Pine Steam Halo", sphere(0.32 * t.scale, 12, 10), mist, {
+        position: [0, trunkH + 0.95 * t.scale, 0],
+        scale: [1.4, 0.6, 1.4],
+      }, { castShadow: false }),
+    ];
+    trees.push(
+      f.group(`Geothermal Pine ${i + 1}`, parts, {
+        position: [t.x, 0, t.z],
+        rotation: [0, i * 1.3, 0],
+      }),
+    );
+  }
+  return f.group("Geothermal Pines", trees);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -27147,6 +28047,50 @@ function buildAlpineEdelweiss(f: NodeFactory): SceneNode {
  *    trims and four flat stepping stones crossing the creek at the
  *    path line, and a sparse scatter of five edelweiss alpine
  *    wildflower clusters dotted across the moss tufts.
+ *  - Thirty-third pass — courtyard: a Victorian bronze tortoise statue on
+ *    a fluted marble pedestal, parked on the back outside-fence lawn
+ *    between the carousel horse (back-west-far at x=-12.5) and the fox
+ *    statue (back-west-close at x=-6) so it reads as a slow sentinel
+ *    continuing the line of marble-pedestal sentinels along the back-
+ *    west perimeter — the tortoise crouches four-square on the plinth
+ *    cap with a domed shell stamped by a ring of hexagonal scute plates,
+ *    a slim outstretched head with two glinting eye highlights and a
+ *    parted beak mouth, four stout splayed legs and a small pointed
+ *    tail tucked to one side (the bronze body, shell plates, head and
+ *    tail reuse the existing `copper-patina` colour + bump pair so the
+ *    verdigris reads as crusted relief on the cast metal, and the
+ *    plinth reuses the existing `marble` colour + bump pair so the
+ *    stone reads with veined relief). House: a pair of Victorian
+ *    copper-patina ornamental window valance crowns mounted above the
+ *    existing side bay window hoods on the east and west side walls —
+ *    each valance a slim scroll cornice with a central foliate crest,
+ *    a pair of C-curve volutes flanking the crest medallion, four
+ *    small tip beads across the crown and three pendant drop beads
+ *    hanging below the scroll, reading as cast-iron millwork finishing
+ *    the bay window roofs (the cornice, crest, volutes, tip beads and
+ *    drop beads reuse the existing `copper-patina` pair so the
+ *    verdigris reads as crusted relief on the cast metal). Scene: a
+ *    far-east geothermal hot springs valley plane east of the alpine
+ *    ridge — a warm cream-and-grey sinter floor surfaced with the new
+ *    `geothermal-sinter` colour map paired with a sinter-terrace depth
+ *    map (registered alongside the other procedural textures) so the
+ *    layered mineral crusts and shallow brine pools read as raised
+ *    relief at glancing sun, a slim moss-and-scree west apron along
+ *    the alpine-ridge join so the ground layer has no holes at the
+ *    seam, a focal timber bathhouse cottage at the southeast corner
+ *    with a peaked shingle roof, a fieldstone foundation course, a
+ *    stone chimney trailing a translucent steam wisp and a glowing
+ *    front window catching the dusk, a steaming turquoise hot spring
+ *    pool ringed by darker mineral-deposit lip stones with three
+ *    rising steam wisps and a slim ripple highlight, a layered cream
+ *    sinter terrace on the north side of the pool (three concentric
+ *    stepped rings reading as the mineral terraces built by the
+ *    spring outflow) crowned by a small dome mineral deposit cap, two
+ *    slim mineral-cone cairns crowned by bright drip beads, and a
+ *    grove of three slim alpine pines clinging to the valley rim
+ *    with stacked-cone foliage canopies in mid and pale green tints
+ *    and slim steam-misted halo highlights catching the warm humid
+ *    air.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -27247,6 +28191,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: HARE_STATUE_POS[0], z: HARE_STATUE_POS[2], r: 0.9 },
     // Thirty-second-pass keep-out — bronze raven statue on the back outside-fence lawn.
     { x: RAVEN_STATUE_POS[0], z: RAVEN_STATUE_POS[2], r: 0.9 },
+    // Thirty-third-pass keep-out — bronze tortoise statue on the back outside-fence lawn.
+    { x: TORTOISE_STATUE_POS[0], z: TORTOISE_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -27320,6 +28266,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildFoxStatue(f, FOX_STATUE_POS),
     buildHareStatue(f, HARE_STATUE_POS),
     buildRavenStatue(f, RAVEN_STATUE_POS),
+    buildTortoiseStatue(f, TORTOISE_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -27349,6 +28296,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fwPrairie = buildFarWestPrairie(f);
   const fswRedrockMesa = buildFarSouthwestRedrockMesa(f);
   const fsAlpineRidge = buildFarSouthAlpineRidge(f);
+  const feGeothermalValley = buildFarEastGeothermalValley(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -27401,6 +28349,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchCornerFinials(f),
     buildDoorPilasters(f),
     buildChimneyPotCaps(f),
+    buildSideValances(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -27437,6 +28386,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fwPrairie,
       fswRedrockMesa,
       fsAlpineRidge,
+      feGeothermalValley,
       house,
     ],
   };
