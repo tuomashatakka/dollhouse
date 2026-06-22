@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirty-two enhancement passes.
+// house and its courtyard, layered over thirty-three enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -885,6 +885,56 @@
 //   of five edelweiss alpine wildflower clusters dotted across
 //   the moss tufts (each cluster a small ring of six pale
 //   woolly petals around a golden core on a slim leaf rosette).
+//   Pass 33 — Courtyard: a Victorian bronze tortoise statue on
+//   a fluted marble pedestal, parked on the back outside-fence
+//   lawn between the carousel horse (back-west-far at x=-12.5)
+//   and the fox statue (back-west-close at x=-6) so it reads
+//   as a slow sentinel continuing the line of marble-pedestal
+//   sentinels along the back-west perimeter. The tortoise
+//   crouches four-square on the plinth cap with a domed shell
+//   stamped by a ring of hexagonal scute plates, a slim
+//   outstretched head with two glinting eye highlights and a
+//   parted beak mouth, four stout splayed legs and a small
+//   pointed tail tucked to one side (the bronze body, shell
+//   plates, head and tail reuse the existing `copper-patina`
+//   colour + bump pair so the verdigris reads as crusted
+//   relief on the cast metal, and the plinth reuses the
+//   existing `marble` colour + bump pair so the stone reads
+//   with veined relief). House: a pair of Victorian copper-
+//   patina ornamental window valance crowns mounted above the
+//   existing side bay window hoods on the east and west side
+//   walls — each valance a slim scroll cornice with a central
+//   foliate crest medallion, a pair of C-curve volutes
+//   flanking the crest, four small tip beads across the crown
+//   and three pendant drop beads hanging below the scroll,
+//   reading as cast-iron millwork finishing the bay window
+//   roofs (the cornice, crest, volutes, tip beads and drop
+//   beads reuse the existing `copper-patina` pair so the
+//   verdigris reads as crusted relief on the cast metal).
+//   Scene: a far-east geothermal hot springs valley plane
+//   east of the alpine ridge — a warm cream-and-grey sinter
+//   floor surfaced with the new `geothermal-sinter` colour
+//   map paired with a sinter-terrace depth map (registered
+//   alongside the other procedural textures) so the layered
+//   mineral crusts and shallow brine pools read as raised
+//   relief at glancing sun, a slim moss-and-scree west apron
+//   along the alpine-ridge join so the ground layer has no
+//   holes at the seam, a focal timber bathhouse cottage at
+//   the southeast corner with a peaked shingle roof, a
+//   fieldstone foundation course, a stone chimney trailing a
+//   translucent steam wisp and a glowing front window
+//   catching the dusk, a steaming turquoise hot spring pool
+//   ringed by darker mineral-deposit lip stones with three
+//   rising steam wisps and a slim ripple highlight, a
+//   layered cream sinter terrace on the north side of the
+//   pool (three concentric stepped rings reading as the
+//   mineral terraces built by the spring outflow) crowned by
+//   a small dome mineral deposit cap, two slim mineral-cone
+//   cairns crowned by bright drip beads, and a grove of
+//   three slim alpine pines clinging to the valley rim with
+//   stacked-cone foliage canopies in mid and pale green
+//   tints and slim steam-misted halo highlights catching the
+//   warm humid air.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
