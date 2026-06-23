@@ -5509,4 +5509,184 @@ function buildDefaultLibrary(): void {
       }
     },
   });
+
+  // Thirty-fourth-pass scene extension — a far-east volcanic plateau plane
+  // east of the geothermal valley. The new `basalt-plateau` colour map
+  // shows a dark basalt rock floor with a network of cooled lava cracks,
+  // scattered scoria pebbles, faint sulfur-yellow mineral stains and a
+  // slim warm sun-cast across the upper-right. Paired with the depth map
+  // so the cracks and scoria pebbles read as raised relief at glancing
+  // sun.
+
+  // Basalt-plateau colour — a dark basalt rock floor with cooled lava
+  // cracks, scattered scoria pebbles, faint sulfur-yellow mineral stains
+  // and a slim warm sun-cast across the upper-right.
+  registry["basalt-plateau"] = makeCanvasTexture({
+    seed: 0xb45a17,
+    draw: (ctx, rng, size) => {
+      // Base gradient — slightly cooler in the north, warmer in the south
+      // suggesting where ambient heat lingers near the active vents.
+      const bg = ctx.createLinearGradient(0, 0, 0, size);
+      bg.addColorStop(0, "#1c1816");
+      bg.addColorStop(0.55, "#2a2422");
+      bg.addColorStop(1, "#382a26");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size);
+      // Network of cooled lava cracks — slim dark fissures running across
+      // the basalt floor in branching segments.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 38; i++) {
+        const sx = rng() * size;
+        const sy = rng() * size;
+        const len = 60 + rng() * 180;
+        const ang = rng() * Math.PI * 2;
+        const segs = 4 + Math.floor(rng() * 4);
+        ctx.strokeStyle = `rgba(8,6,4,${0.55 + rng() * 0.3})`;
+        ctx.lineWidth = 1 + rng() * 1.6;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        let cx = sx;
+        let cy = sy;
+        for (let s = 0; s < segs; s++) {
+          const a = ang + (rng() - 0.5) * 0.9;
+          cx += Math.cos(a) * (len / segs);
+          cy += Math.sin(a) * (len / segs);
+          ctx.lineTo(cx, cy);
+        }
+        ctx.stroke();
+      }
+      // Slim warm-orange inner crack highlights — emissive glow strips
+      // suggesting cooling magma still smouldering inside some fissures.
+      for (let i = 0; i < 9; i++) {
+        const sx = rng() * size;
+        const sy = rng() * size;
+        const len = 30 + rng() * 60;
+        const ang = rng() * Math.PI * 2;
+        ctx.strokeStyle = `rgba(255,108,40,${0.32 + rng() * 0.2})`;
+        ctx.lineWidth = 0.8 + rng() * 0.8;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx + Math.cos(ang) * len, sy + Math.sin(ang) * len);
+        ctx.stroke();
+      }
+      // Scoria pebbles — small scattered ovals in two dark tints reading
+      // as porous basalt fragments across the floor.
+      for (let i = 0; i < 240; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 1.4 + rng() * 3.0;
+        const tint = rng();
+        let h: number;
+        let l: number;
+        if (tint < 0.5) {
+          h = 14 + rng() * 12;
+          l = 10 + rng() * 12;
+        } else {
+          h = 22 + rng() * 14;
+          l = 18 + rng() * 14;
+        }
+        ctx.fillStyle = `hsla(${h}, 18%, ${l}%, 0.82)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Faint sulfur-yellow mineral stain dabs — sparse pale patches
+      // reading as fresh sulfur crust on the basalt floor.
+      for (let i = 0; i < 26; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 4 + rng() * 12;
+        ctx.save();
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r2);
+        grad.addColorStop(0, "hsla(48, 38%, 56%, 0.42)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Faint warm sun cast across the upper-right — a wide pale wash
+      // so glancing afternoon sun catches the rim of the plateau.
+      const sun = ctx.createRadialGradient(size * 0.78, size * 0.18, 0, size * 0.78, size * 0.18, size * 0.9);
+      sun.addColorStop(0, "rgba(248,182,118,0.18)");
+      sun.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = sun;
+      ctx.fillRect(0, 0, size, size);
+      // Micro-noise so the surface keeps tonal life at deep mip levels.
+      paintNoise(ctx, rng, size, "transparent", 26, 0.0024);
+    },
+  });
+
+  // Basalt-plateau depth map — cooled lava cracks and scoria pebbles sit
+  // slightly above the recessed mineral stains (light = high) so the
+  // surface shows fissure relief at glancing sun.
+  registry["basalt-plateau-bump"] = makeCanvasTexture({
+    seed: 0xb45a17 + 1,
+    draw: (ctx, rng, size) => {
+      // Mid-grey base — average basalt floor height.
+      ctx.fillStyle = "#7a7a7a";
+      ctx.fillRect(0, 0, size, size);
+      // Crack recesses — dark thin lines reading as cracked-in fissures.
+      ctx.lineCap = "round";
+      for (let i = 0; i < 38; i++) {
+        const sx = rng() * size;
+        const sy = rng() * size;
+        const len = 60 + rng() * 180;
+        const ang = rng() * Math.PI * 2;
+        const segs = 4 + Math.floor(rng() * 4);
+        ctx.strokeStyle = `rgba(40,40,40,${0.6 + rng() * 0.3})`;
+        ctx.lineWidth = 1.4 + rng() * 1.6;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        let cx = sx;
+        let cy = sy;
+        for (let s = 0; s < segs; s++) {
+          const a = ang + (rng() - 0.5) * 0.9;
+          cx += Math.cos(a) * (len / segs);
+          cy += Math.sin(a) * (len / segs);
+          ctx.lineTo(cx, cy);
+        }
+        ctx.stroke();
+      }
+      // Mineral stain recesses — soft darker patches reading as shallow
+      // sulfur-deposited depressions.
+      for (let i = 0; i < 26; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 4 + rng() * 12;
+        ctx.save();
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r2);
+        grad.addColorStop(0, "rgba(40,40,40,0.42)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      // Scoria pebble bumps — slim bright dots reading as raised stones
+      // with a slim shaded undercut on the south-east side.
+      for (let i = 0; i < 240; i++) {
+        const cx = rng() * size;
+        const cy = rng() * size;
+        const r2 = 1.4 + rng() * 3.0;
+        ctx.fillStyle = `rgba(214,214,214,0.74)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(54,54,54,0.5)`;
+        ctx.beginPath();
+        ctx.arc(cx + 0.6, cy + 0.6, r2 * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // High-frequency speckle so the surface keeps tonal life at deep
+      // mip levels.
+      for (let i = 0; i < 1500; i++) {
+        const v = 90 + Math.floor(rng() * 90);
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(rng() * size, rng() * size, 1, 1);
+      }
+    },
+  });
 }

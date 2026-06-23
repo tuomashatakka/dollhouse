@@ -22,16 +22,17 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 33) adds a Victorian bronze tortoise statue on
- * a fluted marble pedestal to the back outside-fence lawn (between the
- * carousel horse at back-west-far and the fox statue at back-west-close,
- * continuing the line of marble-pedestal sentinels along the back-west
- * perimeter), a pair of Victorian copper-patina ornamental side window
- * valance crowns mounted above the existing side bay windows, and a
- * far-east geothermal hot springs valley plane east of the alpine ridge
- * with a focal wooden bathhouse cottage, a steaming turquoise hot spring
- * pool, a layered cream sinter terrace, two mineral-cone cairns and a
- * small grove of three steam-misted pines clinging to the valley rim.
+ * latest enhancement (pass 34) adds a Victorian bronze swan statue on a
+ * fluted marble pedestal to the back-east outside-fence lawn (between the
+ * obelisk at back-east-close and the weather station at back-east-far,
+ * continuing the line of marble-pedestal sentinels along the back-east
+ * perimeter), a pair of Victorian copper-patina ornamental porch column
+ * capitals mounted atop each porch post, and a far-east volcanic plateau
+ * plane east of the geothermal valley with a focal basalt obelisk pillar
+ * with carved lava-glow runes, two bubbling sulfur pools with rising
+ * steam wisps, a slim fumarole vent trailing a magma-glow plume, a slim
+ * cracked lava-vein river snaking across the plateau and a scatter of
+ * five dark basalt boulders ringing the obelisk.
  */
 const W = 7;
 const D = 5;
@@ -1460,6 +1461,79 @@ const GEOTHERMAL_CAIRNS: { x: number; z: number; scale: number }[] = [
   { x: 32, z: 134, scale: 0.9 },
 ];
 
+/**
+ * Thirty-fourth-pass courtyard prop — a Victorian bronze swan statue on a
+ * fluted marble pedestal, parked on the back-east outside-fence lawn
+ * between the obelisk (back-east-close at x=+7) and the weather station
+ * (back-east-far at x=+12.5) so it reads as a graceful sentinel continuing
+ * the line of marble-pedestal ornaments along the back-east perimeter of
+ * the courtyard. The swan stands four-square on the plinth cap with an
+ * arched curving neck, a tapered beak, two glinting eye highlights and a
+ * pair of folded wings tucked against the body.
+ */
+const SWAN_STATUE_POS: [number, number, number] = [10, 0, -5.5];
+
+/**
+ * Thirty-fourth-pass house detail — a pair of Victorian copper-patina
+ * ornamental porch column capitals mounted atop each porch post just
+ * below the canopy eave. Each capital is a stepped block with a slim
+ * crown bead, a flanking pair of C-curve volutes and a slim foliate tip
+ * cluster reading as cast-iron millwork finishing the porch posts. The
+ * porch posts sit at x=±1.18, z=FRONT_Z+0.65 and the post tops are at
+ * y≈2.62, so the capitals anchor just below the canopy.
+ */
+const PORCH_CAPITAL_POSITIONS: [number, number, number][] = [
+  [-1.18, 2.55, FRONT_Z + 0.65],
+  [1.18, 2.55, FRONT_Z + 0.65],
+];
+
+/**
+ * Thirty-fourth-pass scene extension — a far-east volcanic plateau plane
+ * east of the geothermal valley (which is at x=24, z=140 with W=20, so
+ * its east edge sits at x=34). The new plane is centred at x=44 with
+ * W=20 so the western apron overlaps the geothermal valley's east edge
+ * with a slim sinter strip and the ground layer has no holes at the
+ * seam. The plane carries a dark basalt rock floor surfaced with the
+ * new `basalt-plateau` colour map paired with a fissure-and-vein depth
+ * map (registered alongside the other procedural textures) so the cooled
+ * basalt cracks and scattered scoria pebbles read as raised relief at
+ * glancing sun. Features a focal basalt obelisk pillar with carved
+ * lava-glow runes at the centre of the plateau, two bubbling sulfur
+ * pools with rising steam wisps and a sulfur-yellow rim crust, a slim
+ * fumarole vent at the north end trailing a magma-glow plume, a slim
+ * cracked lava-vein river snaking diagonally across the plateau with
+ * darker bank trims and three glowing magma-pool nodes along its bed,
+ * and a scatter of five dark basalt boulders ringing the obelisk.
+ */
+const VOLCANIC_PLATEAU_POS: [number, number, number] = [44, -0.044, 140];
+const VOLCANIC_PLATEAU_W = 20;
+const VOLCANIC_PLATEAU_D = 20;
+const VOLCANIC_OBELISK_POS: [number, number, number] = [44, 0, 140];
+const VOLCANIC_SULFUR_POOLS: { x: number; z: number; r: number }[] = [
+  { x: 38, z: 145, r: 1.0 },
+  { x: 50, z: 136, r: 0.85 },
+];
+const VOLCANIC_FUMAROLE_POS: [number, number, number] = [46, 0, 133];
+const VOLCANIC_LAVA_VEIN: { x: number; z: number }[] = [
+  { x: 36, z: 132 },
+  { x: 40, z: 137 },
+  { x: 44, z: 140 },
+  { x: 48, z: 143 },
+  { x: 52, z: 148 },
+];
+const VOLCANIC_LAVA_NODES: { x: number; z: number }[] = [
+  { x: 40, z: 137 },
+  { x: 44, z: 140 },
+  { x: 48, z: 143 },
+];
+const VOLCANIC_BOULDERS: { x: number; z: number; scale: number; rot: number }[] = [
+  { x: 41, z: 142, scale: 1.0, rot: 0.4 },
+  { x: 47, z: 138, scale: 0.85, rot: 1.6 },
+  { x: 40, z: 146, scale: 0.95, rot: 2.3 },
+  { x: 48, z: 144, scale: 1.1, rot: 0.9 },
+  { x: 44, z: 134, scale: 0.9, rot: 1.2 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -2702,6 +2776,47 @@ const C = {
   gtCairnConeHi: "#dccbb0",
   gtCairnConeShade: "#665846",
   gtCairnDrip: "#e6dccc",
+  // Thirty-fourth enhancement pass — a Victorian bronze swan statue on a
+  // fluted marble pedestal on the back-east outside-fence lawn, a pair of
+  // copper-patina ornamental porch column capitals mounted atop each
+  // porch post and a far-east volcanic plateau plane east of the
+  // geothermal valley with a focal basalt obelisk, two bubbling sulfur
+  // pools, a fumarole vent, a cracked lava-vein river and a scatter of
+  // dark basalt boulders.
+  swanBronze: "#3c5048",
+  swanBronzeHi: "#80a092",
+  swanBronzeShade: "#1c2620",
+  swanWingShade: "#2a3a32",
+  swanBeak: "#b8763a",
+  swanPlinth: "#ede2d0",
+  swanPlinthShade: "#a89776",
+  porchCapitalCopper: "#5f8c6c",
+  porchCapitalCopperHi: "#9ec6aa",
+  porchCapitalCopperShade: "#305a40",
+  // Far-east volcanic plateau — a dark basalt rock floor with a focal
+  // obelisk, bubbling sulfur pools, a fumarole vent, a cracked lava-vein
+  // river and a scatter of dark basalt boulders.
+  vpGround: "#2a2624",
+  vpGroundShade: "#16120f",
+  vpGroundHi: "#4a3c34",
+  vpApronSinter: "#a89c86",
+  vpObeliskBasalt: "#1c1816",
+  vpObeliskBasaltHi: "#5a4c40",
+  vpObeliskRune: "#ff7a2a",
+  vpObeliskRuneHi: "#ffd078",
+  vpSulfurRim: "#d8b840",
+  vpSulfurRimHi: "#f6e08c",
+  vpSulfurWater: "#9ec46a",
+  vpSulfurWaterDeep: "#5e8a40",
+  vpSulfurSteam: "#e8e2cc",
+  vpFumarolePlume: "#ff8c3a",
+  vpFumarolePlumeHi: "#ffd278",
+  vpLavaVein: "#ff5018",
+  vpLavaVeinHi: "#ffc060",
+  vpLavaBank: "#1c1410",
+  vpBoulder: "#2c2622",
+  vpBoulderHi: "#5e504a",
+  vpBoulderShade: "#0e0a08",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -27270,6 +27385,692 @@ function buildGeothermalPines(f: NodeFactory): SceneNode {
   return f.group("Geothermal Pines", trees);
 }
 
+/* ─────────────── thirty-fourth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze swan statue on a fluted marble pedestal, parked on
+ * the back-east outside-fence lawn between the obelisk (back-east-close
+ * at x=+7) and the weather station (back-east-far at x=+12.5) so it reads
+ * as a graceful sentinel continuing the line of marble-pedestal ornaments
+ * along the back-east perimeter of the courtyard. The swan stands
+ * four-square on the plinth cap with an arched curving neck rising from a
+ * teardrop body, a tapered orange beak, two glinting eye highlights and a
+ * pair of folded wings tucked against the body; the bronze body, neck and
+ * wing slabs reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal, and the plinth
+ * reuses the existing `marble` colour + bump pair so the stone reads with
+ * veined relief.
+ */
+function buildSwanStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.swanBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.swanBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.swanBronzeShade, 0.95, { flatShading: true });
+  const wingShade = std(C.swanWingShade, 0.92, { flatShading: true });
+  const beak = std(C.swanBeak, 0.7, { metalness: 0.2 });
+  const marble: MaterialDef = {
+    color: C.swanPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.swanPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base — broad square marble base.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft + cap.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Swan body — a teardrop-shaped oblong sitting on the plinth cap.
+  const bodyY = 0.94;
+  parts.push(
+    f.mesh("Swan Body", sphere(0.22, 14, 10), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.4, 0.9, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Swan Belly Shade", sphere(0.18, 12, 8), bronzeShade, {
+      position: [0, bodyY - 0.08, 0],
+      scale: [1.2, 0.35, 0.9],
+    }, { castShadow: false }),
+  );
+  // ── Folded wings — two slim wing slabs tucked against the body sides.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Swan Wing ${sz}`, box(0.34, 0.12, 0.06), bronze, {
+        position: [0.02, bodyY + 0.04, sz * 0.20],
+        rotation: [0, 0, 0.10],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut along each wing reading as folded feather lines.
+      f.mesh(`Swan Wing Shade ${sz}`, box(0.32, 0.04, 0.05), wingShade, {
+        position: [0.02, bodyY - 0.01, sz * 0.22],
+        rotation: [0, 0, 0.10],
+      }, { castShadow: false }),
+      // Slim bright tip highlight at the wing rear edge.
+      f.mesh(`Swan Wing Tip ${sz}`, box(0.10, 0.05, 0.03), bronzeHi, {
+        position: [-0.14, bodyY + 0.05, sz * 0.22],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Curved arched neck — five stacked cylinder segments rising and
+  // tilting forward in a slim "S" curve to read as a swan's elegant
+  // arched neck.
+  const neckBase: [number, number, number] = [0.18, bodyY + 0.06, 0];
+  const neckSegs: { dx: number; dy: number; r: number; tilt: number }[] = [
+    { dx: 0.03, dy: 0.10, r: 0.052, tilt: -0.55 },
+    { dx: 0.07, dy: 0.20, r: 0.048, tilt: -0.85 },
+    { dx: 0.10, dy: 0.30, r: 0.046, tilt: -0.95 },
+    { dx: 0.12, dy: 0.40, r: 0.044, tilt: -0.75 },
+    { dx: 0.15, dy: 0.48, r: 0.042, tilt: -0.45 },
+  ];
+  for (let i = 0; i < neckSegs.length; i++) {
+    const s = neckSegs[i]!;
+    parts.push(
+      f.mesh(`Swan Neck ${i}`, cylinder(s.r, s.r + 0.004, 0.12, 8), bronze, {
+        position: [neckBase[0] + s.dx, neckBase[1] + s.dy, neckBase[2]],
+        rotation: [0, 0, s.tilt],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // ── Swan head — small ovoid at the top of the neck arc.
+  const headX = neckBase[0] + 0.20;
+  const headY = neckBase[1] + 0.56;
+  parts.push(
+    f.mesh("Swan Head", sphere(0.072, 12, 10), bronze, {
+      position: [headX, headY, 0],
+      scale: [1.1, 0.95, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tapered orange beak protruding forward.
+    f.mesh("Swan Beak", cone(0.034, 0.10, 8), beak, {
+      position: [headX + 0.09, headY - 0.012, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: true }),
+    // Slim darker beak base ring at the head join.
+    f.mesh("Swan Beak Base", cylinder(0.036, 0.038, 0.018, 8), bronzeShade, {
+      position: [headX + 0.05, headY - 0.012, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+    // Two glinting eye highlights flanking the head.
+    f.mesh("Swan Eye L", sphere(0.013, 8, 6), bronzeHi, {
+      position: [headX + 0.02, headY + 0.022, 0.045],
+    }, { castShadow: false }),
+    f.mesh("Swan Eye R", sphere(0.013, 8, 6), bronzeHi, {
+      position: [headX + 0.02, headY + 0.022, -0.045],
+    }, { castShadow: false }),
+  );
+  // ── Short curving tail tuft at the back of the body.
+  parts.push(
+    f.mesh("Swan Tail", cone(0.05, 0.16, 8), bronze, {
+      position: [-0.26, bodyY + 0.10, 0],
+      rotation: [0, 0, Math.PI / 2 + 0.4],
+    }, { castShadow: true }),
+    f.mesh("Swan Tail Tip", sphere(0.020, 8, 6), bronzeHi, {
+      position: [-0.34, bodyY + 0.16, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Swan Plaque Tablet", box(0.3, 0.1, 0.018), bronze, {
+      position: [0, 0.46, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Swan Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Swan Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Swan Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+  );
+  return f.group("Swan Statue", parts, { position: pos });
+}
+
+/* ─────────────── thirty-fourth-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental porch column capitals
+ * mounted atop each porch post just below the canopy eave. Each capital
+ * is a stepped block crown with a slim crown bead, a flanking pair of
+ * C-curve volute scrolls, a small foliate tip cluster of three pendant
+ * leaf-drop beads beneath, and a slim chamfered necking ring binding the
+ * capital to the post head — reading as cast-iron millwork finishing the
+ * porch posts. The capital body, crown, volutes, beads and necking ring
+ * reuse the existing `copper-patina` colour + bump pair so the verdigris
+ * mottling reads as crusted relief on the cast metal.
+ */
+function buildPorchColumnCapitals(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.porchCapitalCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.porchCapitalCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.porchCapitalCopperShade, 0.95, { flatShading: true });
+  const capitals: SceneNode[] = [];
+  for (let i = 0; i < PORCH_CAPITAL_POSITIONS.length; i++) {
+    const pos = PORCH_CAPITAL_POSITIONS[i]!;
+    const parts: SceneNode[] = [
+      // Slim chamfered necking ring binding the capital to the post head.
+      f.mesh("Necking Ring", cylinder(0.085, 0.09, 0.02, 12), copperShade, {
+        position: [0, -0.05, 0],
+      }, { castShadow: false }),
+      // Stepped block crown body — wider at the top.
+      f.mesh("Capital Body", box(0.18, 0.08, 0.18), copper, {
+        position: [0, 0.0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Capital Crown", box(0.22, 0.025, 0.22), copperHi, {
+        position: [0, 0.052, 0],
+      }, { castShadow: true }),
+      // Slim crown bead — a small dome bead atop the crown for ornament.
+      f.mesh("Capital Crown Bead", sphere(0.022, 8, 6), copperHi, {
+        position: [0, 0.078, 0],
+      }, { castShadow: false }),
+      // Two C-curve volute scrolls flanking the capital body — slim
+      // cylinder segments curling up at each shoulder.
+      f.mesh("Volute N", cylinder(0.022, 0.022, 0.10, 8), copper, {
+        position: [0, 0.012, 0.10],
+        rotation: [-0.6, 0, 0],
+      }, { castShadow: false }),
+      f.mesh("Volute N Tip", sphere(0.022, 8, 6), copperHi, {
+        position: [0, 0.044, 0.13],
+      }, { castShadow: false }),
+      f.mesh("Volute S", cylinder(0.022, 0.022, 0.10, 8), copper, {
+        position: [0, 0.012, -0.10],
+        rotation: [0.6, 0, 0],
+      }, { castShadow: false }),
+      f.mesh("Volute S Tip", sphere(0.022, 8, 6), copperHi, {
+        position: [0, 0.044, -0.13],
+      }, { castShadow: false }),
+      // Foliate cluster — three pendant leaf-drop beads beneath the body
+      // reading as a small leaf ornament wrapping the capital.
+      f.mesh("Leaf Drop N", sphere(0.022, 8, 6), copperHi, {
+        position: [0, -0.06, 0.07],
+        scale: [1.0, 1.3, 1.0],
+      }, { castShadow: false }),
+      f.mesh("Leaf Drop C", sphere(0.024, 8, 6), copperHi, {
+        position: [0, -0.07, 0],
+        scale: [1.0, 1.3, 1.0],
+      }, { castShadow: false }),
+      f.mesh("Leaf Drop S", sphere(0.022, 8, 6), copperHi, {
+        position: [0, -0.06, -0.07],
+        scale: [1.0, 1.3, 1.0],
+      }, { castShadow: false }),
+    ];
+    capitals.push(
+      f.group(`Porch Column Capital ${i === 0 ? "West" : "East"}`, parts, {
+        position: pos,
+      }),
+    );
+  }
+  return f.group("Porch Column Capitals", capitals);
+}
+
+/* ─────────────── thirty-fourth-pass scene extension ─────────────── */
+
+/**
+ * Far-east volcanic plateau plane east of the geothermal valley. Carries
+ * a dark basalt rock floor surfaced with the new `basalt-plateau` colour
+ * map paired with a fissure-and-vein depth map so the cooled basalt
+ * cracks and scattered scoria pebbles read as raised relief at glancing
+ * sun. Features a focal basalt obelisk pillar with carved lava-glow
+ * runes at the centre of the plateau, two bubbling sulfur pools with
+ * rising steam wisps and a sulfur-yellow rim crust, a slim fumarole vent
+ * at the north end trailing a magma-glow plume, a slim cracked lava-vein
+ * river snaking diagonally across the plateau with three glowing magma-
+ * pool nodes along its bed, and a scatter of five dark basalt boulders
+ * ringing the obelisk.
+ */
+function buildFarEastVolcanicPlateau(f: NodeFactory): SceneNode {
+  return f.group("Far East Volcanic Plateau", [
+    // Basalt ground plane — dark rock floor with the new colour + depth
+    // map pair so the cooled basalt cracks and scoria pebbles read as
+    // raised relief at glancing sun.
+    f.mesh(
+      "Volcanic Plateau Ground",
+      plane(VOLCANIC_PLATEAU_W, VOLCANIC_PLATEAU_D),
+      std(C.vpGround, 0.95, {
+        texture: "basalt-plateau",
+        textureScale: [4, 4],
+        bumpMap: "basalt-plateau-bump",
+        bumpScale: 0.09,
+      }),
+      { position: VOLCANIC_PLATEAU_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the geothermal valley's east edge with a
+    // slim sinter strip so the seam reads as a continuous sinter-into-
+    // basalt join with no holes at the ground layer.
+    f.mesh(
+      "Volcanic Plateau West Apron",
+      plane(3, VOLCANIC_PLATEAU_D),
+      std(C.vpApronSinter, 0.95, {
+        texture: "geothermal-sinter",
+        textureScale: [1, 4],
+      }),
+      {
+        position: [
+          VOLCANIC_PLATEAU_POS[0] - VOLCANIC_PLATEAU_W / 2 + 1.5,
+          -0.042,
+          VOLCANIC_PLATEAU_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildVolcanicObelisk(f, VOLCANIC_OBELISK_POS),
+    buildVolcanicSulfurPools(f),
+    buildVolcanicFumarole(f, VOLCANIC_FUMAROLE_POS),
+    buildVolcanicLavaVein(f),
+    buildVolcanicBoulders(f),
+  ]);
+}
+
+/**
+ * Focal basalt obelisk pillar at the centre of the plateau — a tall
+ * tapered four-sided basalt shaft with carved lava-glow rune slits
+ * running vertically up two faces, a stepped basalt plinth at the base
+ * and a slim pyramidal cap at the top. The rune slits carry a warm
+ * emissive lava-orange tint so the obelisk reads as a half-lit beacon at
+ * dusk.
+ */
+function buildVolcanicObelisk(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const basalt = std(C.vpObeliskBasalt, 0.95, { flatShading: true });
+  const basaltHi = std(C.vpObeliskBasaltHi, 0.85, { flatShading: true });
+  const rune: MaterialDef = {
+    color: C.vpObeliskRune,
+    roughness: 0.35,
+    metalness: 0.1,
+    emissive: C.vpObeliskRune,
+  };
+  const runeHi: MaterialDef = {
+    color: C.vpObeliskRuneHi,
+    roughness: 0.3,
+    metalness: 0.1,
+    emissive: C.vpObeliskRuneHi,
+  };
+  const parts: SceneNode[] = [];
+  // Stepped basalt plinth base.
+  parts.push(
+    f.mesh("Obelisk Base Slab", box(0.96, 0.16, 0.96), basalt, {
+      position: [0, 0.08, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Obelisk Base Cap", box(0.74, 0.10, 0.74), basaltHi, {
+      position: [0, 0.21, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Tapered obelisk shaft — slim four-sided pillar narrowing toward the top.
+  parts.push(
+    f.mesh("Obelisk Shaft", cylinder(0.18, 0.30, 2.4, 4), basalt, {
+      position: [0, 1.46, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim chamfered shaft trim ring near the base for ornament.
+    f.mesh("Obelisk Shaft Ring", cylinder(0.32, 0.32, 0.04, 4), basaltHi, {
+      position: [0, 0.32, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: false }),
+  );
+  // Pyramidal cap at the top.
+  parts.push(
+    f.mesh("Obelisk Cap", cone(0.20, 0.32, 4), basalt, {
+      position: [0, 2.82, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Obelisk Cap Tip", sphere(0.06, 8, 6), basaltHi, {
+      position: [0, 3.02, 0],
+    }, { castShadow: false }),
+  );
+  // Carved lava-glow rune slits — four vertical slim emissive bars
+  // climbing the south face of the shaft, with three smaller rune dots
+  // between them so the obelisk reads as inscribed with glyphs.
+  const runeY = [0.7, 1.2, 1.7, 2.2];
+  for (let i = 0; i < runeY.length; i++) {
+    parts.push(
+      f.mesh(`Rune Slit ${i}`, box(0.04, 0.22, 0.02), rune, {
+        position: [0, runeY[i]!, 0.22],
+      }, { castShadow: false }),
+    );
+  }
+  const runeDotY = [0.95, 1.45, 1.95];
+  for (let i = 0; i < runeDotY.length; i++) {
+    parts.push(
+      f.mesh(`Rune Dot ${i}`, sphere(0.018, 8, 6), runeHi, {
+        position: [0, runeDotY[i]!, 0.225],
+      }, { castShadow: false }),
+    );
+  }
+  // Mirror runes on the north face so the obelisk reads as inscribed all around.
+  for (let i = 0; i < runeY.length; i++) {
+    parts.push(
+      f.mesh(`Rune Slit N ${i}`, box(0.04, 0.22, 0.02), rune, {
+        position: [0, runeY[i]!, -0.22],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Volcanic Obelisk", parts, { position: pos });
+}
+
+/**
+ * Two bubbling sulfur pools scattered across the plateau — each a slim
+ * cylinder of murky sulfur-green water rimmed by a sulfur-yellow crust
+ * ring with two rising steam wisps and a slim sulfur-yellow bubble dab
+ * on the surface reading as a fresh outgassing bubble.
+ */
+function buildVolcanicSulfurPools(f: NodeFactory): SceneNode {
+  const water: MaterialDef = {
+    color: C.vpSulfurWater,
+    roughness: 0.25,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.88,
+    emissive: "#2a4818",
+  };
+  const waterDeep: MaterialDef = {
+    color: C.vpSulfurWaterDeep,
+    roughness: 0.25,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.92,
+    emissive: "#1a2e0e",
+  };
+  const rim = std(C.vpSulfurRim, 0.85, {
+    texture: "cobblestone",
+    textureScale: [1.4, 1.4],
+    flatShading: true,
+  });
+  const rimHi = std(C.vpSulfurRimHi, 0.75, { flatShading: true });
+  const steam: MaterialDef = {
+    color: C.vpSulfurSteam,
+    roughness: 0.5,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.46,
+  };
+  const pools: SceneNode[] = [];
+  for (let i = 0; i < VOLCANIC_SULFUR_POOLS.length; i++) {
+    const p = VOLCANIC_SULFUR_POOLS[i]!;
+    const parts: SceneNode[] = [];
+    // Sulfur-yellow crust rim ring — small pebbles around the pool edge.
+    const rimCount = 14;
+    for (let j = 0; j < rimCount; j++) {
+      const a = (j / rimCount) * Math.PI * 2;
+      const px = Math.cos(a) * p.r;
+      const pz = Math.sin(a) * p.r;
+      parts.push(
+        f.mesh(`Rim ${j}`, sphere(0.14 + (j % 2) * 0.03, 10, 8), rim, {
+          position: [px, 0.06, pz],
+          scale: [1.0, 0.6, 1.0],
+          rotation: [0, a, 0],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    // Slim bright sulfur highlight along the rim — a sparse ring of
+    // bright dabs reading as fresh sulfur deposit caps.
+    for (let j = 0; j < 7; j++) {
+      const a = (j / 7) * Math.PI * 2 + 0.2;
+      const px = Math.cos(a) * p.r;
+      const pz = Math.sin(a) * p.r;
+      parts.push(
+        f.mesh(`Rim Hi ${j}`, sphere(0.08, 8, 6), rimHi, {
+          position: [px, 0.14, pz],
+          scale: [1.0, 0.4, 1.0],
+        }, { castShadow: false }),
+      );
+    }
+    // Murky sulfur-green water surface.
+    parts.push(
+      f.mesh("Sulfur Water", cylinder(p.r - 0.08, p.r - 0.08, 0.05, 24), water, {
+        position: [0, 0.05, 0],
+      }, { castShadow: false, receiveShadow: true }),
+      // Deeper core.
+      f.mesh("Sulfur Water Deep", cylinder(p.r * 0.55, p.r * 0.55, 0.04, 20), waterDeep, {
+        position: [0, 0.065, 0],
+      }, { castShadow: false }),
+      // Slim sulfur-yellow bubble dab on the surface.
+      f.mesh("Sulfur Bubble", sphere(0.06, 8, 6), rimHi, {
+        position: [p.r * 0.18, 0.085, p.r * 0.12],
+        scale: [1.0, 0.5, 1.0],
+      }, { castShadow: false }),
+    );
+    // Two rising steam wisps above the pool surface.
+    parts.push(
+      f.mesh("Steam Wisp 1", sphere(0.22, 12, 10), steam, {
+        position: [-p.r * 0.2, 0.6, p.r * 0.2],
+        scale: [1.5, 0.8, 1.3],
+      }, { castShadow: false }),
+      f.mesh("Steam Wisp 2", sphere(0.18, 12, 10), steam, {
+        position: [p.r * 0.15, 0.9, -p.r * 0.15],
+        scale: [1.3, 0.7, 1.2],
+      }, { castShadow: false }),
+    );
+    pools.push(
+      f.group(`Sulfur Pool ${i + 1}`, parts, {
+        position: [p.x, 0, p.z],
+        rotation: [0, i * 1.4, 0],
+      }),
+    );
+  }
+  return f.group("Sulfur Pools", pools);
+}
+
+/**
+ * Slim fumarole vent at the north end of the plateau trailing a magma-
+ * glow plume. A small basalt chimney mound carries a slim emissive
+ * lava-orange plume tower with a brighter inner core suggesting hot
+ * gases escaping through a vent.
+ */
+function buildVolcanicFumarole(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const basalt = std(C.vpObeliskBasalt, 0.95, { flatShading: true });
+  const basaltHi = std(C.vpObeliskBasaltHi, 0.85, { flatShading: true });
+  const plume: MaterialDef = {
+    color: C.vpFumarolePlume,
+    roughness: 0.4,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.7,
+    emissive: C.vpFumarolePlume,
+  };
+  const plumeHi: MaterialDef = {
+    color: C.vpFumarolePlumeHi,
+    roughness: 0.35,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.75,
+    emissive: C.vpFumarolePlumeHi,
+  };
+  const parts: SceneNode[] = [];
+  // Basalt chimney mound — a slim ring of cobblestone pebbles around the vent.
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    parts.push(
+      f.mesh(`Vent Stone ${i}`, sphere(0.14, 10, 8), basalt, {
+        position: [Math.cos(a) * 0.34, 0.10, Math.sin(a) * 0.34],
+        scale: [1.0, 0.7, 1.0],
+        rotation: [0, a, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Slim bright lichen crust dabs along the vent crown.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 + 0.4;
+    parts.push(
+      f.mesh(`Vent Crust ${i}`, sphere(0.08, 8, 6), basaltHi, {
+        position: [Math.cos(a) * 0.34, 0.22, Math.sin(a) * 0.34],
+        scale: [1.0, 0.4, 1.0],
+      }, { castShadow: false }),
+    );
+  }
+  // Lava-glow plume tower — three stacked emissive spheres rising from
+  // the vent, narrowing toward the top.
+  parts.push(
+    f.mesh("Plume Base", sphere(0.24, 14, 10), plume, {
+      position: [0, 0.32, 0],
+      scale: [1.2, 1.6, 1.2],
+    }, { castShadow: false }),
+    f.mesh("Plume Mid", sphere(0.18, 14, 10), plumeHi, {
+      position: [0.03, 0.72, -0.02],
+      scale: [1.0, 1.4, 1.0],
+    }, { castShadow: false }),
+    f.mesh("Plume Top", sphere(0.14, 14, 10), plume, {
+      position: [-0.02, 1.10, 0.03],
+      scale: [0.95, 1.2, 0.95],
+    }, { castShadow: false }),
+    // Slim brighter inner core suggesting molten gas at the centre.
+    f.mesh("Plume Core", sphere(0.10, 10, 8), plumeHi, {
+      position: [0, 0.45, 0],
+      scale: [0.7, 1.4, 0.7],
+    }, { castShadow: false }),
+  );
+  return f.group("Fumarole Vent", parts, { position: pos });
+}
+
+/**
+ * Slim cracked lava-vein river snaking diagonally across the plateau
+ * with darker bank trims and three glowing magma-pool nodes along its
+ * bed. The vein is built from a chain of slim flat strips running
+ * between consecutive waypoints, with a dark basalt bank strip on each
+ * side reading as the cooled crust framing the molten core.
+ */
+function buildVolcanicLavaVein(f: NodeFactory): SceneNode {
+  const lava: MaterialDef = {
+    color: C.vpLavaVein,
+    roughness: 0.4,
+    metalness: 0.05,
+    emissive: C.vpLavaVein,
+  };
+  const lavaHi: MaterialDef = {
+    color: C.vpLavaVeinHi,
+    roughness: 0.3,
+    metalness: 0.05,
+    emissive: C.vpLavaVeinHi,
+  };
+  const bank = std(C.vpLavaBank, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Chain together slim flat strips between consecutive vein waypoints.
+  for (let i = 0; i < VOLCANIC_LAVA_VEIN.length - 1; i++) {
+    const a = VOLCANIC_LAVA_VEIN[i]!;
+    const b = VOLCANIC_LAVA_VEIN[i + 1]!;
+    const mx = (a.x + b.x) / 2;
+    const mz = (a.z + b.z) / 2;
+    const dx = b.x - a.x;
+    const dz = b.z - a.z;
+    const len = Math.hypot(dx, dz);
+    const rot = Math.atan2(dx, dz);
+    // Dark bank strip — wider, sits just below the lava core for contrast.
+    parts.push(
+      f.mesh(`Vein Bank ${i}`, box(0.6, 0.03, len), bank, {
+        position: [mx, 0.015, mz],
+        rotation: [0, rot, 0],
+      }, { castShadow: false, receiveShadow: true }),
+      // Slim emissive lava core — bright orange strip down the bank centre.
+      f.mesh(`Vein Lava ${i}`, box(0.28, 0.04, len + 0.05), lava, {
+        position: [mx, 0.025, mz],
+        rotation: [0, rot, 0],
+      }, { castShadow: false }),
+      // Slim bright inner-core highlight strip — yellower core dab.
+      f.mesh(`Vein Lava Hi ${i}`, box(0.10, 0.045, len + 0.05), lavaHi, {
+        position: [mx, 0.032, mz],
+        rotation: [0, rot, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Three glowing magma-pool nodes along the vein bed — small bright
+  // emissive discs marking where the lava pools and bubbles up.
+  for (let i = 0; i < VOLCANIC_LAVA_NODES.length; i++) {
+    const n = VOLCANIC_LAVA_NODES[i]!;
+    parts.push(
+      f.mesh(`Magma Pool ${i}`, cylinder(0.30, 0.30, 0.05, 14), lava, {
+        position: [n.x, 0.05, n.z],
+      }, { castShadow: false }),
+      f.mesh(`Magma Pool Hi ${i}`, cylinder(0.16, 0.16, 0.018, 12), lavaHi, {
+        position: [n.x, 0.075, n.z],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Lava Vein River", parts);
+}
+
+/**
+ * Scatter of five dark basalt boulders ringing the obelisk — each a slim
+ * irregular sphere with a brighter highlight cap and a darker shaded
+ * undercut so the silhouette reads with relief at glancing sun.
+ */
+function buildVolcanicBoulders(f: NodeFactory): SceneNode {
+  const stone = std(C.vpBoulder, 0.95, { flatShading: true });
+  const stoneHi = std(C.vpBoulderHi, 0.85, { flatShading: true });
+  const stoneShade = std(C.vpBoulderShade, 0.98, { flatShading: true });
+  const boulders: SceneNode[] = [];
+  for (let i = 0; i < VOLCANIC_BOULDERS.length; i++) {
+    const b = VOLCANIC_BOULDERS[i]!;
+    const parts: SceneNode[] = [
+      f.mesh("Boulder Body", sphere(0.42, 12, 10), stone, {
+        position: [0, 0.32, 0],
+        scale: [1.2, 0.9, 1.1],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim bright cap on the top reading as sun-catch on the curve.
+      f.mesh("Boulder Cap", sphere(0.22, 10, 8), stoneHi, {
+        position: [0.05, 0.58, 0.02],
+        scale: [1.0, 0.35, 1.0],
+      }, { castShadow: false }),
+      // Slim shaded undercut at the base reading as ground shadow.
+      f.mesh("Boulder Shade", sphere(0.34, 10, 8), stoneShade, {
+        position: [0, 0.12, 0],
+        scale: [1.2, 0.35, 1.1],
+      }, { castShadow: false }),
+    ];
+    boulders.push(
+      f.group(`Volcanic Boulder ${i + 1}`, parts, {
+        position: [b.x, 0, b.z],
+        rotation: [0, b.rot, 0],
+        scale: [b.scale, b.scale, b.scale],
+      }),
+    );
+  }
+  return f.group("Volcanic Boulders", boulders);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -28091,6 +28892,45 @@ function buildGeothermalPines(f: NodeFactory): SceneNode {
  *    with stacked-cone foliage canopies in mid and pale green tints
  *    and slim steam-misted halo highlights catching the warm humid
  *    air.
+ *  - Thirty-fourth pass — courtyard: a Victorian bronze swan statue on
+ *    a fluted marble pedestal, parked on the back-east outside-fence
+ *    lawn between the obelisk (back-east-close at x=+7) and the weather
+ *    station (back-east-far at x=+12.5) so it reads as a graceful
+ *    sentinel continuing the line of marble-pedestal ornaments along
+ *    the back-east perimeter — the swan stands on the plinth cap with
+ *    an arched curving neck rising from a teardrop body, a tapered
+ *    orange beak, two glinting eye highlights and a pair of folded
+ *    wings tucked against the body (the bronze body, neck, head and
+ *    wing slabs reuse the existing `copper-patina` colour + bump pair
+ *    so the verdigris reads as crusted relief on the cast metal, and
+ *    the plinth reuses the existing `marble` colour + bump pair so the
+ *    stone reads with veined relief). House: a pair of Victorian
+ *    copper-patina ornamental porch column capitals mounted atop each
+ *    porch post just below the canopy eave — each capital a stepped
+ *    block crown with a slim crown bead, a flanking pair of C-curve
+ *    volute scrolls, a small foliate cluster of three pendant leaf-
+ *    drop beads beneath and a slim chamfered necking ring binding the
+ *    capital to the post head (the capital body, crown, volutes,
+ *    beads and necking ring reuse the existing `copper-patina` pair
+ *    so the verdigris reads as crusted relief on the cast metal).
+ *    Scene: a far-east volcanic plateau plane east of the geothermal
+ *    valley — a dark basalt rock floor surfaced with the new
+ *    `basalt-plateau` colour map paired with a fissure-and-vein depth
+ *    map (registered alongside the other procedural textures) so the
+ *    cooled basalt cracks and scattered scoria pebbles read as raised
+ *    relief at glancing sun, a slim sinter west apron along the
+ *    geothermal valley join so the ground layer has no holes at the
+ *    seam, a focal basalt obelisk pillar at the centre of the plateau
+ *    with carved lava-glow rune slits running vertically up its
+ *    south and north faces, a stepped basalt plinth and a pyramidal
+ *    cap with a slim tip bead, two bubbling sulfur pools with murky
+ *    sulfur-green water rimmed by sulfur-yellow crust pebbles and
+ *    rising steam wisps, a slim fumarole vent at the north end with
+ *    a basalt chimney mound and a magma-glow plume tower, a slim
+ *    cracked lava-vein river snaking diagonally across the plateau
+ *    with darker bank trims and three glowing magma-pool nodes along
+ *    its bed, and a scatter of five dark basalt boulders ringing the
+ *    obelisk.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -28193,6 +29033,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: RAVEN_STATUE_POS[0], z: RAVEN_STATUE_POS[2], r: 0.9 },
     // Thirty-third-pass keep-out — bronze tortoise statue on the back outside-fence lawn.
     { x: TORTOISE_STATUE_POS[0], z: TORTOISE_STATUE_POS[2], r: 0.9 },
+    // Thirty-fourth-pass keep-out — bronze swan statue on the back-east outside-fence lawn.
+    { x: SWAN_STATUE_POS[0], z: SWAN_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -28267,6 +29109,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildHareStatue(f, HARE_STATUE_POS),
     buildRavenStatue(f, RAVEN_STATUE_POS),
     buildTortoiseStatue(f, TORTOISE_STATUE_POS),
+    buildSwanStatue(f, SWAN_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -28297,6 +29140,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fswRedrockMesa = buildFarSouthwestRedrockMesa(f);
   const fsAlpineRidge = buildFarSouthAlpineRidge(f);
   const feGeothermalValley = buildFarEastGeothermalValley(f);
+  const feVolcanicPlateau = buildFarEastVolcanicPlateau(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -28350,6 +29194,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildDoorPilasters(f),
     buildChimneyPotCaps(f),
     buildSideValances(f),
+    buildPorchColumnCapitals(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -28387,6 +29232,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fswRedrockMesa,
       fsAlpineRidge,
       feGeothermalValley,
+      feVolcanicPlateau,
       house,
     ],
   };
