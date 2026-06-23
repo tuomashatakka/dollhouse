@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirty-three enhancement passes.
+// house and its courtyard, layered over thirty-four enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -935,6 +935,51 @@
 //   stacked-cone foliage canopies in mid and pale green
 //   tints and slim steam-misted halo highlights catching the
 //   warm humid air.
+//   Pass 34 — courtyard: a Victorian bronze swan statue on a
+//   fluted marble pedestal, parked on the back-east outside-
+//   fence lawn between the obelisk (back-east-close at x=+7)
+//   and the weather station (back-east-far at x=+12.5) so it
+//   reads as a graceful sentinel continuing the line of
+//   marble-pedestal ornaments along the back-east perimeter
+//   of the courtyard. The swan stands four-square on the
+//   plinth cap with an arched curving neck rising from a
+//   teardrop body in a slim "S" curve, a tapered orange beak,
+//   two glinting eye highlights and a pair of folded wings
+//   tucked against the body (the bronze body, neck, head and
+//   wing slabs reuse the existing `copper-patina` colour +
+//   bump pair so the verdigris reads as crusted relief on
+//   the cast metal, and the plinth reuses the existing
+//   `marble` colour + bump pair so the stone reads with
+//   veined relief). House: a pair of Victorian copper-patina
+//   ornamental porch column capitals mounted atop each porch
+//   post just below the canopy eave — each capital a stepped
+//   block crown with a slim crown bead, a flanking pair of
+//   C-curve volute scrolls, a small foliate cluster of three
+//   pendant leaf-drop beads beneath and a slim chamfered
+//   necking ring binding the capital to the post head (the
+//   capital body, crown, volutes, beads and necking ring
+//   reuse the existing `copper-patina` pair so the verdigris
+//   reads as crusted relief on the cast metal). Scene: a
+//   far-east volcanic plateau plane east of the geothermal
+//   valley — a dark basalt rock floor surfaced with the new
+//   `basalt-plateau` colour map paired with a fissure-and-
+//   vein depth map (registered alongside the other
+//   procedural textures) so the cooled basalt cracks and
+//   scattered scoria pebbles read as raised relief at
+//   glancing sun, a slim sinter west apron along the
+//   geothermal-valley join so the ground layer has no holes
+//   at the seam, a focal basalt obelisk pillar at the centre
+//   of the plateau with carved lava-glow rune slits running
+//   vertically up its south and north faces, a stepped
+//   basalt plinth base and a pyramidal cap with a slim tip
+//   bead, two bubbling sulfur pools with murky sulfur-green
+//   water rimmed by sulfur-yellow crust pebbles and rising
+//   steam wisps, a slim fumarole vent at the north end with
+//   a basalt chimney mound and a magma-glow plume tower, a
+//   slim cracked lava-vein river snaking diagonally across
+//   the plateau with darker bank trims and three glowing
+//   magma-pool nodes along its bed, and a scatter of five
+//   dark basalt boulders ringing the obelisk.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
