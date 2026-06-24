@@ -22,17 +22,16 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 34) adds a Victorian bronze swan statue on a
+ * latest enhancement (pass 35) adds a Victorian bronze otter statue on a
  * fluted marble pedestal to the back-east outside-fence lawn (between the
- * obelisk at back-east-close and the weather station at back-east-far,
- * continuing the line of marble-pedestal sentinels along the back-east
+ * hare at back-east-close and the obelisk at back-east-close, slotting
+ * into the line of marble-pedestal sentinels along the back-east
  * perimeter), a pair of Victorian copper-patina ornamental porch column
- * capitals mounted atop each porch post, and a far-east volcanic plateau
- * plane east of the geothermal valley with a focal basalt obelisk pillar
- * with carved lava-glow runes, two bubbling sulfur pools with rising
- * steam wisps, a slim fumarole vent trailing a magma-glow plume, a slim
- * cracked lava-vein river snaking across the plateau and a scatter of
- * five dark basalt boulders ringing the obelisk.
+ * bases mounted at the foot of each porch post (companion to the column
+ * capitals from pass 34) and a far-east obsidian shore plane east of the
+ * volcanic plateau with a focal volcanic crater pool, three jagged
+ * obsidian sea-stack arches, a steaming geothermal coastal spring and a
+ * scatter of obsidian glass shards.
  */
 const W = 7;
 const D = 5;
@@ -1534,6 +1533,74 @@ const VOLCANIC_BOULDERS: { x: number; z: number; scale: number; rot: number }[] 
   { x: 44, z: 134, scale: 0.9, rot: 1.2 },
 ];
 
+/**
+ * Thirty-fifth-pass courtyard prop — a Victorian bronze otter statue on a
+ * fluted marble pedestal, parked on the back-east outside-fence lawn
+ * between the hare (back-east-close at x=+3.5) and the obelisk
+ * (back-east-close at x=+7) so it slots into the line of marble-pedestal
+ * sentinels along the back-east perimeter of the courtyard. The otter
+ * lies on its back across the plinth cap with a slim curling tail at one
+ * end, a tapered head with two glinting eye highlights at the other, two
+ * folded paws clutching a small bronze shell to its chest and a pair of
+ * stubby hind feet tucked beside the tail.
+ */
+const OTTER_STATUE_POS: [number, number, number] = [5.25, 0, -5.5];
+
+/**
+ * Thirty-fifth-pass house detail — a pair of Victorian copper-patina
+ * ornamental porch column bases mounted at the foot of each porch post
+ * just above the porch deck (companion to the column capitals from pass
+ * 34 capping the post heads). Each base is a stepped block plinth with a
+ * slim chamfered necking ring above, a flanking pair of inverted C-curve
+ * volutes and a row of three small egg-and-dart pendant beads on each
+ * side reading as cast-iron millwork finishing the bottom of the porch
+ * posts. The porch posts sit at x=±1.18, z=FRONT_Z+0.65 and the post
+ * bases sit at y≈0.05, so the bases anchor just above the deck.
+ */
+const PORCH_BASE_POSITIONS: [number, number, number][] = [
+  [-1.18, 0.04, FRONT_Z + 0.65],
+  [1.18, 0.04, FRONT_Z + 0.65],
+];
+
+/**
+ * Thirty-fifth-pass scene extension — a far-east obsidian shore plane
+ * east of the volcanic plateau (which is at x=44, z=140 with W=20, so
+ * its east edge sits at x=54). The new plane is centred at x=64 with
+ * W=20 so the western apron overlaps the volcanic plateau's east edge
+ * with a slim basalt strip and the ground layer has no holes at the
+ * seam. The plane carries a dark obsidian glass-and-sand floor surfaced
+ * with the new `obsidian-shore` colour reference paired with a glass-
+ * shard depth map so the obsidian shards and tide ripples read as
+ * raised relief at glancing sun. Features a focal volcanic crater pool
+ * at the centre of the shore with a glowing magma-orange core, three
+ * jagged obsidian sea-stack arches (each a curved obsidian span
+ * cantilevered on twin pillar bases), a steaming geothermal coastal
+ * spring at the south corner trailing translucent steam wisps, a
+ * scatter of seven obsidian glass shards strewn across the shore and a
+ * slim board-and-batten volcanologist's hut at the northeast corner
+ * with a steel-shuttered front door and a tall ash-deflector chimney.
+ */
+const OBSIDIAN_SHORE_POS: [number, number, number] = [64, -0.048, 140];
+const OBSIDIAN_SHORE_W = 20;
+const OBSIDIAN_SHORE_D = 20;
+const OBSIDIAN_CRATER_POS: [number, number, number] = [64, 0, 140];
+const OBSIDIAN_HUT_POS: [number, number, number] = [70, 0, 134];
+const OBSIDIAN_SPRING_POS: [number, number, number] = [60, 0, 146];
+const OBSIDIAN_STACKS: { x: number; z: number; rot: number; scale: number }[] = [
+  { x: 58, z: 138, rot: 0.4, scale: 1.0 },
+  { x: 67, z: 144, rot: 1.4, scale: 0.9 },
+  { x: 60, z: 134, rot: 2.1, scale: 0.95 },
+];
+const OBSIDIAN_SHARDS: { x: number; z: number; rot: number; scale: number }[] = [
+  { x: 62, z: 137, rot: 0.5, scale: 0.9 },
+  { x: 66, z: 141, rot: 1.2, scale: 1.0 },
+  { x: 59, z: 143, rot: 2.0, scale: 0.85 },
+  { x: 68, z: 138, rot: 0.3, scale: 1.05 },
+  { x: 61, z: 146, rot: 1.8, scale: 0.95 },
+  { x: 65, z: 135, rot: 2.5, scale: 0.9 },
+  { x: 67, z: 147, rot: 0.9, scale: 1.0 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -2817,6 +2884,50 @@ const C = {
   vpBoulder: "#2c2622",
   vpBoulderHi: "#5e504a",
   vpBoulderShade: "#0e0a08",
+  // Thirty-fifth enhancement pass — a Victorian bronze otter statue on a
+  // fluted marble pedestal at the back-east outside-fence lawn, a pair of
+  // copper-patina ornamental porch column bases mounted at the foot of
+  // each porch post and a far-east obsidian shore plane east of the
+  // volcanic plateau with a focal crater pool, three sea-stack arches, a
+  // steaming geothermal spring, a scatter of obsidian shards and a
+  // volcanologist's hut.
+  otterBronze: "#3c5048",
+  otterBronzeHi: "#80a092",
+  otterBronzeShade: "#1c2620",
+  otterPawShade: "#2a3a32",
+  otterShell: "#b89a64",
+  otterPlinth: "#ede2d0",
+  otterPlinthShade: "#a89776",
+  porchBaseCopper: "#5f8c6c",
+  porchBaseCopperHi: "#9ec6aa",
+  porchBaseCopperShade: "#305a40",
+  // Far-east obsidian shore — a dark obsidian glass-and-sand floor with
+  // a focal crater pool, sea-stack arches, a steaming geothermal spring,
+  // obsidian shards and a volcanologist's hut.
+  osGround: "#1a1612",
+  osGroundShade: "#0c0a08",
+  osGroundHi: "#3a3026",
+  osApronBasalt: "#2a2624",
+  osCraterRim: "#3a3028",
+  osCraterRimHi: "#5e4a3c",
+  osCraterMagma: "#ff5018",
+  osCraterMagmaHi: "#ffd078",
+  osCraterCrust: "#1c1410",
+  osStackObsidian: "#161412",
+  osStackObsidianHi: "#3e3a36",
+  osStackObsidianShade: "#06040a",
+  osSpringWater: "#5cc8e8",
+  osSpringWaterDeep: "#1c5e7c",
+  osSpringRim: "#9a8c7a",
+  osSpringSteam: "#e8e2d8",
+  osShardObsidian: "#1c1820",
+  osShardObsidianHi: "#5a5468",
+  osHutWall: "#6a4e36",
+  osHutTrim: "#3a2e22",
+  osHutRoof: "#2a2422",
+  osHutShutter: "#7c8084",
+  osHutChimney: "#3a3430",
+  osHutWindow: "#ffc874",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -28071,6 +28182,782 @@ function buildVolcanicBoulders(f: NodeFactory): SceneNode {
   return f.group("Volcanic Boulders", boulders);
 }
 
+/* ─────────────── thirty-fifth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze otter statue on a fluted marble pedestal, parked on
+ * the back-east outside-fence lawn between the hare (back-east-close at
+ * x=+3.5) and the obelisk (back-east-close at x=+7) so it slots into the
+ * line of marble-pedestal sentinels along the back-east perimeter of the
+ * courtyard. The otter lies on its back across the plinth cap with a
+ * slim curling tail at one end, a tapered head with two glinting eye
+ * highlights at the other, two folded paws clutching a small bronze
+ * shell to its chest and a pair of stubby hind feet tucked beside the
+ * tail. The bronze body, head, paws and tail reuse the existing
+ * `copper-patina` colour + bump pair so the verdigris reads as crusted
+ * relief on the cast metal, and the plinth reuses the existing `marble`
+ * colour + bump pair so the stone reads with veined relief.
+ */
+function buildOtterStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.otterBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.otterBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.otterBronzeShade, 0.95, { flatShading: true });
+  const pawShade = std(C.otterPawShade, 0.92, { flatShading: true });
+  const shell = std(C.otterShell, 0.5, { metalness: 0.3 });
+  const marble: MaterialDef = {
+    color: C.otterPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.otterPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base — broad square marble base.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft + cap.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Otter body — a long oblong lying on its back on the plinth cap.
+  const bodyY = 0.92;
+  parts.push(
+    f.mesh("Otter Body", sphere(0.22, 14, 10), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.8, 0.6, 0.9],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Otter Belly Shade", sphere(0.18, 12, 8), bronzeShade, {
+      position: [0, bodyY - 0.04, 0],
+      scale: [1.5, 0.25, 0.8],
+    }, { castShadow: false }),
+    // Slim raised belly cap highlight reading as polished underside.
+    f.mesh("Otter Belly Hi", sphere(0.12, 10, 8), bronzeHi, {
+      position: [0, bodyY + 0.06, 0],
+      scale: [1.2, 0.2, 0.6],
+    }, { castShadow: false }),
+  );
+  // ── Tapered head — small ovoid at the east end with two eye highlights.
+  const headX = 0.32;
+  parts.push(
+    f.mesh("Otter Head", sphere(0.10, 12, 10), bronze, {
+      position: [headX, bodyY + 0.04, 0],
+      scale: [1.2, 1.0, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Two glinting eye highlights on the head.
+    f.mesh("Otter Eye L", sphere(0.015, 8, 6), bronzeHi, {
+      position: [headX + 0.05, bodyY + 0.08, 0.05],
+    }, { castShadow: false }),
+    f.mesh("Otter Eye R", sphere(0.015, 8, 6), bronzeHi, {
+      position: [headX + 0.05, bodyY + 0.08, -0.05],
+    }, { castShadow: false }),
+    // Small dark nose dab at the tip.
+    f.mesh("Otter Nose", sphere(0.018, 8, 6), bronzeShade, {
+      position: [headX + 0.10, bodyY + 0.06, 0],
+    }, { castShadow: false }),
+    // Two small ear nubs.
+    f.mesh("Otter Ear L", sphere(0.022, 8, 6), bronze, {
+      position: [headX - 0.02, bodyY + 0.13, 0.07],
+    }, { castShadow: false }),
+    f.mesh("Otter Ear R", sphere(0.022, 8, 6), bronze, {
+      position: [headX - 0.02, bodyY + 0.13, -0.07],
+    }, { castShadow: false }),
+  );
+  // ── Two folded forepaws clutching a small bronze shell at the chest.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Otter Paw ${sz}`, box(0.08, 0.04, 0.05), bronze, {
+        position: [0.10, bodyY + 0.10, sz * 0.06],
+        rotation: [0, 0, -0.4],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh(`Otter Paw Shade ${sz}`, box(0.07, 0.02, 0.04), pawShade, {
+        position: [0.10, bodyY + 0.08, sz * 0.06],
+        rotation: [0, 0, -0.4],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Small bronze shell clutched at the chest — slim ridged half-dome.
+  parts.push(
+    f.mesh("Otter Shell", sphere(0.06, 12, 8), shell, {
+      position: [0.14, bodyY + 0.14, 0],
+      scale: [1.0, 0.55, 1.2],
+    }, { castShadow: true }),
+    // Three slim shell ridges reading as scallop ribbing.
+    f.mesh("Shell Ridge L", box(0.10, 0.012, 0.012), bronzeHi, {
+      position: [0.14, bodyY + 0.16, -0.025],
+    }, { castShadow: false }),
+    f.mesh("Shell Ridge C", box(0.10, 0.012, 0.012), bronzeHi, {
+      position: [0.14, bodyY + 0.18, 0],
+    }, { castShadow: false }),
+    f.mesh("Shell Ridge R", box(0.10, 0.012, 0.012), bronzeHi, {
+      position: [0.14, bodyY + 0.16, 0.025],
+    }, { castShadow: false }),
+  );
+  // ── Two stubby hind feet tucked at the west end beside the tail base.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Otter Hind Foot ${sz}`, box(0.07, 0.05, 0.05), bronze, {
+        position: [-0.22, bodyY + 0.06, sz * 0.08],
+      }, { castShadow: true, receiveShadow: true }),
+      // Three slim toe ridges on the foot pad.
+      f.mesh(`Hind Toe ${sz} 0`, box(0.018, 0.018, 0.012), bronzeHi, {
+        position: [-0.26, bodyY + 0.085, sz * 0.06],
+      }, { castShadow: false }),
+      f.mesh(`Hind Toe ${sz} 1`, box(0.018, 0.018, 0.012), bronzeHi, {
+        position: [-0.26, bodyY + 0.085, sz * 0.08],
+      }, { castShadow: false }),
+      f.mesh(`Hind Toe ${sz} 2`, box(0.018, 0.018, 0.012), bronzeHi, {
+        position: [-0.26, bodyY + 0.085, sz * 0.10],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Slim curling tail at the west end — three stacked cylinder segments
+  // tapering and curling slightly toward the plinth cap.
+  const tailBase: [number, number, number] = [-0.32, bodyY, 0];
+  const tailSegs: { dx: number; dy: number; r: number; tilt: number }[] = [
+    { dx: -0.04, dy: 0.00, r: 0.040, tilt: 0.0 },
+    { dx: -0.08, dy: -0.02, r: 0.034, tilt: -0.4 },
+    { dx: -0.10, dy: -0.05, r: 0.028, tilt: -0.7 },
+  ];
+  for (let i = 0; i < tailSegs.length; i++) {
+    const s = tailSegs[i]!;
+    parts.push(
+      f.mesh(`Otter Tail ${i}`, cylinder(s.r, s.r + 0.004, 0.10, 8), bronze, {
+        position: [tailBase[0] + s.dx, tailBase[1] + s.dy, tailBase[2]],
+        rotation: [0, 0, Math.PI / 2 + s.tilt],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  parts.push(
+    f.mesh("Otter Tail Tip", sphere(0.024, 8, 6), bronzeHi, {
+      position: [tailBase[0] - 0.16, tailBase[1] - 0.08, tailBase[2]],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Otter Plaque Tablet", box(0.3, 0.1, 0.018), bronze, {
+      position: [0, 0.46, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Otter Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Otter Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Otter Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+  );
+  return f.group("Otter Statue", parts, { position: pos });
+}
+
+/* ─────────────── thirty-fifth-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental porch column bases mounted
+ * at the foot of each porch post (companion to the column capitals from
+ * pass 34 capping the post heads). Each base is a stepped block plinth
+ * with a slim chamfered necking ring above, a flanking pair of inverted
+ * C-curve volute scrolls and a row of three small egg-and-dart pendant
+ * beads on each side reading as cast-iron millwork finishing the bottom
+ * of the porch posts. The base body, necking ring, volutes and beads
+ * reuse the existing `copper-patina` colour + bump pair so the verdigris
+ * mottling reads as crusted relief on the cast metal.
+ */
+function buildPorchColumnBases(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.porchBaseCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.porchBaseCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.porchBaseCopperShade, 0.95, { flatShading: true });
+  const bases: SceneNode[] = [];
+  for (let i = 0; i < PORCH_BASE_POSITIONS.length; i++) {
+    const pos = PORCH_BASE_POSITIONS[i]!;
+    const parts: SceneNode[] = [
+      // Stepped block plinth — broad lower step with a slimmer upper step
+      // hugging the post foot.
+      f.mesh("Base Lower Step", box(0.30, 0.04, 0.30), copper, {
+        position: [0, 0.02, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Base Lower Step Shade", box(0.28, 0.012, 0.28), copperShade, {
+        position: [0, 0.046, 0],
+      }, { castShadow: false }),
+      f.mesh("Base Upper Step", box(0.24, 0.06, 0.24), copper, {
+        position: [0, 0.07, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim chamfered necking ring binding the base to the post foot.
+      f.mesh("Base Necking Ring", cylinder(0.13, 0.13, 0.025, 12), copper, {
+        position: [0, 0.115, 0],
+      }, { castShadow: false }),
+      f.mesh("Base Necking Ring Hi", cylinder(0.135, 0.135, 0.008, 12), copperHi, {
+        position: [0, 0.13, 0],
+      }, { castShadow: false }),
+      // Slim chamfered crown bead at the top of the base.
+      f.mesh("Base Crown Bead", sphere(0.024, 10, 8), copperHi, {
+        position: [0, 0.14, 0],
+      }, { castShadow: false }),
+    ];
+    // Flanking pair of inverted C-curve volute scrolls (one on each
+    // side of the base) — each a small curl reading as cast-iron scrollwork.
+    for (const sx of [-1, 1]) {
+      parts.push(
+        f.mesh(`Base Volute ${sx}`, sphere(0.04, 10, 8), copper, {
+          position: [sx * 0.14, 0.08, 0],
+          scale: [0.6, 0.8, 1.0],
+        }, { castShadow: false }),
+        f.mesh(`Base Volute Cap ${sx}`, sphere(0.018, 8, 6), copperHi, {
+          position: [sx * 0.16, 0.10, 0],
+        }, { castShadow: false }),
+        f.mesh(`Base Volute Shade ${sx}`, sphere(0.022, 8, 6), copperShade, {
+          position: [sx * 0.14, 0.06, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // Row of three egg-and-dart pendant beads on each side reading as
+    // pendant millwork drops.
+    for (const sx of [-1, 1]) {
+      for (let b = 0; b < 3; b++) {
+        const bx = sx * (0.08 + b * 0.0) + (b - 1) * 0.05 * sx;
+        parts.push(
+          f.mesh(`Base Pendant ${sx} ${b}`, sphere(0.014, 8, 6), copper, {
+            position: [bx, 0.015, sx * 0.13],
+          }, { castShadow: false }),
+        );
+      }
+    }
+    bases.push(
+      f.group(`Porch Column Base ${i === 0 ? "West" : "East"}`, parts, {
+        position: pos,
+      }),
+    );
+  }
+  return f.group("Porch Column Bases", bases);
+}
+
+/* ─────────────── thirty-fifth-pass scene extension ─────────────── */
+
+/**
+ * Far-east obsidian shore plane east of the volcanic plateau. Carries a
+ * dark obsidian glass-and-sand floor surfaced with a basalt-plateau
+ * colour reference so the obsidian shards and tide ripples read as
+ * raised relief at glancing sun. Features a focal volcanic crater pool
+ * at the centre of the shore with a glowing magma-orange core, three
+ * jagged obsidian sea-stack arches (each a curved obsidian span
+ * cantilevered on twin pillar bases), a steaming geothermal coastal
+ * spring at the south corner trailing translucent steam wisps, a slim
+ * board-and-batten volcanologist's hut at the northeast corner with a
+ * steel-shuttered front door and a tall ash-deflector chimney, and a
+ * scatter of seven obsidian glass shards strewn across the shore.
+ */
+function buildFarEastObsidianShore(f: NodeFactory): SceneNode {
+  return f.group("Far East Obsidian Shore", [
+    // Obsidian-shore ground plane — dark obsidian glass-and-sand floor.
+    f.mesh(
+      "Obsidian Shore Ground",
+      plane(OBSIDIAN_SHORE_W, OBSIDIAN_SHORE_D),
+      std(C.osGround, 0.85, {
+        texture: "basalt-plateau",
+        textureScale: [4, 4],
+        bumpMap: "basalt-plateau-bump",
+        bumpScale: 0.07,
+        metalness: 0.2,
+      }),
+      { position: OBSIDIAN_SHORE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the volcanic plateau's east edge with a slim
+    // basalt strip so the seam reads as a continuous basalt-into-obsidian
+    // join with no holes at the ground layer.
+    f.mesh(
+      "Obsidian Shore West Apron",
+      plane(3, OBSIDIAN_SHORE_D),
+      std(C.osApronBasalt, 0.95, {
+        texture: "basalt-plateau",
+        textureScale: [1, 4],
+      }),
+      {
+        position: [
+          OBSIDIAN_SHORE_POS[0] - OBSIDIAN_SHORE_W / 2 + 1.5,
+          -0.046,
+          OBSIDIAN_SHORE_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildObsidianCrater(f, OBSIDIAN_CRATER_POS),
+    buildObsidianStacks(f),
+    buildObsidianSpring(f, OBSIDIAN_SPRING_POS),
+    buildObsidianHut(f, OBSIDIAN_HUT_POS),
+    buildObsidianShards(f),
+  ]);
+}
+
+/**
+ * Focal volcanic crater pool at the centre of the obsidian shore — a
+ * shallow disc of glowing magma-orange core ringed by a darker crusted
+ * rim and crowned by a thin emissive ring catching the dusk light. The
+ * core carries a soft emissive lava-orange tint so the crater reads as a
+ * half-lit beacon at low light.
+ */
+function buildObsidianCrater(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const rim = std(C.osCraterRim, 0.95, { flatShading: true });
+  const rimHi = std(C.osCraterRimHi, 0.85, { flatShading: true });
+  const crust = std(C.osCraterCrust, 0.98, { flatShading: true });
+  const magma: MaterialDef = {
+    color: C.osCraterMagma,
+    roughness: 0.35,
+    metalness: 0.1,
+    emissive: C.osCraterMagma,
+  };
+  const magmaHi: MaterialDef = {
+    color: C.osCraterMagmaHi,
+    roughness: 0.3,
+    metalness: 0.1,
+    emissive: C.osCraterMagmaHi,
+  };
+  const parts: SceneNode[] = [];
+  // Crusted outer rim — twelve dark crusted boulders ringing the crater.
+  const rimCount = 12;
+  const rimRadius = 1.45;
+  for (let j = 0; j < rimCount; j++) {
+    const a = (j / rimCount) * Math.PI * 2;
+    const px = Math.cos(a) * rimRadius;
+    const pz = Math.sin(a) * rimRadius;
+    parts.push(
+      f.mesh(`Crater Rim Stone ${j}`, sphere(0.18, 10, 8), rim, {
+        position: [px, 0.10, pz],
+        scale: [1.1, 0.65, 1.1],
+        rotation: [0, a, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    if (j % 3 === 0) {
+      // Slim crusted highlight cap on every third rim stone.
+      parts.push(
+        f.mesh(`Crater Rim Cap ${j}`, sphere(0.10, 8, 6), rimHi, {
+          position: [px, 0.18, pz],
+          scale: [0.9, 0.35, 0.9],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Inner crater crust ring — a slim darker band reading as crusted
+  // tuff just inside the rim stones.
+  parts.push(
+    f.mesh("Crater Crust Ring", cylinder(1.20, 1.20, 0.04, 24), crust, {
+      position: [0, 0.04, 0],
+    }, { castShadow: false }),
+  );
+  // Glowing magma core — a flat disc of emissive lava at the centre.
+  parts.push(
+    f.mesh("Crater Magma Core", cylinder(0.95, 0.95, 0.04, 24), magma, {
+      position: [0, 0.05, 0],
+    }, { castShadow: false }),
+    // Slim raised highlight ring around the core edge catching the glow.
+    f.mesh("Crater Magma Edge", cylinder(0.95, 0.98, 0.024, 24), magmaHi, {
+      position: [0, 0.07, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim raised magma bubbles dotted across the core reading as
+  // active outgassing dabs.
+  const bubbleOff: [number, number][] = [
+    [0.30, 0.30],
+    [-0.40, 0.10],
+    [0.05, -0.45],
+    [-0.20, -0.30],
+  ];
+  for (let i = 0; i < bubbleOff.length; i++) {
+    const o = bubbleOff[i]!;
+    parts.push(
+      f.mesh(`Crater Bubble ${i}`, sphere(0.08 + (i % 2) * 0.02, 10, 8), magmaHi, {
+        position: [o[0], 0.10, o[1]],
+        scale: [1.0, 0.5, 1.0],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim translucent heat-haze halo just above the core.
+  const haze: MaterialDef = {
+    color: C.osSpringSteam,
+    roughness: 0.6,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.32,
+  };
+  parts.push(
+    f.mesh("Crater Heat Haze", sphere(0.95, 16, 10), haze, {
+      position: [0, 0.32, 0],
+      scale: [1.0, 0.35, 1.0],
+    }, { castShadow: false }),
+    f.mesh("Crater Heat Haze Hi", sphere(0.6, 14, 10), haze, {
+      position: [0, 0.48, 0],
+      scale: [1.0, 0.45, 1.0],
+    }, { castShadow: false }),
+  );
+  return f.group("Obsidian Crater", parts, { position: pos });
+}
+
+/**
+ * Three jagged obsidian sea-stack arches scattered across the shore —
+ * each a curved obsidian span cantilevered on twin pillar bases (the
+ * arch spans rise to a peak between two slim tapered pillars). The
+ * obsidian carries a glassy specular highlight along its leading edge so
+ * the stacks read as shaped volcanic glass rather than rough basalt.
+ */
+function buildObsidianStacks(f: NodeFactory): SceneNode {
+  const glass: MaterialDef = {
+    color: C.osStackObsidian,
+    roughness: 0.18,
+    metalness: 0.4,
+    flatShading: true,
+  };
+  const glassHi: MaterialDef = {
+    color: C.osStackObsidianHi,
+    roughness: 0.1,
+    metalness: 0.7,
+    flatShading: true,
+  };
+  const glassShade = std(C.osStackObsidianShade, 0.95, { flatShading: true });
+  const stacks: SceneNode[] = [];
+  for (let i = 0; i < OBSIDIAN_STACKS.length; i++) {
+    const s = OBSIDIAN_STACKS[i]!;
+    const parts: SceneNode[] = [];
+    // Twin pillar bases — two slim tapered cylinders flanking the arch.
+    for (const sx of [-1, 1]) {
+      parts.push(
+        f.mesh(`Pillar ${sx}`, cylinder(0.18, 0.28, 1.2, 6), glass, {
+          position: [sx * 0.45, 0.60, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim shaded base ring reading as ground undercut.
+        f.mesh(`Pillar Shade ${sx}`, cylinder(0.30, 0.30, 0.06, 6), glassShade, {
+          position: [sx * 0.45, 0.03, 0],
+        }, { castShadow: false }),
+        // Slim glassy specular highlight along the pillar's east face.
+        f.mesh(`Pillar Hi ${sx}`, box(0.025, 0.9, 0.05), glassHi, {
+          position: [sx * 0.55, 0.70, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // Arch span — three slim segments meeting at the apex.
+    parts.push(
+      f.mesh("Arch West", box(0.4, 0.16, 0.20), glass, {
+        position: [-0.35, 1.30, 0],
+        rotation: [0, 0, 0.45],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Arch East", box(0.4, 0.16, 0.20), glass, {
+        position: [0.35, 1.30, 0],
+        rotation: [0, 0, -0.45],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Arch Crown", box(0.34, 0.18, 0.22), glass, {
+        position: [0, 1.52, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut on the arch's underside reading as inner curve.
+      f.mesh("Arch Undercut", box(0.5, 0.04, 0.18), glassShade, {
+        position: [0, 1.18, 0],
+      }, { castShadow: false }),
+      // Slim bright highlight ridge across the arch's leading edge.
+      f.mesh("Arch Hi Ridge", box(0.42, 0.02, 0.05), glassHi, {
+        position: [0, 1.62, 0.10],
+      }, { castShadow: false }),
+    );
+    stacks.push(
+      f.group(`Obsidian Sea Stack ${i + 1}`, parts, {
+        position: [s.x, 0, s.z],
+        rotation: [0, s.rot, 0],
+        scale: [s.scale, s.scale, s.scale],
+      }),
+    );
+  }
+  return f.group("Obsidian Sea Stacks", stacks);
+}
+
+/**
+ * Steaming geothermal coastal spring at the south corner of the shore —
+ * a small turquoise hot-spring pool ringed by a darker stone lip with
+ * three rising translucent steam wisps and a slim ripple highlight on
+ * the water surface.
+ */
+function buildObsidianSpring(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const water: MaterialDef = {
+    color: C.osSpringWater,
+    roughness: 0.18,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.86,
+  };
+  const waterDeep: MaterialDef = {
+    color: C.osSpringWaterDeep,
+    roughness: 0.18,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.94,
+  };
+  const rim = std(C.osSpringRim, 0.85, {
+    texture: "cobblestone",
+    textureScale: [1.2, 1.2],
+    flatShading: true,
+  });
+  const steam: MaterialDef = {
+    color: C.osSpringSteam,
+    roughness: 0.5,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.4,
+  };
+  const parts: SceneNode[] = [];
+  // Stone rim — ten cobble pebbles ringing the pool.
+  const rimCount = 10;
+  const rimRadius = 0.85;
+  for (let j = 0; j < rimCount; j++) {
+    const a = (j / rimCount) * Math.PI * 2;
+    const px = Math.cos(a) * rimRadius;
+    const pz = Math.sin(a) * rimRadius;
+    parts.push(
+      f.mesh(`Spring Rim ${j}`, sphere(0.16, 10, 8), rim, {
+        position: [px, 0.08, pz],
+        scale: [1.0, 0.6, 1.0],
+        rotation: [0, a, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Deep dark water disc — bottom of the pool.
+  parts.push(
+    f.mesh("Spring Deep", cylinder(0.78, 0.78, 0.04, 20), waterDeep, {
+      position: [0, 0.03, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Translucent surface disc — slim ripple of warm hot-spring water.
+    f.mesh("Spring Surface", cylinder(0.74, 0.74, 0.018, 20), water, {
+      position: [0, 0.06, 0],
+    }, { castShadow: false }),
+    // Slim ripple highlight ring on the surface.
+    f.mesh("Spring Ripple", cylinder(0.34, 0.34, 0.008, 20), steam, {
+      position: [0, 0.07, 0],
+    }, { castShadow: false }),
+  );
+  // Three rising translucent steam wisps over the pool.
+  for (let i = 0; i < 3; i++) {
+    const a = (i / 3) * Math.PI * 2;
+    const px = Math.cos(a) * 0.22;
+    const pz = Math.sin(a) * 0.22;
+    parts.push(
+      f.mesh(`Spring Steam ${i}`, sphere(0.18, 12, 10), steam, {
+        position: [px, 0.32 + i * 0.05, pz],
+        scale: [1.0, 1.6, 1.0],
+      }, { castShadow: false }),
+      f.mesh(`Spring Steam Hi ${i}`, sphere(0.10, 10, 8), steam, {
+        position: [px, 0.60 + i * 0.06, pz],
+        scale: [0.9, 1.2, 0.9],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Obsidian Coastal Spring", parts, { position: pos });
+}
+
+/**
+ * Slim board-and-batten volcanologist's hut at the northeast corner of
+ * the shore — a small dark cabin with a steel-shuttered front door, a
+ * peaked dark shingle roof, a tall ash-deflector chimney and a glowing
+ * front window catching the dusk light.
+ */
+function buildObsidianHut(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall = std(C.osHutWall, 0.85, { flatShading: true });
+  const trim = std(C.osHutTrim, 0.9, { flatShading: true });
+  const roof = std(C.osHutRoof, 0.92, { flatShading: true });
+  const shutter = std(C.osHutShutter, 0.5, { metalness: 0.6 });
+  const chimney = std(C.osHutChimney, 0.95, { flatShading: true });
+  const windowGlow: MaterialDef = {
+    color: C.osHutWindow,
+    roughness: 0.3,
+    metalness: 0.0,
+    emissive: C.osHutWindow,
+  };
+  const parts: SceneNode[] = [];
+  // Hut body — small board-and-batten cabin.
+  parts.push(
+    f.mesh("Hut Wall", box(1.4, 1.0, 1.2), wall, {
+      position: [0, 0.50, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim batten trim strips on the front face (four verticals).
+  );
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh(`Batten ${i}`, box(0.06, 1.0, 0.02), trim, {
+        position: [-0.55 + i * 0.35, 0.50, 0.62],
+      }, { castShadow: false }),
+    );
+  }
+  // Peaked dark shingle roof — two angled slabs meeting at the ridge.
+  parts.push(
+    f.mesh("Roof Slab N", box(1.55, 0.05, 0.85), roof, {
+      position: [0, 1.10, -0.32],
+      rotation: [0.55, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Slab S", box(1.55, 0.05, 0.85), roof, {
+      position: [0, 1.10, 0.32],
+      rotation: [-0.55, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Roof Ridge", box(1.6, 0.05, 0.06), trim, {
+      position: [0, 1.34, 0],
+    }, { castShadow: false }),
+  );
+  // Tall ash-deflector chimney — slim stack with a wider deflector cap
+  // canted west to deflect ash falls.
+  parts.push(
+    f.mesh("Chimney Shaft", box(0.22, 0.9, 0.22), chimney, {
+      position: [0.5, 1.45, -0.3],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Cap", box(0.32, 0.08, 0.32), chimney, {
+      position: [0.5, 1.94, -0.3],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Chimney Deflector", box(0.4, 0.04, 0.20), trim, {
+      position: [0.40, 2.02, -0.3],
+      rotation: [0, 0, 0.35],
+    }, { castShadow: false }),
+    f.mesh("Chimney Smoke", sphere(0.16, 10, 8), {
+      color: C.osSpringSteam,
+      roughness: 0.6,
+      metalness: 0.0,
+      transparent: true,
+      opacity: 0.42,
+    }, {
+      position: [0.42, 2.20, -0.3],
+      scale: [1.0, 1.4, 1.0],
+    }, { castShadow: false }),
+  );
+  // Steel-shuttered front door — slim shutter slab framed by trim.
+  parts.push(
+    f.mesh("Door Frame", box(0.50, 0.78, 0.04), trim, {
+      position: [-0.25, 0.39, 0.62],
+    }, { castShadow: false }),
+    f.mesh("Door Shutter", box(0.42, 0.70, 0.05), shutter, {
+      position: [-0.25, 0.40, 0.64],
+    }, { castShadow: false }),
+    // Three slim horizontal shutter louvres.
+    f.mesh("Door Louvre 0", box(0.40, 0.025, 0.02), trim, {
+      position: [-0.25, 0.55, 0.668],
+    }, { castShadow: false }),
+    f.mesh("Door Louvre 1", box(0.40, 0.025, 0.02), trim, {
+      position: [-0.25, 0.40, 0.668],
+    }, { castShadow: false }),
+    f.mesh("Door Louvre 2", box(0.40, 0.025, 0.02), trim, {
+      position: [-0.25, 0.25, 0.668],
+    }, { castShadow: false }),
+    // Door handle — slim raised stud at the east edge of the shutter.
+    f.mesh("Door Handle", sphere(0.022, 8, 6), shutter, {
+      position: [-0.06, 0.40, 0.672],
+    }, { castShadow: false }),
+  );
+  // Glowing front window — small square pane catching the dusk.
+  parts.push(
+    f.mesh("Window Frame", box(0.32, 0.32, 0.04), trim, {
+      position: [0.32, 0.62, 0.62],
+    }, { castShadow: false }),
+    f.mesh("Window Pane", box(0.26, 0.26, 0.05), windowGlow, {
+      position: [0.32, 0.62, 0.64],
+    }, { castShadow: false }),
+    // Muntin cross — two slim trim bars splitting the pane.
+    f.mesh("Window Muntin V", box(0.020, 0.26, 0.012), trim, {
+      position: [0.32, 0.62, 0.668],
+    }, { castShadow: false }),
+    f.mesh("Window Muntin H", box(0.26, 0.020, 0.012), trim, {
+      position: [0.32, 0.62, 0.668],
+    }, { castShadow: false }),
+  );
+  return f.group("Volcanologist Hut", parts, { position: pos });
+}
+
+/**
+ * Scatter of seven obsidian glass shards strewn across the shore — each
+ * a slim tapered shard of dark obsidian with a slim bright fracture
+ * highlight along its leading edge reading as freshly broken volcanic
+ * glass. The shards carry a glassy specular tint so they catch the dusk
+ * sun even at low light.
+ */
+function buildObsidianShards(f: NodeFactory): SceneNode {
+  const glass: MaterialDef = {
+    color: C.osShardObsidian,
+    roughness: 0.18,
+    metalness: 0.4,
+    flatShading: true,
+  };
+  const glassHi: MaterialDef = {
+    color: C.osShardObsidianHi,
+    roughness: 0.1,
+    metalness: 0.7,
+    flatShading: true,
+  };
+  const shards: SceneNode[] = [];
+  for (let i = 0; i < OBSIDIAN_SHARDS.length; i++) {
+    const s = OBSIDIAN_SHARDS[i]!;
+    const parts: SceneNode[] = [
+      // Slim tapered shard — flat-shaded cone tipped forward.
+      f.mesh("Shard Body", cone(0.10, 0.40, 4), glass, {
+        position: [0, 0.20, 0],
+        rotation: [0.4, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim shaded undercut at the base reading as ground shadow.
+      f.mesh("Shard Base Shade", sphere(0.08, 8, 6), glass, {
+        position: [0, 0.04, 0.02],
+        scale: [1.2, 0.35, 1.0],
+      }, { castShadow: false }),
+      // Slim bright fracture highlight along the shard's leading edge.
+      f.mesh("Shard Hi", box(0.012, 0.32, 0.04), glassHi, {
+        position: [0, 0.22, 0.06],
+        rotation: [0.4, 0, 0],
+      }, { castShadow: false }),
+    ];
+    shards.push(
+      f.group(`Obsidian Shard ${i + 1}`, parts, {
+        position: [s.x, 0, s.z],
+        rotation: [0, s.rot, 0],
+        scale: [s.scale, s.scale, s.scale],
+      }),
+    );
+  }
+  return f.group("Obsidian Shards", shards);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -28931,6 +29818,42 @@ function buildVolcanicBoulders(f: NodeFactory): SceneNode {
  *    with darker bank trims and three glowing magma-pool nodes along
  *    its bed, and a scatter of five dark basalt boulders ringing the
  *    obelisk.
+ *  - Thirty-fifth pass — courtyard: a Victorian bronze otter statue on a
+ *    fluted marble pedestal, parked on the back-east outside-fence lawn
+ *    between the hare (back-east-close at x=+3.5) and the obelisk
+ *    (back-east-close at x=+7) so it slots into the line of marble-
+ *    pedestal sentinels along the back-east perimeter — the otter lies
+ *    on its back across the plinth cap with a slim curling tail at one
+ *    end, a tapered head with two glinting eye highlights at the other,
+ *    two folded paws clutching a small bronze shell to its chest and a
+ *    pair of stubby hind feet tucked beside the tail (the bronze body,
+ *    head, paws and tail reuse the existing `copper-patina` colour +
+ *    bump pair so the verdigris reads as crusted relief on the cast
+ *    metal, and the plinth reuses the existing `marble` colour + bump
+ *    pair so the stone reads with veined relief). House: a pair of
+ *    Victorian copper-patina ornamental porch column bases mounted at
+ *    the foot of each porch post (companion to the column capitals from
+ *    pass 34 capping the post heads) — each base a stepped block
+ *    plinth with a slim chamfered necking ring above, a flanking pair
+ *    of inverted C-curve volute scrolls and a row of three small egg-
+ *    and-dart pendant beads on each side reading as cast-iron millwork
+ *    finishing the bottom of the porch posts (the base body, necking
+ *    ring, volutes and beads reuse the existing `copper-patina` pair so
+ *    the verdigris reads as crusted relief on the cast metal). Scene: a
+ *    far-east obsidian shore plane east of the volcanic plateau — a
+ *    dark obsidian glass-and-sand floor surfaced with a basalt-plateau
+ *    colour reference so the obsidian shards and tide ripples read as
+ *    raised relief at glancing sun, a slim basalt west apron along the
+ *    volcanic-plateau join so the ground layer has no holes at the
+ *    seam, a focal volcanic crater pool at the centre of the shore with
+ *    a glowing magma-orange core ringed by twelve crusted rim stones,
+ *    three jagged obsidian sea-stack arches (each a curved obsidian
+ *    span cantilevered on twin pillar bases), a steaming geothermal
+ *    coastal spring at the south corner trailing translucent steam
+ *    wisps, a slim board-and-batten volcanologist's hut at the
+ *    northeast corner with a steel-shuttered front door and a tall
+ *    ash-deflector chimney, and a scatter of seven obsidian glass
+ *    shards strewn across the shore.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -29035,6 +29958,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: TORTOISE_STATUE_POS[0], z: TORTOISE_STATUE_POS[2], r: 0.9 },
     // Thirty-fourth-pass keep-out — bronze swan statue on the back-east outside-fence lawn.
     { x: SWAN_STATUE_POS[0], z: SWAN_STATUE_POS[2], r: 0.9 },
+    // Thirty-fifth-pass keep-out — bronze otter statue on the back-east outside-fence lawn.
+    { x: OTTER_STATUE_POS[0], z: OTTER_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -29110,6 +30035,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildRavenStatue(f, RAVEN_STATUE_POS),
     buildTortoiseStatue(f, TORTOISE_STATUE_POS),
     buildSwanStatue(f, SWAN_STATUE_POS),
+    buildOtterStatue(f, OTTER_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -29141,6 +30067,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fsAlpineRidge = buildFarSouthAlpineRidge(f);
   const feGeothermalValley = buildFarEastGeothermalValley(f);
   const feVolcanicPlateau = buildFarEastVolcanicPlateau(f);
+  const feObsidianShore = buildFarEastObsidianShore(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -29195,6 +30122,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildChimneyPotCaps(f),
     buildSideValances(f),
     buildPorchColumnCapitals(f),
+    buildPorchColumnBases(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -29233,6 +30161,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fsAlpineRidge,
       feGeothermalValley,
       feVolcanicPlateau,
+      feObsidianShore,
       house,
     ],
   };

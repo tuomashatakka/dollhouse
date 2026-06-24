@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirty-four enhancement passes.
+// house and its courtyard, layered over thirty-five enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -980,6 +980,47 @@
 //   the plateau with darker bank trims and three glowing
 //   magma-pool nodes along its bed, and a scatter of five
 //   dark basalt boulders ringing the obelisk.
+//   Pass 35 — courtyard: a Victorian bronze otter statue on a
+//   fluted marble pedestal, parked on the back-east outside-
+//   fence lawn between the hare (back-east-close at x=+3.5)
+//   and the obelisk (back-east-close at x=+7) so it slots into
+//   the line of marble-pedestal sentinels along the back-east
+//   perimeter — the otter lies on its back across the plinth
+//   cap with a slim curling tail at one end, a tapered head
+//   with two glinting eye highlights at the other, two folded
+//   paws clutching a small bronze shell to its chest and a pair
+//   of stubby hind feet tucked beside the tail (the bronze
+//   body, head, paws and tail reuse the existing
+//   `copper-patina` colour + bump pair so the verdigris reads
+//   as crusted relief on the cast metal, and the plinth reuses
+//   the existing `marble` colour + bump pair so the stone reads
+//   with veined relief). House: a pair of Victorian copper-
+//   patina ornamental porch column bases mounted at the foot of
+//   each porch post (companion to the column capitals from pass
+//   34 capping the post heads) — each base a stepped block
+//   plinth with a slim chamfered necking ring above, a flanking
+//   pair of inverted C-curve volute scrolls and a row of three
+//   small egg-and-dart pendant beads on each side reading as
+//   cast-iron millwork finishing the bottom of the porch posts
+//   (the base body, necking ring, volutes and beads reuse the
+//   existing `copper-patina` pair so the verdigris reads as
+//   crusted relief on the cast metal). Scene: a far-east
+//   obsidian shore plane east of the volcanic plateau — a dark
+//   obsidian glass-and-sand floor surfaced with a
+//   basalt-plateau colour reference so the obsidian shards and
+//   tide ripples read as raised relief at glancing sun, a slim
+//   basalt west apron along the volcanic-plateau join so the
+//   ground layer has no holes at the seam, a focal volcanic
+//   crater pool at the centre of the shore with a glowing
+//   magma-orange core ringed by twelve crusted rim stones,
+//   three jagged obsidian sea-stack arches (each a curved
+//   obsidian span cantilevered on twin pillar bases), a
+//   steaming geothermal coastal spring at the south corner
+//   trailing translucent steam wisps, a slim board-and-batten
+//   volcanologist's hut at the northeast corner with a steel-
+//   shuttered front door and a tall ash-deflector chimney, and
+//   a scatter of seven obsidian glass shards strewn across the
+//   shore.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
