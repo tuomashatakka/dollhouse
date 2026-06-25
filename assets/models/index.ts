@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirty-five enhancement passes.
+// house and its courtyard, layered over thirty-six enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -1021,6 +1021,53 @@
 //   shuttered front door and a tall ash-deflector chimney, and
 //   a scatter of seven obsidian glass shards strewn across the
 //   shore.
+//   Pass 36 — courtyard: a Victorian bronze wolf statue on a
+//   fluted marble pedestal, parked on the back-west outside-
+//   fence lawn between the tortoise (back-west-far at x=-9.5)
+//   and the fox (back-west-close at x=-6) so it continues the
+//   line of marble-pedestal sentinels along the back-west
+//   perimeter — the wolf stands four-square on the plinth cap
+//   in a slim alert pose with a tapered snout parted in a quiet
+//   half-howl, two pointed ears swept back, two glinting eye
+//   highlights, a slim arched back and a bushy tail swept low
+//   across its haunches (the bronze body, head, ears and tail
+//   reuse the existing `copper-patina` colour + bump pair so
+//   the verdigris reads as crusted relief on the cast metal,
+//   and the plinth reuses the existing `marble` colour + bump
+//   pair so the stone reads with veined relief). House: a pair
+//   of Victorian copper-patina ornamental porch ceiling pendants
+//   hanging from the porch canopy underside flanking the central
+//   porch ceiling rosette (companion to the rosette from pass
+//   27) — each pendant a foliate medallion cap fixed under the
+//   canopy, a slim copper-patina chain of three linked oval
+//   beads, a foliate medallion drop body ringed by four tip
+//   beads, a slim ringed tip cap and a slim translucent crystal
+//   teardrop suspended just below the medallion catching the
+//   porch glow (the cap, chain, drop body and ringed cap reuse
+//   the existing `copper-patina` pair so the verdigris reads as
+//   crusted relief on the cast metal). Scene: a far-east coral
+//   atoll lagoon plane east of the obsidian shore — a bone-white
+//   sandy lagoon floor surfaced with a `coral-atoll` colour
+//   reference (using the existing `desert-sand` texture as the
+//   bone-sand tone) paired with the sand depth map so the
+//   exposed sand bars and scattered shells read as raised
+//   relief at glancing sun, a slim obsidian-toned west apron
+//   along the obsidian-shore join so the ground layer has no
+//   holes at the seam, a shallow turquoise lagoon water pool at
+//   the centre with a darker deep-water core and a slim foam-
+//   fringe ring of wave wash, three branching coral towers
+//   (orange / pink / red) scattered around the lagoon, a small
+//   palm-thatched dive shack at the northeast corner on four
+//   stilts with a thatched conical roof, a glowing front window
+//   and a slim lean-to ladder, three coconut palms scattered
+//   along the beach (each a slim leaning trunk with a five-
+//   frond fanning crown and a small cluster of three brown
+//   coconuts hanging just below the crown), a small wooden
+//   outrigger boat moored at the lagoon's west edge with a
+//   tapered hull, a slim mast carrying a furled triangular
+//   sail, a slim outrigger float on two spars and a brass
+//   mooring cleat at the bow, and a scatter of seven seashells
+//   (cockle, pearl-conch, spiral-shell) strewn along the sand.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

@@ -22,16 +22,16 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 35) adds a Victorian bronze otter statue on a
- * fluted marble pedestal to the back-east outside-fence lawn (between the
- * hare at back-east-close and the obelisk at back-east-close, slotting
- * into the line of marble-pedestal sentinels along the back-east
- * perimeter), a pair of Victorian copper-patina ornamental porch column
- * bases mounted at the foot of each porch post (companion to the column
- * capitals from pass 34) and a far-east obsidian shore plane east of the
- * volcanic plateau with a focal volcanic crater pool, three jagged
- * obsidian sea-stack arches, a steaming geothermal coastal spring and a
- * scatter of obsidian glass shards.
+ * latest enhancement (pass 36) adds a Victorian bronze wolf statue on a
+ * fluted marble pedestal to the back-west outside-fence lawn (between the
+ * tortoise at back-west-far and the fox at back-west-close, continuing
+ * the line of marble-pedestal sentinels along the back-west perimeter),
+ * a pair of Victorian copper-patina ornamental porch ceiling pendants
+ * hanging from the porch canopy underside flanking the central rosette
+ * (companion to the rosette from pass 27) and a far-east coral atoll
+ * lagoon plane east of the obsidian shore with a turquoise lagoon pool,
+ * three branching coral towers, a palm-thatched dive shack, three
+ * coconut palms, a moored outrigger boat and a scatter of seashells.
  */
 const W = 7;
 const D = 5;
@@ -1601,6 +1601,80 @@ const OBSIDIAN_SHARDS: { x: number; z: number; rot: number; scale: number }[] = 
   { x: 67, z: 147, rot: 0.9, scale: 1.0 },
 ];
 
+/**
+ * Thirty-sixth-pass courtyard prop — a Victorian bronze wolf statue on a
+ * fluted marble pedestal, parked on the back-west outside-fence lawn between
+ * the tortoise (back-west-far at x=-9.5) and the fox (back-west-close at
+ * x=-6) so it continues the line of marble-pedestal sentinels along the
+ * back-west perimeter of the courtyard. The wolf stands four-square on the
+ * plinth cap in a slim alert pose with a slim arched back, a tapered snout
+ * parted in a quiet half-howl, two pointed ears swept back, two glinting
+ * eye highlights and a bushy tail swept low across its haunches.
+ */
+const WOLF_STATUE_POS: [number, number, number] = [-7.75, 0, -5.5];
+
+/**
+ * Thirty-sixth-pass house detail — a pair of Victorian copper-patina
+ * ornamental porch ceiling pendants hanging from the porch canopy underside
+ * just inside the canopy span flanking the central rosette (pass 27). Each
+ * pendant carries a foliate medallion cap on a slim copper-patina chain
+ * with a slim drop bead at the end and a slim translucent crystal teardrop
+ * suspended just below the medallion catching the porch glow. The porch
+ * canopy ridge sits at y=2.95, z=FRONT_Z+0.45, with the rosette centred at
+ * x=0, so the two pendants flank the rosette at x=±0.9 just inside the
+ * canopy's western and eastern spans.
+ */
+const PORCH_PENDANT_POSITIONS: [number, number, number][] = [
+  [-0.9, 2.62, FRONT_Z + 0.45],
+  [0.9, 2.62, FRONT_Z + 0.45],
+];
+
+/**
+ * Thirty-sixth-pass scene extension — a far-east coral atoll lagoon plane
+ * east of the obsidian shore (which is at x=64, z=140 with W=20, so its
+ * east edge sits at x=74). The new plane is centred at x=84 with W=20 so
+ * the western apron overlaps the obsidian shore's east edge with a slim
+ * dark-obsidian strip and the ground layer has no holes at the seam. The
+ * plane carries a bone-white sandy lagoon floor surfaced with the new
+ * `coral-atoll` colour map paired with a coral-and-sand depth map so the
+ * exposed sand bars and scattered shells read as raised relief at glancing
+ * sun. Features a shallow turquoise lagoon water pool at the centre with
+ * a darker deep-water core and a slim foam-fringe ripple, three branching
+ * coral towers (orange / pink / red) scattered around the lagoon, a small
+ * palm-thatched dive shack at the northeast corner with a thatched roof
+ * and a glowing front window catching the dusk, three coconut palms
+ * scattered along the beach, a small wooden outrigger boat moored at the
+ * lagoon's west edge with a slim mast and a furled triangular sail and a
+ * scatter of seven seashells (cockle, pearl-conch, spiral-shell) strewn
+ * along the sandy beach.
+ */
+const CORAL_ATOLL_POS: [number, number, number] = [84, -0.050, 140];
+const CORAL_ATOLL_W = 20;
+const CORAL_ATOLL_D = 20;
+const CORAL_LAGOON_POS: [number, number, number] = [84, 0, 140];
+const CORAL_LAGOON_RADIUS = 3.6;
+const DIVE_SHACK_POS: [number, number, number] = [90, 0, 134];
+const OUTRIGGER_BOAT_POS: [number, number, number] = [78.5, 0, 140];
+const CORAL_TOWERS: { x: number; z: number; tint: "orange" | "pink" | "red"; scale: number; rot: number }[] = [
+  { x: 86, z: 142, tint: "orange", scale: 1.0, rot: 0.3 },
+  { x: 81, z: 144, tint: "pink", scale: 0.9, rot: 1.4 },
+  { x: 87, z: 137, tint: "red", scale: 1.05, rot: 2.1 },
+];
+const COCONUT_PALMS: { x: number; z: number; lean: number; scale: number }[] = [
+  { x: 78, z: 134, lean: 0.18, scale: 1.0 },
+  { x: 91, z: 146, lean: -0.20, scale: 0.95 },
+  { x: 80, z: 147, lean: 0.10, scale: 1.05 },
+];
+const CORAL_SHELLS: { x: number; z: number; kind: "cockle" | "pearl" | "spiral"; rot: number; scale: number }[] = [
+  { x: 82, z: 135, kind: "cockle", rot: 0.4, scale: 0.9 },
+  { x: 89, z: 142, kind: "pearl", rot: 1.2, scale: 1.0 },
+  { x: 79, z: 142, kind: "spiral", rot: 2.0, scale: 0.95 },
+  { x: 92, z: 138, kind: "cockle", rot: 0.3, scale: 1.0 },
+  { x: 80, z: 137, kind: "pearl", rot: 1.8, scale: 0.85 },
+  { x: 88, z: 146, kind: "spiral", rot: 2.5, scale: 0.95 },
+  { x: 86, z: 134, kind: "cockle", rot: 0.9, scale: 1.0 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -2928,6 +3002,58 @@ const C = {
   osHutShutter: "#7c8084",
   osHutChimney: "#3a3430",
   osHutWindow: "#ffc874",
+  // Thirty-sixth enhancement pass — a Victorian bronze wolf statue on a
+  // fluted marble pedestal at the back-west outside-fence lawn (between
+  // the tortoise at x=-9.5 and the fox at x=-6), a pair of copper-patina
+  // ornamental porch ceiling pendants hanging from the porch canopy
+  // underside flanking the central rosette, and a far-east coral atoll
+  // lagoon plane east of the obsidian shore with a turquoise lagoon pool,
+  // three branching coral towers, a thatched dive shack, three coconut
+  // palms, a moored outrigger boat and a scatter of seashells.
+  wolfBronze: "#3c5048",
+  wolfBronzeHi: "#80a092",
+  wolfBronzeShade: "#1c2620",
+  wolfTongue: "#b46a78",
+  wolfPlinth: "#ede2d0",
+  wolfPlinthShade: "#a89776",
+  porchPendantCopper: "#5f8c6c",
+  porchPendantCopperHi: "#9ec6aa",
+  porchPendantCopperShade: "#305a40",
+  porchPendantCrystal: "#cfe4dc",
+  // Far-east coral atoll lagoon — a sandy bone-white lagoon floor with a
+  // shallow turquoise pool, branching coral towers, a thatched dive shack,
+  // coconut palms, a moored outrigger boat and scattered seashells.
+  caGround: "#efe2bc",
+  caGroundShade: "#bea870",
+  caGroundHi: "#fbf2d8",
+  caApronObsidian: "#1a1612",
+  caWater: "#5cd2c6",
+  caWaterDeep: "#1e8488",
+  caFoam: "#f4fefb",
+  caSand: "#f4e6b6",
+  caCoralOrange: "#ff8a4a",
+  caCoralOrangeHi: "#ffd2a0",
+  caCoralPink: "#ff7aa8",
+  caCoralPinkHi: "#ffc8e0",
+  caCoralRed: "#e54a64",
+  caCoralRedHi: "#ff9aa8",
+  caCoralBase: "#a06448",
+  caPalmTrunk: "#7a5238",
+  caPalmTrunkHi: "#a87a52",
+  caPalmFrond: "#5b8543",
+  caPalmFrondHi: "#9ed87a",
+  caCoconut: "#3a2618",
+  caShackThatch: "#c69a5a",
+  caShackThatchShade: "#7a5e34",
+  caShackPost: "#7a5238",
+  caShackWindow: "#ffd278",
+  caBoatHull: "#8a5e36",
+  caBoatHullHi: "#bc8a5c",
+  caBoatTrim: "#3a2620",
+  caBoatSail: "#fdf6ea",
+  caShellPink: "#fbc8d6",
+  caShellPearl: "#fbf2e6",
+  caShellSpiral: "#dfae72",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -28958,6 +29084,928 @@ function buildObsidianShards(f: NodeFactory): SceneNode {
   return f.group("Obsidian Shards", shards);
 }
 
+/* ─────────────── thirty-sixth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze wolf statue on a fluted marble pedestal, parked on
+ * the back-west outside-fence lawn between the tortoise (back-west-far at
+ * x=-9.5) and the fox (back-west-close at x=-6) so it continues the line
+ * of marble-pedestal sentinels along the back-west perimeter of the
+ * courtyard. The wolf stands four-square on the plinth cap in a slim
+ * alert pose with a tapered snout parted in a quiet half-howl, two
+ * pointed ears swept back, two glinting eye highlights, a slim arched
+ * back and a bushy tail swept low across its haunches. The bronze body,
+ * head, ears and tail reuse the existing `copper-patina` colour + bump
+ * pair so the verdigris reads as crusted relief on the cast metal, and
+ * the plinth reuses the existing `marble` colour + bump pair so the
+ * stone reads with veined relief.
+ */
+function buildWolfStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.wolfBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.wolfBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.wolfBronzeShade, 0.95, { flatShading: true });
+  const tongue = std(C.wolfTongue, 0.6, { metalness: 0.2 });
+  const marble: MaterialDef = {
+    color: C.wolfPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.wolfPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base — broad square marble base.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft + cap.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Wolf body — a long oblong standing four-square on the plinth cap.
+  const bodyY = 1.08;
+  parts.push(
+    f.mesh("Wolf Body", sphere(0.22, 14, 10), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.7, 0.8, 0.8],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded underbelly seam reading as ribbed undercoat.
+    f.mesh("Wolf Belly Shade", sphere(0.18, 12, 8), bronzeShade, {
+      position: [0, bodyY - 0.10, 0],
+      scale: [1.5, 0.3, 0.7],
+    }, { castShadow: false }),
+    // Slim raised back ridge highlight reading as the spine.
+    f.mesh("Wolf Back Hi", box(0.40, 0.014, 0.06), bronzeHi, {
+      position: [0, bodyY + 0.16, 0],
+    }, { castShadow: false }),
+  );
+  // ── Four slim legs — front pair under shoulder, back pair under haunch.
+  const legPositions: [number, number][] = [
+    [0.20, 0.16],   // front-right
+    [0.20, -0.16],  // front-left
+    [-0.22, 0.16],  // back-right
+    [-0.22, -0.16], // back-left
+  ];
+  for (let i = 0; i < legPositions.length; i++) {
+    const lp = legPositions[i]!;
+    parts.push(
+      f.mesh(`Wolf Leg ${i}`, cylinder(0.038, 0.044, 0.32, 8), bronze, {
+        position: [lp[0], bodyY - 0.30, lp[1]],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim hoof-cap base ring reading as paw.
+      f.mesh(`Wolf Paw ${i}`, cylinder(0.048, 0.044, 0.04, 8), bronzeShade, {
+        position: [lp[0], bodyY - 0.46, lp[1]],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Tapered head — small ovoid raised on a short neck at the east end.
+  const headX = 0.36;
+  const headY = bodyY + 0.10;
+  parts.push(
+    // Slim short neck — angled cylinder linking body to head.
+    f.mesh("Wolf Neck", cylinder(0.07, 0.06, 0.16, 8), bronze, {
+      position: [0.26, bodyY + 0.06, 0],
+      rotation: [0, 0, -0.65],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Wolf Head", sphere(0.11, 12, 10), bronze, {
+      position: [headX, headY, 0],
+      scale: [1.2, 1.0, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tapered snout protruding forward from the head.
+    f.mesh("Wolf Snout", cone(0.06, 0.16, 8), bronze, {
+      position: [headX + 0.13, headY - 0.02, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: true }),
+    // Slim parted-jaw tongue dab — slim raised pink line inside the snout.
+    f.mesh("Wolf Tongue", box(0.06, 0.012, 0.025), tongue, {
+      position: [headX + 0.15, headY - 0.04, 0],
+    }, { castShadow: false }),
+    // Small dark nose dab at the snout tip.
+    f.mesh("Wolf Nose", sphere(0.022, 8, 6), bronzeShade, {
+      position: [headX + 0.22, headY - 0.01, 0],
+    }, { castShadow: false }),
+    // Two glinting eye highlights flanking the head.
+    f.mesh("Wolf Eye L", sphere(0.014, 8, 6), bronzeHi, {
+      position: [headX + 0.06, headY + 0.03, 0.06],
+    }, { castShadow: false }),
+    f.mesh("Wolf Eye R", sphere(0.014, 8, 6), bronzeHi, {
+      position: [headX + 0.06, headY + 0.03, -0.06],
+    }, { castShadow: false }),
+  );
+  // ── Two pointed ears swept back — slim cones at the head crown.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Wolf Ear ${sz}`, cone(0.034, 0.10, 6), bronze, {
+        position: [headX - 0.02, headY + 0.13, sz * 0.06],
+        rotation: [0, 0, 0.25],
+      }, { castShadow: true }),
+      // Slim shaded inner ear cup.
+      f.mesh(`Wolf Ear Cup ${sz}`, cone(0.022, 0.07, 6), bronzeShade, {
+        position: [headX - 0.015, headY + 0.13, sz * 0.06],
+        rotation: [0, 0, 0.25],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Bushy tail swept low across the haunches — three stacked cylinder
+  // segments tapering and curling slightly downward.
+  const tailBase: [number, number, number] = [-0.34, bodyY + 0.02, 0];
+  const tailSegs: { dx: number; dy: number; r: number; tilt: number }[] = [
+    { dx: -0.04, dy: -0.02, r: 0.060, tilt: -1.0 },
+    { dx: -0.10, dy: -0.10, r: 0.052, tilt: -1.3 },
+    { dx: -0.14, dy: -0.20, r: 0.040, tilt: -1.6 },
+  ];
+  for (let i = 0; i < tailSegs.length; i++) {
+    const s = tailSegs[i]!;
+    parts.push(
+      f.mesh(`Wolf Tail ${i}`, cylinder(s.r, s.r + 0.004, 0.12, 8), bronze, {
+        position: [tailBase[0] + s.dx, tailBase[1] + s.dy, tailBase[2]],
+        rotation: [0, 0, Math.PI / 2 + s.tilt],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  parts.push(
+    f.mesh("Wolf Tail Tip", sphere(0.034, 8, 6), bronzeHi, {
+      position: [tailBase[0] - 0.22, tailBase[1] - 0.30, tailBase[2]],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Wolf Plaque Tablet", box(0.3, 0.1, 0.018), bronze, {
+      position: [0, 0.46, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Wolf Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Wolf Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Wolf Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+  );
+  return f.group("Wolf Statue", parts, { position: pos });
+}
+
+/* ─────────────── thirty-sixth-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental porch ceiling pendants
+ * hanging from the porch canopy underside flanking the central porch
+ * ceiling rosette (from pass 27). Each pendant carries a slim foliate
+ * medallion cap fixed under the canopy, a slim copper-patina chain of
+ * three linked oval beads dropping below, a foliate medallion drop body
+ * at the chain end and a slim translucent crystal teardrop suspended
+ * just below the medallion catching the porch glow. The medallion cap,
+ * chain, drop body and ringed cap reuse the existing `copper-patina`
+ * colour + bump pair so the verdigris mottling reads as crusted relief
+ * on the cast metal.
+ */
+function buildPorchCeilingPendants(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.porchPendantCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.porchPendantCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.porchPendantCopperShade, 0.95, { flatShading: true });
+  const crystal: MaterialDef = {
+    color: C.porchPendantCrystal,
+    roughness: 0.2,
+    metalness: 0.1,
+    transparent: true,
+    opacity: 0.7,
+    emissive: "#cfd8d4",
+  };
+  const pendants: SceneNode[] = [];
+  for (let i = 0; i < PORCH_PENDANT_POSITIONS.length; i++) {
+    const pos = PORCH_PENDANT_POSITIONS[i]!;
+    const parts: SceneNode[] = [
+      // Ceiling cap medallion — slim flanged disc fixing the pendant to the
+      // canopy underside.
+      f.mesh("Pendant Ceiling Cap", cylinder(0.06, 0.06, 0.012, 14), copper, {
+        position: [0, 0, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false, receiveShadow: true }),
+      f.mesh("Pendant Cap Hi", cylinder(0.04, 0.04, 0.014, 14), copperHi, {
+        position: [0, 0.008, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+      f.mesh("Pendant Cap Shade", cylinder(0.07, 0.07, 0.005, 14), copperShade, {
+        position: [0, -0.004, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    ];
+    // Slim chain of three linked oval beads dropping below the cap.
+    for (let b = 0; b < 3; b++) {
+      const cy = -0.04 - b * 0.05;
+      parts.push(
+        f.mesh(`Pendant Chain Bead ${b}`, sphere(0.015, 8, 6), copper, {
+          position: [0, cy, 0],
+          scale: [0.7, 1.0, 0.7],
+        }, { castShadow: false }),
+        // Slim highlight glint on each bead.
+        f.mesh(`Pendant Chain Glint ${b}`, sphere(0.008, 6, 4), copperHi, {
+          position: [0.008, cy + 0.003, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // Foliate medallion drop body at the chain end — slim stepped cone with
+    // a wider midband ringed by four tip beads.
+    const dropY = -0.22;
+    parts.push(
+      f.mesh("Pendant Drop Body", cone(0.06, 0.16, 8), copper, {
+        position: [0, dropY, 0],
+        rotation: [Math.PI, 0, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      f.mesh("Pendant Drop Shade", cone(0.05, 0.08, 8), copperShade, {
+        position: [0, dropY - 0.04, 0],
+        rotation: [Math.PI, 0, 0],
+      }, { castShadow: false }),
+      // Slim midband ring with four tip beads ringing it.
+      f.mesh("Pendant Midband", cylinder(0.052, 0.052, 0.016, 10), copperHi, {
+        position: [0, dropY + 0.005, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+    for (let j = 0; j < 4; j++) {
+      const a = (j / 4) * Math.PI * 2;
+      parts.push(
+        f.mesh(`Pendant Tip Bead ${j}`, sphere(0.012, 8, 6), copperHi, {
+          position: [Math.cos(a) * 0.058, dropY + 0.005, Math.sin(a) * 0.058],
+        }, { castShadow: false }),
+      );
+    }
+    // Slim ringed tip cap at the bottom of the medallion drop.
+    parts.push(
+      f.mesh("Pendant Ringed Cap", sphere(0.024, 8, 6), copper, {
+        position: [0, dropY - 0.12, 0],
+      }, { castShadow: false }),
+      f.mesh("Pendant Ringed Cap Hi", sphere(0.016, 6, 4), copperHi, {
+        position: [0, dropY - 0.11, 0],
+      }, { castShadow: false }),
+    );
+    // Slim translucent crystal teardrop suspended just below the medallion
+    // catching the porch glow.
+    parts.push(
+      // Slim hanging filament from the ringed cap to the crystal.
+      f.mesh("Pendant Crystal String", cylinder(0.004, 0.004, 0.06, 6), copper, {
+        position: [0, dropY - 0.18, 0],
+      }, { castShadow: false }),
+      f.mesh("Pendant Crystal", sphere(0.04, 10, 8), crystal, {
+        position: [0, dropY - 0.24, 0],
+        scale: [1.0, 1.4, 1.0],
+      }, { castShadow: false }),
+      // Slim bright tip glint at the crystal's lower tip.
+      f.mesh("Pendant Crystal Tip", sphere(0.014, 6, 4), copperHi, {
+        position: [0, dropY - 0.30, 0],
+      }, { castShadow: false }),
+    );
+    pendants.push(
+      f.group(`Porch Ceiling Pendant ${i === 0 ? "West" : "East"}`, parts, {
+        position: pos,
+      }),
+    );
+  }
+  return f.group("Porch Ceiling Pendants", pendants);
+}
+
+/* ─────────────── thirty-sixth-pass scene extension ─────────────── */
+
+/**
+ * Far-east coral atoll lagoon plane east of the obsidian shore. Carries
+ * a bone-white sandy lagoon floor surfaced with a `coral-atoll` colour
+ * reference (using the existing `desert-sand` texture as the closest
+ * available bone-sand tone) and a pebble depth map so the exposed sand
+ * bars and scattered shells read as raised relief at glancing sun.
+ * Features a shallow turquoise lagoon water pool at the centre with a
+ * darker deep-water core and a slim foam-fringe ripple, three branching
+ * coral towers (orange / pink / red) scattered around the lagoon, a
+ * small palm-thatched dive shack at the northeast corner, three coconut
+ * palms scattered along the beach, a small wooden outrigger boat moored
+ * at the lagoon's west edge and a scatter of seven seashells strewn
+ * along the sand.
+ */
+function buildFarEastCoralAtoll(f: NodeFactory): SceneNode {
+  return f.group("Far East Coral Atoll", [
+    // Coral-atoll ground plane — bone-white sandy lagoon floor.
+    f.mesh(
+      "Coral Atoll Ground",
+      plane(CORAL_ATOLL_W, CORAL_ATOLL_D),
+      std(C.caGround, 0.92, {
+        texture: "desert-sand",
+        textureScale: [4, 4],
+        bumpMap: "desert-sand-bump",
+        bumpScale: 0.05,
+        metalness: 0.05,
+      }),
+      { position: CORAL_ATOLL_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the obsidian shore's east edge with a slim
+    // obsidian-toned strip so the seam reads as a continuous obsidian-into-
+    // sand join with no holes at the ground layer.
+    f.mesh(
+      "Coral Atoll West Apron",
+      plane(3, CORAL_ATOLL_D),
+      std(C.caApronObsidian, 0.95, {
+        texture: "basalt-plateau",
+        textureScale: [1, 4],
+      }),
+      {
+        position: [
+          CORAL_ATOLL_POS[0] - CORAL_ATOLL_W / 2 + 1.5,
+          -0.048,
+          CORAL_ATOLL_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildCoralLagoon(f, CORAL_LAGOON_POS),
+    buildCoralTowers(f),
+    buildDiveShack(f, DIVE_SHACK_POS),
+    buildAtollCoconutPalms(f),
+    buildOutriggerBoat(f, OUTRIGGER_BOAT_POS),
+    buildCoralShells(f),
+  ]);
+}
+
+/**
+ * Shallow turquoise lagoon water pool at the centre of the atoll — a
+ * sandy disc holding a translucent turquoise surface ringed by a slim
+ * darker deep-water core and a fringe of foam ripple just inside the
+ * shore. The turquoise water carries a soft transparency so the sandy
+ * floor reads through it.
+ */
+function buildCoralLagoon(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const sand = std(C.caSand, 0.95, { flatShading: true });
+  const water: MaterialDef = {
+    color: C.caWater,
+    roughness: 0.18,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.78,
+  };
+  const waterDeep: MaterialDef = {
+    color: C.caWaterDeep,
+    roughness: 0.2,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.9,
+  };
+  const foam = std(C.caFoam, 0.55, { metalness: 0.1 });
+  const parts: SceneNode[] = [];
+  // Sandy lagoon floor disc — slightly recessed lighter sand basin.
+  parts.push(
+    f.mesh("Lagoon Sand Floor", cylinder(CORAL_LAGOON_RADIUS, CORAL_LAGOON_RADIUS, 0.04, 28), sand, {
+      position: [0, 0.02, 0],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  // Darker deep-water core — smaller disc at the lagoon centre reading as
+  // the deeper trough.
+  parts.push(
+    f.mesh("Lagoon Deep Core", cylinder(CORAL_LAGOON_RADIUS - 1.3, CORAL_LAGOON_RADIUS - 1.3, 0.05, 24), waterDeep, {
+      position: [0, 0.045, 0],
+    }, { castShadow: false }),
+  );
+  // Translucent turquoise water surface — wider disc covering the lagoon.
+  parts.push(
+    f.mesh("Lagoon Water Surface", cylinder(CORAL_LAGOON_RADIUS - 0.1, CORAL_LAGOON_RADIUS - 0.1, 0.018, 28), water, {
+      position: [0, 0.07, 0],
+    }, { castShadow: false }),
+  );
+  // Slim foam-fringe ring just inside the shore reading as wave wash.
+  const foamCount = 18;
+  for (let j = 0; j < foamCount; j++) {
+    const a = (j / foamCount) * Math.PI * 2;
+    const fx = Math.cos(a) * (CORAL_LAGOON_RADIUS - 0.15);
+    const fz = Math.sin(a) * (CORAL_LAGOON_RADIUS - 0.15);
+    parts.push(
+      f.mesh(`Lagoon Foam ${j}`, sphere(0.10, 8, 6), foam, {
+        position: [fx, 0.085, fz],
+        scale: [1.1, 0.3, 1.1],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Three slim ripple highlight rings dotted across the surface.
+  const rippleOff: [number, number][] = [
+    [0.6, 0.4],
+    [-0.8, 0.2],
+    [-0.2, -0.7],
+  ];
+  for (let i = 0; i < rippleOff.length; i++) {
+    const o = rippleOff[i]!;
+    parts.push(
+      f.mesh(`Lagoon Ripple ${i}`, cylinder(0.30, 0.30, 0.006, 16), foam, {
+        position: [o[0], 0.085, o[1]],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Coral Lagoon", parts, { position: pos });
+}
+
+/**
+ * Three branching coral towers scattered around the lagoon — each a slim
+ * stacked cluster of tapering branched coral arms in a dominant tint
+ * (orange / pink / red) on a darker coral base. The branches carry slim
+ * bright tip glints reading as polyp highlights catching the dusk sun.
+ */
+function buildCoralTowers(f: NodeFactory): SceneNode {
+  const baseMat = std(C.caCoralBase, 0.85, { flatShading: true });
+  const tintMats: Record<"orange" | "pink" | "red", { body: MaterialDef; hi: MaterialDef }> = {
+    orange: {
+      body: std(C.caCoralOrange, 0.7, { metalness: 0.05 }),
+      hi: std(C.caCoralOrangeHi, 0.4, { metalness: 0.2 }),
+    },
+    pink: {
+      body: std(C.caCoralPink, 0.7, { metalness: 0.05 }),
+      hi: std(C.caCoralPinkHi, 0.4, { metalness: 0.2 }),
+    },
+    red: {
+      body: std(C.caCoralRed, 0.7, { metalness: 0.05 }),
+      hi: std(C.caCoralRedHi, 0.4, { metalness: 0.2 }),
+    },
+  };
+  const towers: SceneNode[] = [];
+  for (let i = 0; i < CORAL_TOWERS.length; i++) {
+    const t = CORAL_TOWERS[i]!;
+    const mats = tintMats[t.tint];
+    const parts: SceneNode[] = [
+      // Darker coral base footing — slim flat disc anchoring the tower.
+      f.mesh("Coral Base", cylinder(0.32, 0.26, 0.10, 10), baseMat, {
+        position: [0, 0.05, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Central trunk — wider tapering column.
+      f.mesh("Coral Trunk", cone(0.22, 0.7, 10), mats.body, {
+        position: [0, 0.42, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim crown tip glint at the trunk crown.
+      f.mesh("Coral Trunk Tip", sphere(0.06, 10, 8), mats.hi, {
+        position: [0, 0.82, 0],
+      }, { castShadow: false }),
+    ];
+    // Four slim branched arms angled outward and upward from the trunk.
+    for (let j = 0; j < 4; j++) {
+      const a = (j / 4) * Math.PI * 2 + 0.4;
+      const bx = Math.cos(a) * 0.16;
+      const bz = Math.sin(a) * 0.16;
+      parts.push(
+        f.mesh(`Coral Arm ${j}`, cone(0.10, 0.40, 8), mats.body, {
+          position: [bx, 0.55, bz],
+          rotation: [Math.cos(a) * 0.6, 0, Math.sin(a) * 0.6],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim bright tip glint on each branch.
+        f.mesh(`Coral Arm Tip ${j}`, sphere(0.04, 8, 6), mats.hi, {
+          position: [bx * 1.6, 0.78, bz * 1.6],
+        }, { castShadow: false }),
+        // Slim mid-branch lobe bead reading as a polyp cluster.
+        f.mesh(`Coral Arm Lobe ${j}`, sphere(0.05, 8, 6), mats.body, {
+          position: [bx * 1.3, 0.65, bz * 1.3],
+        }, { castShadow: false }),
+      );
+    }
+    // Three smaller side fronds budding from the trunk for relief.
+    for (let j = 0; j < 3; j++) {
+      const a = (j / 3) * Math.PI * 2 + 0.8;
+      const fx = Math.cos(a) * 0.12;
+      const fz = Math.sin(a) * 0.12;
+      parts.push(
+        f.mesh(`Coral Frond ${j}`, cone(0.05, 0.18, 6), mats.body, {
+          position: [fx, 0.30, fz],
+          rotation: [Math.cos(a) * 0.4, 0, Math.sin(a) * 0.4],
+        }, { castShadow: false }),
+        f.mesh(`Coral Frond Tip ${j}`, sphere(0.025, 6, 4), mats.hi, {
+          position: [fx * 1.4, 0.42, fz * 1.4],
+        }, { castShadow: false }),
+      );
+    }
+    towers.push(
+      f.group(`Coral Tower ${i + 1}`, parts, {
+        position: [t.x, 0, t.z],
+        rotation: [0, t.rot, 0],
+        scale: [t.scale, t.scale, t.scale],
+      }),
+    );
+  }
+  return f.group("Coral Towers", towers);
+}
+
+/**
+ * Small palm-thatched dive shack at the northeast corner of the atoll —
+ * a slim square cabin on four post legs with a thatched conical roof, a
+ * front railing trim, a glowing front window catching the dusk and a
+ * small lean-to ladder leaning against the front porch step.
+ */
+function buildDiveShack(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const thatch = std(C.caShackThatch, 0.95, { flatShading: true });
+  const thatchShade = std(C.caShackThatchShade, 0.95, { flatShading: true });
+  const post = std(C.caShackPost, 0.85, { texture: "wood" });
+  const windowGlow: MaterialDef = {
+    color: C.caShackWindow,
+    roughness: 0.3,
+    metalness: 0.0,
+    emissive: C.caShackWindow,
+  };
+  const parts: SceneNode[] = [];
+  // Four short stilts holding the cabin above the sand.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Shack Stilt ${sx} ${sz}`, cylinder(0.05, 0.06, 0.42, 8), post, {
+          position: [sx * 0.45, 0.21, sz * 0.45],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Cabin floor deck — slim square plank slab.
+  parts.push(
+    f.mesh("Shack Floor", box(1.10, 0.06, 1.10), post, {
+      position: [0, 0.44, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Cabin walls — three solid post-and-thatch panels with a front opening.
+  parts.push(
+    // Back wall.
+    f.mesh("Shack Wall Back", box(1.10, 0.7, 0.06), thatch, {
+      position: [0, 0.82, -0.52],
+    }, { castShadow: true, receiveShadow: true }),
+    // West wall.
+    f.mesh("Shack Wall West", box(0.06, 0.7, 1.10), thatch, {
+      position: [-0.52, 0.82, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // East wall.
+    f.mesh("Shack Wall East", box(0.06, 0.7, 1.10), thatch, {
+      position: [0.52, 0.82, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim front upper lintel — leaves a covered porch entry below.
+    f.mesh("Shack Front Lintel", box(1.10, 0.18, 0.06), thatch, {
+      position: [0, 1.08, 0.52],
+    }, { castShadow: true }),
+  );
+  // Thatched conical roof — wide cone hat with a darker shaded undercut.
+  parts.push(
+    f.mesh("Shack Roof", cone(0.90, 0.55, 10), thatch, {
+      position: [0, 1.50, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Shack Roof Undercut", cone(0.95, 0.10, 10), thatchShade, {
+      position: [0, 1.24, 0],
+    }, { castShadow: false }),
+    // Slim crown tuft at the roof apex reading as a tied thatch finial.
+    f.mesh("Shack Roof Crown", sphere(0.08, 10, 8), thatchShade, {
+      position: [0, 1.78, 0],
+      scale: [1.0, 1.4, 1.0],
+    }, { castShadow: false }),
+  );
+  // Glowing front window — small square pane catching the dusk on the east
+  // wall's south face.
+  parts.push(
+    f.mesh("Shack Window Frame", box(0.04, 0.32, 0.32), post, {
+      position: [0.55, 0.92, 0.28],
+    }, { castShadow: false }),
+    f.mesh("Shack Window Pane", box(0.05, 0.26, 0.26), windowGlow, {
+      position: [0.57, 0.92, 0.28],
+    }, { castShadow: false }),
+  );
+  // Slim front porch railing trim — two horizontal bars across the front
+  // opening flanking the entrance.
+  parts.push(
+    f.mesh("Shack Rail Lower", box(0.92, 0.025, 0.025), post, {
+      position: [0, 0.62, 0.52],
+    }, { castShadow: false }),
+    f.mesh("Shack Rail Upper", box(0.92, 0.025, 0.025), post, {
+      position: [0, 0.84, 0.52],
+    }, { castShadow: false }),
+  );
+  // Slim lean-to ladder leaning against the front porch step.
+  parts.push(
+    f.mesh("Shack Ladder L", cylinder(0.018, 0.018, 0.6, 6), post, {
+      position: [-0.18, 0.30, 0.72],
+      rotation: [-0.4, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Shack Ladder R", cylinder(0.018, 0.018, 0.6, 6), post, {
+      position: [0.18, 0.30, 0.72],
+      rotation: [-0.4, 0, 0],
+    }, { castShadow: true }),
+  );
+  for (let r = 0; r < 3; r++) {
+    parts.push(
+      f.mesh(`Shack Ladder Rung ${r}`, box(0.42, 0.014, 0.014), post, {
+        position: [0, 0.12 + r * 0.15, 0.74 - r * 0.06],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Dive Shack", parts, { position: pos });
+}
+
+/**
+ * Three coconut palms scattered along the beach — each a slim tapered
+ * trunk with a lean leaning toward the lagoon, a broad fanning frond
+ * crown of five fronds in mid and pale-green tints and a small cluster
+ * of three brown coconuts hanging just below the crown.
+ */
+function buildAtollCoconutPalms(f: NodeFactory): SceneNode {
+  const trunk = std(C.caPalmTrunk, 0.92, { texture: "wood", flatShading: true });
+  const trunkHi = std(C.caPalmTrunkHi, 0.85, { flatShading: true });
+  const frondMid = std(C.caPalmFrond, 0.85, { flatShading: true });
+  const frondHi = std(C.caPalmFrondHi, 0.7, { flatShading: true });
+  const coconut = std(C.caCoconut, 0.85, { flatShading: true });
+  const palms: SceneNode[] = [];
+  for (let i = 0; i < COCONUT_PALMS.length; i++) {
+    const p = COCONUT_PALMS[i]!;
+    const parts: SceneNode[] = [];
+    // Trunk — four stacked cylinder segments with a slim lean.
+    for (let s = 0; s < 4; s++) {
+      parts.push(
+        f.mesh(`Palm Trunk ${s}`, cylinder(0.10 - s * 0.012, 0.12 - s * 0.012, 0.55, 8), trunk, {
+          position: [p.lean * s * 0.25, 0.28 + s * 0.55, 0],
+          rotation: [0, 0, p.lean * 0.25],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+      // Slim ring band highlight at each trunk seam reading as bark ring.
+      if (s > 0) {
+        parts.push(
+          f.mesh(`Palm Trunk Ring ${s}`, cylinder(0.105 - s * 0.012, 0.105 - s * 0.012, 0.024, 8), trunkHi, {
+            position: [p.lean * s * 0.25, 0.55 + s * 0.55 - 0.275, 0],
+          }, { castShadow: false }),
+        );
+      }
+    }
+    // Frond crown — five splayed cones radiating from the trunk top.
+    const crownX = p.lean * 1.0;
+    const crownY = 2.5;
+    for (let j = 0; j < 5; j++) {
+      const a = (j / 5) * Math.PI * 2;
+      const fx = Math.cos(a) * 0.5;
+      const fz = Math.sin(a) * 0.5;
+      const mat = j % 2 === 0 ? frondMid : frondHi;
+      parts.push(
+        f.mesh(`Palm Frond ${j}`, cone(0.18, 0.85, 6), mat, {
+          position: [crownX + fx, crownY + 0.05, fz],
+          rotation: [Math.cos(a) * 0.8, 0, Math.sin(a) * 0.8],
+        }, { castShadow: true }),
+        // Slim frond rachis ridge highlight along the centre line.
+        f.mesh(`Palm Frond Rachis ${j}`, box(0.012, 0.55, 0.024), frondHi, {
+          position: [crownX + fx * 0.7, crownY + 0.18, fz * 0.7],
+          rotation: [Math.cos(a) * 0.8, 0, Math.sin(a) * 0.8],
+        }, { castShadow: false }),
+      );
+    }
+    // Small coconut cluster — three brown spheres hanging just below the
+    // crown.
+    const coconutOff: [number, number][] = [
+      [0.06, 0.06],
+      [-0.06, 0.06],
+      [0.0, -0.06],
+    ];
+    for (let k = 0; k < coconutOff.length; k++) {
+      const o = coconutOff[k]!;
+      parts.push(
+        f.mesh(`Palm Coconut ${k}`, sphere(0.07, 10, 8), coconut, {
+          position: [crownX + o[0], crownY - 0.18, o[1]],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    palms.push(
+      f.group(`Coconut Palm ${i + 1}`, parts, {
+        position: [p.x, 0, p.z],
+        scale: [p.scale, p.scale, p.scale],
+      }),
+    );
+  }
+  return f.group("Coconut Palms", palms);
+}
+
+/**
+ * Small wooden outrigger boat moored at the lagoon's west edge — a slim
+ * tapered hull on the sand with a slim mast carrying a furled triangular
+ * sail wrapped around the mast, a slim outrigger float on a pair of
+ * spars off the south side and a slim brass mooring cleat at the bow.
+ */
+function buildOutriggerBoat(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const hull = std(C.caBoatHull, 0.85, { texture: "wood", flatShading: true });
+  const hullHi = std(C.caBoatHullHi, 0.75, { flatShading: true });
+  const trim = std(C.caBoatTrim, 0.92, { flatShading: true });
+  const sail = std(C.caBoatSail, 0.9);
+  const cleat = std(C.porchPendantCopper, 0.55, {
+    metalness: 0.65,
+    texture: "copper-patina",
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  });
+  const parts: SceneNode[] = [];
+  // Main hull — slim tapered oblong with a darker waterline trim band.
+  parts.push(
+    f.mesh("Boat Hull", box(1.6, 0.22, 0.40), hull, {
+      position: [0, 0.18, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim bow taper cone at the east end.
+    f.mesh("Boat Bow", cone(0.20, 0.35, 6), hull, {
+      position: [0.95, 0.18, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: true }),
+    // Slim stern taper cone at the west end.
+    f.mesh("Boat Stern", cone(0.20, 0.30, 6), hull, {
+      position: [-0.90, 0.18, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    // Slim waterline trim band running along the hull side.
+    f.mesh("Boat Trim N", box(1.6, 0.028, 0.04), trim, {
+      position: [0, 0.10, 0.20],
+    }, { castShadow: false }),
+    f.mesh("Boat Trim S", box(1.6, 0.028, 0.04), trim, {
+      position: [0, 0.10, -0.20],
+    }, { castShadow: false }),
+    // Slim deck plank highlight along the hull crown.
+    f.mesh("Boat Deck Hi", box(1.4, 0.012, 0.30), hullHi, {
+      position: [0, 0.29, 0],
+    }, { castShadow: false }),
+  );
+  // Slim mast — vertical cylinder standing amidships.
+  parts.push(
+    f.mesh("Boat Mast", cylinder(0.04, 0.04, 1.4, 8), trim, {
+      position: [0.1, 0.95, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim mast tip cap bead.
+    f.mesh("Boat Mast Tip", sphere(0.04, 8, 6), trim, {
+      position: [0.1, 1.65, 0],
+    }, { castShadow: false }),
+  );
+  // Furled triangular sail wrapped around the mast — slim wide-cylinder
+  // bundle reading as canvas tied to the mast.
+  parts.push(
+    f.mesh("Boat Sail", cylinder(0.10, 0.08, 0.95, 8), sail, {
+      position: [0.1, 0.95, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Three slim binding ties around the furled sail.
+    f.mesh("Sail Tie 0", cylinder(0.105, 0.105, 0.018, 8), trim, {
+      position: [0.1, 0.6, 0],
+    }, { castShadow: false }),
+    f.mesh("Sail Tie 1", cylinder(0.105, 0.105, 0.018, 8), trim, {
+      position: [0.1, 1.0, 0],
+    }, { castShadow: false }),
+    f.mesh("Sail Tie 2", cylinder(0.105, 0.105, 0.018, 8), trim, {
+      position: [0.1, 1.3, 0],
+    }, { castShadow: false }),
+  );
+  // Outrigger float — slim tapered cylinder parallel to the hull on the
+  // south side, held by two slim spars connecting it to the hull.
+  parts.push(
+    f.mesh("Outrigger Float", cylinder(0.08, 0.08, 1.0, 8), hull, {
+      position: [-0.05, 0.10, -0.62],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim spar 1 — angled brace from hull to float.
+    f.mesh("Outrigger Spar 1", cylinder(0.022, 0.022, 0.5, 6), trim, {
+      position: [0.30, 0.20, -0.42],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Outrigger Spar 2", cylinder(0.022, 0.022, 0.5, 6), trim, {
+      position: [-0.40, 0.20, -0.42],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // Slim brass mooring cleat at the bow.
+  parts.push(
+    f.mesh("Boat Cleat Base", box(0.12, 0.04, 0.04), cleat, {
+      position: [1.1, 0.32, 0],
+    }, { castShadow: false }),
+    f.mesh("Boat Cleat Horn L", cylinder(0.018, 0.018, 0.10, 6), cleat, {
+      position: [1.06, 0.40, 0],
+      rotation: [0, 0, 0.4],
+    }, { castShadow: false }),
+    f.mesh("Boat Cleat Horn R", cylinder(0.018, 0.018, 0.10, 6), cleat, {
+      position: [1.14, 0.40, 0],
+      rotation: [0, 0, -0.4],
+    }, { castShadow: false }),
+  );
+  return f.group("Outrigger Boat", parts, { position: pos });
+}
+
+/**
+ * Scatter of seven seashells strewn along the sandy beach — three
+ * varieties: a domed cockle shell, a teardrop pearl-conch shell and a
+ * coiled spiral shell. Each kind carries a distinct silhouette and a
+ * slim bright lip highlight catching the dusk so the shells read at low
+ * light against the sand.
+ */
+function buildCoralShells(f: NodeFactory): SceneNode {
+  const cockle = std(C.caShellPink, 0.6, { metalness: 0.15 });
+  const pearl = std(C.caShellPearl, 0.45, { metalness: 0.25 });
+  const spiral = std(C.caShellSpiral, 0.7, { metalness: 0.15 });
+  const shells: SceneNode[] = [];
+  for (let i = 0; i < CORAL_SHELLS.length; i++) {
+    const s = CORAL_SHELLS[i]!;
+    const parts: SceneNode[] = [];
+    if (s.kind === "cockle") {
+      // Domed cockle shell — slim half-sphere with three raised ridge
+      // ribs across the dome.
+      parts.push(
+        f.mesh("Cockle Body", sphere(0.10, 12, 8), cockle, {
+          position: [0, 0.05, 0],
+          scale: [1.2, 0.45, 1.0],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh("Cockle Rib 0", box(0.020, 0.012, 0.16), pearl, {
+          position: [-0.04, 0.085, 0],
+        }, { castShadow: false }),
+        f.mesh("Cockle Rib 1", box(0.020, 0.012, 0.16), pearl, {
+          position: [0, 0.09, 0],
+        }, { castShadow: false }),
+        f.mesh("Cockle Rib 2", box(0.020, 0.012, 0.16), pearl, {
+          position: [0.04, 0.085, 0],
+        }, { castShadow: false }),
+      );
+    } else if (s.kind === "pearl") {
+      // Teardrop pearl-conch shell — slim tapered ovoid with a bright
+      // pearly highlight along its leading edge.
+      parts.push(
+        f.mesh("Pearl Body", sphere(0.10, 12, 8), pearl, {
+          position: [0, 0.06, 0],
+          scale: [1.4, 0.55, 0.85],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim shaded undercut along the underside.
+        f.mesh("Pearl Shade", sphere(0.08, 10, 8), cockle, {
+          position: [-0.02, 0.025, 0],
+          scale: [1.2, 0.25, 0.7],
+        }, { castShadow: false }),
+        // Slim bright pearl-lip highlight along the leading edge.
+        f.mesh("Pearl Lip Hi", box(0.018, 0.014, 0.12), pearl, {
+          position: [0.10, 0.08, 0.04],
+        }, { castShadow: false }),
+      );
+    } else {
+      // Coiled spiral shell — three stacked tapered cones with a slim
+      // bright apex glint.
+      parts.push(
+        f.mesh("Spiral Body 0", cone(0.10, 0.10, 8), spiral, {
+          position: [0, 0.05, 0],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh("Spiral Body 1", cone(0.07, 0.07, 8), spiral, {
+          position: [0.005, 0.13, 0],
+        }, { castShadow: false }),
+        f.mesh("Spiral Body 2", cone(0.045, 0.05, 8), spiral, {
+          position: [0.01, 0.19, 0],
+        }, { castShadow: false }),
+        // Slim bright apex glint at the spiral tip.
+        f.mesh("Spiral Apex", sphere(0.018, 6, 4), pearl, {
+          position: [0.014, 0.225, 0],
+        }, { castShadow: false }),
+        // Slim shaded opening band at the spiral base reading as aperture.
+        f.mesh("Spiral Aperture", cylinder(0.11, 0.11, 0.018, 10), cockle, {
+          position: [0, 0.02, 0],
+        }, { castShadow: false }),
+      );
+    }
+    shells.push(
+      f.group(`Coral Shell ${i + 1}`, parts, {
+        position: [s.x, 0, s.z],
+        rotation: [0, s.rot, 0],
+        scale: [s.scale, s.scale, s.scale],
+      }),
+    );
+  }
+  return f.group("Coral Shells", shells);
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -29854,6 +30902,50 @@ function buildObsidianShards(f: NodeFactory): SceneNode {
  *    northeast corner with a steel-shuttered front door and a tall
  *    ash-deflector chimney, and a scatter of seven obsidian glass
  *    shards strewn across the shore.
+ *  - Thirty-sixth pass — courtyard: a Victorian bronze wolf statue on a
+ *    fluted marble pedestal, parked on the back-west outside-fence lawn
+ *    between the tortoise (back-west-far at x=-9.5) and the fox (back-
+ *    west-close at x=-6) so it continues the line of marble-pedestal
+ *    sentinels along the back-west perimeter — the wolf stands four-
+ *    square on the plinth cap in a slim alert pose with a tapered snout
+ *    parted in a quiet half-howl, two pointed ears swept back, two
+ *    glinting eye highlights, a slim arched back and a bushy tail swept
+ *    low across its haunches (the bronze body, head, ears and tail
+ *    reuse the existing `copper-patina` colour + bump pair so the
+ *    verdigris reads as crusted relief on the cast metal, and the
+ *    plinth reuses the existing `marble` colour + bump pair so the
+ *    stone reads with veined relief). House: a pair of Victorian
+ *    copper-patina ornamental porch ceiling pendants hanging from the
+ *    porch canopy underside flanking the central porch ceiling rosette
+ *    (companion to the rosette from pass 27) — each pendant a foliate
+ *    medallion cap fixed under the canopy, a slim copper-patina chain
+ *    of three linked oval beads, a foliate medallion drop body ringed
+ *    by four tip beads, a slim ringed tip cap and a slim translucent
+ *    crystal teardrop suspended just below the medallion catching the
+ *    porch glow (the cap, chain, drop body and ringed cap reuse the
+ *    existing `copper-patina` pair so the verdigris reads as crusted
+ *    relief on the cast metal). Scene: a far-east coral atoll lagoon
+ *    plane east of the obsidian shore — a bone-white sandy lagoon
+ *    floor surfaced with a `coral-atoll` colour reference (using the
+ *    existing `desert-sand` texture as the bone-sand tone) paired with
+ *    the sand depth map so the exposed sand bars and scattered shells
+ *    read as raised relief at glancing sun, a slim obsidian-toned west
+ *    apron along the obsidian-shore join so the ground layer has no
+ *    holes at the seam, a shallow turquoise lagoon water pool at the
+ *    centre with a darker deep-water core and a slim foam-fringe ring
+ *    of wave wash, three branching coral towers (orange / pink / red)
+ *    scattered around the lagoon (each a stacked cluster of tapering
+ *    branched coral arms with slim tip glints on a darker coral base),
+ *    a small palm-thatched dive shack at the northeast corner on four
+ *    stilts with a thatched conical roof, a glowing front window and a
+ *    slim lean-to ladder, three coconut palms scattered along the
+ *    beach (each a slim leaning trunk with a five-frond fanning crown
+ *    and a small cluster of three brown coconuts hanging just below
+ *    the crown), a small wooden outrigger boat moored at the lagoon's
+ *    west edge with a tapered hull, a slim mast carrying a furled
+ *    triangular sail, a slim outrigger float on two spars and a brass
+ *    mooring cleat at the bow, and a scatter of seven seashells
+ *    (cockle, pearl-conch, spiral-shell) strewn along the sand.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -29960,6 +31052,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: SWAN_STATUE_POS[0], z: SWAN_STATUE_POS[2], r: 0.9 },
     // Thirty-fifth-pass keep-out — bronze otter statue on the back-east outside-fence lawn.
     { x: OTTER_STATUE_POS[0], z: OTTER_STATUE_POS[2], r: 0.9 },
+    // Thirty-sixth-pass keep-out — bronze wolf statue on the back-west outside-fence lawn.
+    { x: WOLF_STATUE_POS[0], z: WOLF_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -30036,6 +31130,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildTortoiseStatue(f, TORTOISE_STATUE_POS),
     buildSwanStatue(f, SWAN_STATUE_POS),
     buildOtterStatue(f, OTTER_STATUE_POS),
+    buildWolfStatue(f, WOLF_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -30068,6 +31163,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const feGeothermalValley = buildFarEastGeothermalValley(f);
   const feVolcanicPlateau = buildFarEastVolcanicPlateau(f);
   const feObsidianShore = buildFarEastObsidianShore(f);
+  const feCoralAtoll = buildFarEastCoralAtoll(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -30123,6 +31219,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildSideValances(f),
     buildPorchColumnCapitals(f),
     buildPorchColumnBases(f),
+    buildPorchCeilingPendants(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -30162,6 +31259,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       feGeothermalValley,
       feVolcanicPlateau,
       feObsidianShore,
+      feCoralAtoll,
       house,
     ],
   };
