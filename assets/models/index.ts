@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirty-six enhancement passes.
+// house and its courtyard, layered over thirty-seven enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -1068,6 +1068,61 @@
 //   sail, a slim outrigger float on two spars and a brass
 //   mooring cleat at the bow, and a scatter of seven seashells
 //   (cockle, pearl-conch, spiral-shell) strewn along the sand.
+//   Pass 37 — courtyard: a Victorian bronze bear statue on a
+//   fluted marble pedestal, parked on the back-east outside-
+//   fence lawn between the otter (back-east-near at x=+5.25)
+//   and the swan (back-east-far at x=+10) so it continues the
+//   line of marble-pedestal sentinels along the back-east
+//   perimeter — the bear stands on its hind legs in a slim
+//   quiet upright pose with two outstretched forepaws, a
+//   tapered muzzle parted in a quiet half-snort, two small
+//   rounded ears on a broad head, two glinting eye highlights
+//   and a short stubby tail tucked at the back (the bronze
+//   body, head, ears and tail reuse the existing `copper-
+//   patina` colour + bump pair so the verdigris reads as
+//   crusted relief on the cast metal, and the plinth reuses
+//   the existing `marble` colour + bump pair so the stone
+//   reads with veined relief). House: a pair of Victorian
+//   copper-patina ornamental side-wall gas-style wall sconces
+//   mounted at mid-height on the east and west exterior side
+//   walls of the house (companion to the front door lanterns
+//   flanking the front door) — each sconce a slim foliate
+//   medallion backplate fixed against the side wall ringed by
+//   four foliate tip dabs, an S-curve scroll bracket arching
+//   outward from the wall with a slim volute curl at the wall
+//   joint, a copper-cage glass lantern hanging from the
+//   bracket tip with four corner ribs and a warm glowing
+//   teardrop pane catching the dusk and a small foliate cap
+//   finial on top (the backplate, bracket, cage and finial
+//   reuse the existing `copper-patina` pair so the verdigris
+//   reads as crusted relief on the cast metal). Scene: a far-
+//   east tidepool rocky shelf plane east of the coral atoll —
+//   a basalt-pebble rocky shelf floor surfaced with the
+//   existing `basalt-plateau` colour map paired with a fissure
+//   depth map so the pebbled rock reads as raised relief at
+//   glancing sun, a slim sandy west apron along the coral-
+//   atoll join so the ground layer has no holes at the seam,
+//   three shallow translucent turquoise tidepool water pools
+//   inset into the rocky shelf with foam-fringe rings and slim
+//   ripple highlights, a focal stranded whale ribcage at the
+//   centre with five bleached arched rib pairs on a slim
+//   vertebral column with a tapered skull cap at the front
+//   and a tail-bone cluster at the rear, a small beachcomber's
+//   stone-and-driftwood hut at the northeast corner on a sandy
+//   mound with a peaked driftwood roof, a glowing front
+//   window, a stone chimney trailing slim smoke wisps and a
+//   slim driftwood ladder leaning against the side, a focal
+//   unlit driftwood bonfire pile at the centre of the shelf
+//   with a teepee of four stacked logs in a ringed firepit of
+//   eight darker stones with two slim kindling sticks at the
+//   base, a scatter of five starfish (orange / purple / pink)
+//   clinging to the rocks around the tidepools, four spiny
+//   sea urchins clustered around the centre tidepool, three
+//   drift bull-kelp bulbs with slim stipe trails strewn along
+//   the sand and a small wooden beached rowing dinghy at the
+//   west edge moored against the atoll seam with a pair of
+//   oars resting in the boat and a slim brass mooring cleat
+//   at the bow.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
