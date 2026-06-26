@@ -22,16 +22,17 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 36) adds a Victorian bronze wolf statue on a
- * fluted marble pedestal to the back-west outside-fence lawn (between the
- * tortoise at back-west-far and the fox at back-west-close, continuing
- * the line of marble-pedestal sentinels along the back-west perimeter),
- * a pair of Victorian copper-patina ornamental porch ceiling pendants
- * hanging from the porch canopy underside flanking the central rosette
- * (companion to the rosette from pass 27) and a far-east coral atoll
- * lagoon plane east of the obsidian shore with a turquoise lagoon pool,
- * three branching coral towers, a palm-thatched dive shack, three
- * coconut palms, a moored outrigger boat and a scatter of seashells.
+ * latest enhancement (pass 37) adds a Victorian bronze bear statue on a
+ * fluted marble pedestal to the back-east outside-fence lawn (between the
+ * otter at back-east-near and the swan at back-east-far, continuing
+ * the line of marble-pedestal sentinels along the back-east perimeter),
+ * a pair of Victorian copper-patina ornamental side-wall gas-style wall
+ * sconces mounted at mid-height on the east and west exterior side walls
+ * of the house (companion to the front door lanterns) and a far-east
+ * tidepool rocky shelf plane east of the coral atoll with three
+ * translucent turquoise tidepools, a stranded whale ribcage, a
+ * beachcomber's driftwood hut, a driftwood bonfire pile and a scatter
+ * of starfish, sea urchins, kelp bulbs and a beached rowing dinghy.
  */
 const W = 7;
 const D = 5;
@@ -1675,6 +1676,91 @@ const CORAL_SHELLS: { x: number; z: number; kind: "cockle" | "pearl" | "spiral";
   { x: 86, z: 134, kind: "cockle", rot: 0.9, scale: 1.0 },
 ];
 
+/**
+ * Thirty-seventh-pass courtyard prop — a Victorian bronze bear statue on a
+ * fluted marble pedestal, parked on the back-east outside-fence lawn
+ * between the otter (back-east-near at x=5.25) and the swan (back-east-
+ * far at x=10) so it slots into the line of marble-pedestal sentinels
+ * along the back-east perimeter of the courtyard. The bear stands on
+ * its hind legs in a slim quiet upright pose with two outstretched
+ * forepaws, a tapered muzzle parted in a quiet half-snort, two small
+ * rounded ears on a broad head, two glinting eye highlights and a short
+ * stubby tail tucked at the back.
+ */
+const BEAR_STATUE_POS: [number, number, number] = [7.5, 0, -5.5];
+
+/**
+ * Thirty-seventh-pass house detail — a pair of Victorian copper-patina
+ * ornamental side-wall gas-style wall sconces mounted at mid-height on
+ * the east and west exterior side walls of the house (companion to the
+ * front door lanterns flanking the front door). Each sconce carries a
+ * foliate medallion backplate fixed against the side wall, an S-curve
+ * scroll bracket arching outward from the wall, a copper-cage glass
+ * lantern hanging from the bracket tip with a warm glowing teardrop
+ * pane catching the dusk and a small foliate cap finial on top. The
+ * house side walls sit at x=±W/2 (≈±3.5) with WALL_T thickness, so the
+ * sconces anchor just outside each wall face at mid-window height.
+ */
+const SIDE_WALL_SCONCE_POSITIONS: { pos: [number, number, number]; side: 1 | -1; label: "West" | "East" }[] = [
+  { pos: [-W / 2 - WALL_T / 2 - 0.04, 1.95, 0], side: -1, label: "West" },
+  { pos: [W / 2 + WALL_T / 2 + 0.04, 1.95, 0], side: 1, label: "East" },
+];
+
+/**
+ * Thirty-seventh-pass scene extension — a far-east tidepool rocky shelf
+ * plane east of the coral atoll (which is at x=84, z=140 with W=20, so
+ * its east edge sits at x=94). The new plane is centred at x=104 with
+ * W=20 so the western apron overlaps the coral atoll's east edge with a
+ * slim sandy strip and the ground layer has no holes at the seam. The
+ * plane carries a basalt-pebble rocky shelf floor surfaced with the
+ * existing `basalt-plateau` colour map paired with a fissure depth map
+ * so the pebbled rock and scattered tidepool stones read as raised
+ * relief at glancing sun. Features three shallow translucent turquoise
+ * tidepool water pools inset into the rocky shelf with foam-fringe
+ * rings and slim ripple highlights, a focal stranded whale ribcage at
+ * the centre with five bleached arched ribs and a slim vertebral column
+ * along the sand, a small beachcomber's stone-and-driftwood hut at the
+ * northeast corner on a sandy mound with a peaked driftwood roof, a
+ * glowing front window catching the dusk and a slim driftwood ladder
+ * leaning against the side, a focal unlit driftwood bonfire pile at the
+ * centre of the shelf with stacked logs in a ringed firepit of stones,
+ * a scatter of five starfish (orange / purple / pink) clinging to the
+ * rocks around the tidepools, four spiny sea urchins clustered around
+ * the centre tidepool, three drift bull-kelp bulbs strewn along the
+ * sand and a small wooden beached rowing dinghy at the west edge moored
+ * against the atoll seam.
+ */
+const TIDEPOOL_SHELF_POS: [number, number, number] = [104, -0.052, 140];
+const TIDEPOOL_SHELF_W = 20;
+const TIDEPOOL_SHELF_D = 20;
+const BEACHCOMBER_HUT_POS: [number, number, number] = [110, 0, 134];
+const BONFIRE_POS: [number, number, number] = [104, 0, 140];
+const WHALE_RIBCAGE_POS: [number, number, number] = [101, 0, 143];
+const TIDE_DINGHY_POS: [number, number, number] = [97, 0, 140];
+const TIDE_POOLS: { x: number; z: number; r: number }[] = [
+  { x: 104, z: 136, r: 1.2 },
+  { x: 108, z: 142, r: 1.0 },
+  { x: 100, z: 138, r: 0.9 },
+];
+const TIDE_STARFISH: { x: number; z: number; tint: "orange" | "purple" | "pink"; rot: number; scale: number }[] = [
+  { x: 105, z: 137, tint: "orange", rot: 0.4, scale: 1.0 },
+  { x: 107, z: 142, tint: "purple", rot: 1.2, scale: 0.9 },
+  { x: 101, z: 137, tint: "pink", rot: 2.0, scale: 0.95 },
+  { x: 109, z: 144, tint: "orange", rot: 0.6, scale: 0.85 },
+  { x: 103, z: 145, tint: "purple", rot: 1.8, scale: 1.0 },
+];
+const TIDE_URCHINS: { x: number; z: number }[] = [
+  { x: 103.2, z: 136.2 },
+  { x: 104.8, z: 135.4 },
+  { x: 103.8, z: 137.0 },
+  { x: 104.4, z: 137.2 },
+];
+const TIDE_KELP_BULBS: { x: number; z: number; rot: number }[] = [
+  { x: 99, z: 145, rot: 0.5 },
+  { x: 111, z: 138, rot: 1.4 },
+  { x: 106, z: 147, rot: 2.2 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -3054,6 +3140,62 @@ const C = {
   caShellPink: "#fbc8d6",
   caShellPearl: "#fbf2e6",
   caShellSpiral: "#dfae72",
+  // Thirty-seventh enhancement pass — a Victorian bronze bear statue on a
+  // fluted marble pedestal at the back-east outside-fence lawn (between
+  // the otter at x=5.25 and the swan at x=10), a pair of copper-patina
+  // ornamental side-wall gas-style wall sconces mounted at mid-height on
+  // the east and west exterior side walls, and a far-east tidepool rocky
+  // shelf plane east of the coral atoll with three translucent turquoise
+  // tidepools, a stranded whale ribcage, a beachcomber's driftwood hut,
+  // an unlit driftwood bonfire pile, a scatter of starfish, sea urchins,
+  // drift kelp bulbs and a small beached rowing dinghy.
+  bearBronze: "#3c4e44",
+  bearBronzeHi: "#82a092",
+  bearBronzeShade: "#1c2620",
+  bearTongue: "#a66272",
+  bearPlinth: "#ede2d0",
+  bearPlinthShade: "#a89776",
+  sconceCopper: "#5f8c6c",
+  sconceCopperHi: "#9ec6aa",
+  sconceCopperShade: "#305a40",
+  sconceGlow: "#ffd07a",
+  sconceBackplate: "#4a7458",
+  // Far-east tidepool rocky shelf — a basalt-pebble rocky shelf floor with
+  // three translucent turquoise tidepools, a stranded whale ribcage, a
+  // beachcomber's driftwood hut, a driftwood bonfire pile, starfish, sea
+  // urchins, drift kelp bulbs and a beached rowing dinghy.
+  tpGround: "#5a544c",
+  tpGroundHi: "#8a8278",
+  tpGroundShade: "#2a2622",
+  tpApronSand: "#efe2bc",
+  tpPoolWater: "#5cd2c6",
+  tpPoolDeep: "#1e8488",
+  tpPoolFoam: "#f4fefb",
+  tpPoolSand: "#e8d8a4",
+  tpWhaleBone: "#fbf4e2",
+  tpWhaleBoneShade: "#a89e88",
+  tpHutDrift: "#8a6e4c",
+  tpHutDriftHi: "#b89870",
+  tpHutStone: "#7a7268",
+  tpHutRoof: "#5a3a26",
+  tpHutWindow: "#ffd278",
+  tpBonfireLog: "#6a4a30",
+  tpBonfireLogHi: "#9a7048",
+  tpBonfireStone: "#7a7268",
+  tpBonfireStoneShade: "#3a3430",
+  tpStarOrange: "#ff8a4a",
+  tpStarPurple: "#9a6ac8",
+  tpStarPink: "#ff7aa8",
+  tpStarHi: "#ffd2a0",
+  tpUrchinBody: "#3a2832",
+  tpUrchinSpine: "#5a4658",
+  tpKelpBulb: "#7a5b32",
+  tpKelpBulbHi: "#b89058",
+  tpKelpFrond: "#3a5a3a",
+  tpDinghyHull: "#7a5238",
+  tpDinghyHullHi: "#a87a52",
+  tpDinghyTrim: "#3a2620",
+  tpDinghyOar: "#bc8a5c",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -29281,6 +29423,197 @@ function buildWolfStatue(f: NodeFactory, pos: [number, number, number]): SceneNo
   return f.group("Wolf Statue", parts, { position: pos });
 }
 
+/* ─────────────── thirty-seventh-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze bear statue on a fluted marble pedestal, parked on
+ * the back-east outside-fence lawn between the otter (back-east-near at
+ * x=5.25) and the swan (back-east-far at x=10) so it slots into the line
+ * of marble-pedestal sentinels along the back-east perimeter of the
+ * courtyard. The bear stands on its hind legs in a slim quiet upright
+ * pose with two outstretched forepaws, a tapered muzzle parted in a
+ * quiet half-snort, two small rounded ears on a broad head, two glinting
+ * eye highlights and a short stubby tail tucked at the back.
+ */
+function buildBearStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.bearBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.bearBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.bearBronzeShade, 0.95, { flatShading: true });
+  const tongue = std(C.bearTongue, 0.6, { metalness: 0.2 });
+  const marble: MaterialDef = {
+    color: C.bearPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.bearPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base — broad square marble base.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+  );
+  // ── Plinth shaft + cap.
+  parts.push(
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  // Four slim vertical flutes on the plinth shaft for relief.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Bear body — broad upright oblong standing on its hind legs.
+  const bodyY = 1.20;
+  parts.push(
+    f.mesh("Bear Body", sphere(0.24, 14, 12), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.0, 1.5, 0.9],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded belly seam reading as a ribbed undercoat.
+    f.mesh("Bear Belly Shade", sphere(0.18, 12, 8), bronzeShade, {
+      position: [0, bodyY - 0.06, 0.08],
+      scale: [0.9, 1.2, 0.4],
+    }, { castShadow: false }),
+    // Slim raised chest highlight reading as polished plastron.
+    f.mesh("Bear Chest Hi", sphere(0.12, 10, 8), bronzeHi, {
+      position: [0, bodyY + 0.10, 0.16],
+      scale: [0.9, 0.6, 0.4],
+    }, { castShadow: false }),
+  );
+  // ── Two hind legs anchoring the bear to the plinth cap.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Bear Hind Leg ${sz}`, cylinder(0.07, 0.08, 0.40, 10), bronze, {
+        position: [sz * 0.10, bodyY - 0.50, -0.02],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim hind-paw foot pad at the base.
+      f.mesh(`Bear Hind Foot ${sz}`, box(0.12, 0.05, 0.16), bronzeShade, {
+        position: [sz * 0.10, bodyY - 0.74, 0.02],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Two outstretched forepaws raised forward from the upper body.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      // Slim shoulder + upper foreleg cylinder.
+      f.mesh(`Bear Foreleg ${sz}`, cylinder(0.05, 0.06, 0.36, 10), bronze, {
+        position: [sz * 0.20, bodyY + 0.08, 0.16],
+        rotation: [0.6, 0, sz * -0.2],
+      }, { castShadow: true, receiveShadow: true }),
+      // Forepaw cap at the wrist — small ovoid mitten.
+      f.mesh(`Bear Forepaw ${sz}`, sphere(0.075, 10, 8), bronze, {
+        position: [sz * 0.24, bodyY + 0.00, 0.34],
+        scale: [1.0, 0.8, 1.0],
+      }, { castShadow: true }),
+      // Slim three-claw highlight ridge across each paw.
+      f.mesh(`Bear Paw Claws ${sz}`, box(0.06, 0.014, 0.05), bronzeHi, {
+        position: [sz * 0.24, bodyY - 0.05, 0.38],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Broad head — ovoid at the top with a tapered muzzle.
+  const headY = bodyY + 0.34;
+  parts.push(
+    f.mesh("Bear Neck", cylinder(0.10, 0.12, 0.10, 10), bronze, {
+      position: [0, bodyY + 0.20, 0.02],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Bear Head", sphere(0.16, 14, 12), bronze, {
+      position: [0, headY, 0.04],
+      scale: [1.0, 0.95, 1.05],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tapered muzzle protruding forward from the head.
+    f.mesh("Bear Muzzle", cone(0.08, 0.14, 10), bronze, {
+      position: [0, headY - 0.04, 0.22],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Slim parted-jaw tongue dab inside the muzzle.
+    f.mesh("Bear Tongue", box(0.05, 0.012, 0.04), tongue, {
+      position: [0, headY - 0.07, 0.26],
+    }, { castShadow: false }),
+    // Small dark nose dab at the muzzle tip.
+    f.mesh("Bear Nose", sphere(0.024, 8, 6), bronzeShade, {
+      position: [0, headY - 0.02, 0.30],
+    }, { castShadow: false }),
+    // Two glinting eye highlights flanking the head.
+    f.mesh("Bear Eye L", sphere(0.016, 8, 6), bronzeHi, {
+      position: [-0.06, headY + 0.04, 0.18],
+    }, { castShadow: false }),
+    f.mesh("Bear Eye R", sphere(0.016, 8, 6), bronzeHi, {
+      position: [0.06, headY + 0.04, 0.18],
+    }, { castShadow: false }),
+  );
+  // ── Two small rounded ears at the head crown.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Bear Ear ${sz}`, sphere(0.05, 10, 8), bronze, {
+        position: [sz * 0.10, headY + 0.13, 0.0],
+        scale: [1.0, 0.85, 0.7],
+      }, { castShadow: true }),
+      // Slim shaded inner ear cup.
+      f.mesh(`Bear Ear Cup ${sz}`, sphere(0.030, 8, 6), bronzeShade, {
+        position: [sz * 0.10, headY + 0.13, 0.03],
+        scale: [1.0, 0.85, 0.5],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Short stubby tail tucked at the back of the body.
+  parts.push(
+    f.mesh("Bear Tail", sphere(0.06, 10, 8), bronze, {
+      position: [0, bodyY - 0.10, -0.22],
+      scale: [1.0, 1.0, 0.8],
+    }, { castShadow: true }),
+    f.mesh("Bear Tail Hi", sphere(0.026, 6, 4), bronzeHi, {
+      position: [0, bodyY - 0.08, -0.24],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Bear Plaque Tablet", box(0.3, 0.1, 0.018), bronze, {
+      position: [0, 0.46, 0.25],
+    }, { castShadow: false }),
+    f.mesh("Bear Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Bear Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.46, 0.265],
+    }, { castShadow: false }),
+    f.mesh("Bear Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.46, 0.265],
+    }, { castShadow: false }),
+  );
+  return f.group("Bear Statue", parts, { position: pos });
+}
+
 /* ─────────────── thirty-sixth-pass house detail ─────────────── */
 
 /**
@@ -29406,6 +29739,171 @@ function buildPorchCeilingPendants(f: NodeFactory): SceneNode {
     );
   }
   return f.group("Porch Ceiling Pendants", pendants);
+}
+
+/* ─────────────── thirty-seventh-pass house detail ─────────────── */
+
+/**
+ * A pair of Victorian copper-patina ornamental side-wall gas-style wall
+ * sconces mounted at mid-height on the east and west exterior side walls
+ * of the house (companion to the front door lanterns flanking the front
+ * door). Each sconce carries a slim foliate medallion backplate fixed
+ * flush against the side wall, an S-curve scroll bracket arching
+ * outward from the wall, a copper-cage glass lantern hanging from the
+ * bracket tip with a warm glowing teardrop pane catching the dusk and a
+ * small foliate cap finial on top. The backplate, bracket, cage and
+ * finial reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris mottling reads as crusted relief on the cast metal.
+ */
+function buildSideWallSconces(f: NodeFactory): SceneNode {
+  const copper: MaterialDef = {
+    color: C.sconceCopper,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const copperHi = std(C.sconceCopperHi, 0.4, { metalness: 0.85 });
+  const copperShade = std(C.sconceCopperShade, 0.95, { flatShading: true });
+  const backplate: MaterialDef = {
+    color: C.sconceBackplate,
+    roughness: 0.7,
+    metalness: 0.55,
+    texture: "copper-patina",
+    textureScale: [0.5, 0.5],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.018,
+  };
+  const glow: MaterialDef = {
+    color: C.sconceGlow,
+    roughness: 0.3,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.85,
+    emissive: C.sconceGlow,
+  };
+  const sconces: SceneNode[] = [];
+  for (let i = 0; i < SIDE_WALL_SCONCE_POSITIONS.length; i++) {
+    const entry = SIDE_WALL_SCONCE_POSITIONS[i]!;
+    const s = entry.side;
+    const parts: SceneNode[] = [];
+    // Foliate medallion backplate — slim oval disc fixed against the side
+    // wall. The side wall lies in the xz plane on its outer face, so we
+    // rotate the backplate to face outward along x.
+    parts.push(
+      f.mesh("Sconce Backplate", cylinder(0.12, 0.12, 0.018, 14), backplate, {
+        position: [0, 0, 0],
+        rotation: [0, 0, Math.PI / 2],
+        scale: [1.0, 1.0, 1.4],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim raised central boss rivet on the backplate.
+      f.mesh("Sconce Boss", sphere(0.030, 10, 8), copperHi, {
+        position: [s * 0.012, 0, 0],
+      }, { castShadow: false }),
+      // Four foliate tip dabs ringing the boss for relief.
+    );
+    for (let j = 0; j < 4; j++) {
+      const a = (j / 4) * Math.PI * 2;
+      parts.push(
+        f.mesh(`Sconce Foliate ${j}`, sphere(0.018, 8, 6), copperShade, {
+          position: [s * 0.006, Math.cos(a) * 0.07, Math.sin(a) * 0.07],
+        }, { castShadow: false }),
+      );
+    }
+    // S-curve scroll bracket arching outward from the wall — three
+    // stacked oblong segments tracing the curve.
+    const armBaseX = s * 0.04;
+    const armSegs: { dx: number; dy: number; tilt: number }[] = [
+      { dx: 0.10, dy: -0.02, tilt: -0.25 },
+      { dx: 0.20, dy: -0.06, tilt: -0.55 },
+      { dx: 0.28, dy: -0.12, tilt: -0.20 },
+    ];
+    for (let j = 0; j < armSegs.length; j++) {
+      const seg = armSegs[j]!;
+      parts.push(
+        f.mesh(`Sconce Arm ${j}`, cylinder(0.018, 0.018, 0.14, 8), copper, {
+          position: [armBaseX + s * seg.dx, seg.dy, 0],
+          rotation: [0, 0, s * (Math.PI / 2 + seg.tilt)],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+    // Slim scroll volute curl at the bracket joint where it meets the
+    // wall — small ring reading as cast-iron millwork.
+    parts.push(
+      f.mesh("Sconce Volute", cylinder(0.034, 0.034, 0.012, 10), copperHi, {
+        position: [s * 0.06, -0.02, 0],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+    );
+    // Lantern bracket tip block — small cap holding the lantern below.
+    const lanternX = s * 0.34;
+    const lanternY = -0.14;
+    parts.push(
+      f.mesh("Sconce Tip Cap", cylinder(0.034, 0.034, 0.018, 10), copper, {
+        position: [lanternX, lanternY + 0.16, 0],
+      }, { castShadow: false }),
+      // Slim hanging chain link between the bracket tip and the lantern.
+      f.mesh("Sconce Chain", cylinder(0.006, 0.006, 0.10, 6), copper, {
+        position: [lanternX, lanternY + 0.10, 0],
+      }, { castShadow: false }),
+    );
+    // Copper-cage glass lantern — a slim square cage of four corner
+    // ribs and a translucent teardrop glow pane catching the dusk.
+    const cageW = 0.10;
+    const cageH = 0.18;
+    parts.push(
+      // Cage cap above the glass.
+      f.mesh("Sconce Cage Cap", box(cageW + 0.04, 0.022, cageW + 0.04), copper, {
+        position: [lanternX, lanternY + 0.06, 0],
+      }, { castShadow: true }),
+      // Cage floor below the glass.
+      f.mesh("Sconce Cage Floor", box(cageW + 0.04, 0.022, cageW + 0.04), copperShade, {
+        position: [lanternX, lanternY - cageH + 0.04, 0],
+      }, { castShadow: false }),
+    );
+    // Four slim cage ribs at the corners of the lantern.
+    for (const cx of [-1, 1]) {
+      for (const cz of [-1, 1]) {
+        parts.push(
+          f.mesh(`Sconce Cage Rib ${cx} ${cz}`, cylinder(0.006, 0.006, cageH - 0.02, 6), copper, {
+            position: [lanternX + cx * cageW / 2, lanternY - cageH / 2 + 0.05, cz * cageW / 2],
+          }, { castShadow: false }),
+        );
+      }
+    }
+    // Translucent teardrop glow pane inside the cage.
+    parts.push(
+      f.mesh("Sconce Glass", sphere(0.052, 12, 10), glow, {
+        position: [lanternX, lanternY - cageH / 2 + 0.06, 0],
+        scale: [1.0, 1.4, 1.0],
+      }, { castShadow: false }),
+      // Slim bright tip glint at the glass tip catching the wall.
+      f.mesh("Sconce Glass Tip", sphere(0.018, 6, 4), copperHi, {
+        position: [lanternX, lanternY - cageH + 0.04, 0],
+      }, { castShadow: false }),
+    );
+    // Small foliate cap finial on top of the lantern cage cap.
+    parts.push(
+      f.mesh("Sconce Finial Stem", cylinder(0.010, 0.012, 0.06, 6), copper, {
+        position: [lanternX, lanternY + 0.10, 0],
+      }, { castShadow: false }),
+      f.mesh("Sconce Finial Bud", sphere(0.026, 10, 8), copper, {
+        position: [lanternX, lanternY + 0.16, 0],
+        scale: [1.0, 1.2, 1.0],
+      }, { castShadow: false }),
+      f.mesh("Sconce Finial Tip", sphere(0.014, 6, 4), copperHi, {
+        position: [lanternX, lanternY + 0.20, 0],
+      }, { castShadow: false }),
+    );
+    sconces.push(
+      f.group(`Side Wall Sconce ${entry.label}`, parts, {
+        position: entry.pos,
+      }),
+    );
+  }
+  return f.group("Side Wall Sconces", sconces);
 }
 
 /* ─────────────── thirty-sixth-pass scene extension ─────────────── */
@@ -30004,6 +30502,639 @@ function buildCoralShells(f: NodeFactory): SceneNode {
     );
   }
   return f.group("Coral Shells", shells);
+}
+
+/* ─────────────── thirty-seventh-pass scene extension ─────────────── */
+
+/**
+ * Far-east tidepool rocky shelf plane east of the coral atoll. Carries a
+ * basalt-pebble rocky shelf floor surfaced with the existing `basalt-
+ * plateau` colour map paired with a fissure depth map so the pebbled
+ * rock and scattered tidepool stones read as raised relief at glancing
+ * sun. Features three translucent turquoise tidepool water pools inset
+ * into the rocky shelf with foam-fringe rings, a focal stranded whale
+ * ribcage in the centre with bleached arched ribs, a small beachcomber's
+ * driftwood hut at the northeast corner on a sandy mound, a focal
+ * driftwood bonfire pile of stacked logs in a ringed firepit of stones,
+ * a scatter of five starfish (orange / purple / pink) clinging to the
+ * rocks, four spiny sea urchins clustered around the centre tidepool,
+ * three drift bull-kelp bulbs strewn along the sand and a small beached
+ * rowing dinghy at the west edge moored against the atoll seam.
+ */
+function buildFarEastTidepoolShelf(f: NodeFactory): SceneNode {
+  return f.group("Far East Tidepool Shelf", [
+    // Tidepool rocky shelf ground plane — basalt-pebble rock floor.
+    f.mesh(
+      "Tidepool Ground",
+      plane(TIDEPOOL_SHELF_W, TIDEPOOL_SHELF_D),
+      std(C.tpGround, 0.92, {
+        texture: "basalt-plateau",
+        textureScale: [3, 3],
+        bumpMap: "basalt-plateau-bump",
+        bumpScale: 0.06,
+        metalness: 0.05,
+      }),
+      { position: TIDEPOOL_SHELF_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the coral atoll's east edge with a slim
+    // sandy strip so the seam reads as a continuous sand-into-rock join
+    // with no holes at the ground layer.
+    f.mesh(
+      "Tidepool West Apron",
+      plane(3, TIDEPOOL_SHELF_D),
+      std(C.tpApronSand, 0.95, {
+        texture: "desert-sand",
+        textureScale: [1, 4],
+      }),
+      {
+        position: [
+          TIDEPOOL_SHELF_POS[0] - TIDEPOOL_SHELF_W / 2 + 1.5,
+          -0.050,
+          TIDEPOOL_SHELF_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildTidePools(f),
+    buildWhaleRibcage(f, WHALE_RIBCAGE_POS),
+    buildBeachcomberHut(f, BEACHCOMBER_HUT_POS),
+    buildDriftwoodBonfire(f, BONFIRE_POS),
+    buildTideStarfish(f),
+    buildTideUrchins(f),
+    buildTideKelpBulbs(f),
+    buildBeachedDinghy(f, TIDE_DINGHY_POS),
+  ]);
+}
+
+/**
+ * Three translucent turquoise tidepool water pools inset into the rocky
+ * shelf — each a slim sandy basin disc holding a translucent turquoise
+ * surface ringed by a slim foam-fringe ripple. The turquoise water
+ * carries a soft transparency so the sandy floor reads through it.
+ */
+function buildTidePools(f: NodeFactory): SceneNode {
+  const sand = std(C.tpPoolSand, 0.95, { flatShading: true });
+  const water: MaterialDef = {
+    color: C.tpPoolWater,
+    roughness: 0.18,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.78,
+  };
+  const waterDeep: MaterialDef = {
+    color: C.tpPoolDeep,
+    roughness: 0.22,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.88,
+  };
+  const foam = std(C.tpPoolFoam, 0.55, { metalness: 0.1 });
+  const pools: SceneNode[] = [];
+  for (let i = 0; i < TIDE_POOLS.length; i++) {
+    const p = TIDE_POOLS[i]!;
+    const parts: SceneNode[] = [];
+    // Sandy basin floor — slightly recessed lighter sand basin.
+    parts.push(
+      f.mesh("Tide Sand Floor", cylinder(p.r, p.r, 0.04, 24), sand, {
+        position: [0, 0.02, 0],
+      }, { castShadow: false, receiveShadow: true }),
+    );
+    // Darker deep-water core — smaller disc at the centre.
+    parts.push(
+      f.mesh("Tide Deep Core", cylinder(p.r * 0.5, p.r * 0.5, 0.05, 18), waterDeep, {
+        position: [0, 0.045, 0],
+      }, { castShadow: false }),
+    );
+    // Translucent turquoise water surface.
+    parts.push(
+      f.mesh("Tide Water Surface", cylinder(p.r - 0.06, p.r - 0.06, 0.018, 24), water, {
+        position: [0, 0.07, 0],
+      }, { castShadow: false }),
+    );
+    // Slim foam-fringe ring just inside the shore reading as wave wash.
+    const foamCount = 14;
+    for (let j = 0; j < foamCount; j++) {
+      const a = (j / foamCount) * Math.PI * 2;
+      const fx = Math.cos(a) * (p.r - 0.08);
+      const fz = Math.sin(a) * (p.r - 0.08);
+      parts.push(
+        f.mesh(`Tide Foam ${j}`, sphere(0.06, 6, 4), foam, {
+          position: [fx, 0.085, fz],
+          scale: [1.1, 0.3, 1.1],
+          rotation: [0, a, 0],
+        }, { castShadow: false }),
+      );
+    }
+    // Two slim ripple highlight rings dotted across the surface.
+    const rippleOff: [number, number][] = [
+      [p.r * 0.3, p.r * 0.2],
+      [-p.r * 0.4, p.r * 0.1],
+    ];
+    for (let k = 0; k < rippleOff.length; k++) {
+      const o = rippleOff[k]!;
+      parts.push(
+        f.mesh(`Tide Ripple ${k}`, cylinder(p.r * 0.18, p.r * 0.18, 0.006, 12), foam, {
+          position: [o[0], 0.085, o[1]],
+        }, { castShadow: false }),
+      );
+    }
+    pools.push(
+      f.group(`Tide Pool ${i + 1}`, parts, { position: [p.x, 0, p.z] }),
+    );
+  }
+  return f.group("Tide Pools", pools);
+}
+
+/**
+ * Focal stranded whale ribcage at the centre of the shelf — five bleached
+ * arched ribs paired across a slim central vertebral column with two
+ * darker shaded rib shadows reading as the underside of the ribcage.
+ */
+function buildWhaleRibcage(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bone = std(C.tpWhaleBone, 0.85, { flatShading: true });
+  const boneShade = std(C.tpWhaleBoneShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Vertebral column — slim bleached spine running along the sand.
+  parts.push(
+    f.mesh("Whale Spine", cylinder(0.05, 0.05, 1.8, 10), bone, {
+      position: [0, 0.06, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Whale Spine Hi", cylinder(0.03, 0.03, 1.8, 8), boneShade, {
+      position: [0, 0.10, 0],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // Five rib pairs arching upward from each side of the spine.
+  for (let i = 0; i < 5; i++) {
+    const zOff = -0.7 + i * 0.35;
+    for (const sx of [-1, 1]) {
+      parts.push(
+        // Slim arched rib — slightly tilted cone arching outward.
+        f.mesh(`Whale Rib ${i} ${sx}`, cone(0.04, 0.78, 8), bone, {
+          position: [sx * 0.30, 0.42, zOff],
+          rotation: [0, 0, sx * -0.5],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim darker shaded rib underside reading as ribcage depth.
+        f.mesh(`Whale Rib Shade ${i} ${sx}`, cone(0.024, 0.40, 6), boneShade, {
+          position: [sx * 0.20, 0.18, zOff],
+          rotation: [0, 0, sx * -0.5],
+        }, { castShadow: false }),
+        // Slim tip ridge cap at each rib apex.
+        f.mesh(`Whale Rib Tip ${i} ${sx}`, sphere(0.038, 8, 6), bone, {
+          position: [sx * 0.50, 0.80, zOff],
+        }, { castShadow: false }),
+      );
+    }
+    // Slim vertebra knob along the spine between each rib pair.
+    parts.push(
+      f.mesh(`Whale Vertebra ${i}`, sphere(0.07, 10, 8), bone, {
+        position: [0, 0.10, zOff],
+        scale: [1.0, 0.7, 1.2],
+      }, { castShadow: true }),
+    );
+  }
+  // Slim tapered skull cap at the front end of the spine.
+  parts.push(
+    f.mesh("Whale Skull", sphere(0.18, 12, 10), bone, {
+      position: [0, 0.18, -0.92],
+      scale: [1.3, 1.0, 1.6],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Whale Skull Shade", sphere(0.14, 10, 8), boneShade, {
+      position: [0, 0.10, -0.92],
+      scale: [1.2, 0.3, 1.4],
+    }, { castShadow: false }),
+  );
+  // Slim tapered tail-bone cluster at the rear end of the spine.
+  parts.push(
+    f.mesh("Whale Tailbone", cone(0.08, 0.40, 8), bone, {
+      position: [0, 0.10, 0.92],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  );
+  return f.group("Whale Ribcage", parts, { position: pos });
+}
+
+/**
+ * Small beachcomber's driftwood hut at the northeast corner of the
+ * shelf on a sandy mound — a slim square cabin with stacked driftwood
+ * walls, a peaked driftwood roof, a glowing front window catching the
+ * dusk, a stone chimney trailing a slim smoke wisp and a slim driftwood
+ * ladder leaning against the side.
+ */
+function buildBeachcomberHut(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const drift = std(C.tpHutDrift, 0.92, { texture: "wood", flatShading: true });
+  const driftHi = std(C.tpHutDriftHi, 0.85, { flatShading: true });
+  const stone = std(C.tpHutStone, 0.95, { flatShading: true });
+  const roof = std(C.tpHutRoof, 0.9, { flatShading: true });
+  const sand = std(C.tpApronSand, 0.95, { flatShading: true });
+  const windowGlow: MaterialDef = {
+    color: C.tpHutWindow,
+    roughness: 0.3,
+    metalness: 0.0,
+    emissive: C.tpHutWindow,
+  };
+  const smoke: MaterialDef = {
+    color: "#cfcabb",
+    roughness: 0.95,
+    metalness: 0.0,
+    transparent: true,
+    opacity: 0.35,
+  };
+  const parts: SceneNode[] = [];
+  // Sand mound base — slim wide oval mound under the hut.
+  parts.push(
+    f.mesh("Hut Mound", cylinder(1.2, 1.4, 0.12, 16), sand, {
+      position: [0, 0.06, 0],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  // Cabin floor deck — slim square plank slab on the mound.
+  parts.push(
+    f.mesh("Hut Floor", box(1.10, 0.06, 1.10), drift, {
+      position: [0, 0.18, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Stacked driftwood walls — three solid panels and a slim front lintel.
+  parts.push(
+    f.mesh("Hut Wall Back", box(1.10, 0.7, 0.08), drift, {
+      position: [0, 0.56, -0.51],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Hut Wall West", box(0.08, 0.7, 1.10), drift, {
+      position: [-0.51, 0.56, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Hut Wall East", box(0.08, 0.7, 1.10), drift, {
+      position: [0.51, 0.56, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Hut Front Lintel", box(1.10, 0.18, 0.08), drift, {
+      position: [0, 0.82, 0.51],
+    }, { castShadow: true }),
+  );
+  // Three slim driftwood highlight bands across the back wall.
+  for (let b = 0; b < 3; b++) {
+    parts.push(
+      f.mesh(`Hut Plank Hi ${b}`, box(1.00, 0.025, 0.024), driftHi, {
+        position: [0, 0.30 + b * 0.20, -0.46],
+      }, { castShadow: false }),
+    );
+  }
+  // Peaked driftwood roof — two pitched slabs meeting at a ridge.
+  for (const side of [-1, 1]) {
+    parts.push(
+      f.mesh(`Hut Roof ${side > 0 ? "East" : "West"}`, box(0.04, 0.78, 1.20), roof, {
+        position: [side * 0.36, 1.18, 0],
+        rotation: [0, 0, side * 0.55],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // Slim ridge cap at the roof peak.
+  parts.push(
+    f.mesh("Hut Roof Ridge", box(0.10, 0.04, 1.20), roof, {
+      position: [0, 1.40, 0],
+    }, { castShadow: false }),
+  );
+  // Glowing front window — small square pane catching the dusk.
+  parts.push(
+    f.mesh("Hut Window Frame", box(0.32, 0.32, 0.04), drift, {
+      position: [-0.20, 0.62, 0.54],
+    }, { castShadow: false }),
+    f.mesh("Hut Window Pane", box(0.26, 0.26, 0.05), windowGlow, {
+      position: [-0.20, 0.62, 0.56],
+    }, { castShadow: false }),
+  );
+  // Stone chimney on the east wall — slim stack with a smoke wisp on top.
+  parts.push(
+    f.mesh("Hut Chimney", box(0.18, 0.6, 0.18), stone, {
+      position: [0.62, 1.10, -0.30],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Hut Chimney Cap", box(0.22, 0.05, 0.22), stone, {
+      position: [0.62, 1.42, -0.30],
+    }, { castShadow: true }),
+    f.mesh("Hut Chimney Smoke 0", sphere(0.10, 8, 6), smoke, {
+      position: [0.62, 1.62, -0.30],
+    }, { castShadow: false }),
+    f.mesh("Hut Chimney Smoke 1", sphere(0.13, 8, 6), smoke, {
+      position: [0.66, 1.80, -0.28],
+    }, { castShadow: false }),
+  );
+  // Slim driftwood ladder leaning against the west wall.
+  parts.push(
+    f.mesh("Hut Ladder L", cylinder(0.020, 0.020, 0.8, 6), drift, {
+      position: [-0.62, 0.40, 0.18],
+      rotation: [0.3, 0, 0.2],
+    }, { castShadow: true }),
+    f.mesh("Hut Ladder R", cylinder(0.020, 0.020, 0.8, 6), drift, {
+      position: [-0.62, 0.40, -0.10],
+      rotation: [0.3, 0, 0.2],
+    }, { castShadow: true }),
+  );
+  for (let r = 0; r < 3; r++) {
+    parts.push(
+      f.mesh(`Hut Ladder Rung ${r}`, box(0.014, 0.014, 0.32), drift, {
+        position: [-0.62, 0.18 + r * 0.20, 0.04],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Beachcomber Hut", parts, { position: pos });
+}
+
+/**
+ * Focal unlit driftwood bonfire pile at the centre of the shelf — a
+ * ringed firepit of eight darker stones holding a slim teepee of four
+ * stacked driftwood logs ready to be lit, with two smaller kindling
+ * sticks tucked at the base of the teepee.
+ */
+function buildDriftwoodBonfire(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const log = std(C.tpBonfireLog, 0.92, { texture: "wood", flatShading: true });
+  const logHi = std(C.tpBonfireLogHi, 0.85, { flatShading: true });
+  const stone = std(C.tpBonfireStone, 0.95, { flatShading: true });
+  const stoneShade = std(C.tpBonfireStoneShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // Sand basin disc under the firepit — slightly recessed lighter sand.
+  parts.push(
+    f.mesh("Firepit Basin", cylinder(0.62, 0.62, 0.025, 16), stoneShade, {
+      position: [0, 0.013, 0],
+    }, { castShadow: false, receiveShadow: true }),
+  );
+  // Eight ringed stones around the firepit perimeter.
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    const sx = Math.cos(a) * 0.52;
+    const sz = Math.sin(a) * 0.52;
+    parts.push(
+      f.mesh(`Firepit Stone ${i}`, sphere(0.11, 10, 8), stone, {
+        position: [sx, 0.08, sz],
+        scale: [1.0, 0.7, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim darker shaded base under each stone reading as sand-shadow.
+      f.mesh(`Firepit Stone Shade ${i}`, cylinder(0.10, 0.10, 0.012, 8), stoneShade, {
+        position: [sx, 0.018, sz],
+      }, { castShadow: false }),
+    );
+  }
+  // Teepee of four stacked driftwood logs angled inward toward the apex.
+  const logTilt = 0.35;
+  const logBaseY = 0.10;
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 + 0.5;
+    parts.push(
+      f.mesh(`Firepit Log ${i}`, cylinder(0.044, 0.052, 0.68, 8), log, {
+        position: [Math.cos(a) * 0.16, logBaseY + 0.28, Math.sin(a) * 0.16],
+        rotation: [Math.sin(a) * logTilt, 0, -Math.cos(a) * logTilt],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim highlight band along the log spine.
+      f.mesh(`Firepit Log Hi ${i}`, cylinder(0.018, 0.018, 0.40, 6), logHi, {
+        position: [Math.cos(a) * 0.14, logBaseY + 0.32, Math.sin(a) * 0.14],
+        rotation: [Math.sin(a) * logTilt, 0, -Math.cos(a) * logTilt],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim apex tie-bead reading as the convergence of the teepee.
+  parts.push(
+    f.mesh("Firepit Apex", sphere(0.05, 10, 8), logHi, {
+      position: [0, 0.62, 0],
+    }, { castShadow: false }),
+  );
+  // Two slim kindling sticks tucked at the base of the teepee for relief.
+  parts.push(
+    f.mesh("Firepit Kindling A", cylinder(0.020, 0.020, 0.36, 6), logHi, {
+      position: [0.20, 0.06, -0.08],
+      rotation: [0, 0.4, Math.PI / 2 + 0.2],
+    }, { castShadow: false }),
+    f.mesh("Firepit Kindling B", cylinder(0.020, 0.020, 0.30, 6), logHi, {
+      position: [-0.16, 0.06, 0.12],
+      rotation: [0, -0.6, Math.PI / 2 - 0.3],
+    }, { castShadow: false }),
+  );
+  return f.group("Driftwood Bonfire", parts, { position: pos });
+}
+
+/**
+ * Five starfish (orange / purple / pink) clinging to the rocks around
+ * the tidepools — each a slim flat five-armed star with a bright glint
+ * at the centre catching the dusk sun.
+ */
+function buildTideStarfish(f: NodeFactory): SceneNode {
+  const tintMats: Record<"orange" | "purple" | "pink", MaterialDef> = {
+    orange: std(C.tpStarOrange, 0.7, { metalness: 0.05 }),
+    purple: std(C.tpStarPurple, 0.7, { metalness: 0.05 }),
+    pink: std(C.tpStarPink, 0.7, { metalness: 0.05 }),
+  };
+  const hi = std(C.tpStarHi, 0.4, { metalness: 0.2 });
+  const stars: SceneNode[] = [];
+  for (let i = 0; i < TIDE_STARFISH.length; i++) {
+    const s = TIDE_STARFISH[i]!;
+    const parts: SceneNode[] = [];
+    // Five slim tapered arms radiating from the centre.
+    for (let j = 0; j < 5; j++) {
+      const a = (j / 5) * Math.PI * 2;
+      parts.push(
+        f.mesh(`Star Arm ${j}`, cone(0.04, 0.18, 6), tintMats[s.tint], {
+          position: [Math.cos(a) * 0.10, 0.02, Math.sin(a) * 0.10],
+          rotation: [Math.PI / 2, 0, a],
+          scale: [1.0, 1.0, 0.5],
+        }, { castShadow: false, receiveShadow: true }),
+        // Slim bright tip dab on each arm.
+        f.mesh(`Star Arm Tip ${j}`, sphere(0.018, 6, 4), hi, {
+          position: [Math.cos(a) * 0.18, 0.03, Math.sin(a) * 0.18],
+        }, { castShadow: false }),
+      );
+    }
+    // Slim central body disc.
+    parts.push(
+      f.mesh("Star Body", cylinder(0.06, 0.06, 0.02, 10), tintMats[s.tint], {
+        position: [0, 0.025, 0],
+      }, { castShadow: false }),
+      // Slim bright central glint catching the dusk.
+      f.mesh("Star Glint", sphere(0.024, 8, 6), hi, {
+        position: [0, 0.04, 0],
+      }, { castShadow: false }),
+    );
+    stars.push(
+      f.group(`Starfish ${i + 1}`, parts, {
+        position: [s.x, 0, s.z],
+        rotation: [0, s.rot, 0],
+        scale: [s.scale, s.scale, s.scale],
+      }),
+    );
+  }
+  return f.group("Tide Starfish", stars);
+}
+
+/**
+ * Four spiny sea urchins clustered around the centre tidepool — each a
+ * slim dark hemisphere body bristling with eight slim radial spines.
+ */
+function buildTideUrchins(f: NodeFactory): SceneNode {
+  const body = std(C.tpUrchinBody, 0.85, { flatShading: true });
+  const spine = std(C.tpUrchinSpine, 0.7, { metalness: 0.15 });
+  const urchins: SceneNode[] = [];
+  for (let i = 0; i < TIDE_URCHINS.length; i++) {
+    const u = TIDE_URCHINS[i]!;
+    const parts: SceneNode[] = [];
+    parts.push(
+      f.mesh("Urchin Body", sphere(0.07, 12, 8), body, {
+        position: [0, 0.04, 0],
+        scale: [1.0, 0.7, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    // Eight slim radial spines bristling outward from the body.
+    for (let j = 0; j < 8; j++) {
+      const a = (j / 8) * Math.PI * 2;
+      const tilt = 0.7;
+      parts.push(
+        f.mesh(`Urchin Spine ${j}`, cone(0.008, 0.08, 6), spine, {
+          position: [Math.cos(a) * 0.06, 0.06, Math.sin(a) * 0.06],
+          rotation: [Math.cos(a) * tilt, 0, -Math.sin(a) * tilt],
+        }, { castShadow: false }),
+      );
+    }
+    // Four slim upper spines bristling straight up.
+    for (let j = 0; j < 4; j++) {
+      const a = (j / 4) * Math.PI * 2 + 0.3;
+      parts.push(
+        f.mesh(`Urchin Spine Top ${j}`, cone(0.008, 0.07, 6), spine, {
+          position: [Math.cos(a) * 0.03, 0.10, Math.sin(a) * 0.03],
+        }, { castShadow: false }),
+      );
+    }
+    urchins.push(
+      f.group(`Sea Urchin ${i + 1}`, parts, { position: [u.x, 0, u.z] }),
+    );
+  }
+  return f.group("Tide Urchins", urchins);
+}
+
+/**
+ * Three drift bull-kelp bulbs strewn along the sand — each a slim
+ * brown-amber bulb with a slim tapered stipe trail and two slim fronds
+ * curling from the stipe tip reading as washed-up kelp.
+ */
+function buildTideKelpBulbs(f: NodeFactory): SceneNode {
+  const bulb = std(C.tpKelpBulb, 0.7, { metalness: 0.15 });
+  const bulbHi = std(C.tpKelpBulbHi, 0.5, { metalness: 0.25 });
+  const frond = std(C.tpKelpFrond, 0.85, { flatShading: true });
+  const bulbs: SceneNode[] = [];
+  for (let i = 0; i < TIDE_KELP_BULBS.length; i++) {
+    const k = TIDE_KELP_BULBS[i]!;
+    const parts: SceneNode[] = [];
+    // Slim oblong bulb body lying on its side.
+    parts.push(
+      f.mesh("Kelp Bulb", sphere(0.10, 12, 10), bulb, {
+        position: [0, 0.07, 0],
+        scale: [1.4, 0.85, 0.9],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim bright highlight glint along the bulb crown.
+      f.mesh("Kelp Bulb Hi", sphere(0.06, 10, 8), bulbHi, {
+        position: [0, 0.12, 0],
+        scale: [1.2, 0.3, 0.6],
+      }, { castShadow: false }),
+    );
+    // Slim tapered stipe trail trailing east from the bulb.
+    parts.push(
+      f.mesh("Kelp Stipe", cylinder(0.024, 0.012, 0.50, 8), bulb, {
+        position: [0.30, 0.04, 0],
+        rotation: [0, 0, Math.PI / 2],
+      }, { castShadow: false, receiveShadow: true }),
+    );
+    // Two slim curled fronds at the stipe tip.
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Kelp Frond ${sz}`, cone(0.04, 0.30, 6), frond, {
+          position: [0.50, 0.05, sz * 0.06],
+          rotation: [0, sz * 0.5, Math.PI / 2 - 0.2],
+        }, { castShadow: false }),
+      );
+    }
+    bulbs.push(
+      f.group(`Kelp Bulb ${i + 1}`, parts, {
+        position: [k.x, 0, k.z],
+        rotation: [0, k.rot, 0],
+      }),
+    );
+  }
+  return f.group("Tide Kelp Bulbs", bulbs);
+}
+
+/**
+ * Small wooden beached rowing dinghy at the west edge of the shelf,
+ * moored against the atoll seam — a slim tapered hull lying on the sand
+ * with a slim waterline trim band, a pair of dark oars resting in the
+ * boat and a slim brass mooring cleat at the bow.
+ */
+function buildBeachedDinghy(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const hull = std(C.tpDinghyHull, 0.85, { texture: "wood", flatShading: true });
+  const hullHi = std(C.tpDinghyHullHi, 0.75, { flatShading: true });
+  const trim = std(C.tpDinghyTrim, 0.92, { flatShading: true });
+  const oar = std(C.tpDinghyOar, 0.85, { flatShading: true });
+  const cleat = std(C.sconceCopper, 0.55, {
+    metalness: 0.65,
+    texture: "copper-patina",
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  });
+  const parts: SceneNode[] = [];
+  // Main hull — slim tapered oblong with a waterline trim band.
+  parts.push(
+    f.mesh("Dinghy Hull", box(1.4, 0.20, 0.36), hull, {
+      position: [0, 0.18, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim bow taper cone at the east end.
+    f.mesh("Dinghy Bow", cone(0.18, 0.30, 6), hull, {
+      position: [0.85, 0.18, 0],
+      rotation: [0, 0, -Math.PI / 2],
+    }, { castShadow: true }),
+    // Slim stern taper cone at the west end.
+    f.mesh("Dinghy Stern", cone(0.18, 0.26, 6), hull, {
+      position: [-0.83, 0.18, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: true }),
+    // Slim waterline trim band running along the hull side.
+    f.mesh("Dinghy Trim N", box(1.4, 0.026, 0.04), trim, {
+      position: [0, 0.10, 0.18],
+    }, { castShadow: false }),
+    f.mesh("Dinghy Trim S", box(1.4, 0.026, 0.04), trim, {
+      position: [0, 0.10, -0.18],
+    }, { castShadow: false }),
+    // Slim deck plank highlight along the hull crown.
+    f.mesh("Dinghy Deck Hi", box(1.2, 0.012, 0.26), hullHi, {
+      position: [0, 0.29, 0],
+    }, { castShadow: false }),
+  );
+  // Slim transom bench across the stern.
+  parts.push(
+    f.mesh("Dinghy Bench", box(0.32, 0.04, 0.30), hull, {
+      position: [-0.58, 0.24, 0],
+    }, { castShadow: true }),
+    f.mesh("Dinghy Bench Hi", box(0.30, 0.012, 0.28), hullHi, {
+      position: [-0.58, 0.27, 0],
+    }, { castShadow: false }),
+  );
+  // Pair of oars resting in the boat — slim cylinders with paddle tips.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Dinghy Oar ${sz}`, cylinder(0.018, 0.018, 1.0, 6), oar, {
+        position: [0.05, 0.30, sz * 0.10],
+        rotation: [sz * 0.04, 0, Math.PI / 2 - 0.15],
+      }, { castShadow: false, receiveShadow: true }),
+      // Slim paddle blade at one end of each oar.
+      f.mesh(`Dinghy Oar Blade ${sz}`, box(0.04, 0.026, 0.12), oar, {
+        position: [-0.45, 0.30, sz * 0.16],
+      }, { castShadow: false }),
+    );
+  }
+  // Slim brass mooring cleat at the bow.
+  parts.push(
+    f.mesh("Dinghy Cleat Base", box(0.06, 0.022, 0.06), cleat, {
+      position: [0.78, 0.32, 0],
+    }, { castShadow: false }),
+    f.mesh("Dinghy Cleat Horn", cylinder(0.012, 0.012, 0.06, 6), cleat, {
+      position: [0.78, 0.36, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  return f.group("Beached Dinghy", parts, { position: pos });
 }
 
 /* ───────────────────────── document ───────────────────────── */
@@ -30946,6 +32077,54 @@ function buildCoralShells(f: NodeFactory): SceneNode {
  *    triangular sail, a slim outrigger float on two spars and a brass
  *    mooring cleat at the bow, and a scatter of seven seashells
  *    (cockle, pearl-conch, spiral-shell) strewn along the sand.
+ *  - Thirty-seventh pass — courtyard: a Victorian bronze bear statue on
+ *    a fluted marble pedestal, parked on the back-east outside-fence
+ *    lawn between the otter (back-east-near at x=+5.25) and the swan
+ *    (back-east-far at x=+10) so it continues the line of marble-
+ *    pedestal sentinels along the back-east perimeter — the bear stands
+ *    on its hind legs in a slim quiet upright pose with two outstretched
+ *    forepaws, a tapered muzzle parted in a quiet half-snort, two small
+ *    rounded ears on a broad head, two glinting eye highlights and a
+ *    short stubby tail tucked at the back (the bronze body, head, ears
+ *    and tail reuse the existing `copper-patina` colour + bump pair so
+ *    the verdigris reads as crusted relief on the cast metal, and the
+ *    plinth reuses the existing `marble` colour + bump pair so the
+ *    stone reads with veined relief). House: a pair of Victorian copper-
+ *    patina ornamental side-wall gas-style wall sconces mounted at mid-
+ *    height on the east and west exterior side walls of the house
+ *    (companion to the front door lanterns flanking the front door) —
+ *    each sconce a slim foliate medallion backplate fixed against the
+ *    side wall ringed by four foliate tip dabs, an S-curve scroll
+ *    bracket arching outward from the wall with a slim volute curl at
+ *    the wall joint, a copper-cage glass lantern hanging from the
+ *    bracket tip with four corner ribs and a warm glowing teardrop pane
+ *    catching the dusk and a small foliate cap finial on top (the
+ *    backplate, bracket, cage and finial reuse the existing `copper-
+ *    patina` pair so the verdigris reads as crusted relief on the cast
+ *    metal). Scene: a far-east tidepool rocky shelf plane east of the
+ *    coral atoll — a basalt-pebble rocky shelf floor surfaced with the
+ *    existing `basalt-plateau` colour map paired with a fissure depth
+ *    map so the pebbled rock reads as raised relief at glancing sun, a
+ *    slim sandy west apron along the coral-atoll join so the ground
+ *    layer has no holes at the seam, three shallow translucent
+ *    turquoise tidepool water pools inset into the rocky shelf with
+ *    foam-fringe rings and slim ripple highlights, a focal stranded
+ *    whale ribcage at the centre with five bleached arched rib pairs
+ *    on a slim vertebral column with a tapered skull cap at the front
+ *    and a tail-bone cluster at the rear, a small beachcomber's stone-
+ *    and-driftwood hut at the northeast corner on a sandy mound with
+ *    a peaked driftwood roof, a glowing front window, a stone chimney
+ *    trailing slim smoke wisps and a slim driftwood ladder leaning
+ *    against the side, a focal unlit driftwood bonfire pile at the
+ *    centre of the shelf with a teepee of four stacked logs in a
+ *    ringed firepit of eight darker stones with two slim kindling
+ *    sticks at the base, a scatter of five starfish (orange / purple
+ *    / pink) clinging to the rocks around the tidepools, four spiny
+ *    sea urchins clustered around the centre tidepool, three drift
+ *    bull-kelp bulbs with slim stipe trails strewn along the sand and
+ *    a small wooden beached rowing dinghy at the west edge moored
+ *    against the atoll seam with a pair of oars resting in the boat
+ *    and a slim brass mooring cleat at the bow.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -31054,6 +32233,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: OTTER_STATUE_POS[0], z: OTTER_STATUE_POS[2], r: 0.9 },
     // Thirty-sixth-pass keep-out — bronze wolf statue on the back-west outside-fence lawn.
     { x: WOLF_STATUE_POS[0], z: WOLF_STATUE_POS[2], r: 0.9 },
+    // Thirty-seventh-pass keep-out — bronze bear statue on the back-east outside-fence lawn.
+    { x: BEAR_STATUE_POS[0], z: BEAR_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -31131,6 +32312,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildSwanStatue(f, SWAN_STATUE_POS),
     buildOtterStatue(f, OTTER_STATUE_POS),
     buildWolfStatue(f, WOLF_STATUE_POS),
+    buildBearStatue(f, BEAR_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -31164,6 +32346,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const feVolcanicPlateau = buildFarEastVolcanicPlateau(f);
   const feObsidianShore = buildFarEastObsidianShore(f);
   const feCoralAtoll = buildFarEastCoralAtoll(f);
+  const feTidepoolShelf = buildFarEastTidepoolShelf(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -31220,6 +32403,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchColumnCapitals(f),
     buildPorchColumnBases(f),
     buildPorchCeilingPendants(f),
+    buildSideWallSconces(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -31260,6 +32444,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       feVolcanicPlateau,
       feObsidianShore,
       feCoralAtoll,
+      feTidepoolShelf,
       house,
     ],
   };
