@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirty-seven enhancement passes.
+// house and its courtyard, layered over thirty-eight enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -1123,6 +1123,44 @@
 //   west edge moored against the atoll seam with a pair of
 //   oars resting in the boat and a slim brass mooring cleat
 //   at the bow.
+//   Pass 38 — courtyard: a Victorian bronze lynx statue on a fluted
+//   marble pedestal, parked on the back outside-fence lawn between
+//   the back archway (at x=0) and the hare (at x=+3.5) so it
+//   continues the line of marble-pedestal sentinels along the back
+//   perimeter — the lynx stands four-square on the plinth cap in a
+//   slim alert pose with tufted pointed ears, broad cheek-ruff
+//   sideburns, two glinting eye highlights, a tapered muzzle parted
+//   in a quiet half-growl and a short bobbed tail tucked at the back
+//   (the bronze body, head, ears and tail reuse the existing
+//   `copper-patina` colour + bump pair so the verdigris reads as
+//   crusted relief on the cast metal, and the plinth reuses the
+//   existing `marble` colour + bump pair so the stone reads with
+//   veined relief). House: a polished brass kickplate pinned across
+//   the bottom of the front door slab with four corner rivets, and
+//   a brass bell-pull rosette mounted on the front wall just right
+//   of the door trailing a knotted cord with a fluted brass tip-bob
+//   at the bottom (companion to the front door knocker, carriage
+//   lanterns, address plaque and pine-needle wreath) — both reuse
+//   the existing `copper-patina` pair tinted toward warm brass so
+//   the polished metal reads as fitted relief against the door slab
+//   and pink plaster wall. Scene: a far-east mangrove estuary plane
+//   east of the tidepool rocky shelf — a mangrove-mud floor surfaced
+//   with the existing `peat-moor` colour map paired with its bump
+//   depth map so the silty mud and exposed root tangles read as
+//   raised relief at glancing sun, a slim brackish-silt west apron
+//   along the tidepool join so the ground layer has no holes at the
+//   seam, a meandering brackish tidal channel cutting across the
+//   centre of the shelf with a darker deep-water core and a foam-
+//   fringe rim, three mangrove tree clumps (each a gnarled trunk
+//   rising out of six arched stilt roots radiating into the mud
+//   with a dense rounded dark-green canopy capping the trunk), a
+//   short slatted wooden boardwalk along the east edge of the
+//   channel on six stilt posts with a knotted-rope handrail, a
+//   slim bronze heron statue stalking the channel on one folded
+//   leg with a long S-curved neck and a tapered dagger beak, and
+//   a small wooden pirogue canoe drawn up onto the mud at the
+//   channel's east end with a pair of carved paddles resting in
+//   the boat and a brass mooring cleat at the bow.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,

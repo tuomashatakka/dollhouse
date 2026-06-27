@@ -22,17 +22,17 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 37) adds a Victorian bronze bear statue on a
- * fluted marble pedestal to the back-east outside-fence lawn (between the
- * otter at back-east-near and the swan at back-east-far, continuing
- * the line of marble-pedestal sentinels along the back-east perimeter),
- * a pair of Victorian copper-patina ornamental side-wall gas-style wall
- * sconces mounted at mid-height on the east and west exterior side walls
- * of the house (companion to the front door lanterns) and a far-east
- * tidepool rocky shelf plane east of the coral atoll with three
- * translucent turquoise tidepools, a stranded whale ribcage, a
- * beachcomber's driftwood hut, a driftwood bonfire pile and a scatter
- * of starfish, sea urchins, kelp bulbs and a beached rowing dinghy.
+ * latest enhancement (pass 38) adds a Victorian bronze lynx statue on a
+ * fluted marble pedestal to the back outside-fence lawn (between the back
+ * archway at x=0 and the hare at x=+3.5, continuing the line of
+ * marble-pedestal sentinels along the back perimeter), a polished brass
+ * kickplate and a brass bell-pull rosette pull mounted on the front door
+ * apron (companions to the door knocker, lanterns, plaque and pine-needle
+ * wreath) and a far-east mangrove estuary plane east of the tidepool shelf
+ * with a brackish tidal channel, three arched-root mangrove tree clumps, a
+ * slatted wooden boardwalk along the east edge, a bronze-style heron
+ * statue stalking the channel and a small wooden pirogue canoe drawn up
+ * onto the mud at the channel's east end.
  */
 const W = 7;
 const D = 5;
@@ -1761,6 +1761,71 @@ const TIDE_KELP_BULBS: { x: number; z: number; rot: number }[] = [
   { x: 106, z: 147, rot: 2.2 },
 ];
 
+/**
+ * Thirty-eighth-pass courtyard prop — a Victorian bronze lynx statue on a
+ * fluted marble pedestal, parked on the back outside-fence lawn between the
+ * back archway (at x=0) and the hare (at x=+3.5) so it slots into the line
+ * of marble-pedestal sentinels along the back perimeter of the courtyard.
+ * The lynx stands four-square on the plinth cap in a slim alert pose with
+ * tufted pointed ears, broad cheek-ruff sideburns, two glinting eye
+ * highlights, a tapered muzzle parted in a quiet hunt-stance and a short
+ * bobbed tail tucked at the back (the bronze body, head, ears and tail
+ * reuse the existing `copper-patina` colour + bump pair so the verdigris
+ * reads as crusted relief on the cast metal, and the plinth reuses the
+ * existing `marble` colour + bump pair so the stone reads with veined
+ * relief).
+ */
+const LYNX_STATUE_POS: [number, number, number] = [1.8, 0, -5.5];
+
+/**
+ * Thirty-eighth-pass house detail — a polished brass kickplate at the base
+ * of the front door slab and a brass bell-pull rosette pull mounted on the
+ * front wall just right of the door (companions to the door knocker,
+ * carriage lanterns, address plaque and pine-needle door wreath). The
+ * kickplate is a slim broad brass panel pinned across the bottom of the
+ * door with four small rivet heads at the corners; the bell pull is a
+ * small foliate brass rosette mounted on the wall trailing a slim knotted
+ * cord with a fluted brass tip-bob at the bottom. Both use the existing
+ * `copper-patina` colour + bump pair tinted toward warm brass so the
+ * polished metal reads as fitted relief against the door slab and pink
+ * plaster wall.
+ */
+const DOOR_KICKPLATE_POS: [number, number, number] = [0, 0.10, FRONT_Z + WALL_T / 2 + 0.012];
+const DOOR_BELL_PULL_POS: [number, number, number] = [1.18, 1.55, FRONT_Z + WALL_T / 2 + 0.01];
+
+/**
+ * Thirty-eighth-pass scene extension — a far-east mangrove estuary plane
+ * east of the tidepool rocky shelf (which is at x=104, z=140 with W=20, so
+ * its east edge sits at x=114). The new plane is centred at x=124 with W=20
+ * so the western apron overlaps the tidepool shelf's east edge with a slim
+ * brackish mud-flat strip and the ground layer has no holes at the seam.
+ * The plane carries a mangrove-mud floor surfaced with the existing
+ * `peat-moor` colour map paired with its bump depth map so the silty mud
+ * and exposed root tangles read as raised relief at glancing sun. Features:
+ * a meandering brackish water channel cutting across the centre of the
+ * shelf with a darker deep-water core and a slim foam-fringe rim; three
+ * mangrove tree clumps (each with a gnarled trunk on six arched stilt
+ * roots radiating outward and a dense rounded dark-green canopy capping
+ * the trunk); a short slatted wooden boardwalk along the east edge of the
+ * channel on six stilt posts with a knotted-rope handrail; a slim bronze
+ * heron statue stalking the channel on one folded leg with a tapered
+ * dagger beak; and a small wooden pirogue canoe drawn up onto the mud at
+ * the channel's east end with a pair of carved paddles resting in the boat
+ * and a brass mooring cleat at the bow.
+ */
+const MANGROVE_ESTUARY_POS: [number, number, number] = [124, -0.053, 140];
+const MANGROVE_ESTUARY_W = 20;
+const MANGROVE_ESTUARY_D = 20;
+const MANGROVE_CHANNEL_Z = 140;
+const MANGROVE_BOARDWALK_POS: [number, number, number] = [128, 0, 140];
+const MANGROVE_HERON_POS: [number, number, number] = [125, 0, 138];
+const MANGROVE_PIROGUE_POS: [number, number, number] = [129.5, 0, 142];
+const MANGROVE_CLUMPS: { x: number; z: number; scale: number; rot: number }[] = [
+  { x: 121, z: 134, scale: 1.05, rot: 0.3 },
+  { x: 127, z: 145, scale: 0.95, rot: 1.4 },
+  { x: 120, z: 145, scale: 1.0, rot: 2.1 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -3196,6 +3261,47 @@ const C = {
   tpDinghyHullHi: "#a87a52",
   tpDinghyTrim: "#3a2620",
   tpDinghyOar: "#bc8a5c",
+  // Thirty-eighth enhancement pass — a Victorian bronze lynx statue on a
+  // fluted marble pedestal (back outside-fence lawn between back archway and
+  // hare), a brass kickplate and bell-pull rosette on the front door apron,
+  // and a far-east mangrove estuary plane east of the tidepool shelf with a
+  // brackish channel, mangrove tree clumps, a slatted boardwalk, a bronze
+  // heron statue and a wooden pirogue canoe.
+  lynxBronze: "#3c4e44",
+  lynxBronzeHi: "#82a092",
+  lynxBronzeShade: "#1c2620",
+  lynxRuff: "#92b0a2",
+  lynxPlinth: "#ede2d0",
+  lynxPlinthShade: "#a89776",
+  doorBrass: "#caa462",
+  doorBrassHi: "#f0d488",
+  doorBrassShade: "#7a5a30",
+  doorBellCord: "#5a3a26",
+  // Far-east mangrove estuary — a brackish mud floor with a meandering
+  // tidal channel, three arched-root mangrove tree clumps, a slatted
+  // boardwalk along the east edge, a bronze-style heron statue stalking
+  // the channel and a small wooden pirogue canoe.
+  meMud: "#5a4632",
+  meMudHi: "#866848",
+  meMudShade: "#2c2218",
+  meApronSilt: "#7a6a4c",
+  meChannelWater: "#3a5a52",
+  meChannelDeep: "#1a3030",
+  meChannelFoam: "#a8c4b6",
+  meRootBark: "#3e2a1c",
+  meRootBarkHi: "#684830",
+  meCanopy: "#2c4a2e",
+  meCanopyHi: "#4d784f",
+  meBoardwalk: "#6a4a30",
+  meBoardwalkHi: "#9a7048",
+  meBoardwalkRope: "#cbb487",
+  meHeronBronze: "#3c4e44",
+  meHeronBronzeHi: "#82a092",
+  meHeronBeak: "#1a1c20",
+  mePirogueHull: "#7a5238",
+  mePirogueHullHi: "#a87a52",
+  mePirogueTrim: "#3a2620",
+  mePiroguePaddle: "#bc8a5c",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -31137,6 +31243,735 @@ function buildBeachedDinghy(f: NodeFactory, pos: [number, number, number]): Scen
   return f.group("Beached Dinghy", parts, { position: pos });
 }
 
+/* ────────────────────── pass 38 — lynx statue ────────────────────── */
+
+/**
+ * Victorian bronze lynx statue on a fluted marble pedestal — pose 4-square
+ * on the plinth cap with a slim alert hunt stance, tufted pointed ears,
+ * broad cheek-ruff sideburns, two glinting eye highlights, a tapered muzzle
+ * parted in a quiet half-growl and a short bobbed tail tucked at the back.
+ * Reuses the existing `copper-patina` colour+bump pair for the bronze body
+ * and the `marble` colour+bump pair for the plinth so the verdigris and
+ * stone veins both read as relief instead of flat decals.
+ */
+function buildLynxStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.lynxBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.lynxBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.lynxBronzeShade, 0.95, { flatShading: true });
+  const ruff = std(C.lynxRuff, 0.55, { metalness: 0.3 });
+  const marble: MaterialDef = {
+    color: C.lynxPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.lynxPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base, shaft and cap (matches the rest of the bestiary line).
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Lynx body — slim oblong torso standing four-square on the plinth.
+  const bodyY = 1.08;
+  parts.push(
+    f.mesh("Lynx Body", sphere(0.22, 14, 12), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.0, 0.85, 1.8],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded underside reading as a tawny belly tone.
+    f.mesh("Lynx Belly Shade", sphere(0.16, 12, 8), bronzeShade, {
+      position: [0, bodyY - 0.10, 0],
+      scale: [0.95, 0.5, 1.6],
+    }, { castShadow: false }),
+    // Raised back-spine highlight ridge.
+    f.mesh("Lynx Spine Hi", box(0.04, 0.018, 0.42), bronzeHi, {
+      position: [0, bodyY + 0.15, 0],
+    }, { castShadow: false }),
+  );
+  // ── Four legs anchoring the lynx to the plinth cap.
+  for (const sz of [-1, 1]) {
+    for (const sx of [-1, 1]) {
+      parts.push(
+        f.mesh(`Lynx Leg ${sx} ${sz}`, cylinder(0.05, 0.06, 0.30, 10), bronze, {
+          position: [sx * 0.10, bodyY - 0.32, sz * 0.24],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim paw pad cap at the base of each leg.
+        f.mesh(`Lynx Paw ${sx} ${sz}`, box(0.10, 0.045, 0.12), bronzeShade, {
+          position: [sx * 0.10, bodyY - 0.50, sz * 0.24],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Head + neck — tilted alert with broad cheek-ruff sideburns.
+  const headY = bodyY + 0.18;
+  parts.push(
+    f.mesh("Lynx Neck", cylinder(0.10, 0.12, 0.10, 10), bronze, {
+      position: [0, bodyY + 0.10, -0.28],
+      rotation: [-0.3, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Lynx Head", sphere(0.14, 14, 12), bronze, {
+      position: [0, headY, -0.36],
+      scale: [1.1, 1.0, 1.0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tapered muzzle protruding forward from the head.
+    f.mesh("Lynx Muzzle", cone(0.07, 0.12, 10), bronze, {
+      position: [0, headY - 0.04, -0.48],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Small dark nose dab at the muzzle tip.
+    f.mesh("Lynx Nose", sphere(0.022, 8, 6), bronzeShade, {
+      position: [0, headY - 0.02, -0.54],
+    }, { castShadow: false }),
+  );
+  // ── Two glinting eye highlights flanking the muzzle.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Lynx Eye ${sx}`, sphere(0.018, 8, 6), bronzeHi, {
+        position: [sx * 0.05, headY + 0.04, -0.46],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Two pointed ears with slim black tufts at the tips.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Lynx Ear ${sx}`, cone(0.05, 0.12, 8), bronze, {
+        position: [sx * 0.08, headY + 0.18, -0.32],
+        rotation: [-0.1, 0, sx * 0.2],
+      }, { castShadow: true }),
+      // Slim tufted black ear-tip dab — the signature lynx feature.
+      f.mesh(`Lynx Ear Tuft ${sx}`, cone(0.018, 0.06, 6), bronzeShade, {
+        position: [sx * 0.10, headY + 0.30, -0.30],
+        rotation: [-0.1, 0, sx * 0.2],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Two broad cheek-ruff sideburns flaring outward from the jaw.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Lynx Ruff ${sx}`, sphere(0.07, 10, 8), ruff, {
+        position: [sx * 0.13, headY - 0.10, -0.42],
+        scale: [0.7, 1.0, 0.5],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Short bobbed tail tucked at the back, characteristic of lynx.
+  parts.push(
+    f.mesh("Lynx Tail", cylinder(0.04, 0.05, 0.18, 8), bronze, {
+      position: [0, bodyY + 0.04, 0.32],
+      rotation: [0.6, 0, 0],
+    }, { castShadow: true }),
+    // Slim shaded tail-tip dab reading as the black tail-tip of the lynx.
+    f.mesh("Lynx Tail Tip", sphere(0.05, 8, 6), bronzeShade, {
+      position: [0, bodyY + 0.16, 0.40],
+    }, { castShadow: false }),
+  );
+  // ── Plaque on the plinth front face with three small bead rivets.
+  parts.push(
+    f.mesh("Lynx Plaque", box(0.30, 0.10, 0.018), bronzeHi, {
+      position: [0, 0.50, 0.235],
+    }, { castShadow: false }),
+    f.mesh("Lynx Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Lynx Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Lynx Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+  );
+  return f.group("Lynx Statue", parts, { position: pos });
+}
+
+/* ────────────────────── pass 38 — door brass fittings ────────────────────── */
+
+/**
+ * Polished brass front-door kickplate (a slim broad panel pinned across the
+ * base of the door slab with four corner rivets) and a brass bell-pull
+ * rosette mounted on the front wall just right of the door, trailing a
+ * slim knotted cord with a fluted brass tip-bob at the bottom. Both reuse
+ * the existing `copper-patina` colour+bump pair tinted toward warm brass
+ * so the polished metal reads as fitted relief against the door slab and
+ * pink plaster wall.
+ */
+function buildDoorBrassFittings(f: NodeFactory): SceneNode {
+  const brass: MaterialDef = {
+    color: C.doorBrass,
+    roughness: 0.42,
+    metalness: 0.85,
+    texture: "copper-patina",
+    textureScale: [0.4, 0.4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.012,
+  };
+  const brassHi = std(C.doorBrassHi, 0.35, { metalness: 0.92 });
+  const brassShade = std(C.doorBrassShade, 0.85, { metalness: 0.6, flatShading: true });
+  const cord = std(C.doorBellCord, 0.85, {});
+  const parts: SceneNode[] = [];
+  // ── Brass kickplate — slim broad panel across the base of the door slab.
+  const kx = DOOR_KICKPLATE_POS[0];
+  const ky = DOOR_KICKPLATE_POS[1];
+  const kz = DOOR_KICKPLATE_POS[2];
+  const plateW = 0.86;
+  const plateH = 0.20;
+  parts.push(
+    f.mesh("Door Kickplate", box(plateW, plateH, 0.012), brass, {
+      position: [kx, ky, kz],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim raised highlight band across the top edge of the plate.
+    f.mesh("Kickplate Hi Top", box(plateW - 0.04, 0.018, 0.014), brassHi, {
+      position: [kx, ky + plateH / 2 - 0.022, kz + 0.001],
+    }, { castShadow: false }),
+    // Slim darker shaded band across the bottom edge of the plate.
+    f.mesh("Kickplate Shade Bot", box(plateW - 0.04, 0.014, 0.014), brassShade, {
+      position: [kx, ky - plateH / 2 + 0.020, kz + 0.001],
+    }, { castShadow: false }),
+  );
+  // Four corner rivet heads pinning the kickplate to the door slab.
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      parts.push(
+        f.mesh(`Kickplate Rivet ${sx} ${sy}`, sphere(0.014, 8, 6), brassHi, {
+          position: [
+            kx + sx * (plateW / 2 - 0.05),
+            ky + sy * (plateH / 2 - 0.05),
+            kz + 0.005,
+          ],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Brass bell-pull rosette plate mounted just right of the door.
+  const bx = DOOR_BELL_PULL_POS[0];
+  const by = DOOR_BELL_PULL_POS[1];
+  const bz = DOOR_BELL_PULL_POS[2];
+  parts.push(
+    // Foliate rosette backplate — a small ringed disc fixed to the wall.
+    f.mesh("Bell Rosette", cylinder(0.08, 0.08, 0.012, 14), brass, {
+      position: [bx, by, bz],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim raised central boss rivet on the rosette.
+    f.mesh("Bell Rosette Boss", sphere(0.022, 10, 8), brassHi, {
+      position: [bx, by, bz + 0.008],
+    }, { castShadow: false }),
+  );
+  // Four foliate tip dabs ringing the boss for relief.
+  for (let j = 0; j < 4; j++) {
+    const a = (j / 4) * Math.PI * 2 + Math.PI / 4;
+    parts.push(
+      f.mesh(`Bell Rosette Foliate ${j}`, sphere(0.014, 8, 6), brassShade, {
+        position: [bx + Math.cos(a) * 0.05, by + Math.sin(a) * 0.05, bz + 0.004],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Slim knotted cord hanging from the rosette boss.
+  parts.push(
+    f.mesh("Bell Cord", cylinder(0.008, 0.008, 0.42, 6), cord, {
+      position: [bx, by - 0.22, bz + 0.005],
+    }, { castShadow: false }),
+    // Three small knot beads along the cord for relief.
+    f.mesh("Bell Cord Knot A", sphere(0.014, 8, 6), cord, {
+      position: [bx, by - 0.10, bz + 0.005],
+    }, { castShadow: false }),
+    f.mesh("Bell Cord Knot B", sphere(0.014, 8, 6), cord, {
+      position: [bx, by - 0.24, bz + 0.005],
+    }, { castShadow: false }),
+    f.mesh("Bell Cord Knot C", sphere(0.014, 8, 6), cord, {
+      position: [bx, by - 0.38, bz + 0.005],
+    }, { castShadow: false }),
+    // Fluted brass tip-bob at the bottom of the cord.
+    f.mesh("Bell Tip Bob", cylinder(0.022, 0.028, 0.06, 10), brass, {
+      position: [bx, by - 0.46, bz + 0.005],
+    }, { castShadow: false }),
+    f.mesh("Bell Tip Bob Cap", sphere(0.022, 10, 8), brassHi, {
+      position: [bx, by - 0.49, bz + 0.005],
+    }, { castShadow: false }),
+  );
+  return f.group("Door Brass Fittings", parts);
+}
+
+/* ────────────────────── pass 38 — mangrove estuary ────────────────────── */
+
+/**
+ * Far-east mangrove estuary plane east of the tidepool rocky shelf. Carries
+ * a mangrove-mud ground floor surfaced with the existing `peat-moor` colour
+ * map paired with its bump depth map, a slim brackish-silt west apron
+ * along the tidepool join (no hole at the seam), a meandering brackish
+ * tidal channel cutting across the centre, three arched-root mangrove tree
+ * clumps, a slatted wooden boardwalk along the east edge of the channel
+ * on stilt posts with a knotted-rope handrail, a slim bronze heron statue
+ * stalking the channel and a small wooden pirogue canoe drawn up onto the
+ * mud at the channel's east end.
+ */
+function buildFarEastMangroveEstuary(f: NodeFactory): SceneNode {
+  return f.group("Far East Mangrove Estuary", [
+    // Mangrove-mud ground plane — silty tidal mud floor.
+    f.mesh(
+      "Mangrove Ground",
+      plane(MANGROVE_ESTUARY_W, MANGROVE_ESTUARY_D),
+      std(C.meMud, 0.95, {
+        texture: "peat-moor",
+        textureScale: [3, 3],
+        bumpMap: "peat-moor-bump",
+        bumpScale: 0.06,
+        metalness: 0.04,
+      }),
+      { position: MANGROVE_ESTUARY_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the tidepool shelf's east edge with a slim
+    // brackish-silt strip so the seam reads as a continuous rock-into-mud
+    // join with no holes at the ground layer.
+    f.mesh(
+      "Mangrove West Apron",
+      plane(3, MANGROVE_ESTUARY_D),
+      std(C.meApronSilt, 0.95, {
+        texture: "peat-moor",
+        textureScale: [1, 4],
+        bumpMap: "peat-moor-bump",
+        bumpScale: 0.04,
+      }),
+      {
+        position: [
+          MANGROVE_ESTUARY_POS[0] - MANGROVE_ESTUARY_W / 2 + 1.5,
+          -0.051,
+          MANGROVE_ESTUARY_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildMangroveChannel(f),
+    buildMangroveTreeClumps(f),
+    buildMangroveBoardwalk(f, MANGROVE_BOARDWALK_POS),
+    buildMangroveHeron(f, MANGROVE_HERON_POS),
+    buildMangrovePirogue(f, MANGROVE_PIROGUE_POS),
+  ]);
+}
+
+/**
+ * Brackish tidal channel cutting across the estuary — a slim slab of dark
+ * brackish water with a darker deep-water core and a foam-fringe rim.
+ */
+function buildMangroveChannel(f: NodeFactory): SceneNode {
+  const water: MaterialDef = {
+    color: C.meChannelWater,
+    roughness: 0.25,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.78,
+  };
+  const waterDeep: MaterialDef = {
+    color: C.meChannelDeep,
+    roughness: 0.28,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.88,
+  };
+  const foam = std(C.meChannelFoam, 0.55, { metalness: 0.1 });
+  const parts: SceneNode[] = [];
+  // Main channel slab — broad shallow brackish water surface.
+  parts.push(
+    f.mesh("Channel Water", box(14, 0.022, 1.8), water, {
+      position: [0, 0.06, 0],
+    }, { castShadow: false }),
+    // Slim darker deep-water core down the centre.
+    f.mesh("Channel Deep Core", box(13, 0.014, 0.7), waterDeep, {
+      position: [0, 0.068, 0],
+    }, { castShadow: false }),
+  );
+  // Foam-fringe dabs alternating along the north + south banks.
+  for (let i = 0; i < 14; i++) {
+    const fx = -6.5 + i * 1.0;
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Channel Foam ${i} ${sz}`, sphere(0.10, 6, 4), foam, {
+          position: [fx + (sz > 0 ? 0.2 : 0), 0.075, sz * 0.85],
+          scale: [1.3, 0.3, 1.0],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Two slim ripple highlight rings dotted across the surface.
+  parts.push(
+    f.mesh("Channel Ripple A", cylinder(0.4, 0.4, 0.006, 12), foam, {
+      position: [-2.4, 0.082, 0.1],
+    }, { castShadow: false }),
+    f.mesh("Channel Ripple B", cylinder(0.32, 0.32, 0.006, 12), foam, {
+      position: [3.0, 0.082, -0.2],
+    }, { castShadow: false }),
+  );
+  return f.group("Brackish Channel", parts, { position: [124, 0, MANGROVE_CHANNEL_Z] });
+}
+
+/**
+ * Three mangrove tree clumps — each a gnarled trunk on six arched stilt
+ * roots radiating outward into the mud and a dense rounded dark-green
+ * canopy capping the trunk. The stilt roots are what defines a mangrove:
+ * the trunk lifts out of the mud on a tangle of arched aerial prop roots.
+ */
+function buildMangroveTreeClumps(f: NodeFactory): SceneNode {
+  const bark: MaterialDef = {
+    color: C.meRootBark,
+    roughness: 0.92,
+    metalness: 0.02,
+    texture: "bark",
+    textureScale: [0.6, 1.2],
+    bumpMap: "pine-bark-bump",
+    bumpScale: 0.04,
+    flatShading: true,
+  };
+  const barkHi = std(C.meRootBarkHi, 0.85, { flatShading: true });
+  const canopy = std(C.meCanopy, 0.85, { texture: "autumn-canopy", textureScale: [0.8, 0.8], flatShading: true });
+  const canopyHi = std(C.meCanopyHi, 0.85, { flatShading: true });
+  const clumps: SceneNode[] = [];
+  for (let c = 0; c < MANGROVE_CLUMPS.length; c++) {
+    const clump = MANGROVE_CLUMPS[c]!;
+    const parts: SceneNode[] = [];
+    const s = clump.scale;
+    // Six arched stilt roots radiating outward — angled cones planted into
+    // the mud rising to meet the trunk base above ground.
+    const rootCount = 6;
+    for (let i = 0; i < rootCount; i++) {
+      const a = (i / rootCount) * Math.PI * 2;
+      const rx = Math.cos(a) * 0.55 * s;
+      const rz = Math.sin(a) * 0.55 * s;
+      parts.push(
+        f.mesh(`Mangrove Root ${i}`, cone(0.07 * s, 0.65 * s, 8), bark, {
+          position: [rx * 0.5, 0.30 * s, rz * 0.5],
+          rotation: [-rz * 1.2, a, rx * 1.2],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim raised root highlight ridge.
+        f.mesh(`Mangrove Root Hi ${i}`, cylinder(0.020 * s, 0.020 * s, 0.36 * s, 6), barkHi, {
+          position: [rx * 0.55, 0.32 * s, rz * 0.55],
+          rotation: [-rz * 1.0, a, rx * 1.0],
+        }, { castShadow: false }),
+      );
+    }
+    // Gnarled trunk lifted on the stilt roots above ground.
+    parts.push(
+      f.mesh("Mangrove Trunk", cylinder(0.20 * s, 0.26 * s, 1.4 * s, 10), bark, {
+        position: [0, 0.95 * s, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim raised trunk highlight ridge running up the south face.
+      f.mesh("Mangrove Trunk Hi", box(0.05 * s, 1.2 * s, 0.024 * s), barkHi, {
+        position: [0, 0.95 * s, 0.22 * s],
+      }, { castShadow: false }),
+    );
+    // Dense rounded canopy capping the trunk — five overlapping foliage
+    // ovoids reading as a leafy crown.
+    const canopyY = 1.95 * s;
+    parts.push(
+      f.mesh("Mangrove Canopy Core", sphere(0.85 * s, 14, 12), canopy, {
+        position: [0, canopyY, 0],
+        scale: [1.0, 0.85, 1.0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2;
+      parts.push(
+        f.mesh(`Mangrove Canopy Lobe ${i}`, sphere(0.50 * s, 12, 8), canopyHi, {
+          position: [Math.cos(a) * 0.45 * s, canopyY + 0.16 * s, Math.sin(a) * 0.45 * s],
+          scale: [1.0, 0.7, 1.0],
+        }, { castShadow: true }),
+      );
+    }
+    clumps.push(
+      f.group(`Mangrove Clump ${c + 1}`, parts, {
+        position: [clump.x, 0, clump.z],
+        rotation: [0, clump.rot, 0],
+      }),
+    );
+  }
+  return f.group("Mangrove Tree Clumps", clumps);
+}
+
+/**
+ * Short slatted wooden boardwalk along the east edge of the channel — six
+ * stilt posts in the mud carrying a slatted plank deck with a knotted-rope
+ * handrail on the channel-side. A few weather-beaten plank highlights
+ * suggest age and use.
+ */
+function buildMangroveBoardwalk(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const plank: MaterialDef = {
+    color: C.meBoardwalk,
+    roughness: 0.92,
+    metalness: 0.0,
+    texture: "wood",
+    textureScale: [0.8, 0.8],
+    flatShading: true,
+  };
+  const plankHi = std(C.meBoardwalkHi, 0.85, { flatShading: true });
+  const rope = std(C.meBoardwalkRope, 0.95, {});
+  const parts: SceneNode[] = [];
+  // Six stilt posts driven into the mud, three pairs along the boardwalk.
+  for (let i = 0; i < 3; i++) {
+    const px = -1.4 + i * 1.4;
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Boardwalk Post ${i} ${sz}`, cylinder(0.06, 0.07, 0.55, 8), plank, {
+          position: [px, 0.27, sz * 0.30],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Plank deck — a slim board running along the boardwalk.
+  parts.push(
+    f.mesh("Boardwalk Deck", box(3.6, 0.06, 0.78), plank, {
+      position: [0, 0.56, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Twelve slim plank highlight bands across the deck reading as boards.
+  for (let i = 0; i < 12; i++) {
+    parts.push(
+      f.mesh(`Boardwalk Plank Hi ${i}`, box(0.26, 0.014, 0.74), plankHi, {
+        position: [-1.7 + i * 0.3, 0.594, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Knotted-rope handrail along the channel side (north, sz=+1).
+  for (let i = 0; i < 4; i++) {
+    const px = -1.4 + i * 0.95;
+    parts.push(
+      // Slim rail post rising above the deck.
+      f.mesh(`Handrail Post ${i}`, cylinder(0.018, 0.018, 0.34, 6), plank, {
+        position: [px, 0.76, 0.36],
+      }, { castShadow: true }),
+    );
+  }
+  // Slim rope running between the posts along the rail.
+  parts.push(
+    f.mesh("Handrail Rope", cylinder(0.010, 0.010, 3.0, 6), rope, {
+      position: [0, 0.92, 0.36],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  // Three small knot beads along the rope for relief.
+  for (let i = 0; i < 3; i++) {
+    parts.push(
+      f.mesh(`Handrail Knot ${i}`, sphere(0.022, 8, 6), rope, {
+        position: [-0.9 + i * 0.9, 0.92, 0.36],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Mangrove Boardwalk", parts, { position: pos });
+}
+
+/**
+ * Slim bronze-style heron statue stalking the channel — a tall thin
+ * sentinel on one folded leg with a long S-curved neck, slim ovoid body,
+ * a tapered dagger beak and two folded wings tucked against the body.
+ */
+function buildMangroveHeron(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.meHeronBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.018,
+  };
+  const bronzeHi = std(C.meHeronBronzeHi, 0.4, { metalness: 0.85 });
+  const beak = std(C.meHeronBeak, 0.7, { metalness: 0.3 });
+  const parts: SceneNode[] = [];
+  // Standing leg planted in the mud — slim straight cylinder.
+  parts.push(
+    f.mesh("Heron Standing Leg", cylinder(0.022, 0.024, 0.70, 8), bronze, {
+      position: [0, 0.35, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim ankle joint ring.
+    f.mesh("Heron Standing Ankle", sphere(0.030, 8, 6), bronzeHi, {
+      position: [0, 0.66, 0],
+    }, { castShadow: false }),
+    // Wide-spread foot pad at the base.
+    f.mesh("Heron Foot", box(0.10, 0.012, 0.14), bronze, {
+      position: [0, 0.006, 0.02],
+    }, { castShadow: false }),
+  );
+  // Folded leg tucked against the body — small cone tucked under the body.
+  parts.push(
+    f.mesh("Heron Folded Leg", cylinder(0.020, 0.022, 0.32, 8), bronze, {
+      position: [-0.04, 0.55, -0.05],
+      rotation: [0.7, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Slim ovoid body sitting above the standing leg.
+  parts.push(
+    f.mesh("Heron Body", sphere(0.13, 14, 10), bronze, {
+      position: [0, 0.78, -0.04],
+      scale: [1.0, 0.9, 1.6],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim chest highlight ridge along the front.
+    f.mesh("Heron Chest Hi", sphere(0.09, 10, 8), bronzeHi, {
+      position: [0, 0.78, 0.05],
+      scale: [0.7, 0.7, 0.5],
+    }, { castShadow: false }),
+  );
+  // Two folded wings tucked against the body — slim flat half-ellipsoids.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Heron Wing ${sx}`, sphere(0.10, 10, 8), bronze, {
+        position: [sx * 0.10, 0.78, -0.08],
+        scale: [0.5, 0.8, 1.2],
+        rotation: [0, sx * 0.3, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // Long S-curved neck — three slim cylinders arching upward and forward.
+  parts.push(
+    f.mesh("Heron Neck Low", cylinder(0.024, 0.022, 0.24, 8), bronze, {
+      position: [0, 0.94, 0.02],
+      rotation: [-0.4, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Heron Neck Mid", cylinder(0.022, 0.020, 0.22, 8), bronze, {
+      position: [0, 1.10, 0.10],
+      rotation: [0.3, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Heron Neck High", cylinder(0.020, 0.018, 0.22, 8), bronze, {
+      position: [0, 1.28, 0.20],
+      rotation: [-0.2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Head + tapered dagger beak.
+  parts.push(
+    f.mesh("Heron Head", sphere(0.06, 10, 8), bronze, {
+      position: [0, 1.40, 0.28],
+      scale: [1.0, 0.9, 1.2],
+    }, { castShadow: true }),
+    // Slim crest plume sweeping back from the crown.
+    f.mesh("Heron Crest", cone(0.018, 0.10, 6), bronzeHi, {
+      position: [0, 1.46, 0.22],
+      rotation: [Math.PI / 2 + 0.5, 0, 0],
+    }, { castShadow: false }),
+    // Tapered dagger beak protruding forward from the head.
+    f.mesh("Heron Beak", cone(0.022, 0.18, 8), beak, {
+      position: [0, 1.40, 0.42],
+      rotation: [-Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+  );
+  // Two glinting eye highlights flanking the head.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Heron Eye ${sx}`, sphere(0.010, 6, 4), bronzeHi, {
+        position: [sx * 0.04, 1.42, 0.32],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Heron Statue", parts, { position: pos });
+}
+
+/**
+ * Small wooden pirogue canoe drawn up onto the mud at the channel's east
+ * end — a slim flat-bottomed dugout with a pair of carved paddles resting
+ * inside and a brass mooring cleat at the bow.
+ */
+function buildMangrovePirogue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const hull: MaterialDef = {
+    color: C.mePirogueHull,
+    roughness: 0.92,
+    metalness: 0.0,
+    texture: "wood",
+    textureScale: [0.7, 1.4],
+    flatShading: true,
+  };
+  const hullHi = std(C.mePirogueHullHi, 0.85, { flatShading: true });
+  const trim = std(C.mePirogueTrim, 0.9, { flatShading: true });
+  const paddle = std(C.mePiroguePaddle, 0.9, { flatShading: true });
+  const cleat = std(C.doorBrass, 0.5, { metalness: 0.8 });
+  const parts: SceneNode[] = [];
+  // Hull body — slim tapered oblong floating just above the mud line.
+  parts.push(
+    f.mesh("Pirogue Hull", box(2.0, 0.18, 0.62), hull, {
+      position: [0, 0.10, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tapered bow cap at the front (east).
+    f.mesh("Pirogue Bow", cone(0.32, 0.42, 8), hull, {
+      position: [1.18, 0.10, 0],
+      rotation: [0, 0, -Math.PI / 2],
+      scale: [0.6, 1.0, 1.0],
+    }, { castShadow: true }),
+    // Tapered stern cap at the back (west).
+    f.mesh("Pirogue Stern", cone(0.32, 0.42, 8), hull, {
+      position: [-1.18, 0.10, 0],
+      rotation: [0, 0, Math.PI / 2],
+      scale: [0.6, 1.0, 1.0],
+    }, { castShadow: true }),
+    // Slim raised gunwale highlight running along each side.
+    f.mesh("Pirogue Gunwale L", box(2.4, 0.024, 0.018), hullHi, {
+      position: [0, 0.20, -0.30],
+    }, { castShadow: false }),
+    f.mesh("Pirogue Gunwale R", box(2.4, 0.024, 0.018), hullHi, {
+      position: [0, 0.20, 0.30],
+    }, { castShadow: false }),
+    // Slim interior floor plank.
+    f.mesh("Pirogue Floor", box(1.8, 0.016, 0.50), trim, {
+      position: [0, 0.18, 0],
+    }, { castShadow: false }),
+  );
+  // Two carved paddles resting in the boat, laid across the interior.
+  for (const sz of [-1, 1]) {
+    parts.push(
+      f.mesh(`Pirogue Paddle Shaft ${sz}`, cylinder(0.018, 0.018, 0.9, 6), paddle, {
+        position: [sz * 0.3, 0.22, 0],
+        rotation: [Math.PI / 2, 0, 0.1 * sz],
+      }, { castShadow: false }),
+      // Slim flat paddle blade at one end.
+      f.mesh(`Pirogue Paddle Blade ${sz}`, box(0.06, 0.012, 0.22), paddle, {
+        position: [sz * 0.3, 0.22, sz * 0.42],
+      }, { castShadow: false }),
+    );
+  }
+  // Brass mooring cleat at the bow.
+  parts.push(
+    f.mesh("Pirogue Cleat Base", box(0.06, 0.022, 0.06), cleat, {
+      position: [1.10, 0.22, 0],
+    }, { castShadow: false }),
+    f.mesh("Pirogue Cleat Horn", cylinder(0.012, 0.012, 0.06, 6), cleat, {
+      position: [1.10, 0.26, 0],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  return f.group("Mangrove Pirogue", parts, { position: pos });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -32125,6 +32960,41 @@ function buildBeachedDinghy(f: NodeFactory, pos: [number, number, number]): Scen
  *    a small wooden beached rowing dinghy at the west edge moored
  *    against the atoll seam with a pair of oars resting in the boat
  *    and a slim brass mooring cleat at the bow.
+ *  - Thirty-eighth pass — courtyard: a Victorian bronze lynx statue on a
+ *    fluted marble pedestal, parked on the back outside-fence lawn between
+ *    the back archway (at x=0) and the hare (at x=+3.5) so it continues
+ *    the line of marble-pedestal sentinels along the back perimeter — the
+ *    lynx stands four-square on the plinth cap in a slim alert pose with
+ *    tufted pointed ears, broad cheek-ruff sideburns, two glinting eye
+ *    highlights, a tapered muzzle parted in a quiet half-growl and a short
+ *    bobbed tail tucked at the back (the bronze body, head, ears and tail
+ *    reuse the existing `copper-patina` colour + bump pair so the
+ *    verdigris reads as crusted relief on the cast metal, and the plinth
+ *    reuses the existing `marble` colour + bump pair so the stone reads
+ *    with veined relief). House: a polished brass kickplate pinned across
+ *    the bottom of the front door slab with four corner rivets, and a
+ *    brass bell-pull rosette mounted on the front wall just right of the
+ *    door trailing a knotted cord with a fluted brass tip-bob at the
+ *    bottom (companion to the front door knocker, carriage lanterns,
+ *    address plaque and pine-needle wreath) — both reuse the existing
+ *    `copper-patina` pair tinted toward warm brass so the polished metal
+ *    reads as fitted relief against the door slab and pink plaster wall.
+ *    Scene: a far-east mangrove estuary plane east of the tidepool rocky
+ *    shelf — a mangrove-mud floor surfaced with the existing `peat-moor`
+ *    colour map paired with its bump depth map so the silty mud and
+ *    exposed root tangles read as raised relief at glancing sun, a slim
+ *    brackish-silt west apron along the tidepool join so the ground layer
+ *    has no holes at the seam, a meandering brackish tidal channel cutting
+ *    across the centre of the shelf with a darker deep-water core and a
+ *    foam-fringe rim, three mangrove tree clumps (each a gnarled trunk
+ *    rising out of six arched stilt roots radiating into the mud with a
+ *    dense rounded dark-green canopy capping the trunk), a short slatted
+ *    wooden boardwalk along the east edge of the channel on six stilt
+ *    posts with a knotted-rope handrail, a slim bronze heron statue
+ *    stalking the channel on one folded leg with a long S-curved neck and
+ *    a tapered dagger beak, and a small wooden pirogue canoe drawn up
+ *    onto the mud at the channel's east end with a pair of carved paddles
+ *    resting in the boat and a brass mooring cleat at the bow.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -32235,6 +33105,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: WOLF_STATUE_POS[0], z: WOLF_STATUE_POS[2], r: 0.9 },
     // Thirty-seventh-pass keep-out — bronze bear statue on the back-east outside-fence lawn.
     { x: BEAR_STATUE_POS[0], z: BEAR_STATUE_POS[2], r: 0.9 },
+    // Thirty-eighth-pass keep-out — bronze lynx statue on the back outside-fence lawn.
+    { x: LYNX_STATUE_POS[0], z: LYNX_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -32313,6 +33185,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildOtterStatue(f, OTTER_STATUE_POS),
     buildWolfStatue(f, WOLF_STATUE_POS),
     buildBearStatue(f, BEAR_STATUE_POS),
+    buildLynxStatue(f, LYNX_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -32347,6 +33220,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const feObsidianShore = buildFarEastObsidianShore(f);
   const feCoralAtoll = buildFarEastCoralAtoll(f);
   const feTidepoolShelf = buildFarEastTidepoolShelf(f);
+  const feMangroveEstuary = buildFarEastMangroveEstuary(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -32404,6 +33278,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchColumnBases(f),
     buildPorchCeilingPendants(f),
     buildSideWallSconces(f),
+    buildDoorBrassFittings(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -32445,6 +33320,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       feObsidianShore,
       feCoralAtoll,
       feTidepoolShelf,
+      feMangroveEstuary,
       house,
     ],
   };
