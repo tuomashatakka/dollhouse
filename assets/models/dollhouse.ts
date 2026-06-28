@@ -22,17 +22,17 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 38) adds a Victorian bronze lynx statue on a
- * fluted marble pedestal to the back outside-fence lawn (between the back
- * archway at x=0 and the hare at x=+3.5, continuing the line of
- * marble-pedestal sentinels along the back perimeter), a polished brass
- * kickplate and a brass bell-pull rosette pull mounted on the front door
- * apron (companions to the door knocker, lanterns, plaque and pine-needle
- * wreath) and a far-east mangrove estuary plane east of the tidepool shelf
- * with a brackish tidal channel, three arched-root mangrove tree clumps, a
- * slatted wooden boardwalk along the east edge, a bronze-style heron
- * statue stalking the channel and a small wooden pirogue canoe drawn up
- * onto the mud at the channel's east end.
+ * latest enhancement (pass 39) adds a Victorian bronze hedgehog statue on a
+ * fluted marble pedestal to the back outside-fence lawn (between the raven
+ * at x=-3.5 and the back archway at x=0, continuing the line of marble-
+ * pedestal sentinels along the back perimeter), a polished brass front-door
+ * letter slot and a slim brass "39" house-number plate above it (companions
+ * to the kickplate, bell pull, knocker, lanterns, address plaque and pine-
+ * needle wreath) and a far-east monsoon paddy-terrace plane east of the
+ * mangrove estuary with three stepped flooded paddy tiers separated by
+ * raised earth bunds, six rice-stalk clumps, a peaked thatched-roof
+ * farmer's stilt-hut, a slim bronze water-buffalo statue wading mid-paddy
+ * and a slatted wooden footbridge across the centre paddy.
  */
 const W = 7;
 const D = 5;
@@ -1826,6 +1826,79 @@ const MANGROVE_CLUMPS: { x: number; z: number; scale: number; rot: number }[] = 
   { x: 120, z: 145, scale: 1.0, rot: 2.1 },
 ];
 
+/**
+ * Thirty-ninth-pass courtyard prop — a Victorian bronze hedgehog statue on a
+ * fluted marble pedestal, parked on the back outside-fence lawn between the
+ * raven (at x=-3.5) and the back archway (at x=0) so it slots into the line
+ * of marble-pedestal sentinels along the back perimeter of the courtyard.
+ * The hedgehog crouches four-square on the plinth cap in a slim foraging
+ * pose with a tapered snout parted in a quiet sniff, two glinting eye
+ * highlights, two small rounded ears, four short stubby legs and a dense
+ * mantle of raised spines reading as bristled relief along the back. The
+ * bronze body, snout, ears and spines reuse the existing `copper-patina`
+ * colour + bump pair so the verdigris reads as crusted relief on the cast
+ * metal, and the plinth reuses the existing `marble` colour + bump pair so
+ * the stone reads with veined relief.
+ */
+const HEDGEHOG_STATUE_POS: [number, number, number] = [-1.7, 0, -5.5];
+
+/**
+ * Thirty-ninth-pass house detail — a polished brass letter slot pinned
+ * across the mid-height of the front door slab and a slim brass house-
+ * number plate fixed above it bearing three raised numeral pips (the
+ * "39" address marker registering the latest pass). Both companions to
+ * the door knocker, kickplate, bell pull, carriage lanterns, address
+ * plaque and pine-needle wreath. The letter slot is a slim broad brass
+ * mouth panel with a slightly raised lip and a recessed dark interior
+ * shadow reading as the slot opening; the number plate is a slim oval
+ * brass disc with three small raised numeral pips arranged left → right.
+ * Both reuse the existing `copper-patina` colour + bump pair tinted
+ * toward warm brass (sharing the pass-38 brass palette entries) so the
+ * polished metal reads as fitted relief against the door slab.
+ */
+const DOOR_LETTER_SLOT_POS: [number, number, number] = [0, 0.95, FRONT_Z + WALL_T / 2 + 0.012];
+const DOOR_NUMBER_PLATE_POS: [number, number, number] = [0, 1.45, FRONT_Z + WALL_T / 2 + 0.012];
+
+/**
+ * Thirty-ninth-pass scene extension — a far-east monsoon paddy-terrace plane
+ * east of the mangrove estuary (which is at x=124, z=140 with W=20, so its
+ * east edge sits at x=134). The new plane is centred at x=144 with W=20 so
+ * the western apron overlaps the mangrove estuary's east edge with a slim
+ * silty mud strip and the ground layer has no holes at the seam. The plane
+ * carries a paddy-mud floor surfaced with the existing `peat-moor` colour
+ * map paired with its bump depth map so the worked mud and earth bunds read
+ * as raised relief at glancing sun. Features: three stepped flooded paddy
+ * tiers separated by slim raised earth bunds, each tier carrying a thin
+ * translucent paddy-water slab with a brighter ripple highlight; a peaked
+ * thatched-roof farmer's hut at the northeast corner on four short stilt
+ * posts with a slim woven-wattle wall, a glowing front window and a small
+ * round bamboo step-ladder leaning against the side; a slim bronze water-
+ * buffalo statue wading mid-paddy with a broad ovoid body, four planted
+ * legs, a tapered horned head and a swept tail; six small rice-stalk
+ * clumps scattered across the tiers (each a fan of slim curved blades
+ * rising from the water); and a short slatted wooden footbridge across
+ * the centre paddy on four stilt posts with a knotted-rope handrail.
+ */
+const PADDY_TERRACE_POS: [number, number, number] = [144, -0.054, 140];
+const PADDY_TERRACE_W = 20;
+const PADDY_TERRACE_D = 20;
+const PADDY_HUT_POS: [number, number, number] = [148, 0, 134];
+const PADDY_BUFFALO_POS: [number, number, number] = [144, 0, 140];
+const PADDY_BRIDGE_POS: [number, number, number] = [142, 0, 140];
+const PADDY_TIERS: { x: number; z: number; w: number; d: number; level: number }[] = [
+  { x: 140, z: 136, w: 7.0, d: 5.0, level: 0.10 },
+  { x: 144, z: 141, w: 7.5, d: 5.0, level: 0.06 },
+  { x: 148, z: 145, w: 7.0, d: 5.0, level: 0.02 },
+];
+const PADDY_RICE_CLUMPS: { x: number; z: number; scale: number; rot: number }[] = [
+  { x: 138, z: 135, scale: 1.0, rot: 0.3 },
+  { x: 142, z: 137, scale: 0.9, rot: 1.0 },
+  { x: 146, z: 142, scale: 1.05, rot: 1.7 },
+  { x: 142, z: 142, scale: 0.95, rot: 2.4 },
+  { x: 147, z: 145, scale: 1.0, rot: 0.8 },
+  { x: 150, z: 145, scale: 0.85, rot: 2.0 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -3302,6 +3375,46 @@ const C = {
   mePirogueHullHi: "#a87a52",
   mePirogueTrim: "#3a2620",
   mePiroguePaddle: "#bc8a5c",
+  // Thirty-ninth enhancement pass — a Victorian bronze hedgehog statue on a
+  // fluted marble pedestal (back outside-fence lawn between the raven and
+  // the back archway), a polished brass front-door letter slot and a slim
+  // brass house-number "39" plate above it, and a far-east monsoon paddy-
+  // terrace plane east of the mangrove estuary with three flooded paddy
+  // tiers, a thatched stilt-hut, a wading bronze water-buffalo statue,
+  // rice-stalk clumps and a slatted wooden footbridge.
+  hedgehogBronze: "#3c4e44",
+  hedgehogBronzeHi: "#82a092",
+  hedgehogBronzeShade: "#1c2620",
+  hedgehogSpine: "#a8c2b2",
+  hedgehogPlinth: "#ede2d0",
+  hedgehogPlinthShade: "#a89776",
+  doorLetterSlotShadow: "#1a1410",
+  doorNumberPip: "#f0d488",
+  // Far-east monsoon paddy terrace — flooded stepped paddy tiers with rice
+  // stalks, a thatched stilt-hut, a bronze water-buffalo statue and a slim
+  // slatted wooden footbridge.
+  pdMud: "#5a4632",
+  pdMudHi: "#866848",
+  pdMudShade: "#2c2218",
+  pdApronSilt: "#7a6a4c",
+  pdBund: "#5e4426",
+  pdBundHi: "#8a6a3c",
+  pdWater: "#7c9a76",
+  pdWaterHi: "#a8c0a0",
+  pdRice: "#a8c46a",
+  pdRiceHi: "#d0e088",
+  pdHutThatch: "#9a7448",
+  pdHutThatchHi: "#b8924c",
+  pdHutWall: "#7a5836",
+  pdHutWallHi: "#a87a4c",
+  pdHutPost: "#4a3422",
+  pdHutWindow: "#ffd989",
+  pdBuffaloBronze: "#3c4e44",
+  pdBuffaloBronzeHi: "#82a092",
+  pdBuffaloHorn: "#1a1c20",
+  pdBridgePlank: "#6a4a30",
+  pdBridgePlankHi: "#9a7048",
+  pdBridgeRope: "#cbb487",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -31419,6 +31532,179 @@ function buildLynxStatue(f: NodeFactory, pos: [number, number, number]): SceneNo
   return f.group("Lynx Statue", parts, { position: pos });
 }
 
+/* ─────────────── thirty-ninth-pass courtyard prop ─────────────── */
+
+/**
+ * A Victorian bronze hedgehog statue on a fluted marble pedestal, parked on
+ * the back outside-fence lawn between the raven (at x=-3.5) and the back
+ * archway (at x=0) so it slots into the line of marble-pedestal sentinels
+ * along the back perimeter of the courtyard. The hedgehog crouches four-
+ * square on the plinth cap in a slim foraging pose with a tapered snout,
+ * two glinting eye highlights, two small rounded ears, four short stubby
+ * legs and a dense mantle of raised spines reading as bristled relief
+ * across the back. The bronze body, snout, ears and spines reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal, and the plinth reuses the existing
+ * `marble` colour + bump pair so the stone reads with veined relief.
+ */
+function buildHedgehogStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.hedgehogBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.hedgehogBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.hedgehogBronzeShade, 0.95, { flatShading: true });
+  const spineTip = std(C.hedgehogSpine, 0.6, { metalness: 0.55 });
+  const marble: MaterialDef = {
+    color: C.hedgehogPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.hedgehogPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth base, shaft and cap — matches the rest of the bestiary line.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Hedgehog body — a small rounded ovoid crouching on the plinth cap.
+  const bodyY = 1.04;
+  parts.push(
+    f.mesh("Hedgehog Body", sphere(0.24, 16, 12), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.05, 0.9, 1.25],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded underbelly seam reading as a soft pale belly.
+    f.mesh("Hedgehog Belly Shade", sphere(0.18, 12, 8), bronzeShade, {
+      position: [0, bodyY - 0.10, 0.02],
+      scale: [0.95, 0.45, 1.1],
+    }, { castShadow: false }),
+  );
+  // ── Tapered snout protruding forward from the body's front (south end).
+  const headZ = 0.22;
+  parts.push(
+    f.mesh("Hedgehog Snout", cone(0.10, 0.18, 10), bronze, {
+      position: [0, bodyY - 0.02, headZ + 0.05],
+      rotation: [Math.PI / 2 - 0.2, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Small dark nose dab at the snout tip.
+    f.mesh("Hedgehog Nose", sphere(0.024, 8, 6), bronzeShade, {
+      position: [0, bodyY - 0.04, headZ + 0.18],
+    }, { castShadow: false }),
+  );
+  // ── Two glinting eye highlights flanking the snout.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Hedgehog Eye ${sx}`, sphere(0.014, 8, 6), bronzeHi, {
+        position: [sx * 0.06, bodyY + 0.04, headZ + 0.02],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Two small rounded ears at the crown above the snout.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Hedgehog Ear ${sx}`, sphere(0.038, 8, 6), bronze, {
+        position: [sx * 0.10, bodyY + 0.14, headZ - 0.02],
+        scale: [0.9, 1.0, 0.7],
+      }, { castShadow: true }),
+      // Slim shaded inner ear cup.
+      f.mesh(`Hedgehog Ear Cup ${sx}`, sphere(0.022, 6, 6), bronzeShade, {
+        position: [sx * 0.10, bodyY + 0.15, headZ - 0.01],
+        scale: [0.7, 0.9, 0.5],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Four short stubby legs anchoring the hedgehog to the plinth cap.
+  for (const sz of [-1, 1]) {
+    for (const sx of [-1, 1]) {
+      parts.push(
+        f.mesh(`Hedgehog Leg ${sx} ${sz}`, cylinder(0.040, 0.046, 0.12, 8), bronze, {
+          position: [sx * 0.10, bodyY - 0.20, sz * 0.16],
+        }, { castShadow: true, receiveShadow: true }),
+        // Tiny paw pad cap at the base of each leg.
+        f.mesh(`Hedgehog Paw ${sx} ${sz}`, box(0.07, 0.030, 0.08), bronzeShade, {
+          position: [sx * 0.10, bodyY - 0.27, sz * 0.16],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Mantle of raised spines — five rings of slim cone tufts radiating
+  // across the back so the bristled relief reads at glancing sun.
+  const spineRings = 5;
+  const spinesPerRing = [10, 12, 14, 12, 10];
+  for (let r = 0; r < spineRings; r++) {
+    const count = spinesPerRing[r]!;
+    const ringY = bodyY + 0.14 - r * 0.04;
+    const ringR = 0.20 + r * 0.012;
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2 + r * 0.18;
+      // Skip the front face so the snout / eyes stay clear.
+      if (Math.cos(a) > 0.6 && r > 1) continue;
+      const sx = Math.cos(a) * ringR;
+      const sz = Math.sin(a) * ringR;
+      parts.push(
+        f.mesh(`Hedgehog Spine ${r} ${i}`, cone(0.014, 0.080, 5), bronze, {
+          position: [sx, ringY, sz - 0.04 * r],
+          rotation: [Math.sin(a) * 0.6, a, Math.cos(a) * 0.6],
+        }, { castShadow: false }),
+        // Slim raised spine tip highlight for a metallic glint along the crown.
+        f.mesh(`Hedgehog Spine Tip ${r} ${i}`, sphere(0.010, 6, 4), spineTip, {
+          position: [sx * 1.15, ringY + 0.05, (sz - 0.04 * r) * 1.15],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Hedgehog Plaque", box(0.30, 0.10, 0.018), bronzeHi, {
+      position: [0, 0.50, 0.235],
+    }, { castShadow: false }),
+    f.mesh("Hedgehog Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Hedgehog Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Hedgehog Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+  );
+  return f.group("Hedgehog Statue", parts, { position: pos });
+}
+
 /* ────────────────────── pass 38 — door brass fittings ────────────────────── */
 
 /**
@@ -31525,6 +31811,109 @@ function buildDoorBrassFittings(f: NodeFactory): SceneNode {
     }, { castShadow: false }),
   );
   return f.group("Door Brass Fittings", parts);
+}
+
+/* ────────────────────── pass 39 — door letter slot + number plate ────────────────────── */
+
+/**
+ * Polished brass front-door letter slot (a slim broad mouth panel pinned
+ * across the mid-height of the door slab with a slightly raised lip and a
+ * recessed dark interior shadow reading as the open slot) and a slim oval
+ * brass house-number plate fixed above it bearing three small raised
+ * numeral pips (the "39" address marker registering the latest pass).
+ * Both reuse the existing `copper-patina` colour+bump pair tinted toward
+ * warm brass (sharing the pass-38 brass palette) so the polished metal
+ * reads as fitted relief against the door slab.
+ */
+function buildDoorLetterSlot(f: NodeFactory): SceneNode {
+  const brass: MaterialDef = {
+    color: C.doorBrass,
+    roughness: 0.42,
+    metalness: 0.85,
+    texture: "copper-patina",
+    textureScale: [0.4, 0.4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.012,
+  };
+  const brassHi = std(C.doorBrassHi, 0.35, { metalness: 0.92 });
+  const brassShade = std(C.doorBrassShade, 0.85, { metalness: 0.6, flatShading: true });
+  const slotShadow = std(C.doorLetterSlotShadow, 0.95, { metalness: 0.05 });
+  const pip = std(C.doorNumberPip, 0.35, { metalness: 0.95 });
+  const parts: SceneNode[] = [];
+  // ── Letter slot — slim broad brass face plate pinned to the door slab.
+  const lx = DOOR_LETTER_SLOT_POS[0];
+  const ly = DOOR_LETTER_SLOT_POS[1];
+  const lz = DOOR_LETTER_SLOT_POS[2];
+  parts.push(
+    // Broad brass face plate — slim raised rectangle.
+    f.mesh("Letter Slot Plate", box(0.42, 0.10, 0.012), brass, {
+      position: [lx, ly, lz],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim raised top lip running along the slot's top edge.
+    f.mesh("Letter Slot Lip Top", box(0.40, 0.020, 0.020), brassHi, {
+      position: [lx, ly + 0.034, lz + 0.004],
+    }, { castShadow: false }),
+    // Slim raised bottom lip running along the slot's bottom edge.
+    f.mesh("Letter Slot Lip Bottom", box(0.40, 0.020, 0.020), brassHi, {
+      position: [lx, ly - 0.034, lz + 0.004],
+    }, { castShadow: false }),
+    // Recessed dark interior shadow reading as the slot opening.
+    f.mesh("Letter Slot Mouth", box(0.34, 0.024, 0.006), slotShadow, {
+      position: [lx, ly, lz + 0.008],
+    }, { castShadow: false }),
+    // Two small rivet heads at the slot's left and right corners.
+    f.mesh("Letter Slot Rivet L", sphere(0.012, 8, 6), brassHi, {
+      position: [lx - 0.19, ly, lz + 0.008],
+    }, { castShadow: false }),
+    f.mesh("Letter Slot Rivet R", sphere(0.012, 8, 6), brassHi, {
+      position: [lx + 0.19, ly, lz + 0.008],
+    }, { castShadow: false }),
+  );
+  // ── House-number plate — slim oval brass disc above the slot.
+  const nx = DOOR_NUMBER_PLATE_POS[0];
+  const ny = DOOR_NUMBER_PLATE_POS[1];
+  const nz = DOOR_NUMBER_PLATE_POS[2];
+  parts.push(
+    // Slim oval brass disc — flat ellipsoidal back plate.
+    f.mesh("Number Plate Disc", cylinder(0.13, 0.13, 0.012, 16), brass, {
+      position: [nx, ny, nz],
+      rotation: [Math.PI / 2, 0, 0],
+      scale: [1.6, 1.0, 1.0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim raised oval frame ring for relief.
+    f.mesh("Number Plate Frame", cylinder(0.11, 0.11, 0.018, 16), brassShade, {
+      position: [nx, ny, nz + 0.006],
+      rotation: [Math.PI / 2, 0, 0],
+      scale: [1.55, 1.0, 1.0],
+    }, { castShadow: false }),
+  );
+  // ── Three raised numeral pips arranged left → right reading "39".
+  // The pips are small bumps reading as embossed numerals at glancing sun.
+  // Left pip — slim vertical bar reading as the "3" stroke.
+  parts.push(
+    f.mesh("Number Plate Pip 3 Top", box(0.026, 0.020, 0.010), pip, {
+      position: [nx - 0.07, ny + 0.020, nz + 0.014],
+    }, { castShadow: false }),
+    f.mesh("Number Plate Pip 3 Mid", box(0.026, 0.014, 0.010), pip, {
+      position: [nx - 0.07, ny + 0.002, nz + 0.014],
+    }, { castShadow: false }),
+    f.mesh("Number Plate Pip 3 Bot", box(0.026, 0.020, 0.010), pip, {
+      position: [nx - 0.07, ny - 0.020, nz + 0.014],
+    }, { castShadow: false }),
+    // Centre pip — slim round dot reading as the separator.
+    f.mesh("Number Plate Pip Dot", sphere(0.011, 8, 6), pip, {
+      position: [nx, ny, nz + 0.018],
+    }, { castShadow: false }),
+    // Right pip — slim ovoid reading as the "9" loop.
+    f.mesh("Number Plate Pip 9 Loop", cylinder(0.022, 0.022, 0.010, 12), pip, {
+      position: [nx + 0.07, ny + 0.010, nz + 0.014],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    f.mesh("Number Plate Pip 9 Tail", box(0.012, 0.030, 0.010), pip, {
+      position: [nx + 0.075, ny - 0.020, nz + 0.014],
+    }, { castShadow: false }),
+  );
+  return f.group("Door Letter Slot", parts);
 }
 
 /* ────────────────────── pass 38 — mangrove estuary ────────────────────── */
@@ -31970,6 +32359,517 @@ function buildMangrovePirogue(f: NodeFactory, pos: [number, number, number]): Sc
     }, { castShadow: false }),
   );
   return f.group("Mangrove Pirogue", parts, { position: pos });
+}
+
+/* ────────────────────── pass 39 — paddy terrace ────────────────────── */
+
+/**
+ * Far-east monsoon paddy-terrace plane east of the mangrove estuary. Carries
+ * a paddy-mud ground floor surfaced with the existing `peat-moor` colour map
+ * paired with its bump depth map, a slim silty-mud west apron along the
+ * mangrove-estuary join (no hole at the seam), three stepped flooded paddy
+ * tiers separated by slim raised earth bunds, six small rice-stalk clumps
+ * scattered across the tiers, a peaked thatched-roof farmer's hut at the
+ * northeast corner on four short stilt posts, a slim bronze water-buffalo
+ * statue wading mid-paddy and a short slatted wooden footbridge across the
+ * centre paddy with a knotted-rope handrail.
+ */
+function buildFarEastPaddyTerrace(f: NodeFactory): SceneNode {
+  return f.group("Far East Paddy Terrace", [
+    // Paddy-mud ground plane — silty worked-earth floor.
+    f.mesh(
+      "Paddy Ground",
+      plane(PADDY_TERRACE_W, PADDY_TERRACE_D),
+      std(C.pdMud, 0.95, {
+        texture: "peat-moor",
+        textureScale: [3, 3],
+        bumpMap: "peat-moor-bump",
+        bumpScale: 0.06,
+        metalness: 0.04,
+      }),
+      { position: PADDY_TERRACE_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the mangrove-estuary east edge with a slim silty
+    // strip so the seam reads as a continuous mud-into-paddy join with no
+    // holes at the ground layer.
+    f.mesh(
+      "Paddy West Apron",
+      plane(3, PADDY_TERRACE_D),
+      std(C.pdApronSilt, 0.95, {
+        texture: "peat-moor",
+        textureScale: [1, 4],
+        bumpMap: "peat-moor-bump",
+        bumpScale: 0.04,
+      }),
+      {
+        position: [
+          PADDY_TERRACE_POS[0] - PADDY_TERRACE_W / 2 + 1.5,
+          -0.052,
+          PADDY_TERRACE_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildPaddyTiers(f),
+    buildPaddyRiceClumps(f),
+    buildPaddyHut(f, PADDY_HUT_POS),
+    buildPaddyBuffalo(f, PADDY_BUFFALO_POS),
+    buildPaddyBridge(f, PADDY_BRIDGE_POS),
+  ]);
+}
+
+/**
+ * Three stepped flooded paddy tiers separated by slim raised earth bunds.
+ * Each tier carries a thin translucent paddy-water slab with a slightly
+ * brighter ripple highlight band running across it.
+ */
+function buildPaddyTiers(f: NodeFactory): SceneNode {
+  const water: MaterialDef = {
+    color: C.pdWater,
+    roughness: 0.28,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.82,
+  };
+  const waterHi = std(C.pdWaterHi, 0.45, { metalness: 0.3, transparent: true, opacity: 0.65 });
+  const bund: MaterialDef = {
+    color: C.pdBund,
+    roughness: 0.92,
+    metalness: 0.0,
+    texture: "peat-moor",
+    textureScale: [2, 2],
+    bumpMap: "peat-moor-bump",
+    bumpScale: 0.04,
+    flatShading: true,
+  };
+  const bundHi = std(C.pdBundHi, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [];
+  for (let i = 0; i < PADDY_TIERS.length; i++) {
+    const t = PADDY_TIERS[i]!;
+    // Slim raised earth bund framing the tier — four box rails outlining the
+    // paddy edges so the stepped retaining berm reads as relief.
+    const bx = t.x;
+    const bz = t.z;
+    parts.push(
+      // North bund rail.
+      f.mesh(`Tier ${i} Bund N`, box(t.w + 0.4, 0.16, 0.18), bund, {
+        position: [bx, t.level + 0.06, bz - t.d / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      // South bund rail.
+      f.mesh(`Tier ${i} Bund S`, box(t.w + 0.4, 0.16, 0.18), bund, {
+        position: [bx, t.level + 0.06, bz + t.d / 2],
+      }, { castShadow: true, receiveShadow: true }),
+      // West bund rail.
+      f.mesh(`Tier ${i} Bund W`, box(0.18, 0.16, t.d + 0.4), bund, {
+        position: [bx - t.w / 2, t.level + 0.06, bz],
+      }, { castShadow: true, receiveShadow: true }),
+      // East bund rail.
+      f.mesh(`Tier ${i} Bund E`, box(0.18, 0.16, t.d + 0.4), bund, {
+        position: [bx + t.w / 2, t.level + 0.06, bz],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim raised bund highlight cap along the south rail for relief.
+      f.mesh(`Tier ${i} Bund Hi`, box(t.w + 0.4, 0.022, 0.10), bundHi, {
+        position: [bx, t.level + 0.15, bz + t.d / 2],
+      }, { castShadow: false }),
+    );
+    // Slim translucent paddy-water slab filling the tier.
+    parts.push(
+      f.mesh(`Tier ${i} Water`, box(t.w - 0.08, 0.022, t.d - 0.08), water, {
+        position: [bx, t.level + 0.022, bz],
+      }, { castShadow: false }),
+      // Slim ripple highlight band across the water surface.
+      f.mesh(`Tier ${i} Water Hi`, box(t.w - 0.5, 0.006, 0.18), waterHi, {
+        position: [bx, t.level + 0.034, bz - t.d / 4],
+      }, { castShadow: false }),
+      f.mesh(`Tier ${i} Water Hi 2`, box(t.w - 0.8, 0.006, 0.12), waterHi, {
+        position: [bx + 0.4, t.level + 0.034, bz + t.d / 4],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Paddy Tiers", parts);
+}
+
+/**
+ * Six small rice-stalk clumps scattered across the tiers — each a fan of
+ * slim curved blades rising from the water with a brighter blade highlight
+ * at the tip.
+ */
+function buildPaddyRiceClumps(f: NodeFactory): SceneNode {
+  const rice: MaterialDef = {
+    color: C.pdRice,
+    roughness: 0.85,
+    metalness: 0.0,
+    flatShading: true,
+  };
+  const riceHi = std(C.pdRiceHi, 0.75, { flatShading: true });
+  const clumps: SceneNode[] = [];
+  for (let c = 0; c < PADDY_RICE_CLUMPS.length; c++) {
+    const clump = PADDY_RICE_CLUMPS[c]!;
+    const s = clump.scale;
+    const parts: SceneNode[] = [];
+    // Fan of slim curved blade stalks — seven cones radiating upward + outward.
+    const bladeCount = 7;
+    for (let i = 0; i < bladeCount; i++) {
+      const a = (i / bladeCount) * Math.PI * 2;
+      parts.push(
+        f.mesh(`Rice Blade ${i}`, cone(0.018 * s, 0.34 * s, 5), rice, {
+          position: [Math.cos(a) * 0.06 * s, 0.17 * s, Math.sin(a) * 0.06 * s],
+          rotation: [Math.sin(a) * 0.35, a, Math.cos(a) * 0.35],
+        }, { castShadow: false }),
+        // Slim brighter blade-tip highlight.
+        f.mesh(`Rice Blade Tip ${i}`, sphere(0.014 * s, 6, 4), riceHi, {
+          position: [Math.cos(a) * 0.14 * s, 0.32 * s, Math.sin(a) * 0.14 * s],
+        }, { castShadow: false }),
+      );
+    }
+    // Centre tuft — slim upright cone in the middle of the clump.
+    parts.push(
+      f.mesh("Rice Centre Tuft", cone(0.02 * s, 0.36 * s, 6), rice, {
+        position: [0, 0.18 * s, 0],
+      }, { castShadow: false }),
+      f.mesh("Rice Centre Tip", sphere(0.018 * s, 6, 4), riceHi, {
+        position: [0, 0.36 * s, 0],
+      }, { castShadow: false }),
+    );
+    clumps.push(
+      f.group(`Rice Clump ${c + 1}`, parts, {
+        position: [clump.x, 0.08, clump.z],
+        rotation: [0, clump.rot, 0],
+      }),
+    );
+  }
+  return f.group("Paddy Rice Clumps", clumps);
+}
+
+/**
+ * Peaked thatched-roof farmer's hut at the northeast corner of the terrace
+ * on four short stilt posts. Slim woven-wattle walls, a glowing front
+ * window and a small round bamboo step-ladder leaning against the side.
+ */
+function buildPaddyHut(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const thatch: MaterialDef = {
+    color: C.pdHutThatch,
+    roughness: 0.95,
+    metalness: 0.0,
+    texture: "wood",
+    textureScale: [0.5, 1.2],
+    flatShading: true,
+  };
+  const thatchHi = std(C.pdHutThatchHi, 0.85, { flatShading: true });
+  const wall: MaterialDef = {
+    color: C.pdHutWall,
+    roughness: 0.9,
+    metalness: 0.0,
+    texture: "wood",
+    textureScale: [0.6, 0.6],
+    flatShading: true,
+  };
+  const wallHi = std(C.pdHutWallHi, 0.85, { flatShading: true });
+  const post = std(C.pdHutPost, 0.95, { flatShading: true });
+  const windowMat = std(C.pdHutWindow, 0.4, { metalness: 0.15 });
+  const parts: SceneNode[] = [];
+  // ── Four stilt posts driven into the mud lifting the hut above the paddies.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Hut Post ${sx} ${sz}`, cylinder(0.08, 0.09, 0.70, 8), post, {
+          position: [sx * 0.85, 0.35, sz * 0.7],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // ── Wattle floor planks raised above the stilt posts.
+  parts.push(
+    f.mesh("Hut Floor", box(2.0, 0.10, 1.6), wall, {
+      position: [0, 0.75, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim raised floor highlight ridge along the south edge.
+    f.mesh("Hut Floor Hi", box(2.0, 0.018, 0.06), wallHi, {
+      position: [0, 0.81, 0.8],
+    }, { castShadow: false }),
+  );
+  // ── Four slim wattle walls — south wall has a window opening.
+  parts.push(
+    // North wall — broad slab.
+    f.mesh("Hut North Wall", box(2.0, 1.0, 0.08), wall, {
+      position: [0, 1.30, -0.78],
+    }, { castShadow: true, receiveShadow: true }),
+    // East wall.
+    f.mesh("Hut East Wall", box(0.08, 1.0, 1.6), wall, {
+      position: [0.96, 1.30, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // West wall.
+    f.mesh("Hut West Wall", box(0.08, 1.0, 1.6), wall, {
+      position: [-0.96, 1.30, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // South wall left of window.
+    f.mesh("Hut South Wall L", box(0.7, 1.0, 0.08), wall, {
+      position: [-0.65, 1.30, 0.78],
+    }, { castShadow: true, receiveShadow: true }),
+    // South wall right of window.
+    f.mesh("Hut South Wall R", box(0.7, 1.0, 0.08), wall, {
+      position: [0.65, 1.30, 0.78],
+    }, { castShadow: true, receiveShadow: true }),
+    // South wall above window.
+    f.mesh("Hut South Wall Top", box(0.6, 0.34, 0.08), wall, {
+      position: [0, 1.63, 0.78],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Glowing window pane.
+  parts.push(
+    f.mesh("Hut Window", box(0.55, 0.50, 0.04), windowMat, {
+      position: [0, 1.30, 0.80],
+    }, { castShadow: false }),
+  );
+  // ── Slim raised wattle highlight bands running across each wall.
+  for (let i = 0; i < 4; i++) {
+    const wy = 1.04 + i * 0.18;
+    parts.push(
+      f.mesh(`Hut Wattle Band N ${i}`, box(1.96, 0.014, 0.022), wallHi, {
+        position: [0, wy, -0.74],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Peaked thatched roof — broad pyramid cap with shaggy raised highlights.
+  parts.push(
+    f.mesh("Hut Roof Core", box(2.4, 0.18, 2.0), thatch, {
+      position: [0, 1.95, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Peaked roof core — pyramidal cone capping the floor.
+    f.mesh("Hut Roof Peak", cone(1.4, 1.2, 6), thatch, {
+      position: [0, 2.55, 0],
+      scale: [1.0, 1.0, 0.85],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim raised thatch highlight tufts along the roof edge.
+    f.mesh("Hut Roof Hi S", box(2.5, 0.06, 0.12), thatchHi, {
+      position: [0, 1.99, 1.0],
+    }, { castShadow: false }),
+    f.mesh("Hut Roof Hi N", box(2.5, 0.06, 0.12), thatchHi, {
+      position: [0, 1.99, -1.0],
+    }, { castShadow: false }),
+    f.mesh("Hut Roof Hi E", box(0.12, 0.06, 2.1), thatchHi, {
+      position: [1.2, 1.99, 0],
+    }, { castShadow: false }),
+    f.mesh("Hut Roof Hi W", box(0.12, 0.06, 2.1), thatchHi, {
+      position: [-1.2, 1.99, 0],
+    }, { castShadow: false }),
+  );
+  // ── Small bamboo step-ladder leaning against the east side.
+  parts.push(
+    f.mesh("Hut Ladder Rail L", cylinder(0.020, 0.020, 1.10, 6), post, {
+      position: [1.20, 0.45, 0.40],
+      rotation: [0.1, 0, -0.25],
+    }, { castShadow: true }),
+    f.mesh("Hut Ladder Rail R", cylinder(0.020, 0.020, 1.10, 6), post, {
+      position: [1.30, 0.45, 0.40],
+      rotation: [0.1, 0, -0.25],
+    }, { castShadow: true }),
+  );
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh(`Hut Ladder Rung ${i}`, cylinder(0.012, 0.012, 0.14, 6), post, {
+        position: [1.25 + i * 0.07, 0.10 + i * 0.24, 0.40],
+        rotation: [0, 0, Math.PI / 2 - 0.25],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Paddy Hut", parts, { position: pos });
+}
+
+/**
+ * Slim bronze water-buffalo statue wading mid-paddy on a slim plinth lip
+ * just above the water. Broad ovoid body, four planted legs, a tapered
+ * horned head and a slim swept tail. Reuses the existing `copper-patina`
+ * pair so the verdigris reads as crusted relief on the cast metal.
+ */
+function buildPaddyBuffalo(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.pdBuffaloBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.018,
+  };
+  const bronzeHi = std(C.pdBuffaloBronzeHi, 0.4, { metalness: 0.85 });
+  const horn = std(C.pdBuffaloHorn, 0.7, { metalness: 0.4 });
+  const parts: SceneNode[] = [];
+  // ── Slim circular bronze base plate sitting just above the paddy water.
+  parts.push(
+    f.mesh("Buffalo Base", cylinder(0.42, 0.42, 0.04, 16), bronze, {
+      position: [0, 0.20, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Buffalo Base Hi", cylinder(0.38, 0.38, 0.008, 16), bronzeHi, {
+      position: [0, 0.224, 0],
+    }, { castShadow: false }),
+  );
+  // ── Broad ovoid body straddling the base.
+  const bodyY = 0.62;
+  parts.push(
+    f.mesh("Buffalo Body", sphere(0.30, 14, 12), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.0, 0.85, 1.7],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim chest hump rising above the shoulders.
+    f.mesh("Buffalo Hump", sphere(0.18, 12, 10), bronze, {
+      position: [0, bodyY + 0.16, -0.18],
+      scale: [0.85, 0.7, 0.7],
+    }, { castShadow: true }),
+    // Slim back-spine highlight ridge.
+    f.mesh("Buffalo Spine Hi", box(0.04, 0.016, 0.50), bronzeHi, {
+      position: [0, bodyY + 0.18, 0],
+    }, { castShadow: false }),
+  );
+  // ── Four planted legs anchoring the buffalo to the base.
+  for (const sz of [-1, 1]) {
+    for (const sx of [-1, 1]) {
+      parts.push(
+        f.mesh(`Buffalo Leg ${sx} ${sz}`, cylinder(0.06, 0.07, 0.38, 8), bronze, {
+          position: [sx * 0.13, bodyY - 0.38, sz * 0.34],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim hoof cap at the base.
+        f.mesh(`Buffalo Hoof ${sx} ${sz}`, box(0.10, 0.040, 0.10), bronzeHi, {
+          position: [sx * 0.13, bodyY - 0.58, sz * 0.34],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Slim neck angled forward to a broad tapered head.
+  const headY = bodyY + 0.06;
+  parts.push(
+    f.mesh("Buffalo Neck", cylinder(0.12, 0.14, 0.20, 10), bronze, {
+      position: [0, headY + 0.04, 0.40],
+      rotation: [0.3, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Buffalo Head", sphere(0.16, 14, 12), bronze, {
+      position: [0, headY, 0.58],
+      scale: [1.0, 0.9, 1.3],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tapered muzzle protruding forward from the head.
+    f.mesh("Buffalo Muzzle", cone(0.10, 0.20, 10), bronze, {
+      position: [0, headY - 0.04, 0.75],
+      rotation: [Math.PI / 2 - 0.2, 0, 0],
+    }, { castShadow: true }),
+    // Small dark nose dab at the muzzle tip.
+    f.mesh("Buffalo Nose", sphere(0.030, 8, 6), horn, {
+      position: [0, headY - 0.05, 0.84],
+    }, { castShadow: false }),
+  );
+  // ── Two curved horns sweeping out and back from the crown.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Buffalo Horn ${sx}`, cone(0.030, 0.32, 8), horn, {
+        position: [sx * 0.16, headY + 0.16, 0.50],
+        rotation: [0.2, 0, sx * 1.0],
+      }, { castShadow: true }),
+      // Slim curved horn-tip dab.
+      f.mesh(`Buffalo Horn Tip ${sx}`, sphere(0.020, 8, 6), horn, {
+        position: [sx * 0.34, headY + 0.20, 0.40],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Two glinting eye highlights flanking the muzzle.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Buffalo Eye ${sx}`, sphere(0.018, 8, 6), bronzeHi, {
+        position: [sx * 0.07, headY + 0.05, 0.65],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Two flat ears flaring out below the horns.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Buffalo Ear ${sx}`, sphere(0.07, 10, 8), bronze, {
+        position: [sx * 0.18, headY + 0.04, 0.46],
+        scale: [0.4, 0.8, 0.9],
+        rotation: [0, sx * 0.4, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Slim swept tail tucked at the back.
+  parts.push(
+    f.mesh("Buffalo Tail", cylinder(0.020, 0.014, 0.30, 6), bronze, {
+      position: [0, bodyY - 0.08, -0.46],
+      rotation: [-0.4, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Buffalo Tail Tuft", sphere(0.034, 8, 6), bronzeHi, {
+      position: [0, bodyY - 0.26, -0.56],
+    }, { castShadow: false }),
+  );
+  return f.group("Paddy Buffalo Statue", parts, { position: pos });
+}
+
+/**
+ * Short slatted wooden footbridge across the centre paddy — four stilt
+ * posts in the mud carrying a slatted plank deck with a knotted-rope
+ * handrail on the south side. The bridge spans the tier-to-tier gap so the
+ * route across the terrace stays continuous above the paddy water.
+ */
+function buildPaddyBridge(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const plank: MaterialDef = {
+    color: C.pdBridgePlank,
+    roughness: 0.92,
+    metalness: 0.0,
+    texture: "wood",
+    textureScale: [0.8, 0.8],
+    flatShading: true,
+  };
+  const plankHi = std(C.pdBridgePlankHi, 0.85, { flatShading: true });
+  const rope = std(C.pdBridgeRope, 0.95, {});
+  const parts: SceneNode[] = [];
+  // Four stilt posts driven into the mud, two pairs along the bridge.
+  for (let i = 0; i < 2; i++) {
+    const px = -1.0 + i * 2.0;
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Bridge Post ${i} ${sz}`, cylinder(0.05, 0.06, 0.55, 8), plank, {
+          position: [px, 0.27, sz * 0.30],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // Plank deck — slim board running along the bridge.
+  parts.push(
+    f.mesh("Bridge Deck", box(3.2, 0.06, 0.78), plank, {
+      position: [0, 0.56, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // Ten slim plank highlight bands across the deck reading as boards.
+  for (let i = 0; i < 10; i++) {
+    parts.push(
+      f.mesh(`Bridge Plank Hi ${i}`, box(0.28, 0.014, 0.74), plankHi, {
+        position: [-1.5 + i * 0.32, 0.594, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // Knotted-rope handrail along the south side (sz=+1).
+  for (let i = 0; i < 4; i++) {
+    const px = -1.2 + i * 0.8;
+    parts.push(
+      f.mesh(`Bridge Handrail Post ${i}`, cylinder(0.016, 0.016, 0.34, 6), plank, {
+        position: [px, 0.76, 0.36],
+      }, { castShadow: true }),
+    );
+  }
+  // Slim rope running between the posts.
+  parts.push(
+    f.mesh("Bridge Handrail Rope", cylinder(0.010, 0.010, 2.8, 6), rope, {
+      position: [0, 0.92, 0.36],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  // Three small knot beads along the rope for relief.
+  for (let i = 0; i < 3; i++) {
+    parts.push(
+      f.mesh(`Bridge Handrail Knot ${i}`, sphere(0.022, 8, 6), rope, {
+        position: [-0.8 + i * 0.8, 0.92, 0.36],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Paddy Bridge", parts, { position: pos });
 }
 
 /* ───────────────────────── document ───────────────────────── */
@@ -32995,6 +33895,42 @@ function buildMangrovePirogue(f: NodeFactory, pos: [number, number, number]): Sc
  *    a tapered dagger beak, and a small wooden pirogue canoe drawn up
  *    onto the mud at the channel's east end with a pair of carved paddles
  *    resting in the boat and a brass mooring cleat at the bow.
+ *  - Thirty-ninth pass — courtyard: a Victorian bronze hedgehog statue on a
+ *    fluted marble pedestal, parked on the back outside-fence lawn between
+ *    the raven (at x=-3.5) and the back archway (at x=0) so it continues
+ *    the line of marble-pedestal sentinels along the back perimeter — the
+ *    hedgehog crouches four-square on the plinth cap in a slim foraging
+ *    pose with a tapered snout, two glinting eye highlights, two small
+ *    rounded ears, four short stubby legs and a dense mantle of raised
+ *    spines reading as bristled relief across the back (the bronze body,
+ *    snout, ears and spines reuse the existing `copper-patina` colour +
+ *    bump pair so the verdigris reads as crusted relief on the cast metal,
+ *    and the plinth reuses the existing `marble` colour + bump pair so the
+ *    stone reads with veined relief). House: a polished brass letter slot
+ *    pinned across the mid-height of the front door slab and a slim oval
+ *    brass house-number plate fixed above it bearing three small raised
+ *    numeral pips (the "39" address marker registering the latest pass) —
+ *    companions to the kickplate, bell pull, knocker, lanterns, address
+ *    plaque and pine-needle wreath. Both reuse the existing `copper-
+ *    patina` pair tinted toward warm brass (sharing the pass-38 brass
+ *    palette) so the polished metal reads as fitted relief against the
+ *    door slab. Scene: a far-east monsoon paddy-terrace plane east of the
+ *    mangrove estuary — a paddy-mud floor surfaced with the existing
+ *    `peat-moor` colour map paired with its bump depth map so the worked
+ *    mud and earth bunds read as raised relief at glancing sun, a slim
+ *    silty-mud west apron along the mangrove join so the ground layer has
+ *    no holes at the seam, three stepped flooded paddy tiers separated by
+ *    slim raised earth bunds (each tier carrying a thin translucent paddy-
+ *    water slab with brighter ripple highlight bands), six small rice-
+ *    stalk clumps scattered across the tiers (each a fan of slim curved
+ *    blades rising from the water), a peaked thatched-roof farmer's hut
+ *    at the northeast corner on four short stilt posts with a slim woven-
+ *    wattle wall, a glowing front window and a small bamboo step-ladder
+ *    leaning against the east side, a slim bronze water-buffalo statue
+ *    wading mid-paddy with a broad ovoid body, four planted legs, a
+ *    tapered horned head and a swept tail, and a short slatted wooden
+ *    footbridge across the centre paddy on four stilt posts with a
+ *    knotted-rope handrail.
  *
  * Trees route around every courtyard prop. Deterministic: every call produces
  * the same ids and randomised positions.
@@ -33107,6 +34043,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: BEAR_STATUE_POS[0], z: BEAR_STATUE_POS[2], r: 0.9 },
     // Thirty-eighth-pass keep-out — bronze lynx statue on the back outside-fence lawn.
     { x: LYNX_STATUE_POS[0], z: LYNX_STATUE_POS[2], r: 0.9 },
+    // Thirty-ninth-pass keep-out — bronze hedgehog statue on the back outside-fence lawn.
+    { x: HEDGEHOG_STATUE_POS[0], z: HEDGEHOG_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -33186,6 +34124,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildWolfStatue(f, WOLF_STATUE_POS),
     buildBearStatue(f, BEAR_STATUE_POS),
     buildLynxStatue(f, LYNX_STATUE_POS),
+    buildHedgehogStatue(f, HEDGEHOG_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -33221,6 +34160,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const feCoralAtoll = buildFarEastCoralAtoll(f);
   const feTidepoolShelf = buildFarEastTidepoolShelf(f);
   const feMangroveEstuary = buildFarEastMangroveEstuary(f);
+  const fePaddyTerrace = buildFarEastPaddyTerrace(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -33279,6 +34219,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildPorchCeilingPendants(f),
     buildSideWallSconces(f),
     buildDoorBrassFittings(f),
+    buildDoorLetterSlot(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -33321,6 +34262,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       feCoralAtoll,
       feTidepoolShelf,
       feMangroveEstuary,
+      fePaddyTerrace,
       house,
     ],
   };

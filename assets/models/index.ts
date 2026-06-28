@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirty-eight enhancement passes.
+// house and its courtyard, layered over thirty-nine enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -1161,6 +1161,42 @@
 //   a small wooden pirogue canoe drawn up onto the mud at the
 //   channel's east end with a pair of carved paddles resting in
 //   the boat and a brass mooring cleat at the bow.
+//   Pass 39 — courtyard: a Victorian bronze hedgehog statue on a fluted
+//   marble pedestal, parked on the back outside-fence lawn between the
+//   raven (at x=-3.5) and the back archway (at x=0) so it continues the
+//   line of marble-pedestal sentinels along the back perimeter — the
+//   hedgehog crouches four-square on the plinth cap in a slim foraging
+//   pose with a tapered snout, two glinting eye highlights, two small
+//   rounded ears, four short stubby legs and a dense mantle of raised
+//   spines reading as bristled relief across the back (the bronze body,
+//   snout, ears and spines reuse the existing `copper-patina` colour +
+//   bump pair so the verdigris reads as crusted relief on the cast metal,
+//   and the plinth reuses the existing `marble` colour + bump pair so the
+//   stone reads with veined relief). House: a polished brass letter slot
+//   pinned across the mid-height of the front door slab and a slim oval
+//   brass house-number plate fixed above it bearing three small raised
+//   numeral pips (the "39" address marker registering the latest pass) —
+//   companions to the kickplate, bell pull, knocker, lanterns, address
+//   plaque and pine-needle wreath. Both reuse the existing `copper-
+//   patina` pair tinted toward warm brass (sharing the pass-38 brass
+//   palette) so the polished metal reads as fitted relief against the
+//   door slab. Scene: a far-east monsoon paddy-terrace plane east of the
+//   mangrove estuary — a paddy-mud floor surfaced with the existing
+//   `peat-moor` colour map paired with its bump depth map so the worked
+//   mud and earth bunds read as raised relief at glancing sun, a slim
+//   silty-mud west apron along the mangrove join so the ground layer has
+//   no holes at the seam, three stepped flooded paddy tiers separated by
+//   slim raised earth bunds (each tier carrying a thin translucent
+//   paddy-water slab with brighter ripple highlight bands), six small
+//   rice-stalk clumps scattered across the tiers (each a fan of slim
+//   curved blades rising from the water), a peaked thatched-roof
+//   farmer's hut at the northeast corner on four short stilt posts with
+//   a slim woven-wattle wall, a glowing front window and a small bamboo
+//   step-ladder leaning against the east side, a slim bronze water-
+//   buffalo statue wading mid-paddy with a broad ovoid body, four
+//   planted legs, a tapered horned head and a swept tail, and a short
+//   slatted wooden footbridge across the centre paddy on four stilt
+//   posts with a knotted-rope handrail.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
