@@ -22,17 +22,14 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 39) adds a Victorian bronze hedgehog statue on a
- * fluted marble pedestal to the back outside-fence lawn (between the raven
- * at x=-3.5 and the back archway at x=0, continuing the line of marble-
- * pedestal sentinels along the back perimeter), a polished brass front-door
- * letter slot and a slim brass "39" house-number plate above it (companions
- * to the kickplate, bell pull, knocker, lanterns, address plaque and pine-
- * needle wreath) and a far-east monsoon paddy-terrace plane east of the
- * mangrove estuary with three stepped flooded paddy tiers separated by
- * raised earth bunds, six rice-stalk clumps, a peaked thatched-roof
- * farmer's stilt-hut, a slim bronze water-buffalo statue wading mid-paddy
- * and a slatted wooden footbridge across the centre paddy.
+ * latest enhancement (pass 40) adds a Victorian bronze badger statue on a
+ * fluted marble pedestal to the back outside-fence lawn (between the fox at
+ * x=-6 and the raven at x=-3.5, continuing the line of marble-pedestal
+ * sentinels along the back perimeter) and a polished brass front-door
+ * peephole pinned to the door slab at eye-height with a spy-glass ring
+ * trim, a recessed dark iris and four corner rivets (companion to the
+ * kickplate, bell pull, knocker, letter slot, number plate, carriage
+ * lanterns, address plaque and pine-needle wreath).
  */
 const W = 7;
 const D = 5;
@@ -1899,6 +1896,39 @@ const PADDY_RICE_CLUMPS: { x: number; z: number; scale: number; rot: number }[] 
   { x: 150, z: 145, scale: 0.85, rot: 2.0 },
 ];
 
+/**
+ * Fortieth-pass courtyard prop — a Victorian bronze badger statue on a fluted
+ * marble pedestal, parked on the back outside-fence lawn between the fox
+ * (at x=-6) and the raven (at x=-3.5) so it slots into the line of marble-
+ * pedestal sentinels along the back perimeter of the courtyard. The badger
+ * stands four-square on the plinth cap in a low-slung foraging pose with a
+ * tapered black-and-cream striped face mask (a dark central stripe down the
+ * snout flanked by two pale cheek stripes for high-contrast relief), two
+ * small rounded ears, two glinting eye highlights, a stocky barrel body, a
+ * pale shaded underbelly seam, four short stubby legs and a short tapered
+ * tail tuft. The bronze body, head, snout, ears, legs and tail reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal, the pale stripe palette inset reads as
+ * a soft enamel inlay against the bronze, and the plinth reuses the
+ * existing `marble` colour + bump pair so the stone reads with veined
+ * relief.
+ */
+const BADGER_STATUE_POS: [number, number, number] = [-4.75, 0, -5.5];
+
+/**
+ * Fortieth-pass house detail — a polished brass front-door peephole pinned
+ * across the upper-mid of the door slab at eye-height (companion to the
+ * door knocker, kickplate, bell pull, letter slot, number plate, carriage
+ * lanterns, address plaque and pine-needle wreath). The peephole reads as
+ * a slim spy-glass ring with a recessed dark iris core, a small glinting
+ * lens highlight catching the porch lamps and a slim raised outer trim
+ * ring with four corner rivets. The brass body and ring reuse the
+ * existing `copper-patina` colour + bump pair tinted toward warm brass
+ * (sharing the pass-38 brass palette) so the polished metal reads as
+ * fitted relief against the door slab.
+ */
+const DOOR_PEEPHOLE_POS: [number, number, number] = [0, 1.78, FRONT_Z + WALL_T / 2 + 0.012];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -3415,6 +3445,20 @@ const C = {
   pdBridgePlank: "#6a4a30",
   pdBridgePlankHi: "#9a7048",
   pdBridgeRope: "#cbb487",
+  // Fortieth enhancement pass — a Victorian bronze badger statue on a fluted
+  // marble pedestal (back outside-fence lawn between the fox and the raven),
+  // a polished brass front-door peephole pinned to the door slab at eye-
+  // height with a spy-glass ring trim and a recessed dark iris, and a slim
+  // brass house-number "40" plate updating the address marker.
+  badgerBronze: "#3c4e44",
+  badgerBronzeHi: "#82a092",
+  badgerBronzeShade: "#1c2620",
+  badgerStripe: "#e6d8b8",
+  badgerStripeShade: "#9c8e6a",
+  badgerPlinth: "#ede2d0",
+  badgerPlinthShade: "#a89776",
+  doorPeepholeIris: "#0e0a06",
+  doorPeepholeGlint: "#f6e6a8",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -31916,6 +31960,242 @@ function buildDoorLetterSlot(f: NodeFactory): SceneNode {
   return f.group("Door Letter Slot", parts);
 }
 
+/* ────────────────────── pass 40 — badger statue ────────────────────── */
+
+/**
+ * Fortieth-pass courtyard prop — a Victorian bronze badger statue on a fluted
+ * marble pedestal continuing the line of marble-pedestal bestiary sentinels
+ * along the back outside-fence lawn (slotted between the fox at x=-6 and the
+ * raven at x=-3.5). The bronze body, head, ears, legs and tail reuse the
+ * existing `copper-patina` colour + bump pair so the verdigris reads as
+ * crusted relief on the cast metal; the cream stripe panels read as soft
+ * enamel inlay against the bronze; the plinth reuses the existing `marble`
+ * colour + bump pair so the stone reads with veined relief.
+ */
+function buildBadgerStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.badgerBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.badgerBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.badgerBronzeShade, 0.95, { flatShading: true });
+  const stripe = std(C.badgerStripe, 0.55, { metalness: 0.4 });
+  const stripeShade = std(C.badgerStripeShade, 0.9, { flatShading: true });
+  const marble: MaterialDef = {
+    color: C.badgerPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.badgerPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth — matches the rest of the bestiary line so the back perimeter
+  // reads as a uniform marching display of marble pedestals.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Badger body — a stocky barrel torso, slightly elongated north-south so
+  // the badger reads as low-slung in a foraging pose.
+  const bodyY = 1.02;
+  parts.push(
+    f.mesh("Badger Body", sphere(0.26, 14, 10), bronze, {
+      position: [0, bodyY, 0],
+      scale: [1.0, 0.7, 1.45],
+    }, { castShadow: true, receiveShadow: true }),
+    // Pale shaded underbelly seam reading as a soft cream belly band.
+    f.mesh("Badger Belly", sphere(0.22, 12, 8), stripeShade, {
+      position: [0, bodyY - 0.10, 0],
+      scale: [0.85, 0.35, 1.25],
+    }, { castShadow: false }),
+  );
+  // ── Tapered head with a striped face mask anchored to the body's front.
+  const headZ = 0.30;
+  parts.push(
+    f.mesh("Badger Head", sphere(0.16, 12, 10), bronze, {
+      position: [0, bodyY + 0.04, headZ],
+      scale: [0.9, 0.9, 1.2],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim tapered snout extending forward from the head.
+    f.mesh("Badger Snout", cone(0.07, 0.16, 10), bronze, {
+      position: [0, bodyY + 0.0, headZ + 0.16],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Small dark nose dab at the snout tip.
+    f.mesh("Badger Nose", sphere(0.022, 8, 6), bronzeShade, {
+      position: [0, bodyY - 0.01, headZ + 0.24],
+    }, { castShadow: false }),
+    // Central dark face stripe down the snout for high-contrast relief.
+    f.mesh("Badger Face Stripe", box(0.07, 0.024, 0.20), bronzeShade, {
+      position: [0, bodyY + 0.12, headZ + 0.06],
+    }, { castShadow: false }),
+  );
+  // ── Two pale cream cheek stripes flanking the dark face stripe.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Badger Cheek Stripe ${sx}`, box(0.05, 0.018, 0.18), stripe, {
+        position: [sx * 0.075, bodyY + 0.08, headZ + 0.06],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Two small rounded ears at the crown and two glinting eye highlights.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Badger Ear ${sx}`, sphere(0.034, 8, 6), bronze, {
+        position: [sx * 0.10, bodyY + 0.18, headZ - 0.04],
+        scale: [0.9, 1.0, 0.7],
+      }, { castShadow: true }),
+      f.mesh(`Badger Ear Cup ${sx}`, sphere(0.020, 6, 6), bronzeShade, {
+        position: [sx * 0.10, bodyY + 0.19, headZ - 0.03],
+        scale: [0.7, 0.9, 0.5],
+      }, { castShadow: false }),
+      f.mesh(`Badger Eye ${sx}`, sphere(0.014, 8, 6), bronzeHi, {
+        position: [sx * 0.06, bodyY + 0.06, headZ + 0.12],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Four short stubby legs anchoring the badger to the plinth cap.
+  for (const sz of [-1, 1]) {
+    for (const sx of [-1, 1]) {
+      parts.push(
+        f.mesh(`Badger Leg ${sx} ${sz}`, cylinder(0.045, 0.052, 0.14, 8), bronze, {
+          position: [sx * 0.12, bodyY - 0.20, sz * 0.20],
+        }, { castShadow: true, receiveShadow: true }),
+        // Tiny paw pad cap at the base of each leg.
+        f.mesh(`Badger Paw ${sx} ${sz}`, box(0.085, 0.030, 0.10), bronzeShade, {
+          position: [sx * 0.12, bodyY - 0.27, sz * 0.20],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Short tapered tail tuft sweeping straight back from the body.
+  parts.push(
+    f.mesh("Badger Tail A", cone(0.06, 0.18, 8), bronze, {
+      position: [0, bodyY + 0.02, -0.36],
+      rotation: [-Math.PI / 2 + 0.15, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Badger Tail Tip", sphere(0.034, 8, 6), bronzeHi, {
+      position: [0, bodyY + 0.05, -0.46],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Badger Plaque", box(0.30, 0.10, 0.018), bronzeHi, {
+      position: [0, 0.50, 0.235],
+    }, { castShadow: false }),
+    f.mesh("Badger Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Badger Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Badger Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+  );
+  return f.group("Badger Statue", parts, { position: pos });
+}
+
+/* ────────────────────── pass 40 — door peephole ────────────────────── */
+
+/**
+ * Polished brass front-door peephole pinned to the door slab at eye-height
+ * (a slim spy-glass ring with a recessed dark iris core, a small glinting
+ * lens highlight and a raised outer trim ring with four corner rivets).
+ * Reuses the existing `copper-patina` colour+bump pair tinted toward warm
+ * brass so the polished metal reads as fitted relief against the door
+ * slab, completing the door's brass fittings line (knocker, kickplate,
+ * bell pull, letter slot, number plate, peephole).
+ */
+function buildDoorPeephole(f: NodeFactory): SceneNode {
+  const brass: MaterialDef = {
+    color: C.doorBrass,
+    roughness: 0.42,
+    metalness: 0.85,
+    texture: "copper-patina",
+    textureScale: [0.4, 0.4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.012,
+  };
+  const brassHi = std(C.doorBrassHi, 0.35, { metalness: 0.92 });
+  const brassShade = std(C.doorBrassShade, 0.85, { metalness: 0.6, flatShading: true });
+  const iris = std(C.doorPeepholeIris, 0.95, { metalness: 0.05 });
+  const glint = std(C.doorPeepholeGlint, 0.3, { metalness: 0.95 });
+  const parts: SceneNode[] = [];
+  const px = DOOR_PEEPHOLE_POS[0];
+  const py = DOOR_PEEPHOLE_POS[1];
+  const pz = DOOR_PEEPHOLE_POS[2];
+  // ── Raised outer brass trim ring — a slim disc reading as the spy-glass
+  // surround pinned to the door slab.
+  parts.push(
+    f.mesh("Peephole Trim Outer", cylinder(0.060, 0.060, 0.012, 18), brass, {
+      position: [px, py, pz],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim raised inner ring step for relief.
+    f.mesh("Peephole Trim Inner", cylinder(0.046, 0.046, 0.018, 18), brassShade, {
+      position: [px, py, pz + 0.006],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Slim highlight bezel cap catching the porch lamps.
+    f.mesh("Peephole Bezel Hi", cylinder(0.040, 0.040, 0.010, 18), brassHi, {
+      position: [px, py, pz + 0.014],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Recessed dark iris core reading as the spy-glass opening.
+    f.mesh("Peephole Iris", cylinder(0.028, 0.028, 0.010, 16), iris, {
+      position: [px, py, pz + 0.020],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Small glinting lens highlight bead reading as the reflection.
+    f.mesh("Peephole Lens Glint", sphere(0.012, 10, 8), glint, {
+      position: [px - 0.008, py + 0.008, pz + 0.025],
+    }, { castShadow: false }),
+  );
+  // ── Four corner rivets pinning the trim ring to the door slab.
+  for (let j = 0; j < 4; j++) {
+    const a = (j / 4) * Math.PI * 2 + Math.PI / 4;
+    parts.push(
+      f.mesh(`Peephole Rivet ${j}`, sphere(0.010, 6, 6), brassHi, {
+        position: [px + Math.cos(a) * 0.052, py + Math.sin(a) * 0.052, pz + 0.006],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Door Peephole", parts);
+}
+
 /* ────────────────────── pass 38 — mangrove estuary ────────────────────── */
 
 /**
@@ -34045,6 +34325,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: LYNX_STATUE_POS[0], z: LYNX_STATUE_POS[2], r: 0.9 },
     // Thirty-ninth-pass keep-out — bronze hedgehog statue on the back outside-fence lawn.
     { x: HEDGEHOG_STATUE_POS[0], z: HEDGEHOG_STATUE_POS[2], r: 0.9 },
+    // Fortieth-pass keep-out — bronze badger statue on the back outside-fence lawn.
+    { x: BADGER_STATUE_POS[0], z: BADGER_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -34125,6 +34407,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildBearStatue(f, BEAR_STATUE_POS),
     buildLynxStatue(f, LYNX_STATUE_POS),
     buildHedgehogStatue(f, HEDGEHOG_STATUE_POS),
+    buildBadgerStatue(f, BADGER_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -34220,6 +34503,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildSideWallSconces(f),
     buildDoorBrassFittings(f),
     buildDoorLetterSlot(f),
+    buildDoorPeephole(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",

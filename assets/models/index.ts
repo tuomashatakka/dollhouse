@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over thirty-nine enhancement passes.
+// house and its courtyard, layered over forty enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -1197,6 +1197,30 @@
 //   planted legs, a tapered horned head and a swept tail, and a short
 //   slatted wooden footbridge across the centre paddy on four stilt
 //   posts with a knotted-rope handrail.
+//   Pass 40 — courtyard: a Victorian bronze badger statue on a fluted
+//   marble pedestal, parked on the back outside-fence lawn between the
+//   fox (at x=-6) and the raven (at x=-3.5) so it slots into the line
+//   of marble-pedestal sentinels along the back perimeter — the badger
+//   stands four-square on the plinth cap in a low-slung foraging pose
+//   with a tapered black-and-cream striped face mask (a dark central
+//   stripe down the snout flanked by two pale cheek stripes for high-
+//   contrast relief), two small rounded ears, two glinting eye
+//   highlights, a stocky barrel body, a pale shaded underbelly seam,
+//   four short stubby legs and a short tapered tail tuft (the bronze
+//   body, head, ears, legs and tail reuse the existing `copper-patina`
+//   colour + bump pair so the verdigris reads as crusted relief on the
+//   cast metal, the pale stripe panels read as soft enamel inlay
+//   against the bronze, and the plinth reuses the existing `marble`
+//   colour + bump pair so the stone reads with veined relief). House:
+//   a polished brass front-door peephole pinned to the door slab at
+//   eye-height — a slim spy-glass ring with a recessed dark iris core,
+//   a small glinting lens highlight catching the porch lamps and a
+//   raised outer trim ring with four corner rivets (companion to the
+//   kickplate, bell pull, knocker, letter slot, number plate, carriage
+//   lanterns, address plaque and pine-needle wreath). The peephole
+//   reuses the existing `copper-patina` colour + bump pair tinted
+//   toward warm brass (sharing the pass-38 brass palette) so the
+//   polished metal reads as fitted relief against the door slab.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
