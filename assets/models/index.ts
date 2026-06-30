@@ -1221,6 +1221,47 @@
 //   reuses the existing `copper-patina` colour + bump pair tinted
 //   toward warm brass (sharing the pass-38 brass palette) so the
 //   polished metal reads as fitted relief against the door slab.
+//   Pass 41 — courtyard: a Victorian bronze squirrel statue on a fluted
+//   marble pedestal, parked on the back-east outside-fence lawn east of
+//   the weather station (at x=12.5) so it extends the line of marble-
+//   pedestal bestiary sentinels eastward along the back perimeter — the
+//   squirrel perches upright on its haunches on the plinth cap, cradling
+//   a single bronze acorn between its forepaws with a long bushy tail
+//   curving up the back, a soft cream chest tuft for pale enamel relief,
+//   two tufted ears and two glinting eye highlights, a slim cream tail-
+//   tip cap reading as a pale enamel inlay on the tail crown, and four
+//   folded hind / forepaw limbs anchoring the upright pose to the plinth
+//   cap (the bronze body, head, ears, limbs, tail and acorn reuse the
+//   existing `copper-patina` colour + bump pair so the verdigris reads
+//   as crusted relief on the cast metal, the cream chest tuft and tail-
+//   tip stripe panels read as soft enamel inlay against the bronze, and
+//   the plinth reuses the existing `marble` colour + bump pair so the
+//   stone reads with veined relief). House: a polished brass front-door
+//   pull handle on a slim brass back-plate, pinned to the right side of
+//   the door slab below the peephole at thumb-height — a slim vertical
+//   brass grip-bar standing proud of the back-plate between two pin caps
+//   top and bottom, anchored by four corner rivets pinning the back-
+//   plate to the door slab (companion to the kickplate, bell pull,
+//   knocker, letter slot, number plate, peephole, carriage lanterns,
+//   address plaque and pine-needle wreath). The pull reuses the existing
+//   `copper-patina` colour + bump pair tinted toward warm brass (sharing
+//   the pass-38 brass palette) so the polished metal reads as fitted
+//   relief against the door slab. Scene: a far-east tea-garden plane
+//   east of the paddy terrace — a worked-earth ground floor surfaced
+//   with the existing `peat-moor` colour map paired with its bump depth
+//   map so the cultivated earth reads as raised relief at glancing sun,
+//   a slim earth-loam west apron along the paddy-terrace east edge so
+//   the ground layer has no holes at the seam, three curved hedgerows
+//   of low rounded tea bushes following the contour of the slope (each
+//   bush a flat ovoid dome with a brighter crown and a darker shaded
+//   underside so the clipped relief reads at glancing sun), a small
+//   peaked-thatch tea-pavilion at the northeast corner of the plot on
+//   four short stilt posts with slim wattle walls, a glowing front
+//   window and a brighter ridge highlight on the pyramidal thatch cap,
+//   and a slim winding cobble path of nine flat step-stones threading
+//   the rows from the paddy-join apron to the pavilion (each cobble a
+//   flat cylinder cap reading as a foot-worn stone with a brighter
+//   centre highlight for relief).
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
