@@ -22,14 +22,21 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 40) adds a Victorian bronze badger statue on a
- * fluted marble pedestal to the back outside-fence lawn (between the fox at
- * x=-6 and the raven at x=-3.5, continuing the line of marble-pedestal
- * sentinels along the back perimeter) and a polished brass front-door
- * peephole pinned to the door slab at eye-height with a spy-glass ring
- * trim, a recessed dark iris and four corner rivets (companion to the
- * kickplate, bell pull, knocker, letter slot, number plate, carriage
- * lanterns, address plaque and pine-needle wreath).
+ * latest enhancement (pass 41) extends the back-east outside-fence bestiary
+ * line eastward with a Victorian bronze squirrel statue on a fluted marble
+ * pedestal (perched upright on its haunches cradling a single bronze acorn
+ * between its forepaws, with a long bushy tail curving up the back, slim
+ * cream chest tuft and tail-tip enamel inlay and two glinting eye
+ * highlights), adds a polished brass front-door pull handle on a slim
+ * brass back-plate pinned to the right of the door slab below the
+ * peephole (companion to the knocker, kickplate, bell pull, letter slot,
+ * number plate, peephole and pine-needle wreath), and extends the scene
+ * eastward with a far-east tea-garden ground plane east of the paddy
+ * terrace carrying three curved hedgerows of low rounded tea bushes, a
+ * small peaked-thatch tea-pavilion at the northeast corner of the plot on
+ * four short stilt posts with a glowing front window, and a winding
+ * cobble path of step-stones threading the rows from the paddy-join
+ * apron to the pavilion.
  */
 const W = 7;
 const D = 5;
@@ -1929,6 +1936,60 @@ const BADGER_STATUE_POS: [number, number, number] = [-4.75, 0, -5.5];
  */
 const DOOR_PEEPHOLE_POS: [number, number, number] = [0, 1.78, FRONT_Z + WALL_T / 2 + 0.012];
 
+/**
+ * Forty-first-pass courtyard prop — a Victorian bronze squirrel statue on a
+ * fluted marble pedestal, parked on the back-east outside-fence lawn east
+ * of the weather station (at x=12.5) so it extends the line of marble-
+ * pedestal bestiary sentinels eastward along the back perimeter. The
+ * squirrel perches upright on its haunches on the plinth cap, cradling a
+ * single bronze acorn between its forepaws with a long bushy tail curving
+ * up the back, a slim cream chest tuft for soft enamel relief and two
+ * glinting eye highlights. The bronze body, head, ears, limbs, tail and
+ * acorn reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal, the cream chest
+ * tuft and tail-tip stripe panels read as soft enamel inlay against the
+ * bronze, and the plinth reuses the existing `marble` colour + bump pair
+ * so the stone reads with veined relief.
+ */
+const SQUIRREL_STATUE_POS: [number, number, number] = [15, 0, -5.5];
+
+/**
+ * Forty-first-pass house detail — a polished brass front-door pull handle on
+ * a slim brass back-plate, pinned to the right side of the door slab below
+ * the peephole at thumb-height (companion to the door knocker, kickplate,
+ * bell pull, letter slot, number plate, peephole, carriage lanterns,
+ * address plaque and pine-needle wreath). The pull reads as a slim
+ * vertical brass grip-bar standing proud of the back-plate between two
+ * pin caps top and bottom, anchored by four corner rivets pinning the
+ * back-plate to the door slab. Reuses the existing `copper-patina`
+ * colour + bump pair tinted toward warm brass (sharing the pass-38 brass
+ * palette) so the polished metal reads as fitted relief against the door
+ * slab.
+ */
+const DOOR_PULL_HANDLE_POS: [number, number, number] = [0.32, 1.20, FRONT_Z + WALL_T / 2 + 0.014];
+
+/**
+ * Forty-first-pass scene extension — a far-east tea-garden plane east of the
+ * paddy terrace. Carries a worked-earth ground floor surfaced with the
+ * existing `peat-moor` colour map paired with its bump depth map so the
+ * cultivated earth reads as raised relief at glancing sun, a slim earth-
+ * loam west apron along the paddy-terrace east edge so the ground layer
+ * has no holes at the seam, three curved hedgerows of low rounded tea
+ * bushes following the contour of the slope, a small peaked-thatch tea-
+ * pavilion at the northeast corner of the plot on four short stilt posts
+ * with a glowing front window, and a slim winding cobble path of step-
+ * stones threading the rows from the paddy-join apron to the pavilion.
+ */
+const TEA_GARDEN_POS: [number, number, number] = [164, -0.055, 140];
+const TEA_GARDEN_W = 20;
+const TEA_GARDEN_D = 20;
+const TEA_PAVILION_POS: [number, number, number] = [168, 0, 134];
+const TEA_ROWS: { x: number; z: number; w: number; bushes: number }[] = [
+  { x: 162, z: 136, w: 8, bushes: 7 },
+  { x: 164, z: 140, w: 9, bushes: 8 },
+  { x: 166, z: 144, w: 8, bushes: 7 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -3459,6 +3520,34 @@ const C = {
   badgerPlinthShade: "#a89776",
   doorPeepholeIris: "#0e0a06",
   doorPeepholeGlint: "#f6e6a8",
+  // Forty-first enhancement pass — a Victorian bronze squirrel statue on a
+  // fluted marble pedestal (back-east outside-fence lawn east of the
+  // weather station), a polished brass front-door pull handle on a slim
+  // brass back-plate (pinned to the right side of the door slab below the
+  // peephole), and a far-east tea-garden scene extension east of the paddy
+  // terrace with curved hedgerows of low tea bushes, a small thatched
+  // tea-pavilion and a winding cobble path threading the rows.
+  squirrelBronze: "#3c4e44",
+  squirrelBronzeHi: "#82a092",
+  squirrelBronzeShade: "#1c2620",
+  squirrelTuft: "#e6d8b8",
+  squirrelTuftShade: "#9c8e6a",
+  squirrelPlinth: "#ede2d0",
+  squirrelPlinthShade: "#a89776",
+  tgEarth: "#5a4632",
+  tgEarthHi: "#866848",
+  tgApronLoam: "#7a6a4c",
+  tgBush: "#3f6e34",
+  tgBushHi: "#7aa64c",
+  tgBushShade: "#26421f",
+  tgPath: "#a8907a",
+  tgPathHi: "#cdb89c",
+  tgPavThatch: "#9a7448",
+  tgPavThatchHi: "#b8924c",
+  tgPavWall: "#7a5836",
+  tgPavWallHi: "#a87a4c",
+  tgPavPost: "#4a3422",
+  tgPavWindow: "#ffd989",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -32196,6 +32285,287 @@ function buildDoorPeephole(f: NodeFactory): SceneNode {
   return f.group("Door Peephole", parts);
 }
 
+/* ────────────────────── pass 41 — squirrel statue ────────────────────── */
+
+/**
+ * Forty-first-pass courtyard prop — a Victorian bronze squirrel statue on a
+ * fluted marble pedestal extending the back-east outside-fence bestiary
+ * line eastward past the weather station (at x=12.5). The squirrel perches
+ * upright on its haunches on the plinth cap, cradling a single bronze
+ * acorn between its forepaws with a long bushy tail curving up the back,
+ * a soft cream chest tuft, a slim cream tail-tip and two glinting eye
+ * highlights.
+ */
+function buildSquirrelStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.squirrelBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.squirrelBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.squirrelBronzeShade, 0.95, { flatShading: true });
+  const tuft = std(C.squirrelTuft, 0.55, { metalness: 0.4 });
+  const tuftShade = std(C.squirrelTuftShade, 0.9, { flatShading: true });
+  const marble: MaterialDef = {
+    color: C.squirrelPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.squirrelPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth (base, shaft, cap, flutes) — matches the bestiary line so the
+  // back perimeter reads as a uniform marching display of marble pedestals.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Haunches: stout teardrop seat planted four-square on the plinth cap.
+  const bodyY = 1.08;
+  parts.push(
+    f.mesh("Squirrel Haunches", sphere(0.22, 14, 10), bronze, {
+      position: [0, bodyY - 0.10, -0.02],
+      scale: [1.0, 0.85, 1.10],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Upright torso: tapered ovoid rising from the haunches, leaning slightly
+  // forward toward the south for a foraging stance.
+  parts.push(
+    f.mesh("Squirrel Torso", sphere(0.17, 14, 10), bronze, {
+      position: [0, bodyY + 0.12, 0.06],
+      scale: [0.85, 1.20, 0.80],
+    }, { castShadow: true, receiveShadow: true }),
+    // Soft cream chest tuft reading as pale enamel relief on the front.
+    f.mesh("Squirrel Chest Tuft", sphere(0.11, 10, 8), tuft, {
+      position: [0, bodyY + 0.10, 0.16],
+      scale: [0.85, 0.95, 0.55],
+    }, { castShadow: false }),
+    // Slim darker chest seam below the tuft for relief.
+    f.mesh("Squirrel Chest Seam", box(0.10, 0.012, 0.04), tuftShade, {
+      position: [0, bodyY - 0.04, 0.20],
+    }, { castShadow: false }),
+  );
+  // ── Head: small ovoid set on the torso top, leaning slightly forward.
+  const headY = bodyY + 0.32;
+  const headZ = 0.10;
+  parts.push(
+    f.mesh("Squirrel Head", sphere(0.13, 12, 10), bronze, {
+      position: [0, headY, headZ],
+      scale: [0.95, 0.95, 1.05],
+    }, { castShadow: true, receiveShadow: true }),
+    // Tapered snout extending forward from the head.
+    f.mesh("Squirrel Snout", cone(0.055, 0.10, 8), bronze, {
+      position: [0, headY - 0.02, headZ + 0.10],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Small dark nose dab at the snout tip.
+    f.mesh("Squirrel Nose", sphere(0.020, 8, 6), bronzeShade, {
+      position: [0, headY - 0.02, headZ + 0.16],
+    }, { castShadow: false }),
+  );
+  // ── Two tufted ears at the crown — slim cones tipped with cream tuft.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Squirrel Ear ${sx}`, cone(0.026, 0.080, 6), bronze, {
+        position: [sx * 0.075, headY + 0.14, headZ - 0.02],
+      }, { castShadow: true }),
+      f.mesh(`Squirrel Ear Tuft ${sx}`, sphere(0.014, 6, 4), tuft, {
+        position: [sx * 0.075, headY + 0.20, headZ - 0.02],
+      }, { castShadow: false }),
+      f.mesh(`Squirrel Eye ${sx}`, sphere(0.014, 8, 6), bronzeHi, {
+        position: [sx * 0.05, headY + 0.02, headZ + 0.08],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Two forepaws cradling a single acorn between them.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Squirrel Forepaw ${sx}`, cylinder(0.026, 0.030, 0.10, 6), bronze, {
+        position: [sx * 0.06, bodyY + 0.14, 0.22],
+        rotation: [Math.PI / 2 + 0.4, 0, 0],
+      }, { castShadow: true }),
+    );
+  }
+  // ── Acorn between the paws — slim cone cap on a small ovoid kernel.
+  parts.push(
+    f.mesh("Squirrel Acorn Kernel", sphere(0.036, 10, 8), bronze, {
+      position: [0, bodyY + 0.14, 0.30],
+      scale: [0.9, 1.0, 1.1],
+    }, { castShadow: true }),
+    f.mesh("Squirrel Acorn Cap", cone(0.044, 0.045, 8), bronzeShade, {
+      position: [0, bodyY + 0.19, 0.30],
+    }, { castShadow: false }),
+    f.mesh("Squirrel Acorn Stem", cylinder(0.006, 0.006, 0.024, 6), bronzeShade, {
+      position: [0, bodyY + 0.23, 0.30],
+    }, { castShadow: false }),
+  );
+  // ── Two hind legs folded under the haunches.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Squirrel Hind Leg ${sx}`, cylinder(0.040, 0.048, 0.14, 8), bronze, {
+        position: [sx * 0.12, bodyY - 0.20, 0.06],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim paw pad at the base of each leg.
+      f.mesh(`Squirrel Hind Paw ${sx}`, box(0.090, 0.030, 0.12), bronzeShade, {
+        position: [sx * 0.12, bodyY - 0.27, 0.10],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Long bushy tail curving up the back — three stacked ovoids tapering up.
+  parts.push(
+    f.mesh("Squirrel Tail Base", sphere(0.13, 12, 8), bronze, {
+      position: [0, bodyY - 0.05, -0.20],
+      scale: [0.9, 1.1, 0.95],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Squirrel Tail Mid", sphere(0.13, 12, 8), bronze, {
+      position: [0, bodyY + 0.18, -0.28],
+      scale: [0.85, 1.20, 0.95],
+    }, { castShadow: true }),
+    f.mesh("Squirrel Tail Top", sphere(0.115, 12, 8), bronze, {
+      position: [0, bodyY + 0.42, -0.22],
+      scale: [0.85, 1.15, 0.95],
+    }, { castShadow: true }),
+    // Slim cream tail-tip reading as pale enamel relief on the tail crown.
+    f.mesh("Squirrel Tail Tip", sphere(0.088, 10, 8), tuft, {
+      position: [0, bodyY + 0.58, -0.18],
+      scale: [0.75, 0.95, 0.75],
+    }, { castShadow: false }),
+    f.mesh("Squirrel Tail Tip Shade", sphere(0.054, 8, 6), tuftShade, {
+      position: [0, bodyY + 0.58, -0.12],
+      scale: [0.7, 0.7, 0.5],
+    }, { castShadow: false }),
+  );
+  // ── Engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Squirrel Plaque", box(0.30, 0.10, 0.018), bronzeHi, {
+      position: [0, 0.50, 0.235],
+    }, { castShadow: false }),
+    f.mesh("Squirrel Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Squirrel Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Squirrel Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+  );
+  return f.group("Squirrel Statue", parts, { position: pos });
+}
+
+/* ────────────────────── pass 41 — door pull handle ────────────────────── */
+
+/**
+ * Polished brass front-door pull handle on a slim brass back-plate, pinned
+ * to the right side of the door slab below the peephole at thumb-height
+ * (companion to the kickplate, bell pull, knocker, letter slot, number
+ * plate, peephole and pine-needle wreath). The pull reads as a slim
+ * vertical brass grip-bar standing proud of the back-plate between two
+ * pin caps top and bottom, anchored by four corner rivets pinning the
+ * back-plate to the door slab.
+ */
+function buildDoorPullHandle(f: NodeFactory): SceneNode {
+  const brass: MaterialDef = {
+    color: C.doorBrass,
+    roughness: 0.42,
+    metalness: 0.85,
+    texture: "copper-patina",
+    textureScale: [0.4, 0.4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.012,
+  };
+  const brassHi = std(C.doorBrassHi, 0.35, { metalness: 0.92 });
+  const brassShade = std(C.doorBrassShade, 0.85, { metalness: 0.6, flatShading: true });
+  const parts: SceneNode[] = [];
+  const px = DOOR_PULL_HANDLE_POS[0];
+  const py = DOOR_PULL_HANDLE_POS[1];
+  const pz = DOOR_PULL_HANDLE_POS[2];
+  // ── Slim brass back-plate pinned to the door slab.
+  const plateW = 0.10;
+  const plateH = 0.32;
+  parts.push(
+    f.mesh("Pull Back-plate", box(plateW, plateH, 0.012), brass, {
+      position: [px, py, pz],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim raised highlight band across the top edge of the plate.
+    f.mesh("Pull Plate Hi Top", box(plateW - 0.02, 0.014, 0.014), brassHi, {
+      position: [px, py + plateH / 2 - 0.018, pz + 0.001],
+    }, { castShadow: false }),
+    // Slim darker shaded band across the bottom edge of the plate.
+    f.mesh("Pull Plate Shade Bot", box(plateW - 0.02, 0.012, 0.014), brassShade, {
+      position: [px, py - plateH / 2 + 0.016, pz + 0.001],
+    }, { castShadow: false }),
+  );
+  // ── Two pin caps standing proud of the plate (top and bottom of the bar).
+  for (const sy of [-1, 1]) {
+    parts.push(
+      f.mesh(`Pull Cap ${sy}`, cylinder(0.022, 0.022, 0.024, 12), brass, {
+        position: [px, py + sy * 0.10, pz + 0.018],
+        rotation: [Math.PI / 2, 0, 0],
+      }, { castShadow: false }),
+      f.mesh(`Pull Cap Hi ${sy}`, sphere(0.016, 8, 6), brassHi, {
+        position: [px, py + sy * 0.10, pz + 0.030],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Slim vertical brass grip-bar standing proud between the pin caps.
+  parts.push(
+    f.mesh("Pull Grip Bar", cylinder(0.014, 0.014, 0.18, 10), brass, {
+      position: [px, py, pz + 0.028],
+    }, { castShadow: false }),
+    // Slim raised highlight strip down the grip bar.
+    f.mesh("Pull Grip Bar Hi", box(0.006, 0.16, 0.006), brassHi, {
+      position: [px - 0.010, py, pz + 0.034],
+    }, { castShadow: false }),
+  );
+  // ── Four corner rivets pinning the back-plate to the door slab.
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      parts.push(
+        f.mesh(`Pull Rivet ${sx} ${sy}`, sphere(0.010, 6, 6), brassHi, {
+          position: [
+            px + sx * (plateW / 2 - 0.018),
+            py + sy * (plateH / 2 - 0.030),
+            pz + 0.006,
+          ],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  return f.group("Door Pull Handle", parts);
+}
+
 /* ────────────────────── pass 38 — mangrove estuary ────────────────────── */
 
 /**
@@ -33150,6 +33520,247 @@ function buildPaddyBridge(f: NodeFactory, pos: [number, number, number]): SceneN
     );
   }
   return f.group("Paddy Bridge", parts, { position: pos });
+}
+
+/* ────────────────────── pass 41 — tea garden ────────────────────── */
+
+/**
+ * Far-east tea-garden plane east of the paddy terrace. Carries a worked-
+ * earth ground floor surfaced with the existing `peat-moor` colour map
+ * paired with its bump depth map so the cultivated earth reads as raised
+ * relief at glancing sun, a slim earth-loam west apron along the paddy-
+ * terrace east edge so the ground layer has no holes at the seam, three
+ * curved hedgerows of low rounded tea bushes following the slope, a small
+ * peaked-thatch tea-pavilion at the northeast corner of the plot on four
+ * short stilt posts with a glowing front window, and a slim winding
+ * cobble path of step-stones threading the rows from the paddy-join
+ * apron to the pavilion.
+ */
+function buildFarEastTeaGarden(f: NodeFactory): SceneNode {
+  return f.group("Far East Tea Garden", [
+    // Tea-garden ground plane — worked, cultivated earth floor.
+    f.mesh(
+      "Tea Garden Ground",
+      plane(TEA_GARDEN_W, TEA_GARDEN_D),
+      std(C.tgEarth, 0.95, {
+        texture: "peat-moor",
+        textureScale: [3, 3],
+        bumpMap: "peat-moor-bump",
+        bumpScale: 0.06,
+        metalness: 0.04,
+      }),
+      { position: TEA_GARDEN_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the paddy-terrace east edge with a slim loamy
+    // earth strip so the seam reads as a continuous mud-into-garden join
+    // with no holes at the ground layer.
+    f.mesh(
+      "Tea Garden West Apron",
+      plane(3, TEA_GARDEN_D),
+      std(C.tgApronLoam, 0.95, {
+        texture: "peat-moor",
+        textureScale: [1, 4],
+        bumpMap: "peat-moor-bump",
+        bumpScale: 0.04,
+      }),
+      {
+        position: [
+          TEA_GARDEN_POS[0] - TEA_GARDEN_W / 2 + 1.5,
+          -0.053,
+          TEA_GARDEN_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildTeaBushRows(f),
+    buildTeaGardenPath(f),
+    buildTeaPavilion(f, TEA_PAVILION_POS),
+  ]);
+}
+
+/**
+ * Three curved hedgerows of low rounded tea bushes following the slope.
+ * Each bush is a flat ovoid dome with a brighter crown and a darker shaded
+ * underside so the rounded clipped relief reads at glancing sun.
+ */
+function buildTeaBushRows(f: NodeFactory): SceneNode {
+  const bush: MaterialDef = {
+    color: C.tgBush,
+    roughness: 0.85,
+    metalness: 0.0,
+    flatShading: true,
+  };
+  const bushHi = std(C.tgBushHi, 0.75, { flatShading: true });
+  const bushShade = std(C.tgBushShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  for (let r = 0; r < TEA_ROWS.length; r++) {
+    const row = TEA_ROWS[r]!;
+    for (let i = 0; i < row.bushes; i++) {
+      const t = row.bushes > 1 ? i / (row.bushes - 1) : 0.5;
+      const bx = row.x + (t - 0.5) * row.w;
+      const bz = row.z + Math.sin(t * Math.PI * 2 + r * 0.7) * 0.22;
+      const s = 0.85 + ((i + r) % 3) * 0.05;
+      // Low rounded bush — flat ovoid dome topped with a brighter crown.
+      parts.push(
+        f.mesh(`Tea Bush ${r}-${i}`, sphere(0.46, 10, 8), bush, {
+          position: [bx, 0.30, bz],
+          scale: [1.20 * s, 0.70 * s, 1.20 * s],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh(`Tea Bush Hi ${r}-${i}`, sphere(0.30, 8, 6), bushHi, {
+          position: [bx, 0.46, bz],
+          scale: [1.10 * s, 0.55 * s, 1.10 * s],
+        }, { castShadow: false }),
+        f.mesh(`Tea Bush Shade ${r}-${i}`, sphere(0.34, 8, 6), bushShade, {
+          position: [bx, 0.20, bz + 0.06],
+          scale: [1.10 * s, 0.35 * s, 1.00 * s],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  return f.group("Tea Bush Rows", parts);
+}
+
+/**
+ * Slim winding cobble path of step-stones threading the rows from the
+ * paddy-join apron at the west edge to the tea-pavilion at the northeast
+ * corner. Each step-stone is a flat cylinder cap reading as a foot-worn
+ * cobble with a brighter centre highlight.
+ */
+function buildTeaGardenPath(f: NodeFactory): SceneNode {
+  const path: MaterialDef = {
+    color: C.tgPath,
+    roughness: 0.9,
+    metalness: 0.0,
+    texture: "peat-moor",
+    textureScale: [2, 2],
+    bumpMap: "peat-moor-bump",
+    bumpScale: 0.03,
+  };
+  const pathHi = std(C.tgPathHi, 0.85, { flatShading: true });
+  const parts: SceneNode[] = [];
+  const steps = 9;
+  const wx = TEA_GARDEN_POS[0] - TEA_GARDEN_W / 2 + 2.5;
+  const ex = TEA_PAVILION_POS[0] - 0.4;
+  const wz = TEA_GARDEN_POS[2] + 1.0;
+  const ez = TEA_PAVILION_POS[2] + 1.4;
+  for (let i = 0; i < steps; i++) {
+    const t = i / (steps - 1);
+    const cx = wx + (ex - wx) * t + Math.sin(t * Math.PI * 2.2) * 0.45;
+    const cz = wz + (ez - wz) * t;
+    parts.push(
+      f.mesh(`Tea Path Cobble ${i}`, cylinder(0.36, 0.36, 0.06, 8), path, {
+        position: [cx, 0.04, cz],
+        rotation: [0, t * Math.PI, 0],
+      }, { castShadow: false, receiveShadow: true }),
+      // Slim brighter centre highlight reading as foot-worn relief.
+      f.mesh(`Tea Path Cobble Hi ${i}`, cylinder(0.22, 0.22, 0.02, 6), pathHi, {
+        position: [cx, 0.075, cz],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Tea Garden Path", parts);
+}
+
+/**
+ * Small peaked-thatch tea-pavilion at the northeast corner of the plot on
+ * four short stilt posts. Slim wattle walls, a glowing front window pane
+ * facing south over the bushes, and a peaked thatched-roof pyramid cap
+ * with a brighter ridge for relief.
+ */
+function buildTeaPavilion(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const thatch: MaterialDef = {
+    color: C.tgPavThatch,
+    roughness: 0.95,
+    metalness: 0.0,
+    texture: "wood",
+    textureScale: [0.5, 1.2],
+    flatShading: true,
+  };
+  const thatchHi = std(C.tgPavThatchHi, 0.85, { flatShading: true });
+  const wall: MaterialDef = {
+    color: C.tgPavWall,
+    roughness: 0.9,
+    metalness: 0.0,
+    texture: "wood",
+    textureScale: [0.6, 0.6],
+    flatShading: true,
+  };
+  const wallHi = std(C.tgPavWallHi, 0.85, { flatShading: true });
+  const post = std(C.tgPavPost, 0.95, { flatShading: true });
+  const windowMat = std(C.tgPavWindow, 0.4, { metalness: 0.15 });
+  const parts: SceneNode[] = [];
+  // ── Four stilt posts driven into the earth lifting the pavilion above.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Pav Post ${sx} ${sz}`, cylinder(0.07, 0.08, 0.55, 8), post, {
+          position: [sx * 0.7, 0.27, sz * 0.55],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // ── Wattle floor planks raised above the stilt posts.
+  parts.push(
+    f.mesh("Pav Floor", box(1.6, 0.08, 1.3), wall, {
+      position: [0, 0.58, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim raised floor highlight ridge along the south edge.
+    f.mesh("Pav Floor Hi", box(1.6, 0.014, 0.06), wallHi, {
+      position: [0, 0.625, 0.65],
+    }, { castShadow: false }),
+    // North wall — broad slab.
+    f.mesh("Pav North Wall", box(1.6, 0.85, 0.07), wall, {
+      position: [0, 1.06, -0.64],
+    }, { castShadow: true, receiveShadow: true }),
+    // East wall.
+    f.mesh("Pav East Wall", box(0.07, 0.85, 1.3), wall, {
+      position: [0.78, 1.06, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // West wall.
+    f.mesh("Pav West Wall", box(0.07, 0.85, 1.3), wall, {
+      position: [-0.78, 1.06, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // South wall sides — leave an open central opening for a window.
+    f.mesh("Pav South Wall L", box(0.55, 0.85, 0.07), wall, {
+      position: [-0.52, 1.06, 0.64],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pav South Wall R", box(0.55, 0.85, 0.07), wall, {
+      position: [0.52, 1.06, 0.64],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pav South Wall Top", box(0.5, 0.28, 0.07), wall, {
+      position: [0, 1.34, 0.64],
+    }, { castShadow: true, receiveShadow: true }),
+    // Glowing front window pane reading as a lit interior at dusk.
+    f.mesh("Pav Window", box(0.46, 0.42, 0.04), windowMat, {
+      position: [0, 1.06, 0.66],
+    }, { castShadow: false }),
+  );
+  // ── Slim wattle band highlights running across each wall for relief.
+  for (let i = 0; i < 3; i++) {
+    const wy = 0.78 + i * 0.18;
+    parts.push(
+      f.mesh(`Pav Wattle Band N ${i}`, box(1.56, 0.012, 0.020), wallHi, {
+        position: [0, wy, -0.60],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Peaked thatched roof — broad pyramid cap with a brighter ridge.
+  parts.push(
+    f.mesh("Pav Roof Core", box(2.0, 0.16, 1.65), thatch, {
+      position: [0, 1.58, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Pav Roof Peak", cone(1.15, 0.95, 6), thatch, {
+      position: [0, 2.10, 0],
+      scale: [1.0, 1.0, 0.85],
+    }, { castShadow: true }),
+    f.mesh("Pav Roof Peak Hi", cone(1.05, 0.18, 6), thatchHi, {
+      position: [0, 2.30, 0],
+      scale: [1.0, 1.0, 0.85],
+    }, { castShadow: false }),
+  );
+  return f.group("Tea Pavilion", parts, { position: pos });
 }
 
 /* ───────────────────────── document ───────────────────────── */
@@ -34327,6 +34938,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: HEDGEHOG_STATUE_POS[0], z: HEDGEHOG_STATUE_POS[2], r: 0.9 },
     // Fortieth-pass keep-out — bronze badger statue on the back outside-fence lawn.
     { x: BADGER_STATUE_POS[0], z: BADGER_STATUE_POS[2], r: 0.9 },
+    // Forty-first-pass keep-out — bronze squirrel statue on the back-east outside-fence lawn.
+    { x: SQUIRREL_STATUE_POS[0], z: SQUIRREL_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -34408,6 +35021,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildLynxStatue(f, LYNX_STATUE_POS),
     buildHedgehogStatue(f, HEDGEHOG_STATUE_POS),
     buildBadgerStatue(f, BADGER_STATUE_POS),
+    buildSquirrelStatue(f, SQUIRREL_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -34444,6 +35058,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const feTidepoolShelf = buildFarEastTidepoolShelf(f);
   const feMangroveEstuary = buildFarEastMangroveEstuary(f);
   const fePaddyTerrace = buildFarEastPaddyTerrace(f);
+  const feTeaGarden = buildFarEastTeaGarden(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -34504,6 +35119,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildDoorBrassFittings(f),
     buildDoorLetterSlot(f),
     buildDoorPeephole(f),
+    buildDoorPullHandle(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -34547,6 +35163,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       feTidepoolShelf,
       feMangroveEstuary,
       fePaddyTerrace,
+      feTeaGarden,
       house,
     ],
   };
