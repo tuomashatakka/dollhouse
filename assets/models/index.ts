@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over forty enhancement passes.
+// house and its courtyard, layered over forty-two enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -1262,6 +1262,44 @@
 //   the rows from the paddy-join apron to the pavilion (each cobble a
 //   flat cylinder cap reading as a foot-worn stone with a brighter
 //   centre highlight for relief).
+//   Pass 42 — courtyard: a Victorian bronze doe statue on a fluted
+//   marble pedestal, parked on the back-west outside-fence lawn west of
+//   the tortoise (at x=-9.5) so it extends the line of marble-pedestal
+//   bestiary sentinels westward along the back perimeter — the doe
+//   stands four-square on the plinth cap in a slim alert grazing pose
+//   with a tapered muzzle, two tall tufted ears at the crown, two
+//   glinting eye highlights, a slim cream throat blaze reading as soft
+//   enamel relief against the bronze, a shaded belly seam below, four
+//   slim tapering legs and a short raised white tail (the bronze body,
+//   head, ears, legs and tail reuse the existing `copper-patina` colour
+//   + bump pair so the verdigris reads as crusted relief on the cast
+//   metal, the cream throat blaze and tail tuft panels read as soft
+//   enamel inlay against the bronze, and the plinth reuses the existing
+//   `marble` colour + bump pair so the stone reads with veined relief).
+//   House: a polished brass Victorian keyhole escutcheon plate pinned
+//   to the door slab between the number plate (above, on the wall) and
+//   the pull handle (below, on the door slab) — a slim oval brass
+//   back-plate ringing a raised keyway drop with a small pivoted cover
+//   flap hanging off the top pin catching the porch lamps, four corner
+//   rivets pinning the plate to the door slab (companion to the
+//   kickplate, bell pull, knocker, letter slot, number plate, peephole,
+//   pull handle, carriage lanterns, address plaque and pine-needle
+//   wreath). The escutcheon reuses the existing `copper-patina` colour +
+//   bump pair tinted toward warm brass (sharing the pass-38 brass
+//   palette) so the polished metal reads as fitted relief against the
+//   door slab. Scene: a far-east zen rock-garden plane east of the tea
+//   garden — a raked pale-sand ground surfaced with the existing
+//   `desert-sand` colour map paired with its bump depth map so the
+//   raked ridges read as raised relief at glancing sun, a slim earth-
+//   loam west apron along the tea-garden east edge so the ground layer
+//   has no holes at the seam, three tokutei-ishi stone arrangements
+//   ringed by concentric raked-sand rings, a small vermilion torii
+//   gate framing the northeast approach on a pair of slate-footed
+//   tapering posts linked by a curved crossbeam and a lower tie-beam
+//   and a small central medallion below the crossbeam, and a
+//   moss-flecked stone lantern near the south edge of the plot with a
+//   slim slate base, a stacked cylindrical shaft, a flared square roof
+//   cap and a warm glow plate behind the carved chamber opening.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
