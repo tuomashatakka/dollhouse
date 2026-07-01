@@ -22,21 +22,23 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 41) extends the back-east outside-fence bestiary
- * line eastward with a Victorian bronze squirrel statue on a fluted marble
- * pedestal (perched upright on its haunches cradling a single bronze acorn
- * between its forepaws, with a long bushy tail curving up the back, slim
- * cream chest tuft and tail-tip enamel inlay and two glinting eye
- * highlights), adds a polished brass front-door pull handle on a slim
- * brass back-plate pinned to the right of the door slab below the
- * peephole (companion to the knocker, kickplate, bell pull, letter slot,
- * number plate, peephole and pine-needle wreath), and extends the scene
- * eastward with a far-east tea-garden ground plane east of the paddy
- * terrace carrying three curved hedgerows of low rounded tea bushes, a
- * small peaked-thatch tea-pavilion at the northeast corner of the plot on
- * four short stilt posts with a glowing front window, and a winding
- * cobble path of step-stones threading the rows from the paddy-join
- * apron to the pavilion.
+ * latest enhancement (pass 42) extends the back-west outside-fence bestiary
+ * line westward past the tortoise (at x=-9.5) with a Victorian bronze doe
+ * statue on a fluted marble pedestal (standing four-square on the plinth
+ * cap in a slim alert grazing pose with a tapered muzzle, two tall tufted
+ * ears at the crown, two glinting eye highlights, a slim cream throat
+ * blaze and belly seam for soft enamel inlay against the bronze, four
+ * slim tapering legs and a short raised white tail), adds a polished
+ * brass Victorian keyhole escutcheon plate pinned to the door slab
+ * between the number plate and the pull handle (a slim oval brass plate
+ * ringing a raised keyway drop and a pivoted cover flap catching the
+ * porch lamps, companion to the knocker, kickplate, bell pull, letter
+ * slot, number plate, peephole, pull handle and pine-needle wreath),
+ * and extends the scene eastward with a far-east zen rock-garden
+ * ground plane east of the tea garden carrying a raked pale-sand
+ * ground, three tokutei-ishi stone arrangements ringed by fine
+ * concentric raking, a small vermilion torii gate at the northeast
+ * corner and a moss-flecked stone lantern near the south edge.
  */
 const W = 7;
 const D = 5;
@@ -1990,6 +1992,60 @@ const TEA_ROWS: { x: number; z: number; w: number; bushes: number }[] = [
   { x: 166, z: 144, w: 8, bushes: 7 },
 ];
 
+/**
+ * Forty-second-pass courtyard prop — a Victorian bronze doe statue on a
+ * fluted marble pedestal, parked on the back-west outside-fence lawn west
+ * of the tortoise (at x=-9.5) so it extends the line of marble-pedestal
+ * bestiary sentinels westward along the back perimeter. The doe stands
+ * four-square on the plinth cap in a slim alert grazing pose with a
+ * tapered muzzle, two tall tufted ears at the crown, two glinting eye
+ * highlights, a slim cream throat blaze reading as soft enamel relief
+ * against the bronze, a slim shaded belly seam below, four slim tapering
+ * legs and a short raised white tail. The bronze body, head, ears, legs
+ * and tail reuse the existing `copper-patina` colour + bump pair so the
+ * verdigris reads as crusted relief on the cast metal, the cream throat
+ * blaze and tail tuft panels read as soft enamel inlay against the
+ * bronze, and the plinth reuses the existing `marble` colour + bump pair
+ * so the stone reads with veined relief.
+ */
+const DOE_STATUE_POS: [number, number, number] = [-12.5, 0, -5.5];
+
+/**
+ * Forty-second-pass house detail — a polished brass Victorian keyhole
+ * escutcheon plate pinned to the door slab between the number plate
+ * (above, on the wall) and the pull handle (below, on the door slab), a
+ * slim oval brass back-plate ringing a raised keyway drop with a small
+ * pivoted cover flap hanging off the top pin catching the porch lamps
+ * (companion to the door knocker, kickplate, bell pull, letter slot,
+ * number plate, peephole, pull handle, carriage lanterns, address plaque
+ * and pine-needle wreath). Reuses the existing `copper-patina` colour +
+ * bump pair tinted toward warm brass (sharing the pass-38 brass palette)
+ * so the polished metal reads as fitted relief against the door slab.
+ */
+const DOOR_ESCUTCHEON_POS: [number, number, number] = [0.32, 1.42, FRONT_Z + WALL_T / 2 + 0.014];
+
+/**
+ * Forty-second-pass scene extension — a far-east zen rock-garden plane
+ * east of the tea garden. Carries a raked pale-sand ground surfaced with
+ * the existing `desert-sand` colour map paired with its bump depth map so
+ * the raked ridges read as raised relief at glancing sun, a slim earth-
+ * loam west apron along the tea-garden east edge so the ground layer has
+ * no holes at the seam, a fine set of concentric raked-sand rings around
+ * each of three tokutei-ishi stone arrangements, a small vermilion torii
+ * gate framing the northeast approach and a moss-flecked stone lantern
+ * near the south edge of the plot.
+ */
+const ZEN_GARDEN_POS: [number, number, number] = [184, -0.056, 140];
+const ZEN_GARDEN_W = 20;
+const ZEN_GARDEN_D = 20;
+const ZEN_TORII_POS: [number, number, number] = [188, 0, 133];
+const ZEN_LANTERN_POS: [number, number, number] = [183, 0, 146.5];
+const ZEN_STONE_GROUPS: { x: number; z: number; count: number; scale: number }[] = [
+  { x: 182, z: 138, count: 3, scale: 1.05 },
+  { x: 186, z: 142, count: 2, scale: 1.20 },
+  { x: 183, z: 144, count: 3, scale: 0.90 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -3548,6 +3604,38 @@ const C = {
   tgPavWallHi: "#a87a4c",
   tgPavPost: "#4a3422",
   tgPavWindow: "#ffd989",
+  // Forty-second enhancement pass — a Victorian bronze doe statue on a
+  // fluted marble pedestal (back-west outside-fence lawn west of the
+  // tortoise), a polished brass Victorian keyhole escutcheon plate pinned
+  // to the door slab between the number plate and the pull handle, and a
+  // far-east zen rock-garden scene extension east of the tea garden with
+  // raked pale sand, three tokutei-ishi stone arrangements ringed by
+  // concentric raking, a vermilion torii gate and a moss-flecked stone
+  // lantern.
+  doeBronze: "#3c4e44",
+  doeBronzeHi: "#82a092",
+  doeBronzeShade: "#1c2620",
+  doeBlaze: "#efe1c4",
+  doeBlazeShade: "#a89678",
+  doePlinth: "#ede2d0",
+  doePlinthShade: "#a89776",
+  doorEscutcheonBrass: "#e9c072",
+  doorEscutcheonHi: "#faeaa4",
+  doorEscutcheonShade: "#8a6a2c",
+  doorEscutcheonKeyway: "#0e0a06",
+  zenSand: "#ebd9b6",
+  zenSandHi: "#faedd0",
+  zenSandShade: "#b89b6c",
+  zenApronLoam: "#8a7a5a",
+  zenStone: "#7d7266",
+  zenStoneHi: "#a89e8f",
+  zenStoneShade: "#3f382c",
+  zenMoss: "#4d6a3c",
+  zenToriiRed: "#a83820",
+  zenToriiRedHi: "#d15a3c",
+  zenToriiShade: "#5c1a10",
+  zenLanternStone: "#8a8074",
+  zenLanternGlow: "#ffd88a",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -33763,6 +33851,612 @@ function buildTeaPavilion(f: NodeFactory, pos: [number, number, number]): SceneN
   return f.group("Tea Pavilion", parts, { position: pos });
 }
 
+/* ────────────────────── pass 42 — doe statue ────────────────────── */
+
+/**
+ * Forty-second-pass courtyard prop — a Victorian bronze doe statue on a
+ * fluted marble pedestal extending the back-west outside-fence bestiary
+ * line westward past the tortoise (at x=-9.5). The doe stands four-square
+ * on the plinth cap in a slim alert grazing pose with a tapered muzzle,
+ * two tall tufted ears at the crown, two glinting eye highlights, a cream
+ * throat blaze reading as soft enamel relief on the front, a slim shaded
+ * belly seam below, four slim tapering legs and a short raised white
+ * tail. The bronze body reuses the existing `copper-patina` colour + bump
+ * pair so the verdigris reads as crusted relief; the cream inlay panels
+ * read as soft enamel against the bronze; the plinth reuses the existing
+ * `marble` colour + bump pair so the stone reads with veined relief.
+ */
+function buildDoeStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.doeBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.doeBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.doeBronzeShade, 0.95, { flatShading: true });
+  const blaze = std(C.doeBlaze, 0.55, { metalness: 0.4 });
+  const blazeShade = std(C.doeBlazeShade, 0.9, { flatShading: true });
+  const marble: MaterialDef = {
+    color: C.doePlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.doePlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth — matches the rest of the bestiary line so the back perimeter
+  // reads as a uniform marching display of marble pedestals.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Slim tapered body — ovoid trunk in a slim four-square grazing pose.
+  const bodyY = 1.14;
+  parts.push(
+    f.mesh("Doe Body", sphere(0.24, 14, 10), bronze, {
+      position: [0, bodyY, 0],
+      scale: [0.90, 0.85, 1.55],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded belly seam reading as a soft belly stripe.
+    f.mesh("Doe Belly Seam", sphere(0.20, 12, 8), blazeShade, {
+      position: [0, bodyY - 0.12, 0],
+      scale: [0.80, 0.35, 1.30],
+    }, { castShadow: false }),
+  );
+  // ── Slim neck rising from the body's front shoulders toward the head.
+  parts.push(
+    f.mesh("Doe Neck", cylinder(0.075, 0.095, 0.30, 10), bronze, {
+      position: [0, bodyY + 0.16, 0.30],
+      rotation: [Math.PI / 4, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim cream throat blaze on the front of the neck reading as enamel.
+    f.mesh("Doe Throat Blaze", box(0.06, 0.22, 0.02), blaze, {
+      position: [0, bodyY + 0.12, 0.42],
+      rotation: [Math.PI / 4, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Tapered head at the top of the neck with a slim muzzle and dark nose.
+  const headY = bodyY + 0.36;
+  const headZ = 0.44;
+  parts.push(
+    f.mesh("Doe Head", sphere(0.11, 12, 10), bronze, {
+      position: [0, headY, headZ],
+      scale: [0.85, 0.95, 1.20],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim tapered muzzle extending forward from the head.
+    f.mesh("Doe Muzzle", cone(0.055, 0.14, 10), bronze, {
+      position: [0, headY - 0.02, headZ + 0.14],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    // Small dark nose dab at the muzzle tip.
+    f.mesh("Doe Nose", sphere(0.020, 8, 6), bronzeShade, {
+      position: [0, headY - 0.02, headZ + 0.22],
+    }, { castShadow: false }),
+  );
+  // ── Two tall tufted ears at the crown — slim cones tipped with cream tuft.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Doe Ear ${sx}`, cone(0.032, 0.14, 6), bronze, {
+        position: [sx * 0.06, headY + 0.16, headZ - 0.04],
+        rotation: [-0.35, 0, sx * 0.25],
+      }, { castShadow: true }),
+      // Slim cream tuft inside the ear cup.
+      f.mesh(`Doe Ear Tuft ${sx}`, cone(0.018, 0.08, 6), blaze, {
+        position: [sx * 0.06, headY + 0.18, headZ - 0.03],
+        rotation: [-0.35, 0, sx * 0.25],
+      }, { castShadow: false }),
+      // Glinting eye highlight.
+      f.mesh(`Doe Eye ${sx}`, sphere(0.012, 8, 6), bronzeHi, {
+        position: [sx * 0.05, headY + 0.02, headZ + 0.08],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Four slim tapering legs anchoring the doe to the plinth cap.
+  for (const sz of [-1, 1]) {
+    for (const sx of [-1, 1]) {
+      const legZ = sz > 0 ? 0.24 : -0.28;
+      parts.push(
+        // Upper leg — slim cylinder tapering into the hoof.
+        f.mesh(`Doe Leg ${sx} ${sz}`, cylinder(0.036, 0.046, 0.30, 8), bronze, {
+          position: [sx * 0.11, bodyY - 0.28, legZ],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim dark hoof cap at the base of each leg.
+        f.mesh(`Doe Hoof ${sx} ${sz}`, cylinder(0.038, 0.048, 0.05, 8), bronzeShade, {
+          position: [sx * 0.11, bodyY - 0.45, legZ],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Short raised white tail flicked up at the back of the body.
+  parts.push(
+    f.mesh("Doe Tail", cone(0.036, 0.12, 6), bronze, {
+      position: [0, bodyY + 0.10, -0.48],
+      rotation: [0.6, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Doe Tail Tuft", sphere(0.032, 8, 6), blaze, {
+      position: [0, bodyY + 0.17, -0.52],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Doe Plaque", box(0.30, 0.10, 0.018), bronzeHi, {
+      position: [0, 0.50, 0.235],
+    }, { castShadow: false }),
+    f.mesh("Doe Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Doe Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Doe Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+  );
+  return f.group("Doe Statue", parts, { position: pos });
+}
+
+/* ────────────────────── pass 42 — door keyhole escutcheon ────────────────────── */
+
+/**
+ * Polished brass Victorian keyhole escutcheon plate pinned to the door
+ * slab between the number plate (above, on the wall) and the pull handle
+ * (below, on the door slab). Reads as a slim oval brass back-plate ringing
+ * a raised keyway drop with a small pivoted cover flap hanging off the
+ * top pin catching the porch lamps (companion to the door knocker,
+ * kickplate, bell pull, letter slot, number plate, peephole, pull handle
+ * and pine-needle wreath). Reuses the existing `copper-patina` colour+bump
+ * pair tinted toward warm brass so the polished metal reads as fitted
+ * relief against the door slab.
+ */
+function buildDoorEscutcheon(f: NodeFactory): SceneNode {
+  const brass: MaterialDef = {
+    color: C.doorEscutcheonBrass,
+    roughness: 0.42,
+    metalness: 0.85,
+    texture: "copper-patina",
+    textureScale: [0.4, 0.4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.012,
+  };
+  const brassHi = std(C.doorEscutcheonHi, 0.32, { metalness: 0.92 });
+  const brassShade = std(C.doorEscutcheonShade, 0.85, { metalness: 0.55, flatShading: true });
+  const keyway = std(C.doorEscutcheonKeyway, 0.95, { metalness: 0.05 });
+  const parts: SceneNode[] = [];
+  const px = DOOR_ESCUTCHEON_POS[0];
+  const py = DOOR_ESCUTCHEON_POS[1];
+  const pz = DOOR_ESCUTCHEON_POS[2];
+  // ── Slim oval brass back-plate — a tall pill anchored to the door slab.
+  // Built from a central cylinder plus two rounded end caps for the oval.
+  parts.push(
+    f.mesh("Escutcheon Plate Body", box(0.070, 0.12, 0.012), brass, {
+      position: [px, py, pz],
+    }, { castShadow: false, receiveShadow: true }),
+    // Top round cap for the oval.
+    f.mesh("Escutcheon Plate Cap Top", cylinder(0.035, 0.035, 0.012, 14), brass, {
+      position: [px, py + 0.06, pz],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Bottom round cap for the oval.
+    f.mesh("Escutcheon Plate Cap Bot", cylinder(0.035, 0.035, 0.012, 14), brass, {
+      position: [px, py - 0.06, pz],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim raised highlight rim ringing the top edge of the plate.
+    f.mesh("Escutcheon Plate Hi", cylinder(0.030, 0.030, 0.014, 14), brassHi, {
+      position: [px, py + 0.062, pz + 0.001],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Slim darker shaded rim ringing the bottom edge for relief.
+    f.mesh("Escutcheon Plate Shade", cylinder(0.028, 0.028, 0.014, 14), brassShade, {
+      position: [px, py - 0.062, pz + 0.001],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Raised keyway drop — a dark keyhole silhouette recessed into the plate.
+  parts.push(
+    // Round upper socket of the keyway.
+    f.mesh("Escutcheon Keyway Socket", cylinder(0.014, 0.014, 0.014, 12), keyway, {
+      position: [px, py + 0.014, pz + 0.008],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Slim drop stem below the socket completing the keyhole shape.
+    f.mesh("Escutcheon Keyway Drop", box(0.008, 0.032, 0.014), keyway, {
+      position: [px, py - 0.006, pz + 0.008],
+    }, { castShadow: false }),
+    // Slim shaded rim ringing the socket for relief.
+    f.mesh("Escutcheon Keyway Rim", cylinder(0.020, 0.020, 0.006, 12), brassShade, {
+      position: [px, py + 0.014, pz + 0.006],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Small pivoted cover flap hanging off the top pin of the plate,
+  // tilted slightly forward so it reads as recently swung open.
+  parts.push(
+    f.mesh("Escutcheon Cover Flap", box(0.048, 0.038, 0.006), brassHi, {
+      position: [px, py + 0.052, pz + 0.014],
+      rotation: [-0.28, 0, 0],
+    }, { castShadow: false }),
+    // Slim darker underside band on the cover flap for relief.
+    f.mesh("Escutcheon Cover Flap Shade", box(0.044, 0.006, 0.008), brassShade, {
+      position: [px, py + 0.036, pz + 0.020],
+      rotation: [-0.28, 0, 0],
+    }, { castShadow: false }),
+    // Tiny top pivot pin holding the cover flap.
+    f.mesh("Escutcheon Cover Pin", cylinder(0.006, 0.006, 0.012, 8), brassHi, {
+      position: [px, py + 0.062, pz + 0.010],
+      rotation: [0, 0, Math.PI / 2],
+    }, { castShadow: false }),
+  );
+  // ── Four corner rivets pinning the escutcheon plate to the door slab.
+  for (const sy of [-1, 1]) {
+    for (const sx of [-1, 1]) {
+      parts.push(
+        f.mesh(`Escutcheon Rivet ${sx} ${sy}`, sphere(0.009, 6, 6), brassHi, {
+          position: [px + sx * 0.028, py + sy * 0.052, pz + 0.006],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  return f.group("Door Escutcheon", parts);
+}
+
+/* ────────────────────── pass 42 — zen rock garden ────────────────────── */
+
+/**
+ * Far-east zen rock-garden plane east of the tea garden. Carries a raked
+ * pale-sand ground surfaced with the existing `desert-sand` colour map
+ * paired with its bump depth map so the raked ridges read as raised
+ * relief at glancing sun, a slim earth-loam west apron overlapping the
+ * tea-garden east edge so the ground layer has no holes at the seam, a
+ * fine set of concentric raked-sand rings around each of three
+ * tokutei-ishi stone arrangements, a small vermilion torii gate framing
+ * the northeast approach and a moss-flecked stone lantern near the south
+ * edge of the plot.
+ */
+function buildFarEastZenGarden(f: NodeFactory): SceneNode {
+  return f.group("Far East Zen Garden", [
+    // Zen-garden ground plane — raked pale sand floor.
+    f.mesh(
+      "Zen Garden Ground",
+      plane(ZEN_GARDEN_W, ZEN_GARDEN_D),
+      std(C.zenSand, 0.95, {
+        texture: "desert-sand",
+        textureScale: [4, 4],
+        bumpMap: "desert-sand-bump",
+        bumpScale: 0.05,
+        metalness: 0.04,
+      }),
+      { position: ZEN_GARDEN_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the tea-garden east edge with a slim loamy
+    // strip so the seam reads as a continuous earth-into-sand join with
+    // no holes at the ground layer.
+    f.mesh(
+      "Zen Garden West Apron",
+      plane(3, ZEN_GARDEN_D),
+      std(C.zenApronLoam, 0.95, {
+        texture: "desert-sand",
+        textureScale: [1, 4],
+        bumpMap: "desert-sand-bump",
+        bumpScale: 0.04,
+      }),
+      {
+        position: [
+          ZEN_GARDEN_POS[0] - ZEN_GARDEN_W / 2 + 1.5,
+          -0.054,
+          ZEN_GARDEN_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildZenRakedRings(f),
+    buildZenStoneGroups(f),
+    buildZenTorii(f, ZEN_TORII_POS),
+    buildZenLantern(f, ZEN_LANTERN_POS),
+  ]);
+}
+
+/**
+ * A fine set of concentric raked-sand rings around each tokutei-ishi
+ * stone arrangement — each ring a slim flat cylinder cap sitting just
+ * above the sand plane so the ridges read as raked relief at glancing
+ * sun. Uses a pale sand-highlight tone so the ridges pop against the
+ * bulk sand ground.
+ */
+function buildZenRakedRings(f: NodeFactory): SceneNode {
+  const sandHi = std(C.zenSandHi, 0.9, { flatShading: true });
+  const sandShade = std(C.zenSandShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  for (let g = 0; g < ZEN_STONE_GROUPS.length; g++) {
+    const grp = ZEN_STONE_GROUPS[g]!;
+    // Three concentric rings around each group's centre.
+    for (let r = 0; r < 3; r++) {
+      const radius = 0.9 + r * 0.55;
+      // Sand ridge — brighter pale cap at the crest.
+      parts.push(
+        f.mesh(`Zen Ridge ${g}-${r}`, cylinder(radius, radius, 0.010, 24), sandHi, {
+          position: [grp.x, -0.048, grp.z],
+        }, { castShadow: false, receiveShadow: true }),
+        // Slim darker interior ring reading as the trough between ridges.
+        f.mesh(`Zen Trough ${g}-${r}`, cylinder(radius - 0.10, radius - 0.10, 0.008, 24), sandShade, {
+          position: [grp.x, -0.049, grp.z],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // Two long parallel raking lines running north-south across the open
+  // sand between the groups for compositional flow.
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh(`Zen Long Rake ${i}`, box(0.10, 0.010, 8.0), sandHi, {
+        position: [ZEN_GARDEN_POS[0] - 3 + i * 1.6, -0.047, ZEN_GARDEN_POS[2] + 2.0],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Zen Raked Rings", parts);
+}
+
+/**
+ * Three tokutei-ishi stone arrangements — each a small cluster of rounded
+ * boulders in a rough triangular grouping. Each stone reuses the existing
+ * grey-tone palette with a slim moss cap and a shaded underside so the
+ * rounded relief reads at glancing sun.
+ */
+function buildZenStoneGroups(f: NodeFactory): SceneNode {
+  const stone: MaterialDef = {
+    color: C.zenStone,
+    roughness: 0.9,
+    metalness: 0.02,
+    flatShading: true,
+  };
+  const stoneHi = std(C.zenStoneHi, 0.82, { flatShading: true });
+  const stoneShade = std(C.zenStoneShade, 0.95, { flatShading: true });
+  const moss = std(C.zenMoss, 0.9, { flatShading: true });
+  const parts: SceneNode[] = [];
+  for (let g = 0; g < ZEN_STONE_GROUPS.length; g++) {
+    const grp = ZEN_STONE_GROUPS[g]!;
+    for (let i = 0; i < grp.count; i++) {
+      const a = (i / grp.count) * Math.PI * 2 + g * 0.7;
+      const rr = 0.28 * (0.6 + i * 0.15);
+      const sx = grp.x + Math.cos(a) * rr;
+      const sz = grp.z + Math.sin(a) * rr;
+      const sHt = (0.30 + (i % 3) * 0.12) * grp.scale;
+      const sRad = (0.22 + (i % 2) * 0.08) * grp.scale;
+      // Main boulder — rounded sphere pressed slightly into the sand.
+      parts.push(
+        f.mesh(`Zen Stone ${g}-${i}`, sphere(sRad, 10, 8), stone, {
+          position: [sx, sHt / 2 - 0.02, sz],
+          scale: [1.15, sHt / (sRad * 1.5), 1.05],
+        }, { castShadow: true, receiveShadow: true }),
+        // Slim brighter crown cap for relief.
+        f.mesh(`Zen Stone Hi ${g}-${i}`, sphere(sRad * 0.72, 8, 6), stoneHi, {
+          position: [sx, sHt - 0.03, sz],
+          scale: [0.9, 0.5, 0.9],
+        }, { castShadow: false }),
+        // Slim shaded underside seam pressed into the sand.
+        f.mesh(`Zen Stone Shade ${g}-${i}`, sphere(sRad * 0.85, 8, 6), stoneShade, {
+          position: [sx, 0.02, sz + 0.05],
+          scale: [1.05, 0.20, 0.95],
+        }, { castShadow: false }),
+        // Small moss patch on top of the crown for a weathered look.
+        f.mesh(`Zen Stone Moss ${g}-${i}`, sphere(sRad * 0.42, 8, 6), moss, {
+          position: [sx + 0.03, sHt - 0.01, sz - 0.02],
+          scale: [1.0, 0.28, 1.0],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  return f.group("Zen Stone Groups", parts);
+}
+
+/**
+ * Small vermilion torii gate framing the northeast approach to the zen
+ * garden — a pair of tapering red posts on slim slate footings linked by
+ * a curved crossbeam (kasagi) with a slim lower tie-beam (nuki) between
+ * the posts and a small central raised medallion (gakuzuka) hanging below
+ * the crossbeam. The paint reads as slim vermilion with a brighter highlight
+ * ridge on the crossbeam's upper edge.
+ */
+function buildZenTorii(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const red: MaterialDef = {
+    color: C.zenToriiRed,
+    roughness: 0.72,
+    metalness: 0.04,
+    flatShading: true,
+  };
+  const redHi = std(C.zenToriiRedHi, 0.55, { flatShading: true });
+  const redShade = std(C.zenToriiShade, 0.95, { flatShading: true });
+  const slate = std(C.zenStoneShade, 0.9, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Two slate footings pressed into the sand at the post bases.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Torii Footing ${sx}`, cylinder(0.14, 0.16, 0.10, 12), slate, {
+        position: [sx * 0.85, 0.05, 0],
+      }, { castShadow: true, receiveShadow: true }),
+    );
+  }
+  // ── Two tapering vermilion posts rising from the footings.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Torii Post ${sx}`, cylinder(0.08, 0.10, 1.65, 10), red, {
+        position: [sx * 0.85, 0.925, 0],
+      }, { castShadow: true, receiveShadow: true }),
+      // Slim brighter highlight strip down the front face of the post.
+      f.mesh(`Torii Post Hi ${sx}`, box(0.03, 1.30, 0.03), redHi, {
+        position: [sx * 0.85 + 0.06, 0.90, 0.06],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Curved crossbeam (kasagi) — broad flared beam across the top.
+  parts.push(
+    f.mesh("Torii Kasagi", box(2.20, 0.14, 0.20), red, {
+      position: [0, 1.82, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim tapered end caps flaring the crossbeam beyond the posts.
+    f.mesh("Torii Kasagi End L", box(0.24, 0.10, 0.16), red, {
+      position: [-1.20, 1.86, 0],
+      rotation: [0, 0, 0.15],
+    }, { castShadow: true }),
+    f.mesh("Torii Kasagi End R", box(0.24, 0.10, 0.16), red, {
+      position: [1.20, 1.86, 0],
+      rotation: [0, 0, -0.15],
+    }, { castShadow: true }),
+    // Slim brighter highlight ridge along the crossbeam's upper edge.
+    f.mesh("Torii Kasagi Hi", box(2.10, 0.020, 0.14), redHi, {
+      position: [0, 1.89, 0],
+    }, { castShadow: false }),
+    // Slim darker shaded band across the underside of the crossbeam.
+    f.mesh("Torii Kasagi Shade", box(2.00, 0.016, 0.14), redShade, {
+      position: [0, 1.755, 0],
+    }, { castShadow: false }),
+  );
+  // ── Lower tie-beam (nuki) linking the posts below the crossbeam.
+  parts.push(
+    f.mesh("Torii Nuki", box(1.80, 0.10, 0.14), red, {
+      position: [0, 1.58, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Torii Nuki Hi", box(1.70, 0.014, 0.10), redHi, {
+      position: [0, 1.622, 0],
+    }, { castShadow: false }),
+  );
+  // ── Small raised central medallion (gakuzuka) hanging below the crossbeam.
+  parts.push(
+    f.mesh("Torii Gakuzuka", box(0.16, 0.14, 0.10), red, {
+      position: [0, 1.68, 0],
+    }, { castShadow: true }),
+    f.mesh("Torii Gakuzuka Hi", box(0.10, 0.020, 0.06), redHi, {
+      position: [0, 1.73, 0.06],
+    }, { castShadow: false }),
+  );
+  return f.group("Zen Torii Gate", parts, { position: pos });
+}
+
+/**
+ * Moss-flecked stone lantern (yukimi-doro style) near the south edge of
+ * the zen garden — a slim four-legged stone base, a stacked cylindrical
+ * shaft, a flared square roof cap and a small warm glow plate reading as
+ * a candle burning behind the lantern's carved opening. Slim moss patches
+ * on the roof cap and shaft weather the stone.
+ */
+function buildZenLantern(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const stone: MaterialDef = {
+    color: C.zenLanternStone,
+    roughness: 0.9,
+    metalness: 0.02,
+    flatShading: true,
+  };
+  const stoneHi = std(C.zenStoneHi, 0.8, { flatShading: true });
+  const stoneShade = std(C.zenStoneShade, 0.95, { flatShading: true });
+  const moss = std(C.zenMoss, 0.9, { flatShading: true });
+  const glow = std(C.zenLanternGlow, 0.35, { metalness: 0.15 });
+  const parts: SceneNode[] = [];
+  // ── Four slim leg posts on a slim slate base.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Lantern Leg ${sx} ${sz}`, cylinder(0.05, 0.06, 0.30, 8), stone, {
+          position: [sx * 0.12, 0.15, sz * 0.12],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // ── Broad slate base under the shaft.
+  parts.push(
+    f.mesh("Lantern Base", cylinder(0.26, 0.28, 0.06, 12), stoneShade, {
+      position: [0, 0.32, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim highlight cap on the base for relief.
+    f.mesh("Lantern Base Hi", cylinder(0.22, 0.22, 0.014, 12), stoneHi, {
+      position: [0, 0.36, 0],
+    }, { castShadow: false }),
+  );
+  // ── Stacked cylindrical shaft with a slim mid-belt ring.
+  parts.push(
+    f.mesh("Lantern Shaft Lower", cylinder(0.16, 0.18, 0.36, 12), stone, {
+      position: [0, 0.56, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Lantern Shaft Belt", cylinder(0.20, 0.20, 0.05, 12), stoneShade, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true }),
+    f.mesh("Lantern Shaft Upper", cylinder(0.14, 0.16, 0.30, 12), stone, {
+      position: [0, 0.96, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Lantern chamber — square hollow box with a warm glow behind the opening.
+  parts.push(
+    f.mesh("Lantern Chamber", box(0.34, 0.30, 0.34), stone, {
+      position: [0, 1.28, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim inner glow plate reading as a candle burning behind the opening.
+    f.mesh("Lantern Glow", box(0.20, 0.20, 0.20), glow, {
+      position: [0, 1.28, 0.075],
+    }, { castShadow: false }),
+    // Slim shaded rim ringing the chamber for depth.
+    f.mesh("Lantern Chamber Shade", box(0.36, 0.014, 0.36), stoneShade, {
+      position: [0, 1.14, 0],
+    }, { castShadow: false }),
+  );
+  // ── Flared square roof cap on top of the chamber.
+  parts.push(
+    f.mesh("Lantern Roof Bot", box(0.44, 0.06, 0.44), stone, {
+      position: [0, 1.48, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Lantern Roof Peak", cone(0.30, 0.18, 4), stone, {
+      position: [0, 1.60, 0],
+      rotation: [0, Math.PI / 4, 0],
+    }, { castShadow: true }),
+    f.mesh("Lantern Finial", sphere(0.05, 8, 6), stoneHi, {
+      position: [0, 1.74, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim moss patches weathering the roof and shaft belt.
+  parts.push(
+    f.mesh("Lantern Moss Roof", sphere(0.14, 8, 6), moss, {
+      position: [-0.12, 1.48, 0.10],
+      scale: [1.0, 0.20, 1.0],
+    }, { castShadow: false }),
+    f.mesh("Lantern Moss Belt", sphere(0.08, 6, 5), moss, {
+      position: [0.14, 0.78, 0.10],
+      scale: [1.0, 0.35, 0.6],
+    }, { castShadow: false }),
+  );
+  return f.group("Zen Stone Lantern", parts, { position: pos });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -34940,6 +35634,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: BADGER_STATUE_POS[0], z: BADGER_STATUE_POS[2], r: 0.9 },
     // Forty-first-pass keep-out — bronze squirrel statue on the back-east outside-fence lawn.
     { x: SQUIRREL_STATUE_POS[0], z: SQUIRREL_STATUE_POS[2], r: 0.9 },
+    // Forty-second-pass keep-out — bronze doe statue on the back-west outside-fence lawn.
+    { x: DOE_STATUE_POS[0], z: DOE_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -35022,6 +35718,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildHedgehogStatue(f, HEDGEHOG_STATUE_POS),
     buildBadgerStatue(f, BADGER_STATUE_POS),
     buildSquirrelStatue(f, SQUIRREL_STATUE_POS),
+    buildDoeStatue(f, DOE_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -35059,6 +35756,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const feMangroveEstuary = buildFarEastMangroveEstuary(f);
   const fePaddyTerrace = buildFarEastPaddyTerrace(f);
   const feTeaGarden = buildFarEastTeaGarden(f);
+  const feZenGarden = buildFarEastZenGarden(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -35120,6 +35818,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildDoorLetterSlot(f),
     buildDoorPeephole(f),
     buildDoorPullHandle(f),
+    buildDoorEscutcheon(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -35164,6 +35863,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       feMangroveEstuary,
       fePaddyTerrace,
       feTeaGarden,
+      feZenGarden,
       house,
     ],
   };
