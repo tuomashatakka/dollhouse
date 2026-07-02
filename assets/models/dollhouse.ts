@@ -22,23 +22,25 @@ import {
  *
  * This module is a snapshot of packages/editor/src/presets/dollhouse.ts with
  * incrementally enhanced meshes — see {@link buildDollhouseDocument}. The
- * latest enhancement (pass 42) extends the back-west outside-fence bestiary
- * line westward past the tortoise (at x=-9.5) with a Victorian bronze doe
- * statue on a fluted marble pedestal (standing four-square on the plinth
- * cap in a slim alert grazing pose with a tapered muzzle, two tall tufted
- * ears at the crown, two glinting eye highlights, a slim cream throat
- * blaze and belly seam for soft enamel inlay against the bronze, four
- * slim tapering legs and a short raised white tail), adds a polished
- * brass Victorian keyhole escutcheon plate pinned to the door slab
- * between the number plate and the pull handle (a slim oval brass plate
- * ringing a raised keyway drop and a pivoted cover flap catching the
- * porch lamps, companion to the knocker, kickplate, bell pull, letter
- * slot, number plate, peephole, pull handle and pine-needle wreath),
- * and extends the scene eastward with a far-east zen rock-garden
- * ground plane east of the tea garden carrying a raked pale-sand
- * ground, three tokutei-ishi stone arrangements ringed by fine
- * concentric raking, a small vermilion torii gate at the northeast
- * corner and a moss-flecked stone lantern near the south edge.
+ * latest enhancement (pass 43) fills the back-west outside-fence bestiary
+ * line between the doe (at x=-12.5) and the tortoise (at x=-9.5) with a
+ * companion Victorian bronze fawn statue on a fluted marble pedestal (a
+ * slim curious four-square pose with a shorter body, two tall tapered
+ * ears at the crown, a slim tapered muzzle and dark nose dab, a scatter
+ * of soft cream juvenile spot dabs for dappled enamel inlay against the
+ * bronze, four slim tapering legs and a short raised white stub tail —
+ * the doe-and-fawn pairing reads as a mother-and-child grouping in the
+ * bestiary line), adds a polished brass Victorian door knob on the door
+ * slab above the escutcheon (a raised knob dome on a slim brass rosette
+ * plate pinned by four corner rivets, companion to the knocker,
+ * kickplate, bell pull, letter slot, number plate, peephole, pull
+ * handle, escutcheon and pine-needle wreath) and extends the scene
+ * eastward with a far-east reed marsh ground plane east of the zen
+ * rock garden carrying a peat-mud ground floor, a small brackish tidal
+ * pool ringed by a foam-fringe rim, five clusters of tall reed stalks
+ * crowned by fluffy brown cattail heads, a small wooden duck-blind hut
+ * on four stilt posts at the northeast corner and a slim bronze crane
+ * statue stalking the pool near the north edge.
  */
 const W = 7;
 const D = 5;
@@ -2046,6 +2048,68 @@ const ZEN_STONE_GROUPS: { x: number; z: number; count: number; scale: number }[]
   { x: 183, z: 144, count: 3, scale: 0.90 },
 ];
 
+/**
+ * Forty-third-pass courtyard prop — a Victorian bronze fawn statue on a
+ * fluted marble pedestal, parked on the back-west outside-fence lawn between
+ * the doe (at x=-12.5) and the tortoise (at x=-9.5) so the doe-and-fawn
+ * family reads as a paired mother-and-child grouping in the bestiary line.
+ * The fawn stands four-square on the plinth cap in a slim curious pose with
+ * a shorter body, a slim rounded chest, two tall tapered ears at the crown,
+ * two glinting eye highlights, a slim tapered muzzle with a dark nose dab, a
+ * scatter of five soft cream juvenile spot dabs across the flanks and back
+ * reading as dappled enamel inlay against the bronze, four slim tapering
+ * legs and a short raised white stub tail. The bronze body, head, ears,
+ * muzzle, legs and tail reuse the existing `copper-patina` colour + bump
+ * pair so the verdigris reads as crusted relief on the cast metal, the
+ * cream spot and tail-tuft panels read as soft enamel inlay against the
+ * bronze, and the plinth reuses the existing `marble` colour + bump pair so
+ * the stone reads with veined relief.
+ */
+const FAWN_STATUE_POS: [number, number, number] = [-11.0, 0, -5.5];
+
+/**
+ * Forty-third-pass house detail — a polished brass Victorian door knob on
+ * the door slab, pinned above the escutcheon on a slim brass rosette plate
+ * — a raised knob dome standing proud of the rosette on a short brass
+ * neck-shaft, four small corner rivets pinning the rosette to the door slab
+ * and a slim highlight crescent catching the porch lamps on the rounded
+ * knob crown (companion to the kickplate, bell pull, knocker, letter slot,
+ * number plate, peephole, pull handle, escutcheon, carriage lanterns,
+ * address plaque and pine-needle wreath). The knob reuses the existing
+ * `copper-patina` colour + bump pair tinted toward warm brass (sharing the
+ * pass-38 brass palette) so the polished metal reads as fitted relief
+ * against the door slab.
+ */
+const DOOR_KNOB_POS: [number, number, number] = [0.32, 1.62, FRONT_Z + WALL_T / 2 + 0.014];
+
+/**
+ * Forty-third-pass scene extension — a far-east reed marsh plane east of the
+ * zen rock garden. Carries a peat-toned muddy ground floor surfaced with the
+ * existing `peat-moor` colour map paired with its bump depth map so the
+ * silty tidal mud reads as raised relief at glancing sun, a slim pale-sand
+ * west apron along the zen-garden east edge so the ground layer has no
+ * holes at the seam, a small dark brackish tidal pool at the plot centre
+ * ringed by a foam-fringe rim, five clusters of tall reed stalks each
+ * crowned by a slim fluffy brown cattail top head, a small wooden
+ * duck-blind hut on four stilt posts at the northeast corner with a peaked
+ * shingle roof and a glowing front observation slit, and a slim bronze
+ * crane statue stalking the pool near the north edge.
+ */
+const REED_MARSH_POS: [number, number, number] = [204, -0.057, 140];
+const REED_MARSH_W = 20;
+const REED_MARSH_D = 20;
+const REED_POOL_POS: [number, number, number] = [204, 0, 141];
+const REED_POOL_R = 3.2;
+const DUCK_BLIND_POS: [number, number, number] = [210, 0, 134];
+const MARSH_CRANE_POS: [number, number, number] = [202.5, 0, 138];
+const REED_CLUSTERS: { x: number; z: number; count: number }[] = [
+  { x: 199, z: 136, count: 6 },
+  { x: 208, z: 139, count: 5 },
+  { x: 200, z: 145, count: 6 },
+  { x: 206, z: 146, count: 5 },
+  { x: 202, z: 133, count: 5 },
+];
+
 const C = {
   exteriorPink: "#f1aac4",
   wallPinkLight: "#f7c6d9",
@@ -3636,6 +3700,42 @@ const C = {
   zenToriiShade: "#5c1a10",
   zenLanternStone: "#8a8074",
   zenLanternGlow: "#ffd88a",
+  // Forty-third enhancement pass — a Victorian bronze fawn statue on a
+  // fluted marble pedestal (back-west outside-fence lawn between the doe
+  // and the tortoise, reading as a mother-and-child pairing), a polished
+  // brass Victorian door knob on a slim rosette plate pinned to the door
+  // slab above the escutcheon, and a far-east reed-marsh scene extension
+  // east of the zen garden with a peat-mud ground, a small brackish tidal
+  // pool, five reed-and-cattail clusters, a stilted duck-blind hut and a
+  // bronze crane statue stalking the pool.
+  fawnBronze: "#3c4e44",
+  fawnBronzeHi: "#82a092",
+  fawnBronzeShade: "#1c2620",
+  fawnSpot: "#efe1c4",
+  fawnSpotShade: "#a89678",
+  fawnPlinth: "#ede2d0",
+  fawnPlinthShade: "#a89776",
+  doorKnobBrass: "#e9c072",
+  doorKnobHi: "#faeaa4",
+  doorKnobShade: "#8a6a2c",
+  rmMud: "#4a3b2e",
+  rmMudHi: "#7a6248",
+  rmApronSand: "#c8b48a",
+  rmPoolWater: "#3a5e58",
+  rmPoolDeep: "#1c3438",
+  rmPoolFoam: "#dfeee6",
+  rmReedStalk: "#6c8248",
+  rmReedShade: "#3f5228",
+  rmCattail: "#6c4a24",
+  rmCattailHi: "#a07030",
+  rmBlindWall: "#5a4028",
+  rmBlindWallHi: "#8a6844",
+  rmBlindRoof: "#3a2f28",
+  rmBlindPost: "#4a3220",
+  rmBlindWindow: "#ffd989",
+  rmCraneBronze: "#3c4e44",
+  rmCraneBronzeHi: "#82a092",
+  rmCraneShade: "#1c2620",
 } as const;
 
 const std = (color: string, roughness = 0.7, extra: Partial<MaterialDef> = {}): MaterialDef => ({
@@ -34457,6 +34557,615 @@ function buildZenLantern(f: NodeFactory, pos: [number, number, number]): SceneNo
   return f.group("Zen Stone Lantern", parts, { position: pos });
 }
 
+/* ────────────────────── pass 43 — fawn statue ────────────────────── */
+
+/**
+ * Forty-third-pass courtyard prop — a Victorian bronze fawn statue on a
+ * fluted marble pedestal, parked on the back-west outside-fence lawn between
+ * the doe (west) and the tortoise (east). The doe-and-fawn pairing reads as
+ * a mother-and-child grouping in the bestiary line. Compared to the doe the
+ * fawn has a shorter, softer body, tall tapered ears at the crown, dappled
+ * cream juvenile spots down the flanks and a raised white stub tail.
+ */
+function buildFawnStatue(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.fawnBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.8, 0.8],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.fawnBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.fawnBronzeShade, 0.95, { flatShading: true });
+  const spot = std(C.fawnSpot, 0.55, { metalness: 0.4 });
+  const spotShade = std(C.fawnSpotShade, 0.9, { flatShading: true });
+  const marble: MaterialDef = {
+    color: C.fawnPlinth,
+    roughness: 0.5,
+    metalness: 0.1,
+    texture: "marble",
+    textureScale: [1.5, 1.5],
+    bumpMap: "marble-bump",
+    bumpScale: 0.025,
+  };
+  const marbleShade = std(C.fawnPlinthShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Plinth matches the rest of the bestiary marching line.
+  parts.push(
+    f.mesh("Plinth Base", box(0.72, 0.14, 0.72), marble, {
+      position: [0, 0.07, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Base Shade", box(0.66, 0.04, 0.66), marbleShade, {
+      position: [0, 0.16, 0],
+    }, { receiveShadow: true }),
+    f.mesh("Plinth Shaft", box(0.46, 0.56, 0.46), marble, {
+      position: [0, 0.46, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap", box(0.56, 0.06, 0.56), marble, {
+      position: [0, 0.77, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Plinth Cap Hi", box(0.52, 0.022, 0.52), bronzeHi, {
+      position: [0, 0.812, 0],
+    }, { castShadow: false }),
+  );
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const fx = Math.cos(a) * 0.235;
+    const fz = Math.sin(a) * 0.235;
+    parts.push(
+      f.mesh(`Flute ${i}`, box(0.04, 0.46, 0.04), marbleShade, {
+        position: [fx, 0.46, fz],
+        rotation: [0, a, 0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Softer shorter body — juvenile-scale ovoid trunk on four legs.
+  const bodyY = 1.02;
+  parts.push(
+    f.mesh("Fawn Body", sphere(0.20, 14, 10), bronze, {
+      position: [0, bodyY, 0],
+      scale: [0.85, 0.85, 1.30],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim shaded belly seam.
+    f.mesh("Fawn Belly Seam", sphere(0.16, 12, 8), spotShade, {
+      position: [0, bodyY - 0.10, 0],
+      scale: [0.80, 0.35, 1.15],
+    }, { castShadow: false }),
+  );
+  // ── Slim neck rising to the head.
+  parts.push(
+    f.mesh("Fawn Neck", cylinder(0.062, 0.078, 0.24, 10), bronze, {
+      position: [0, bodyY + 0.14, 0.22],
+      rotation: [Math.PI / 4, 0, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Cream throat blaze — pale enamel dab down the front.
+    f.mesh("Fawn Throat Blaze", box(0.05, 0.18, 0.02), spot, {
+      position: [0, bodyY + 0.10, 0.32],
+      rotation: [Math.PI / 4, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Tapered head with slim muzzle and dark nose.
+  const headY = bodyY + 0.30;
+  const headZ = 0.34;
+  parts.push(
+    f.mesh("Fawn Head", sphere(0.095, 12, 10), bronze, {
+      position: [0, headY, headZ],
+      scale: [0.85, 0.95, 1.15],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Fawn Muzzle", cone(0.048, 0.11, 10), bronze, {
+      position: [0, headY - 0.02, headZ + 0.11],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Fawn Nose", sphere(0.018, 8, 6), bronzeShade, {
+      position: [0, headY - 0.02, headZ + 0.18],
+    }, { castShadow: false }),
+  );
+  // ── Two tall tapered ears at the crown.
+  for (const sx of [-1, 1]) {
+    parts.push(
+      f.mesh(`Fawn Ear ${sx}`, cone(0.028, 0.13, 6), bronze, {
+        position: [sx * 0.055, headY + 0.15, headZ - 0.03],
+        rotation: [-0.30, 0, sx * 0.28],
+      }, { castShadow: true }),
+      f.mesh(`Fawn Ear Tuft ${sx}`, cone(0.016, 0.075, 6), spot, {
+        position: [sx * 0.055, headY + 0.17, headZ - 0.02],
+        rotation: [-0.30, 0, sx * 0.28],
+      }, { castShadow: false }),
+      f.mesh(`Fawn Eye ${sx}`, sphere(0.011, 8, 6), bronzeHi, {
+        position: [sx * 0.045, headY + 0.02, headZ + 0.07],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Four slim tapering legs anchoring the fawn to the plinth cap.
+  for (const sz of [-1, 1]) {
+    for (const sx of [-1, 1]) {
+      const legZ = sz > 0 ? 0.20 : -0.22;
+      parts.push(
+        f.mesh(`Fawn Leg ${sx} ${sz}`, cylinder(0.030, 0.040, 0.26, 8), bronze, {
+          position: [sx * 0.095, bodyY - 0.24, legZ],
+        }, { castShadow: true, receiveShadow: true }),
+        f.mesh(`Fawn Hoof ${sx} ${sz}`, cylinder(0.032, 0.042, 0.04, 8), bronzeShade, {
+          position: [sx * 0.095, bodyY - 0.39, legZ],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  // ── Five soft cream juvenile spot dabs scattered across the flanks and back
+  // for pale enamel inlay against the bronze.
+  const spots: [number, number, number][] = [
+    [ 0.14, bodyY + 0.02, -0.06],
+    [-0.14, bodyY + 0.03,  0.02],
+    [ 0.12, bodyY + 0.05,  0.10],
+    [-0.12, bodyY + 0.05, -0.14],
+    [ 0.00, bodyY + 0.11, -0.06],
+  ];
+  for (let i = 0; i < spots.length; i++) {
+    const s = spots[i]!;
+    parts.push(
+      f.mesh(`Fawn Spot ${i}`, sphere(0.028, 8, 6), spot, {
+        position: [s[0], s[1], s[2]],
+        scale: [1.0, 0.5, 1.0],
+      }, { castShadow: false }),
+    );
+  }
+  // ── Short raised white stub tail flicked up at the back.
+  parts.push(
+    f.mesh("Fawn Tail", cone(0.028, 0.08, 6), bronze, {
+      position: [0, bodyY + 0.06, -0.36],
+      rotation: [0.7, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Fawn Tail Tuft", sphere(0.028, 8, 6), spot, {
+      position: [0, bodyY + 0.10, -0.40],
+    }, { castShadow: false }),
+  );
+  // ── Slim engraved plaque tablet on the plinth's south face.
+  parts.push(
+    f.mesh("Fawn Plaque", box(0.30, 0.10, 0.018), bronzeHi, {
+      position: [0, 0.50, 0.235],
+    }, { castShadow: false }),
+    f.mesh("Fawn Plaque Bead L", sphere(0.012, 8, 6), bronzeHi, {
+      position: [-0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Fawn Plaque Bead C", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0, 0.50, 0.245],
+    }, { castShadow: false }),
+    f.mesh("Fawn Plaque Bead R", sphere(0.012, 8, 6), bronzeHi, {
+      position: [0.1, 0.50, 0.245],
+    }, { castShadow: false }),
+  );
+  return f.group("Fawn Statue", parts, { position: pos });
+}
+
+/* ────────────────────── pass 43 — door knob ────────────────────── */
+
+/**
+ * Forty-third-pass house detail — a polished brass Victorian door knob on
+ * the door slab, pinned above the escutcheon on a slim brass rosette plate,
+ * a raised knob dome standing proud of the rosette on a short brass neck-
+ * shaft, four small corner rivets pinning the rosette to the door slab and
+ * a slim highlight crescent on the knob crown catching the porch lamps.
+ */
+function buildDoorKnob(f: NodeFactory): SceneNode {
+  const brass: MaterialDef = {
+    color: C.doorKnobBrass,
+    roughness: 0.42,
+    metalness: 0.85,
+    texture: "copper-patina",
+    textureScale: [0.4, 0.4],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.012,
+  };
+  const brassHi = std(C.doorKnobHi, 0.32, { metalness: 0.92 });
+  const brassShade = std(C.doorKnobShade, 0.85, { metalness: 0.55, flatShading: true });
+  const parts: SceneNode[] = [];
+  const px = DOOR_KNOB_POS[0];
+  const py = DOOR_KNOB_POS[1];
+  const pz = DOOR_KNOB_POS[2];
+  // ── Rosette plate pinned to the door slab behind the knob.
+  parts.push(
+    f.mesh("Knob Rosette", cylinder(0.048, 0.048, 0.012, 20), brass, {
+      position: [px, py, pz],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false, receiveShadow: true }),
+    // Slim raised highlight rim ringing the rosette for relief.
+    f.mesh("Knob Rosette Hi", cylinder(0.044, 0.044, 0.014, 20), brassHi, {
+      position: [px, py, pz + 0.001],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+    // Slim darker recessed rim ringing the inside for depth.
+    f.mesh("Knob Rosette Shade", cylinder(0.030, 0.030, 0.014, 16), brassShade, {
+      position: [px, py, pz + 0.002],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Short neck-shaft standing proud of the rosette.
+  parts.push(
+    f.mesh("Knob Neck", cylinder(0.016, 0.018, 0.026, 12), brass, {
+      position: [px, py, pz + 0.020],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: false }),
+  );
+  // ── Raised knob dome standing proud on the neck.
+  parts.push(
+    f.mesh("Knob Dome", sphere(0.040, 14, 10), brass, {
+      position: [px, py, pz + 0.056],
+      scale: [1.0, 1.0, 0.85],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim highlight crescent on the rounded crown catching porch lamps.
+    f.mesh("Knob Dome Hi", sphere(0.030, 10, 8), brassHi, {
+      position: [px - 0.010, py + 0.014, pz + 0.070],
+      scale: [1.0, 0.35, 0.5],
+    }, { castShadow: false }),
+    // Slim darker shaded band under the knob for depth.
+    f.mesh("Knob Dome Shade", sphere(0.032, 10, 6), brassShade, {
+      position: [px, py - 0.020, pz + 0.048],
+      scale: [1.0, 0.30, 0.45],
+    }, { castShadow: false }),
+  );
+  // ── Four corner rivets pinning the rosette to the door slab.
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
+    const rx = px + Math.cos(a) * 0.038;
+    const ry = py + Math.sin(a) * 0.038;
+    parts.push(
+      f.mesh(`Knob Rivet ${i}`, sphere(0.007, 6, 6), brassHi, {
+        position: [rx, ry, pz + 0.008],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Door Knob", parts);
+}
+
+/* ────────────────────── pass 43 — reed marsh ────────────────────── */
+
+/**
+ * Far-east reed marsh plane east of the zen rock garden. Carries a peat-toned
+ * muddy ground floor surfaced with the existing `peat-moor` colour + bump
+ * pair so the silty tidal mud reads as raised relief at glancing sun, a slim
+ * pale-sand west apron overlapping the zen-garden east edge so the ground
+ * layer has no holes at the seam, a small dark brackish tidal pool at the
+ * plot centre ringed by a foam-fringe rim, five clusters of tall reed stalks
+ * each crowned by a slim fluffy brown cattail top head, a small wooden
+ * duck-blind hut on four stilt posts at the northeast corner and a slim
+ * bronze crane statue stalking the pool near the north edge.
+ */
+function buildFarEastReedMarsh(f: NodeFactory): SceneNode {
+  return f.group("Far East Reed Marsh", [
+    // Reed-marsh mud ground plane.
+    f.mesh(
+      "Reed Marsh Ground",
+      plane(REED_MARSH_W, REED_MARSH_D),
+      std(C.rmMud, 0.95, {
+        texture: "peat-moor",
+        textureScale: [3, 3],
+        bumpMap: "peat-moor-bump",
+        bumpScale: 0.06,
+        metalness: 0.04,
+      }),
+      { position: REED_MARSH_POS, rotation: [-Math.PI / 2, 0, 0] },
+      { receiveShadow: true },
+    ),
+    // West apron — overlaps the zen-garden east edge with a slim pale-sand
+    // strip so the seam reads as a continuous sand-into-mud join with no
+    // holes at the ground layer.
+    f.mesh(
+      "Reed Marsh West Apron",
+      plane(3, REED_MARSH_D),
+      std(C.rmApronSand, 0.95, {
+        texture: "desert-sand",
+        textureScale: [1, 4],
+        bumpMap: "desert-sand-bump",
+        bumpScale: 0.04,
+      }),
+      {
+        position: [
+          REED_MARSH_POS[0] - REED_MARSH_W / 2 + 1.5,
+          -0.055,
+          REED_MARSH_POS[2],
+        ],
+        rotation: [-Math.PI / 2, 0, 0],
+      },
+      { receiveShadow: true },
+    ),
+    buildMarshPool(f, REED_POOL_POS),
+    buildReedClusters(f),
+    buildDuckBlindHut(f, DUCK_BLIND_POS),
+    buildMarshCrane(f, MARSH_CRANE_POS),
+  ]);
+}
+
+/**
+ * Small dark brackish tidal pool ringed by a foam-fringe rim — a broad thin
+ * water slab with a darker deep-water core and a scattered ring of foam
+ * dabs so the shoreline reads as brackish standing water on the mud.
+ */
+function buildMarshPool(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const water: MaterialDef = {
+    color: C.rmPoolWater,
+    roughness: 0.25,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.82,
+  };
+  const waterDeep: MaterialDef = {
+    color: C.rmPoolDeep,
+    roughness: 0.28,
+    metalness: 0.2,
+    transparent: true,
+    opacity: 0.9,
+  };
+  const foam = std(C.rmPoolFoam, 0.55, { metalness: 0.1 });
+  const parts: SceneNode[] = [];
+  parts.push(
+    f.mesh("Pool Water", cylinder(REED_POOL_R, REED_POOL_R, 0.022, 28), water, {
+      position: [0, 0.05, 0],
+    }, { castShadow: false }),
+    f.mesh("Pool Deep Core", cylinder(REED_POOL_R * 0.55, REED_POOL_R * 0.55, 0.014, 24), waterDeep, {
+      position: [0, 0.058, 0],
+    }, { castShadow: false }),
+  );
+  // Foam-fringe dabs ringing the shore.
+  const dabs = 14;
+  for (let i = 0; i < dabs; i++) {
+    const a = (i / dabs) * Math.PI * 2 + (i % 2) * 0.13;
+    const rr = REED_POOL_R + 0.05 + (i % 3) * 0.06;
+    parts.push(
+      f.mesh(`Pool Foam ${i}`, sphere(0.09, 6, 5), foam, {
+        position: [Math.cos(a) * rr, 0.06, Math.sin(a) * rr],
+        scale: [1.0, 0.28, 0.9],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Marsh Pool", parts, { position: pos });
+}
+
+/**
+ * Five clusters of tall reed stalks each crowned by a slim fluffy brown
+ * cattail top head — each stalk a slim green cylinder with a darker shaded
+ * side and a rounded brown cattail spike at the tip.
+ */
+function buildReedClusters(f: NodeFactory): SceneNode {
+  const stalk: MaterialDef = {
+    color: C.rmReedStalk,
+    roughness: 0.85,
+    metalness: 0.02,
+    flatShading: true,
+  };
+  const stalkShade = std(C.rmReedShade, 0.95, { flatShading: true });
+  const cattail = std(C.rmCattail, 0.8, { flatShading: true });
+  const cattailHi = std(C.rmCattailHi, 0.55, { flatShading: true });
+  const parts: SceneNode[] = [];
+  for (let g = 0; g < REED_CLUSTERS.length; g++) {
+    const grp = REED_CLUSTERS[g]!;
+    for (let i = 0; i < grp.count; i++) {
+      const a = (i / grp.count) * Math.PI * 2 + g * 0.4;
+      const rr = 0.35 * (0.7 + (i % 3) * 0.2);
+      const sx = grp.x + Math.cos(a) * rr;
+      const sz = grp.z + Math.sin(a) * rr;
+      const h = 1.25 + (i % 3) * 0.25;
+      parts.push(
+        f.mesh(`Reed Stalk ${g}-${i}`, cylinder(0.014, 0.018, h, 6), stalk, {
+          position: [sx, h / 2, sz],
+        }, { castShadow: true }),
+        // Slim shaded side of the stalk for cylindrical relief.
+        f.mesh(`Reed Stalk Shade ${g}-${i}`, box(0.010, h * 0.9, 0.006), stalkShade, {
+          position: [sx + 0.014, h / 2, sz],
+        }, { castShadow: false }),
+        // Fluffy brown cattail top spike at the tip of the stalk.
+        f.mesh(`Reed Cattail ${g}-${i}`, cylinder(0.032, 0.028, 0.24, 8), cattail, {
+          position: [sx, h + 0.06, sz],
+        }, { castShadow: true }),
+        // Slim brighter highlight strip on the cattail spike.
+        f.mesh(`Reed Cattail Hi ${g}-${i}`, box(0.014, 0.20, 0.010), cattailHi, {
+          position: [sx + 0.020, h + 0.06, sz],
+        }, { castShadow: false }),
+        // Tiny tip cap on top of the cattail spike.
+        f.mesh(`Reed Cattail Tip ${g}-${i}`, sphere(0.014, 6, 5), cattailHi, {
+          position: [sx, h + 0.20, sz],
+        }, { castShadow: false }),
+      );
+    }
+  }
+  return f.group("Reed Clusters", parts);
+}
+
+/**
+ * Small wooden duck-blind hut on four stilt posts at the northeast corner of
+ * the marsh — a board-and-batten square cabin with a peaked shingle roof, a
+ * glowing horizontal observation slit on the front face, a slim rung ladder
+ * up the north stilt post and four stilt posts pressed into the mud.
+ */
+function buildDuckBlindHut(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const wall: MaterialDef = {
+    color: C.rmBlindWall,
+    roughness: 0.85,
+    metalness: 0.02,
+    texture: "wood",
+    textureScale: [1.2, 1.2],
+    flatShading: true,
+  };
+  const wallHi = std(C.rmBlindWallHi, 0.72, { flatShading: true });
+  const roof = std(C.rmBlindRoof, 0.85, { flatShading: true });
+  const post = std(C.rmBlindPost, 0.9, { flatShading: true });
+  const windowGlow = std(C.rmBlindWindow, 0.35, { metalness: 0.15 });
+  const parts: SceneNode[] = [];
+  // ── Four stilt posts pressed into the mud below the cabin floor.
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      parts.push(
+        f.mesh(`Blind Post ${sx} ${sz}`, cylinder(0.06, 0.07, 1.10, 8), post, {
+          position: [sx * 0.55, 0.55, sz * 0.55],
+        }, { castShadow: true, receiveShadow: true }),
+      );
+    }
+  }
+  // ── Cabin floor slab across the stilts.
+  parts.push(
+    f.mesh("Blind Floor", box(1.36, 0.06, 1.36), post, {
+      position: [0, 1.10, 0],
+    }, { castShadow: true, receiveShadow: true }),
+  );
+  // ── Four board-and-batten walls above the floor.
+  parts.push(
+    f.mesh("Blind Front Wall", box(1.30, 0.90, 0.05), wall, {
+      position: [0, 1.58, 0.65],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Blind Back Wall", box(1.30, 0.90, 0.05), wall, {
+      position: [0, 1.58, -0.65],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Blind Left Wall", box(0.05, 0.90, 1.30), wall, {
+      position: [-0.65, 1.58, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Blind Right Wall", box(0.05, 0.90, 1.30), wall, {
+      position: [0.65, 1.58, 0],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim highlight cap along the top of each wall for eave relief.
+    f.mesh("Blind Eave Hi F", box(1.32, 0.03, 0.06), wallHi, {
+      position: [0, 2.00, 0.66],
+    }, { castShadow: false }),
+    f.mesh("Blind Eave Hi B", box(1.32, 0.03, 0.06), wallHi, {
+      position: [0, 2.00, -0.66],
+    }, { castShadow: false }),
+  );
+  // ── Glowing horizontal observation slit on the front face.
+  parts.push(
+    f.mesh("Blind Window Slit", box(0.88, 0.16, 0.02), windowGlow, {
+      position: [0, 1.65, 0.685],
+    }, { castShadow: false }),
+    f.mesh("Blind Window Trim T", box(0.92, 0.03, 0.03), wallHi, {
+      position: [0, 1.76, 0.69],
+    }, { castShadow: false }),
+    f.mesh("Blind Window Trim B", box(0.92, 0.03, 0.03), wallHi, {
+      position: [0, 1.54, 0.69],
+    }, { castShadow: false }),
+  );
+  // ── Peaked shingle roof — two sloped panels forming an A-frame ridge.
+  parts.push(
+    f.mesh("Blind Roof L", box(1.55, 0.05, 0.85), roof, {
+      position: [-0.30, 2.20, 0],
+      rotation: [0, 0, 0.55],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Blind Roof R", box(1.55, 0.05, 0.85), roof, {
+      position: [0.30, 2.20, 0],
+      rotation: [0, 0, -0.55],
+    }, { castShadow: true, receiveShadow: true }),
+    // Slim ridge cap along the peak.
+    f.mesh("Blind Roof Ridge", box(0.06, 0.05, 1.35), wallHi, {
+      position: [0, 2.55, 0],
+    }, { castShadow: false }),
+  );
+  // ── Slim rung ladder up the north stilt post.
+  for (let i = 0; i < 4; i++) {
+    parts.push(
+      f.mesh(`Blind Ladder Rung ${i}`, box(0.30, 0.020, 0.02), post, {
+        position: [0, 0.22 + i * 0.24, -0.62],
+      }, { castShadow: false }),
+    );
+  }
+  return f.group("Duck Blind Hut", parts, { position: pos });
+}
+
+/**
+ * Slim bronze crane statue stalking the marsh pool near the north edge — a
+ * slim standing crane with a long slim neck, a slender straight beak, a
+ * rounded body, one folded standing leg and one raised bent leg, and a slim
+ * tail streamer flicked back. Reuses the copper-patina material so the
+ * verdigris reads as crusted relief on the cast metal.
+ */
+function buildMarshCrane(f: NodeFactory, pos: [number, number, number]): SceneNode {
+  const bronze: MaterialDef = {
+    color: C.rmCraneBronze,
+    roughness: 0.55,
+    metalness: 0.65,
+    texture: "copper-patina",
+    textureScale: [0.6, 0.6],
+    bumpMap: "copper-patina-bump",
+    bumpScale: 0.02,
+  };
+  const bronzeHi = std(C.rmCraneBronzeHi, 0.4, { metalness: 0.85 });
+  const bronzeShade = std(C.rmCraneShade, 0.95, { flatShading: true });
+  const parts: SceneNode[] = [];
+  // ── Rounded body with a slim shaded belly seam.
+  const bodyY = 0.95;
+  parts.push(
+    f.mesh("Crane Body", sphere(0.22, 14, 10), bronze, {
+      position: [0, bodyY, 0],
+      scale: [0.75, 0.85, 1.30],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Crane Belly Seam", sphere(0.18, 12, 8), bronzeShade, {
+      position: [0, bodyY - 0.10, 0],
+      scale: [0.75, 0.35, 1.15],
+    }, { castShadow: false }),
+  );
+  // ── Long slim neck curving up from the body's shoulders.
+  parts.push(
+    f.mesh("Crane Neck Lo", cylinder(0.038, 0.045, 0.42, 10), bronze, {
+      position: [0, bodyY + 0.28, 0.10],
+      rotation: [0.35, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Crane Neck Hi", cylinder(0.030, 0.038, 0.36, 10), bronze, {
+      position: [0, bodyY + 0.58, 0.22],
+      rotation: [0.15, 0, 0],
+    }, { castShadow: true }),
+  );
+  // ── Head with a long slender straight beak.
+  const headY = bodyY + 0.82;
+  parts.push(
+    f.mesh("Crane Head", sphere(0.06, 10, 8), bronze, {
+      position: [0, headY, 0.28],
+      scale: [0.85, 0.9, 1.20],
+    }, { castShadow: true }),
+    f.mesh("Crane Beak", cone(0.020, 0.20, 8), bronzeHi, {
+      position: [0, headY - 0.006, 0.44],
+      rotation: [Math.PI / 2, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Crane Eye L", sphere(0.010, 8, 6), bronzeHi, {
+      position: [-0.028, headY + 0.014, 0.32],
+    }, { castShadow: false }),
+    f.mesh("Crane Eye R", sphere(0.010, 8, 6), bronzeHi, {
+      position: [0.028, headY + 0.014, 0.32],
+    }, { castShadow: false }),
+  );
+  // ── One folded standing leg down to the mud, one raised bent leg tucked up.
+  parts.push(
+    // Standing leg — slim vertical shaft.
+    f.mesh("Crane Standing Leg", cylinder(0.022, 0.026, 0.85, 8), bronze, {
+      position: [-0.06, 0.42, -0.02],
+    }, { castShadow: true, receiveShadow: true }),
+    f.mesh("Crane Standing Foot", sphere(0.035, 8, 6), bronzeShade, {
+      position: [-0.06, 0.03, -0.02],
+      scale: [1.2, 0.35, 1.4],
+    }, { castShadow: false }),
+    // Raised bent leg — upper thigh angled forward + slim shin angled back.
+    f.mesh("Crane Raised Thigh", cylinder(0.022, 0.024, 0.30, 8), bronze, {
+      position: [0.06, 0.70, 0.00],
+      rotation: [0.6, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Crane Raised Shin", cylinder(0.020, 0.022, 0.28, 8), bronze, {
+      position: [0.06, 0.62, 0.16],
+      rotation: [-0.6, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Crane Raised Foot", sphere(0.030, 8, 6), bronzeShade, {
+      position: [0.06, 0.48, 0.28],
+      scale: [1.1, 0.35, 1.4],
+    }, { castShadow: false }),
+  );
+  // ── Slim tail streamer flicked back at the rear of the body.
+  parts.push(
+    f.mesh("Crane Tail", cone(0.045, 0.30, 8), bronze, {
+      position: [0, bodyY + 0.08, -0.40],
+      rotation: [-0.4, 0, 0],
+    }, { castShadow: true }),
+    f.mesh("Crane Tail Hi", cone(0.024, 0.20, 6), bronzeHi, {
+      position: [0, bodyY + 0.14, -0.45],
+      rotation: [-0.4, 0, 0],
+    }, { castShadow: false }),
+  );
+  return f.group("Marsh Crane Statue", parts, { position: pos });
+}
+
 /* ───────────────────────── document ───────────────────────── */
 
 /**
@@ -35636,6 +36345,8 @@ export function buildDollhouseDocument(): DollhouseDocument {
     { x: SQUIRREL_STATUE_POS[0], z: SQUIRREL_STATUE_POS[2], r: 0.9 },
     // Forty-second-pass keep-out — bronze doe statue on the back-west outside-fence lawn.
     { x: DOE_STATUE_POS[0], z: DOE_STATUE_POS[2], r: 0.9 },
+    // Forty-third-pass keep-out — bronze fawn statue between the doe and the tortoise.
+    { x: FAWN_STATUE_POS[0], z: FAWN_STATUE_POS[2], r: 0.9 },
   ];
   const garden = f.group("Garden", [
     buildLawn(f),
@@ -35719,6 +36430,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildBadgerStatue(f, BADGER_STATUE_POS),
     buildSquirrelStatue(f, SQUIRREL_STATUE_POS),
     buildDoeStatue(f, DOE_STATUE_POS),
+    buildFawnStatue(f, FAWN_STATUE_POS),
   ]);
   const meadow = buildBackMeadow(f);
   const orchard = buildSideOrchard(f);
@@ -35757,6 +36469,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
   const fePaddyTerrace = buildFarEastPaddyTerrace(f);
   const feTeaGarden = buildFarEastTeaGarden(f);
   const feZenGarden = buildFarEastZenGarden(f);
+  const feReedMarsh = buildFarEastReedMarsh(f);
   const house = f.group("House", [
     buildFloors(f),
     buildBackWall(f),
@@ -35819,6 +36532,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
     buildDoorPeephole(f),
     buildDoorPullHandle(f),
     buildDoorEscutcheon(f),
+    buildDoorKnob(f),
   ]);
   const root: SceneNode = {
     id: "dh-root",
@@ -35864,6 +36578,7 @@ export function buildDollhouseDocument(): DollhouseDocument {
       fePaddyTerrace,
       feTeaGarden,
       feZenGarden,
+      feReedMarsh,
       house,
     ],
   };

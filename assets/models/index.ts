@@ -1,6 +1,6 @@
 // Enhanced dollhouse model — a snapshot imported from
 // packages/editor/src/presets/, with incrementally enhanced meshes for the
-// house and its courtyard, layered over forty-two enhancement passes.
+// house and its courtyard, layered over forty-three enhancement passes.
 //   Pass 1 — courtyard: flower beds, path hedges, a slatted bench, a stone
 //   bird bath, a lamp post and a picket garden gate; house: a brick chimney,
 //   window dressing (shutters + flower boxes) and a tiled roof ridge.
@@ -1300,6 +1300,45 @@
 //   moss-flecked stone lantern near the south edge of the plot with a
 //   slim slate base, a stacked cylindrical shaft, a flared square roof
 //   cap and a warm glow plate behind the carved chamber opening.
+//   Pass 43 — courtyard: a companion Victorian bronze fawn statue on a
+//   fluted marble pedestal, parked on the back-west outside-fence lawn
+//   between the doe (at x=-12.5) and the tortoise (at x=-9.5) so the
+//   doe-and-fawn family reads as a paired mother-and-child grouping in
+//   the bestiary line — the fawn stands four-square on the plinth cap
+//   in a slim curious pose with a shorter body, two tall tapered ears
+//   at the crown, two glinting eye highlights, a slim tapered muzzle
+//   with a dark nose dab, a scatter of five soft cream juvenile spot
+//   dabs across the flanks and back reading as dappled enamel inlay
+//   against the bronze, four slim tapering legs and a short raised
+//   white stub tail (the bronze body, head, ears, muzzle, legs and
+//   tail reuse the existing `copper-patina` colour + bump pair so the
+//   verdigris reads as crusted relief on the cast metal, the cream
+//   spot and tail-tuft panels read as soft enamel inlay against the
+//   bronze, and the plinth reuses the existing `marble` colour + bump
+//   pair so the stone reads with veined relief). House: a polished
+//   brass Victorian door knob pinned to the door slab above the
+//   escutcheon on a slim brass rosette plate — a raised knob dome
+//   standing proud of the rosette on a short brass neck-shaft, four
+//   small corner rivets pinning the rosette to the door slab and a
+//   slim highlight crescent catching the porch lamps on the rounded
+//   knob crown (companion to the kickplate, bell pull, knocker,
+//   letter slot, number plate, peephole, pull handle, escutcheon,
+//   carriage lanterns, address plaque and pine-needle wreath). The
+//   knob reuses the existing `copper-patina` colour + bump pair
+//   tinted toward warm brass (sharing the pass-38 brass palette) so
+//   the polished metal reads as fitted relief against the door slab.
+//   Scene: a far-east reed marsh plane east of the zen rock garden —
+//   a peat-toned muddy ground floor surfaced with the existing
+//   `peat-moor` colour map paired with its bump depth map so the
+//   silty tidal mud reads as raised relief at glancing sun, a slim
+//   pale-sand west apron along the zen-garden east edge so the
+//   ground layer has no holes at the seam, a small dark brackish
+//   tidal pool at the plot centre ringed by a foam-fringe rim, five
+//   clusters of tall reed stalks each crowned by a slim fluffy brown
+//   cattail top head, a small wooden duck-blind hut on four stilt
+//   posts at the northeast corner with a peaked shingle roof and a
+//   glowing front observation slit, and a slim bronze crane statue
+//   stalking the pool near the north edge.
 export { NodeFactory, mulberry32 } from "./builder.js";
 export {
   bakeBufferGeometry,
